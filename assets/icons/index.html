@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RustyWorks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:          #1e1e24;
+    --bg-elev:     #26262e;
+    --bg-panel:    #2a2a33;
+    --bg-hover:    #32323d;
+    --fg:          #e6e6ea;
+    --fg-dim:      #9a9aa6;
+    --fg-mute:     #6a6a76;
+    --line:        #3a3a46;
+    --line-soft:   #2f2f39;
+
+    --c-blue-bg:   #24344a; --c-blue-fg:   #a8c3e6;
+    --c-purple-bg: #3a2a4e; --c-purple-fg: #c9a8e6;
+    --c-green-bg:  #243a2c; --c-green-fg:  #a8d4b8;
+    --c-teal-bg:   #1e3636; --c-teal-fg:   #9ed0d0;
+    --c-amber-bg:  #3a2f1e; --c-amber-fg:  #e6c890;
+    --c-orange-bg: #3e281a; --c-orange-fg: #e6a878;
+    --c-rust-bg:   #3a231a; --c-rust-fg:   #d89a78;
+    --c-tag-bg:    #2e2a1e; --c-tag-fg:    #c8b890;
+
+    --c-green-dot: #4a8a5c;
+
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'Inter', 'Noto Sans JP', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  body {
+    padding: 20px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  /* Top bar */
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .topbar-brand { display: flex; flex-direction: column; gap: 2px; min-width: 220px; }
+  .topbar-brand .name {
+    font-family: var(--mono); font-size: 15px; font-weight: 600; letter-spacing: -0.01em;
+  }
+  .topbar-brand .sub {
+    font-family: var(--mono); font-size: 10.5px; color: var(--fg-mute); letter-spacing: 0.04em;
+  }
+  .topbar-nav { display: flex; gap: 4px; margin-left: auto; flex-wrap: wrap; }
+  .btn {
+    font-family: var(--mono); font-size: 11.5px; color: var(--fg-dim);
+    background: var(--bg-elev); border: 1px solid var(--line);
+    padding: 6px 12px; border-radius: 3px; cursor: pointer; text-decoration: none;
+    transition: all 0.12s; letter-spacing: 0.03em;
+  }
+  .btn:hover { color: var(--fg); background: var(--bg-hover); }
+
+  /* Status strip */
+  .status-strip {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;
+  }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--mono); font-size: 10.5px;
+    padding: 4px 9px; border-radius: 3px;
+    letter-spacing: 0.02em; white-space: nowrap; line-height: 1.4;
+  }
+  .chip-gray   { background: #2a2a33; color: var(--fg-dim); border: 1px solid var(--line); }
+  .chip-blue   { background: var(--c-blue-bg);   color: var(--c-blue-fg); }
+  .chip-purple { background: var(--c-purple-bg); color: var(--c-purple-fg); }
+  .chip-green  { background: var(--c-green-bg);  color: var(--c-green-fg); }
+  .chip-teal   { background: var(--c-teal-bg);   color: var(--c-teal-fg); }
+  .chip-amber  { background: var(--c-amber-bg);  color: var(--c-amber-fg); }
+  .chip-orange { background: var(--c-orange-bg); color: var(--c-orange-fg); }
+  .chip-rust   { background: var(--c-rust-bg);   color: var(--c-rust-fg); }
+  .chip-tag    { background: var(--c-tag-bg);    color: var(--c-tag-fg); }
+  .chip-dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--c-green-dot); flex-shrink: 0;
+  }
+
+  /* Hero */
+  .hero {
+    background: var(--bg-elev); border: 1px solid var(--line);
+    border-radius: 4px; padding: 24px 28px; margin-bottom: 20px;
+  }
+  .hero-header {
+    display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; gap: 12px; flex-wrap: wrap;
+  }
+  .hero-label {
+    font-family: var(--mono); font-size: 10.5px; color: var(--fg-mute); letter-spacing: 0.2em;
+  }
+  .hero-selected {
+    font-family: var(--mono); font-size: 10.5px; color: var(--fg-mute);
+  }
+  .hero-title {
+    font-family: var(--mono); font-size: clamp(28px, 4.5vw, 40px);
+    font-weight: 700; letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 18px;
+  }
+  .hero-desc {
+    font-size: 13px; color: var(--fg-dim); margin-bottom: 20px; max-width: 640px;
+  }
+  .hero-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1px; background: var(--line-soft); border: 1px solid var(--line);
+    border-radius: 3px; overflow: hidden;
+  }
+  .hero-stat {
+    background: var(--bg-panel); padding: 10px 14px;
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .hero-stat .k {
+    font-family: var(--mono); font-size: 10px; color: var(--fg-mute); letter-spacing: 0.15em;
+  }
+  .hero-stat .v {
+    font-family: var(--mono); font-size: 13px; color: var(--fg); font-weight: 500;
+  }
+
+  /* Panel */
+  .panel {
+    background: var(--bg-elev); border: 1px solid var(--line);
+    border-radius: 4px; margin-bottom: 16px; overflow: hidden;
+  }
+  .panel-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 11px 16px; border-bottom: 1px solid var(--line);
+    background: var(--bg-panel); gap: 12px; flex-wrap: wrap;
+  }
+  .panel-title {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
+  }
+  .panel-title .count {
+    font-family: var(--mono); font-size: 10px; color: var(--fg-mute);
+    background: var(--bg); padding: 2px 7px; border-radius: 2px; font-weight: 400;
+  }
+  .panel-sub {
+    font-family: var(--mono); font-size: 10.5px; color: var(--fg-mute);
+  }
+
+  /* Items */
+  .items { display: flex; flex-direction: column; }
+  .item {
+    display: grid; grid-template-columns: 44px 1fr auto;
+    align-items: center; gap: 14px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line-soft);
+    transition: background 0.1s;
+  }
+  .item:last-child { border-bottom: none; }
+  .item:hover { background: var(--bg-hover); }
+
+  /* Icon slot (replaces checkbox position) */
+  .item-icon {
+    width: 44px; height: 44px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .item-icon img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .item-icon.empty::after {
+    content: '—';
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--line);
+  }
+  .item-body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .item-top {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .item-name {
+    font-size: 14px; font-weight: 600; color: var(--fg); letter-spacing: -0.005em;
+  }
+  .item-path {
+    font-family: var(--mono); font-size: 10.5px; color: var(--fg-mute);
+  }
+  .item-desc {
+    font-size: 12.5px; color: var(--fg-dim); min-height: 1.2em;
+  }
+  .item-desc:empty::before { content: '—'; color: var(--line); }
+  .item-tags {
+    display: flex; gap: 4px; flex-wrap: wrap; margin-top: 2px;
+  }
+  .item-right {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end;
+  }
+
+  /* Contact */
+  .contact-row {
+    display: grid; grid-template-columns: 110px 1fr auto;
+    align-items: center; gap: 14px;
+    padding: 11px 16px; border-bottom: 1px solid var(--line-soft);
+    font-family: var(--mono); font-size: 12.5px;
+  }
+  .contact-row:last-child { border-bottom: none; }
+  .contact-row .k {
+    color: var(--fg-mute); font-size: 10.5px; letter-spacing: 0.15em;
+  }
+  .contact-row .v a {
+    color: var(--fg); text-decoration: none;
+    border-bottom: 1px solid transparent; transition: border-color 0.15s;
+    word-break: break-all;
+  }
+  .contact-row .v a:hover { border-bottom-color: var(--fg); }
+
+  /* Footer */
+  footer {
+    margin-top: 24px; padding: 14px 4px;
+    border-top: 1px solid var(--line-soft);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--mono); font-size: 10.5px; color: var(--fg-mute);
+    letter-spacing: 0.08em;
+  }
+  footer a { color: var(--fg-mute); text-decoration: none; transition: color 0.15s; }
+  footer a:hover { color: var(--fg); }
+
+  /* Mobile */
+  @media (max-width: 720px) {
+    body { padding: 14px; }
+    .topbar-nav { margin-left: 0; width: 100%; }
+    .hero { padding: 18px; }
+    .item { grid-template-columns: 44px 1fr; }
+    .item-right { grid-column: 1 / -1; padding-left: 58px; justify-content: flex-start; }
+    .contact-row { grid-template-columns: 70px 1fr; }
+    .contact-row .btn { grid-column: 2; justify-self: start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="name">RustyWorks</div>
+    <div class="sub">// PORTFOLIO · WORKSPACE v2026</div>
+  </div>
+  <div class="topbar-nav">
+    <a class="btn" href="#games">Games</a>
+    <a class="btn" href="#tools">Tools</a>
+    <a class="btn" href="#apps">iOS Apps</a>
+    <a class="btn" href="#contact">Contact</a>
+  </div>
+</div>
+
+<div class="status-strip">
+  <span class="chip chip-gray"><span class="chip-dot"></span>Activity Active</span>
+  <span class="chip chip-blue">Layout Portfolio v2026</span>
+  <span class="chip chip-purple">View Panel</span>
+  <span class="chip chip-teal">Density Compact</span>
+  <span class="chip chip-amber">Group Kind</span>
+  <span class="chip chip-green">Projects 7</span>
+  <span class="chip chip-orange">In Development 3</span>
+  <span class="chip chip-rust">Coming Soon 4</span>
+  <span class="chip chip-gray">Mode Public</span>
+</div>
+
+<section class="hero">
+  <div class="hero-header">
+    <div class="hero-label">PROFILE</div>
+    <div class="hero-selected">Selected: Rusty / Indie Game Developer</div>
+  </div>
+  <h1 class="hero-title">RustyWorks</h1>
+  <p class="hero-desc">インディーゲームとツールをつくる個人ブランド。Unity / Swift を軸に、RPG・ローグライト・開発ツールを制作しています。</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><span class="k">NAME</span><span class="v">Rusty</span></div>
+    <div class="hero-stat"><span class="k">CLASS</span><span class="v">Indie Game Developer</span></div>
+    <div class="hero-stat"><span class="k">BASE</span><span class="v">Japan</span></div>
+    <div class="hero-stat"><span class="k">STACK</span><span class="v">Unity / Swift / C#</span></div>
+  </div>
+</section>
+
+<section class="panel" id="games">
+  <div class="panel-head">
+    <div class="panel-title">GAMES <span class="count">3 entries</span></div>
+    <div class="panel-sub">project / kind / tags / status</div>
+  </div>
+  <ul class="items">
+    <li class="item">
+      <div class="item-icon empty"></div>
+      <div class="item-body">
+        <div class="item-top">
+          <span class="item-name">自動勇者(仮)</span>
+          <span class="item-path">RustyWorks/Games/AutoHero</span>
+        </div>
+        <div class="item-desc"></div>
+        <div class="item-tags">
+          <span class="chip chip-tag">roguelite</span>
+          <span class="chip chip-tag">rpg</span>
+          <span class="chip chip-tag">command-battle</span>
+          <span class="chip chip-tag">unity</span>
+        </div>
+      </div>
+      <div class="item-right">
+        <span class="chip chip-blue">Genre RPG</span>
+        <span class="chip chip-orange">In Development</span>
+      </div>
+    </li>
+    <li class="item">
+      <div class="item-icon empty"></div>
+      <div class="item-body">
+        <div class="item-top">
+          <span class="item-name">ダンジョン習慣(仮)</span>
+          <span class="item-path">RustyWorks/Games/DungeonHabit</span>
+        </div>
+        <div class="item-desc"></div>
+        <div class="item-tags">
+          <span class="chip chip-tag">mobile</span>
+          <span class="chip chip-tag">roguelite</span>
+          <span class="chip chip-tag">daily</span>
+          <span class="chip chip-tag">unity</span>
+        </div>
+      </div>
+      <div class="item-right">
+        <span class="chip chip-purple">Platform Mobile</span>
+        <span class="chip chip-orange">In Development</span>
+      </div>
+    </li>
+    <li class="item">
+      <div class="item-icon empty"></div>
+      <div class="item-body">
+        <div class="item-top">
+          <span class="item-name">Awakening Dungeon(仮)</span>
+          <span class="item-path">RustyWorks/Games/AwakeningDungeon</span>
+        </div>
+        <div class="item-desc"></div>
+        <div class="item-tags">
+          <span class="chip chip-tag">dungeon</span>
+          <span class="chip chip-tag">rpg</span>
+          <span class="chip chip-tag">unity</span>
+        </div>
+      </div>
+      <div class="item-right">
+        <span class="chip chip-blue">Genre RPG</span>
+        <span class="chip chip-orange">In Development</span>
+      </div>
+    </li>
+  </ul>
+</section>
+
+<section class="panel" id="tools">
+  <div class="panel-head">
+    <div class="panel-title">TOOLS <span class="count">2 entries</span></div>
+    <div class="panel-sub">unity editor tools / asset pipeline</div>
+  </div>
+  <ul class="items">
+    <li class="item">
+      <div class="item-icon"><img src="assets/icons/uadb.png" alt="UADB" onerror="this.parentElement.classList.add('empty');this.remove();"></div>
+      <div class="item-body">
+        <div class="item-top">
+          <span class="item-name">UADB</span>
+          <span class="item-path">RustyWorks/Tools/UADB</span>
+        </div>
+        <div class="item-desc"></div>
+        <div class="item-tags">
+          <span class="chip chip-tag">unity</span>
+          <span class="chip chip-tag">editor-tool</span>
+          <span class="chip chip-tag">asset-db</span>
+        </div>
+      </div>
+      <div class="item-right">
+        <span class="chip chip-teal">Unity Editor</span>
+        <span class="chip chip-green">Apr 27 (Mon) Release</span>
+      </div>
+    </li>
+    <li class="item">
+      <div class="item-icon"><img src="assets/icons/uadb.png" alt="UADB Lite" onerror="this.parentElement.classList.add('empty');this.remove();"></div>
+      <div class="item-body">
+        <div class="item-top">
+          <span class="item-name">UADB Lite</span>
+          <span class="item-path">RustyWorks/Tools/UADBLite</span>
+        </div>
+        <div class="item-desc"></div>
+        <div class="item-tags">
+          <span class="chip chip-tag">unity</span>
+          <span class="chip chip-tag">editor-tool</span>
+          <span class="chip chip-tag">asset-db</span>
+          <span class="chip chip-tag">free</span>
+        </div>
+      </div>
+      <div class="item-right">
+        <span class="chip chip-teal">Unity Editor</span>
+        <span class="chip chip-green">Apr 27 (Mon) Release</span>
+      </div>
+    </li>
+  </ul>
+</section>
+
+<section class="panel" id="apps">
+  <div class="panel-head">
+    <div class="panel-title">iOS APPS <span class="count">2 entries</span></div>
+    <div class="panel-sub">native swift / swiftui</div>
+  </div>
+  <ul class="items">
+    <li class="item">
+      <div class="item-icon"><img src="assets/icons/stalog.png" alt="スタログ!" onerror="this.parentElement.classList.add('empty');this.remove();"></div>
+      <div class="item-body">
+        <div class="item-top">
+          <span class="item-name">スタログ!</span>
+          <span class="item-path">RustyWorks/iOS/Stalog</span>
+        </div>
+        <div class="item-desc"></div>
+        <div class="item-tags">
+          <span class="chip chip-tag">ios</span>
+          <span class="chip chip-tag">swiftui</span>
+          <span class="chip chip-tag">app</span>
+        </div>
+      </div>
+      <div class="item-right">
+        <span class="chip chip-purple">Platform iOS</span>
+        <span class="chip chip-rust">Coming Soon</span>
+      </div>
+    </li>
+    <li class="item">
+      <div class="item-icon empty"></div>
+      <div class="item-body">
+        <div class="item-top">
+          <span class="item-name">スタログ拡張アプリ</span>
+          <span class="item-path">RustyWorks/iOS/StalogExt</span>
+        </div>
+        <div class="item-desc"></div>
+        <div class="item-tags">
+          <span class="chip chip-tag">ios</span>
+          <span class="chip chip-tag">swiftui</span>
+          <span class="chip chip-tag">companion</span>
+        </div>
+      </div>
+      <div class="item-right">
+        <span class="chip chip-purple">Platform iOS</span>
+        <span class="chip chip-rust">Coming Soon</span>
+      </div>
+    </li>
+  </ul>
+</section>
+
+<section class="panel" id="contact">
+  <div class="panel-head">
+    <div class="panel-title">CONTACT <span class="count">2 channels</span></div>
+    <div class="panel-sub">email / note</div>
+  </div>
+  <div>
+    <div class="contact-row">
+      <span class="k">EMAIL</span>
+      <span class="v"><a href="mailto:info@rustyworks.jp">rustyworks.games@gmail.com</a></span>
+      <a class="btn" href="mailto:info@rustyworks.jp">Send</a>
+    </div>
+    <div class="contact-row">
+      <span class="k">NOTE</span>
+      <span class="v"><a href="https://note.com/legit_fowl8567" target="_blank" rel="noopener">note.com/legit_fowl8567</a></span>
+      <a class="btn" href="https://note.com/legit_fowl8567" target="_blank" rel="noopener">Open</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© RUSTYWORKS</span>
+  <a href="privacy.html">PRIVACY POLICY</a>
+</footer>
+
+</body>
+</html>
