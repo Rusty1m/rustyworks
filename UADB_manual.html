@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UADB Manual</title>
+  <style>
+    :root {
+      --bg: #0d1118;
+      --panel: #151b24;
+      --panel-2: #1b2230;
+      --line: #2b3445;
+      --text: #eef2f7;
+      --muted: #aeb8c7;
+      --accent: #8dc2ff;
+      --accent-2: #ffbe63;
+      --ok: #9ad67f;
+      --max: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+        Arial, "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(141,194,255,0.10), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(255,190,99,0.08), transparent 22%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .hero {
+      margin-top: 12px;
+      padding: 32px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(141,194,255,0.12);
+      color: var(--accent);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    h1, h2, h3 {
+      margin: 0 0 12px 0;
+      line-height: 1.2;
+    }
+
+    h1 {
+      font-size: clamp(34px, 6vw, 56px);
+      letter-spacing: -0.03em;
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-top: 6px;
+    }
+
+    h3 {
+      font-size: 20px;
+      margin-top: 6px;
+    }
+
+    .hero p {
+      margin: 10px 0 0 0;
+      color: var(--muted);
+      max-width: 880px;
+      font-size: 16px;
+    }
+
+    .hero-actions {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .btn.primary {
+      border-color: rgba(141,194,255,0.4);
+      background: rgba(141,194,255,0.12);
+      color: #d7ebff;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .toc {
+      position: sticky;
+      top: 24px;
+      align-self: start;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(21,27,36,0.84);
+      backdrop-filter: blur(8px);
+    }
+
+    .toc h2 {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .toc ol {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .toc li + li {
+      margin-top: 8px;
+    }
+
+    .content {
+      min-width: 0;
+    }
+
+    section {
+      margin-bottom: 22px;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(21,27,36,0.88);
+    }
+
+    section > p:first-of-type {
+      margin-top: 0;
+    }
+
+    .bilingual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 14px;
+    }
+
+    .lang {
+      padding: 16px;
+      border-radius: 14px;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+    }
+
+    .lang h4 {
+      margin: 0 0 10px 0;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .lang p, .lang li {
+      color: var(--text);
+      font-size: 15px;
+    }
+
+    .lang .subtle {
+      color: var(--muted);
+    }
+
+    ul, ol {
+      margin: 10px 0 0 0;
+      padding-left: 20px;
+    }
+
+    li + li {
+      margin-top: 7px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .card {
+      padding: 16px;
+      border-radius: 14px;
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+    }
+
+    .card h3 {
+      font-size: 18px;
+    }
+
+    .note {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-left: 3px solid var(--accent-2);
+      background: rgba(255,190,99,0.08);
+      color: #f6e4c5;
+      border-radius: 0 12px 12px 0;
+    }
+
+    .ok {
+      border-left-color: var(--ok);
+      background: rgba(154,214,127,0.08);
+      color: #d6efca;
+    }
+
+    code {
+      padding: 2px 6px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.08);
+      font-size: 0.95em;
+    }
+
+    .footer {
+      margin: 18px 0 40px 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .toc {
+        position: static;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .wrap {
+        padding: 16px;
+      }
+
+      .hero {
+        padding: 24px;
+      }
+
+      section {
+        padding: 20px;
+      }
+
+      .bilingual,
+      .cards {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="eyebrow">UADB Manual</div>
+      <h1>UADB 取説 / Manual</h1>
+      <p>
+        UADB（Universal Asset Database）は、プロジェクトアセットを検索、整理、タグ管理するためのエディタ拡張です。
+        <br>
+        UADB (Universal Asset Database) is an editor extension for browsing, searching, tagging, and maintaining project assets.
+      </p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#quick-start">クイックスタート / Quick Start</a>
+        <a class="btn" href="#window-overview">画面概要 / Window Overview</a>
+        <a class="btn" href="#workflow">基本的な使い方 / Workflow</a>
+        <a class="btn" href="#faq">FAQ</a>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="toc">
+        <h2>目次 / Contents</h2>
+        <ol>
+          <li><a href="#overview">概要 / Overview</a></li>
+          <li><a href="#environment">動作環境 / Environment</a></li>
+          <li><a href="#quick-start">クイックスタート / Quick Start</a></li>
+          <li><a href="#window-overview">画面概要 / Window Overview</a></li>
+          <li><a href="#features">主な機能 / Main Features</a></li>
+          <li><a href="#workflow">基本的な使い方 / Workflow</a></li>
+          <li><a href="#recovery">復旧ガイド / Recovery Guide</a></li>
+          <li><a href="#notes">注意事項 / Notes</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </aside>
+
+      <main class="content">
+        <section id="overview">
+          <h2>概要 / Overview</h2>
+          <div class="bilingual">
+            <div class="lang">
+              <h4>Japanese</h4>
+              <p>
+                UADB は、1つのウィンドウでアセット一覧、検索、タグ管理、プロパティ確認を行うためのツールです。
+                元ファイルを勝手に移動・改名しない、非破壊型の運用を前提にしています。
+              </p>
+              <p class="subtle">
+                軽い操作感、高速な一覧切り替え、日常的に開きやすい使い心地を重視しています。
+              </p>
+            </div>
+            <div class="lang">
+              <h4>English</h4>
+              <p>
+                UADB is a tool for browsing assets, searching, managing tags, and checking properties in one window.
+                It is designed for non-destructive workflow and does not normally move or rename your project files.
+              </p>
+              <p class="subtle">
+                It focuses on lightweight operation, fast view switching, and a comfortable day-to-day workflow.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="environment">
+          <h2>動作環境 / Environment</h2>
+          <div class="cards">
+            <div class="card">
+              <h3>日本語</h3>
+              <ul>
+                <li><code>6000.x</code> 系エディタ向け</li>
+                <li>起動メニュー: <code>Window &gt; UADB</code></li>
+                <li>Editor 専用です</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>English</h3>
+              <ul>
+                <li>Designed for <code>6000.x</code> editor versions</li>
+                <li>Open from <code>Window &gt; UADB</code></li>
+                <li>Editor-only tool</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="quick-start">
+          <h2>クイックスタート / Quick Start</h2>
+          <div class="bilingual">
+            <div class="lang">
+              <h4>Japanese</h4>
+              <ol>
+                <li><code>Window &gt; UADB</code> を開きます。</li>
+                <li>上部の <code>更新</code> を押し、<code>リストを更新</code> を選びます。</li>
+                <li>必要なら左側の検索欄にキーワードを入力します。</li>
+                <li>結果をクリックして、右側のプロパティを確認します。</li>
+                <li>タグ編集や一括処理が必要なら、チェックボックスと左側パネルを使います。</li>
+              </ol>
+            </div>
+            <div class="lang">
+              <h4>English</h4>
+              <ol>
+                <li>Open <code>Window &gt; UADB</code>.</li>
+                <li>Press <code>Rescan</code> and choose <code>Refresh List</code>.</li>
+                <li>If needed, type a keyword in the search field.</li>
+                <li>Click a result and check the property panel on the right.</li>
+                <li>For tag editing or bulk actions, use checkboxes and the left-side action panel.</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="note ok">
+            初回はまず <strong>リストを更新 / Refresh List</strong> から始めるのが基本です。<br>
+            For first use, start with <strong>Refresh List</strong>.
+          </div>
+        </section>
+
+        <section id="window-overview">
+          <h2>画面概要 / Window Overview</h2>
+
+          <div class="cards">
+            <div class="card">
+              <h3>上部バー / Top Bar</h3>
+              <ul>
+                <li><strong>UADB</strong>: メインメニュー / Main menu</li>
+                <li><strong>更新 / Rescan</strong>: <code>リストを更新 / Refresh List</code> と <code>未管理ファイルの読み込み / Load Unmanaged Files</code></li>
+                <li><strong>Undo / Redo</strong>: UADB 内の操作を戻す / やり直す</li>
+                <li><strong>削除 / Delete</strong>: チェック済み項目を削除。Undo 可能</li>
+                <li><strong>ステータス</strong>: 管理対象数と未管理 / 新規数を表示</li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <h3>左パネル / Left Panel</h3>
+              <ul>
+                <li><strong>検索 / Search</strong>: キーワード検索</li>
+                <li><strong>検索範囲 / Scope</strong>: 全体、タグ、表示名、呼び出し名、フルパス</li>
+                <li><strong>表示切り替え / View Mode</strong>: リスト、アイコン、プレビュー</li>
+                <li><strong>表示をリセット / Reset View</strong>: 検索と表示状態を初期化</li>
+                <li><strong>タグを追加 / 置換え</strong>: 一括処理</li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <h3>中央ペイン / Center Pane</h3>
+              <ul>
+                <li>検索結果を一覧またはグリッドで表示</li>
+                <li>列: 呼び出し名、表示名、タグ、表示項目</li>
+                <li>チェックボックスで複数選択</li>
+                <li>単クリックは UADB 内選択、ダブルクリックはエディタ側の選択連動</li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <h3>右パネル / Right Panel</h3>
+              <ul>
+                <li><strong>プロパティ / Properties</strong>: 表示名、キー、タグ、JSON</li>
+                <li><strong>プレビュー / Preview</strong>: 選択項目の静的プレビュー</li>
+                <li><strong>タグリスト / Tag List</strong>: タグから絞り込み</li>
+                <li><strong>設定 / Settings</strong>: 言語、保存方式、管理対象フォルダなど</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="features">
+          <h2>主な機能 / Main Features</h2>
+          <div class="bilingual">
+            <div class="lang">
+              <h4>Japanese</h4>
+              <ul>
+                <li>キーワード検索</li>
+                <li>検索範囲の切り替え</li>
+                <li>リスト / アイコン / プレビュー表示</li>
+                <li>表示名、キー、タグの編集</li>
+                <li>タグ追加と文字列置換えの一括処理</li>
+                <li>逆参照確認</li>
+                <li>未管理ファイルの読み込み</li>
+                <li>Undo / Redo</li>
+                <li>管理対象フォルダの設定</li>
+              </ul>
+            </div>
+            <div class="lang">
+              <h4>English</h4>
+              <ul>
+                <li>Keyword search</li>
+                <li>Search scope switching</li>
+                <li>List / Icon / Preview views</li>
+                <li>Edit display name, key, and tags</li>
+                <li>Bulk tag add and text replace</li>
+                <li>Reverse reference check</li>
+                <li>Load unmanaged files</li>
+                <li>Undo / Redo</li>
+                <li>Managed folder settings</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="workflow">
+          <h2>基本的な使い方 / Workflow</h2>
+
+          <div class="cards">
+            <div class="card">
+              <h3>1. リストを更新 / Refresh the List</h3>
+              <p>
+                上部の <code>更新</code> を押して <code>リストを更新</code> を選ぶと、現在のプロジェクト状態に合わせて一覧を再構築します。
+              </p>
+              <p class="subtle">
+                Press <code>Rescan</code> and choose <code>Refresh List</code> to rebuild the current list from project assets.
+              </p>
+            </div>
+
+            <div class="card">
+              <h3>2. 検索する / Search</h3>
+              <p>
+                左上の検索欄にキーワードを入れ、必要に応じて <code>検索範囲 / Scope</code> を切り替えます。
+              </p>
+              <p class="subtle">
+                Type a keyword and change <code>Scope</code> when needed.
+              </p>
+            </div>
+
+            <div class="card">
+              <h3>3. 表示を切り替える / Change the View</h3>
+              <p>
+                <code>リスト / アイコン / プレビュー</code> を切り替えて見やすい形式で探します。
+              </p>
+              <p class="subtle">
+                Switch between <code>List / Icon / Preview</code> to browse in the most useful way.
+              </p>
+            </div>
+
+            <div class="card">
+              <h3>4. プロパティを編集する / Edit Properties</h3>
+              <p>
+                項目を選択すると右側に詳細が出ます。表示名、キー、タグ、データ項目なら JSON を編集できます。
+              </p>
+              <p class="subtle">
+                Select an item to edit display name, key, tags, and JSON for data entries.
+              </p>
+            </div>
+
+            <div class="card">
+              <h3>5. 一括処理 / Bulk Actions</h3>
+              <p>
+                チェックボックスで複数項目を選び、左側の <code>タグを追加 / 置換え</code> から一括処理します。
+              </p>
+              <p class="subtle">
+                Use checkboxes and the bulk action panel for tag add or replace actions.
+              </p>
+            </div>
+
+            <div class="card">
+              <h3>6. 未管理ファイルの読み込み / Load Unmanaged Files</h3>
+              <p>
+                上部の <code>更新</code> メニューから <code>未管理ファイルの読み込み</code> を選ぶと、まだ UADB に入っていない対象を追加できます。
+              </p>
+              <p class="subtle">
+                Choose <code>Load Unmanaged Files</code> from the <code>Rescan</code> menu to add files that are not yet in UADB.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="recovery">
+          <h2>復旧ガイド / Recovery Guide</h2>
+          <div class="bilingual">
+            <div class="lang">
+              <h4>Japanese</h4>
+              <ul>
+                <li><strong>表示復旧</strong>: 一覧、選択、プレビューの接続をやり直します</li>
+                <li><strong>セーフモード</strong>: アイコン / プレビューを止めてリスト表示に戻します</li>
+              </ul>
+              <p class="subtle">
+                白化や一時的な表示崩れが起きた時に使います。
+              </p>
+            </div>
+            <div class="lang">
+              <h4>English</h4>
+              <ul>
+                <li><strong>Recover View</strong>: reconnects list, selection, and preview state</li>
+                <li><strong>Safe Mode</strong>: disables icon / preview rendering and falls back to list-only mode</li>
+              </ul>
+              <p class="subtle">
+                Use these when the window becomes blank or the visual state is broken.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="notes">
+          <h2>注意事項 / Notes</h2>
+          <div class="bilingual">
+            <div class="lang">
+              <h4>Japanese</h4>
+              <ul>
+                <li>通常動作では任意のプロジェクトアセットを移動・改名・物理削除しません</li>
+                <li>削除した項目は通常一覧から外れますが、Undo / Redo で追跡できます</li>
+                <li>未管理ファイルの読み込みは、まだ UADB に入っていない項目を追加する処理です</li>
+              </ul>
+            </div>
+            <div class="lang">
+              <h4>English</h4>
+              <ul>
+                <li>Normal use does not move, rename, or physically delete arbitrary project assets</li>
+                <li>Deleted entries leave the normal list view, but can still be tracked with Undo / Redo</li>
+                <li>Load Unmanaged Files adds items that are not yet stored in UADB</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="faq">
+          <h2>FAQ</h2>
+
+          <div class="cards">
+            <div class="card">
+              <h3>Q. 「更新」と「未管理ファイルの読み込み」は同じですか？</h3>
+              <p>
+                いいえ。<code>リストを更新</code> は現在の一覧を再同期する処理です。<code>未管理ファイルの読み込み</code> は、まだ UADB に入っていない対象を新規追加します。
+              </p>
+              <p class="subtle">
+                No. <code>Refresh List</code> refreshes the current list. <code>Load Unmanaged Files</code> adds files that are not yet in UADB.
+              </p>
+            </div>
+
+            <div class="card">
+              <h3>Q. 単クリックとダブルクリックの違いは？</h3>
+              <p>
+                単クリックは UADB 内の選択更新です。ダブルクリックはエディタ側の選択や Inspector 連動に使います。
+              </p>
+              <p class="subtle">
+                Single click updates selection inside UADB. Double click syncs selection with the editor and Inspector.
+              </p>
+            </div>
+
+            <div class="card">
+              <h3>Q. タグだけで絞れますか？</h3>
+              <p>
+                はい。検索範囲を <code>タグ / Tag</code> に切り替えると、タグだけを対象に検索できます。
+              </p>
+              <p class="subtle">
+                Yes. Set the scope to <code>Tag</code> to search tag values only.
+              </p>
+            </div>
+
+            <div class="card">
+              <h3>Q. 逆参照は重いですか？</h3>
+              <p>
+                プロジェクト規模によっては少し時間がかかることがあります。必要な時だけ確認する使い方をおすすめします。
+              </p>
+              <p class="subtle">
+                It can take some time on large projects. Use it when you need it, not constantly.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <p class="footer">
+          UADB Manual HTML<br>
+          Universal Asset Database
+        </p>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
