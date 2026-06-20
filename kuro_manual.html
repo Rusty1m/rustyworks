@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kuro Manual</title>
+  <style>
+    :root {
+      --bg: #0d0e12;
+      --panel: #16171d;
+      --panel-2: #1c1d25;
+      --line: #2c2e3a;
+      --text: #eef2f7;
+      --muted: #aeb4c2;
+      --accent: #ff8f6b;
+      --accent-2: #ffbe63;
+      --ok: #9ad67f;
+      --max: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+        Arial, "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(255,143,107,0.10), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(255,190,99,0.07), transparent 22%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 24px; }
+
+    .hero {
+      margin-top: 12px;
+      padding: 32px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+    .hero-top { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+    .app-icon {
+      width: 72px; height: 72px; border-radius: 16px; flex-shrink: 0;
+      border: 1px solid var(--line); object-fit: cover;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,143,107,0.14);
+      color: var(--accent);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    h1, h2, h3 { margin: 0 0 12px 0; line-height: 1.2; }
+    h1 { font-size: clamp(34px, 6vw, 56px); letter-spacing: -0.03em; }
+    h2 { font-size: 28px; margin-top: 6px; }
+    h3 { font-size: 20px; margin-top: 6px; }
+
+    .hero p { margin: 10px 0 0 0; color: var(--muted); max-width: 880px; font-size: 16px; }
+
+    .hero-actions { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 12px; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 14px; border-radius: 12px;
+      border: 1px solid var(--line); background: var(--panel);
+      color: var(--text); font-weight: 600;
+    }
+    .btn.primary {
+      border-color: rgba(255,143,107,0.4);
+      background: rgba(255,143,107,0.12);
+      color: #ffd9cc;
+    }
+
+    .layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 24px; margin-top: 24px; }
+
+    .toc {
+      position: sticky; top: 24px; align-self: start;
+      padding: 18px; border: 1px solid var(--line); border-radius: 16px;
+      background: rgba(22,23,29,0.84); backdrop-filter: blur(8px);
+    }
+    .toc h2 { font-size: 16px; margin-bottom: 10px; }
+    .toc ol { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+    .toc li + li { margin-top: 8px; }
+
+    .content { min-width: 0; }
+
+    section {
+      margin-bottom: 22px; padding: 26px;
+      border: 1px solid var(--line); border-radius: 18px;
+      background: rgba(22,23,29,0.88);
+    }
+    section > p:first-of-type { margin-top: 0; }
+
+    .bilingual { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 14px; }
+    .lang { padding: 16px; border-radius: 14px; background: var(--panel-2); border: 1px solid var(--line); }
+    .lang h4 { margin: 0 0 10px 0; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+    .lang p, .lang li { color: var(--text); font-size: 15px; }
+    .lang .subtle { color: var(--muted); }
+
+    ul, ol { margin: 10px 0 0 0; padding-left: 20px; }
+    li + li { margin-top: 7px; }
+
+    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+    .card { padding: 16px; border-radius: 14px; background: var(--panel-2); border: 1px solid var(--line); }
+    .card h3 { font-size: 18px; }
+
+    .note {
+      margin-top: 14px; padding: 14px 16px;
+      border-left: 3px solid var(--accent-2);
+      background: rgba(255,190,99,0.08); color: #f6e4c5;
+      border-radius: 0 12px 12px 0;
+    }
+    .note.ok { border-left-color: var(--ok); background: rgba(154,214,127,0.08); color: #d6efca; }
+
+    code { padding: 2px 6px; border-radius: 8px; background: rgba(255,255,255,0.08); font-size: 0.95em; }
+
+    .footer { margin: 18px 0 40px 0; text-align: center; color: var(--muted); font-size: 14px; }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .toc { position: static; }
+    }
+    @media (max-width: 720px) {
+      .wrap { padding: 16px; }
+      .hero { padding: 24px; }
+      section { padding: 20px; }
+      .bilingual, .cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="hero-top">
+        <img class="app-icon" src="assets/icons/kuro.png" alt="Kuro" onerror="this.style.display='none'">
+        <div>
+          <div class="eyebrow">Kuro Manual</div>
+          <h1>Kuro 取説 / Manual</h1>
+        </div>
+      </div>
+      <p>
+        Kuro は、正確な色で観るための macOS 用ネイティブ動画プレーヤーです。libmpv による幅広い形式の再生に、Metal によるリアルタイムのカラーグレーディングとモニタリングを組み合わせています。
+        <br>
+        Kuro is a native macOS video player built for accurate color, combining wide-format playback via libmpv with real-time color grading and monitoring powered by Metal.
+      </p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#quick-start">クイックスタート / Quick Start</a>
+        <a class="btn" href="#window-overview">画面概要 / Window Overview</a>
+        <a class="btn" href="#features">主な機能 / Main Features</a>
+        <a class="btn" href="#pro">Kuro PRO</a>
+        <a class="btn" href="#faq">FAQ</a>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="toc">
+        <h2>目次 / Contents</h2>
+        <ol>
+          <li><a href="#overview">概要 / Overview</a></li>
+          <li><a href="#environment">動作環境 / Environment</a></li>
+          <li><a href="#quick-start">クイックスタート / Quick Start</a></li>
+          <li><a href="#window-overview">画面概要 / Window Overview</a></li>
+          <li><a href="#features">主な機能 / Main Features</a></li>
+          <li><a href="#workflow">基本的な使い方 / Workflow</a></li>
+          <li><a href="#pro">Kuro PRO</a></li>
+          <li><a href="#notes">注意事項 / Notes</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </aside>
+
+      <main class="content">
+        <section id="overview">
+          <h2>概要 / Overview</h2>
+          <div class="bilingual">
+            <div class="lang">
+              <h4>Japanese</h4>
+              <p>
+                Kuro は、1つのウインドウで「再生・色補正・解析」を行う動画プレーヤーです。リファレンス（Rec.709 / Gamma 2.4）に合わせ込んだ一次補正を、Metal でリアルタイムに適用します。
+              </p>
+              <p class="subtle">
+                正確に見て、思いどおりに整える。軽快な再生と、プロ志向のカラーツールを両立しています。
+              </p>
+            </div>
+            <div class="lang">
+              <h4>English</h4>
+              <p>
+                Kuro is a video player that handles playback, color correction, and analysis in one window. It applies a reference-matched (Rec.709 / Gamma 2.4) primary grade in real time with Metal.
+              </p>
+              <p class="subtle">
+                View accurately, shape it your way — fast playback paired with pro-grade color tools.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="environment">
+          <h2>動作環境 / Environment</h2>
+          <div class="cards">
+            <div class="card">
+              <h3>日本語</h3>
+              <ul>
+                <li><code>macOS 26</code> 以降</li>
+                <li><strong>Apple Silicon</strong>（M1 以降）専用</li>
+                <li>Mac App Store で配布</li>
+                <li>入力：ローカルファイル＋直接URL（<code>http(s)</code> / <code>HLS</code>）</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>English</h3>
+              <ul>
+                <li><code>macOS 26</code> or later</li>
+                <li><strong>Apple Silicon</strong> only (M1+)</li>
+                <li>Distributed on the Mac App Store</li>
+                <li>Input: local files and direct URLs (<code>http(s)</code> / <code>HLS</code>)</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="quick-start">
+          <h2>クイックスタート / Quick Start</h2>
+          <div class="bilingual">
+            <div class="lang">
+              <h4>Japanese</h4>
+              <ol>
+                <li>動画ファイルをウインドウにドロップ、または <code>⌘O</code> で開きます。</li>
+                <li><code>Space</code> で再生 / 一時停止。</li>
+                <li>補正パネルを開きます（表示メニュー → 補正パネル、<code>⇧⌘C</code>）。</li>
+                <li><strong>自動調整</strong> を押すと、ホワイトバランスとレベルを自動で整えます。</li>
+                <li>さらに整えたいときは <code>基本</code> / <code>カラー</code> / <code>画質</code> タブで手動調整します。</li>
+              </ol>
+            </div>
+            <div class="lang">
+              <h4>English</h4>
+              <ol>
+                <li>Drop a video onto the window, or open it with <code>⌘O</code>.</li>
+                <li>Press <code>Space</code> to play / pause.</li>
+                <li>Open the Correction panel (View → Correction Panel, <code>⇧⌘C</code>).</li>
+                <li>Press <strong>Auto Adjust</strong> to set white balance and levels automatically.</li>
+                <li>Fine-tune manually in the <code>Basic</code> / <code>Color</code> / <code>Quality</code> tabs.</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="note ok">
+            まずは <strong>自動調整 / Auto Adjust</strong> から。結果はそのまま手動で微調整できます。<br>
+            Start with <strong>Auto Adjust</strong> — the result stays fully editable.
+          </div>
+        </section>
+
+        <section id="window-overview">
+          <h2>画面概要 / Window Overview</h2>
+          <div class="cards">
+            <div class="card">
+              <h3>プレーヤー / Player</h3>
+              <ul>
+                <li>映像表示・ドラッグ&amp;ドロップ / Video view, drag &amp; drop</li>
+                <li>表示モード切替 <code>⌘G</code>（フィット / フィル / 実寸 / 画面サイズ）</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>コントロールバー / Control Bar</h3>
+              <ul>
+                <li>再生・シーク・コマ送り/戻し・音量 / Play, seek, frame step, volume</li>
+                <li>字幕の表示切替 <code>S</code> / Toggle subtitles</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>補正パネル / Correction Panel</h3>
+              <ul>
+                <li>4タブ：<code>基本</code> / <code>カラー</code> / <code>画質</code> / <code>音声</code></li>
+                <li>カーブ・LUT・ヒストグラム / Curves, LUT, histogram</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>スコープ・解析 / Scopes</h3>
+              <ul>
+                <li>波形 / ベクトル / パレード / ヒストグラム</li>
+                <li>スポットプローブ（画素値の正確な測定）/ Spot probe</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>インスペクタ / Inspector</h3>
+              <ul>
+                <li>映像 / 音声 / 性能 の3タブ / Video, Audio, Performance</li>
+                <li>解像度・FPS・コーデック・HDR状態 など</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>設定 / Settings</h3>
+              <ul>
+                <li>言語（日/英）・表示色域・表示ガンマ</li>
+                <li>アップスケール・Kuro PRO</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="features">
+          <h2>主な機能 / Main Features</h2>
+          <div class="cards">
+            <div class="card">
+              <h3>カラーグレーディング / Color Grading</h3>
+              <ul>
+                <li>リフト / ガンマ / ゲイン、オフセット、コントラスト、3-Way</li>
+                <li>色温度 / ティント、色相 / 彩度、トーンカーブ</li>
+                <li>Lift/Gamma/Gain, Offset, Contrast, 3-Way, WB, Hue/Sat, Curves</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>3D LUT</h3>
+              <ul>
+                <li><code>.cube</code> ディスプレイ LUT の読み込み</li>
+                <li>現在のグレードを <code>.cube</code> として書き出し</li>
+                <li>Load / export <code>.cube</code> LUTs</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>アップスケーリング / Upscaling</h3>
+              <ul>
+                <li>MetalFX / Anime4K / Apple AI 超解像</li>
+                <li>低解像度の映像をリアルタイムで高精細に</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>HDR 再生 / HDR Playback</h3>
+              <ul>
+                <li>ディスプレイの実輝度に合わせてトーンマップ</li>
+                <li>Tone-mapped to your display's real brightness</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>自動調整 / Auto Adjust</h3>
+              <ul>
+                <li>ワンクリックで WB＋レベルを自動補正（無料）</li>
+                <li>One-click white balance + levels (free)</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>オーディオ / Audio</h3>
+              <ul>
+                <li>音声トラック選択・A-V 同期調整・ナイトモード</li>
+                <li>Track select, A/V sync, night mode</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="workflow">
+          <h2>基本的な使い方 / Workflow</h2>
+          <div class="bilingual">
+            <div class="lang">
+              <h4>Japanese</h4>
+              <ol>
+                <li>再生して全体を確認します（終端で再生を押すと頭から再生し直します）。</li>
+                <li><strong>自動調整</strong> で土台を作ります。</li>
+                <li><code>カラー</code> タブで色温度 / ティント、3-Way、彩度を微調整。</li>
+                <li>AWB / AE のスポイトで、画面の一点を基準に WB / 露出を合わせます（PRO）。</li>
+                <li>仕上がった補正を <code>.cube</code> として書き出し、他ツールでも使えます（PRO）。</li>
+              </ol>
+            </div>
+            <div class="lang">
+              <h4>English</h4>
+              <ol>
+                <li>Play through to review (pressing play at the end restarts from the start).</li>
+                <li>Build a base with <strong>Auto Adjust</strong>.</li>
+                <li>Fine-tune temperature / tint, 3-Way, and saturation in the <code>Color</code> tab.</li>
+                <li>Use the AWB / AE eyedroppers to set WB / exposure from a point on screen (PRO).</li>
+                <li>Export your grade as a <code>.cube</code> to reuse in other tools (PRO).</li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <section id="pro">
+          <h2>Kuro PRO</h2>
+          <p class="subtle">Kuro は無料で使えます。Kuro PRO（買い切りのアプリ内課金）で、プロ向けのカラーツールを解放します。 / Kuro is free to use. Kuro PRO (a one-time in-app purchase) unlocks the pro color tools.</p>
+          <div class="cards">
+            <div class="card">
+              <h3>無料 / Free</h3>
+              <ul>
+                <li>再生全般、自動調整、シーン毎の自動調整（バランス）</li>
+                <li>スコープ、スポットプローブ、インスペクタ</li>
+                <li>字幕、プレイリスト、音声タブ、各種フィット・再生速度</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Kuro PRO</h3>
+              <ul>
+                <li>手動カラー補正（<code>基本</code> / <code>カラー</code>）、画質（NR / シャープ）</li>
+                <li>AWB / AE スポイト、A/B 比較、シーン自動の暗部強調</li>
+                <li><code>.cube</code> LUT 書き出し</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="notes">
+          <h2>注意事項 / Notes</h2>
+          <div class="bilingual">
+            <div class="lang">
+              <h4>Japanese</h4>
+              <ul>
+                <li><strong>プライバシー：</strong>データを一切収集しません。接続するのは、あなたが入力した URL のときだけです。</li>
+                <li>直接の動画 URL（<code>http(s)</code> / <code>HLS</code>）に対応。YouTube などのサイト URL には対応していません。</li>
+                <li>Kuro はプレーヤーです。映像そのものの書き出しは行いません（グレードは <code>.cube</code> として書き出せます）。</li>
+              </ul>
+            </div>
+            <div class="lang">
+              <h4>English</h4>
+              <ul>
+                <li><strong>Privacy:</strong> Kuro collects no data. It uses the network only when you open a video URL yourself.</li>
+                <li>Supports direct video URLs (<code>http(s)</code> / <code>HLS</code>). Website URLs such as YouTube are not supported.</li>
+                <li>Kuro is a player; it does not export video itself (you can export the grade as a <code>.cube</code>).</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="faq">
+          <h2>FAQ</h2>
+          <div class="cards">
+            <div class="card">
+              <h3>対応形式は？ / Supported formats?</h3>
+              <p class="subtle">MP4 / MOV / MKV / WebM / AVI / FLV / WMV / TS / M2TS / HEVC / AV1 など、主要な動画形式に幅広く対応します。 / Broad support: MP4, MOV, MKV, WebM, AVI, HEVC, AV1 and more.</p>
+            </div>
+            <div class="card">
+              <h3>Intel Mac で動く？ / Runs on Intel?</h3>
+              <p class="subtle">いいえ。Apple Silicon（M1 以降）専用です。 / No — Apple Silicon (M1+) only.</p>
+            </div>
+            <div class="card">
+              <h3>字幕は使える？ / Subtitles?</h3>
+              <p class="subtle">はい。トラック選択と表示切替（<code>S</code>）に対応します。 / Yes — track select and toggle with <code>S</code>.</p>
+            </div>
+            <div class="card">
+              <h3>オフラインで使える？ / Works offline?</h3>
+              <p class="subtle">はい。ローカルファイルの再生・補正は完全にオフラインで動作します。 / Yes — local playback and grading work fully offline.</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="footer">© RustyWorks — Kuro</div>
+  </div>
+</body>
+</html>
