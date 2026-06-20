@@ -1,68 +1,215 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Privacy Policy | RustyWorks</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plain Video Saver Privacy Policy | RustyWorks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet">
 <style>
-  :root { color-scheme: light dark; }
-  body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Sans", "Yu Gothic", sans-serif;
-    line-height: 1.7;
-    color: #1d1d1f;
-    background: #fff;
+  :root {
+    --bg: #1e1e24;
+    --bg-elev: #26262e;
+    --bg-panel: #2a2a33;
+    --fg: #e6e6ea;
+    --fg-dim: #aaaab4;
+    --fg-mute: #6a6a76;
+    --line: #3a3a46;
+    --accent: #e6a878;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'Inter', 'Noto Sans JP', sans-serif;
   }
-  .wrap { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
-  h1 { font-size: 28px; margin: 0 0 8px; }
-  h2 { font-size: 18px; margin: 36px 0 8px; }
-  p, li { font-size: 15px; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 18px 48px;
+  }
+  a { color: var(--fg); text-decoration: none; border-bottom: 1px solid var(--line); }
+  a:hover { border-bottom-color: var(--fg); }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--fg-mute);
+    letter-spacing: 0.08em;
+  }
+  .btn {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--fg-dim);
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    padding: 6px 12px;
+    border-radius: 3px;
+  }
+  .hero {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 22px;
+    margin-bottom: 16px;
+  }
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 76px 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+  .icon {
+    width: 76px;
+    height: 76px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    overflow: hidden;
+    background: #111;
+  }
+
+  .pvs-icon {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .pvs-icon-bg { fill: #f08b32; }
+  .pvs-icon-shadow { fill: rgba(17, 17, 17, 0.18); }
+  .pvs-icon-mark {
+    fill: #151515;
+    font-family: var(--mono);
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -1px;
+  }
+  .icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  h1 {
+    font-family: var(--mono);
+    font-size: clamp(24px, 5vw, 34px);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    color: var(--fg-dim);
+  }
+  .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg-mute);
+    margin-top: 10px;
+  }
+  .panel {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  h2 {
+    font-family: var(--mono);
+    font-size: 14px;
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+  }
+  p, li { color: var(--fg-dim); }
   ul { padding-left: 1.2em; }
-  .meta { color: #6e6e73; font-size: 14px; margin-top: 40px; }
-  strong { font-weight: 600; }
-  @media (prefers-color-scheme: dark) {
-    body { color: #f5f5f7; background: #161617; }
-    .meta { color: #98989d; }
+  li + li { margin-top: 6px; }
+  strong { color: var(--fg); font-weight: 600; }
+  code {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+  }
+  footer {
+    margin-top: 22px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg-mute);
+  }
+  @media (max-width: 560px) {
+    .hero-inner { grid-template-columns: 1fr; }
   }
 </style>
 </head>
-<body>
-<div class="wrap">
+<body id="plain-video-saver">
+  <div class="top">
+    <div class="brand">RUSTYWORKS / PLAIN VIDEO SAVER</div>
+    <a class="btn" href="index.html#tools">Back to Tools</a>
+  </div>
 
-  <h1>Privacy Policy</h1>
-  <p>RustyWorks ("we", "our") establishes this Privacy Policy for the software and websites we provide (the "Service").</p>
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="icon"><svg class="pvs-icon" viewBox="0 0 128 128" role="img" aria-label="Plain Video Saver"><rect class="pvs-icon-bg" x="10" y="10" width="108" height="108" rx="28"/><circle class="pvs-icon-shadow" cx="84" cy="42" r="22"/><text class="pvs-icon-mark" x="64" y="75" text-anchor="middle">PVS</text></svg></div>
+      <div>
+        <h1>Plain Video Saver Privacy Policy</h1>
+        <p class="subtitle">Plain Video Saver は、入力したURLから動画保存を行うmacOS用アプリです。</p>
+        <div class="meta">Last updated: 2026-06-20</div>
+      </div>
+    </div>
+  </section>
 
-  <h2>1. Information We Collect</h2>
-  <p>The Service does <strong>not</strong> collect the following information:</p>
-  <ul>
-    <li>Personal information such as name, address, or email address</li>
-    <li>Unity project asset data or content</li>
-    <li>Usage logs, analytics, or telemetry data</li>
-  </ul>
-  <p>UADB operates locally within the Unity Editor and does not transmit data to external servers.</p>
+  <section class="panel">
+    <h2>1. 収集する情報</h2>
+    <p>RustyWorks は、Plain Video Saver を通じて個人情報、利用統計、解析データ、広告識別子を収集しません。アプリには独自のユーザー追跡、広告SDK、解析SDKは含まれていません。</p>
+  </section>
 
-  <h2>2. Analytics and External Communication</h2>
-  <p>Our tools do not perform external communication, cloud synchronization, telemetry, or usage tracking.</p>
-  <p>Some of our applications use the network only for functions you explicitly initiate. For example, a media player application (such as <strong>Kuro</strong>) connects to the streaming URLs you enter in order to play them; any credentials you provide for an authenticated stream are stored only in your device's Keychain and are never transmitted to us. Applications that offer in-app purchases communicate with the App Store to process and restore those purchases. In all of these cases, RustyWorks does not collect any personal data and receives no data from you.</p>
-  <p>If analytics are introduced on the website in the future, this will be clearly stated separately.</p>
+  <section class="panel">
+    <h2>2. ローカルに保存される情報</h2>
+    <p>アプリは、使いやすさのために以下の情報をMac内に保存する場合があります。</p>
+    <ul>
+      <li>保存先フォルダ、画質、Cookie利用設定などのアプリ設定</li>
+      <li>ダウンロードキュー、進捗、ログなどの一時的な表示情報</li>
+      <li>ユーザーが保存した動画ファイル</li>
+    </ul>
+    <p>これらは開発者のサーバーへ送信されません。</p>
+  </section>
 
-  <h2>3. Third-Party Disclosure</h2>
-  <p>We do not provide collected information to third parties.</p>
+  <section class="panel">
+    <h2>3. URL・ブラウザ情報の扱い</h2>
+    <p>ユーザーが操作した場合のみ、アプリはSafari、Chrome、Chromium、Arc、Braveなどの現在のタブURLを取得します。ログインが必要なサイトでは、ユーザーの選択によりブラウザCookieを利用する場合があります。</p>
+    <p>Cookieは動画取得処理のためにローカルで利用され、対象サービスへのリクエストに使われます。RustyWorks がCookieを収集・保管することはありません。</p>
+  </section>
 
-  <h2>4. Security</h2>
-  <p>Aside from the user-initiated network functions described in Section 2, the Service is designed to operate entirely within the user's local environment, ensuring privacy and safety by avoiding unnecessary external data transmission.</p>
+  <section class="panel">
+    <h2>4. ネットワーク通信</h2>
+    <p>Plain Video Saver は、ユーザーが入力または取得したURL、および関連する動画配信URLへアクセスします。アプリの動作には <code>yt-dlp</code>、<code>ffmpeg</code>、<code>ffprobe</code>、<code>deno</code> が含まれる場合があります。</p>
+    <p>通信先サービスのデータ処理は、それぞれのサービスの規約・プライバシーポリシーに従います。</p>
+  </section>
 
-  <h2>5. Disclaimer</h2>
-  <p>We assume no responsibility for any damages resulting from the use of the Service.</p>
+  <section class="panel">
+    <h2>5. 利用上の注意</h2>
+    <p>Plain Video Saver は、DRMで保護されたコンテンツの解除を目的としたものではありません。ユーザーは、保存するコンテンツについて必要な権利または許可を持っている場合にのみ利用してください。</p>
+  </section>
 
-  <h2>6. Changes to This Policy</h2>
-  <p>This Privacy Policy may be updated as necessary. Changes will take effect once published on this website.</p>
+  <section class="panel">
+    <h2>6. お問い合わせ</h2>
+    <p>このプライバシーポリシーに関するお問い合わせは、<a href="mailto:info@rustyworks.jp">info@rustyworks.jp</a> までご連絡ください。</p>
+  </section>
 
-  <h2>7. Contact</h2>
-  <p>For inquiries regarding this Privacy Policy, please contact us via the official website or the contact information listed on the product page.</p>
-
-  <p class="meta">Effective Date: January 2026<br>Operator: RustyWorks</p>
-
-</div>
+  <footer>© RustyWorks — Plain Video Saver</footer>
 </body>
 </html>
