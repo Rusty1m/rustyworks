@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShelfNavigator — フォルダもドライブも、ひと目で｜RustyWorks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #1e1e24;
+    --bg-elev: #26262e;
+    --bg-panel: #2a2a33;
+    --fg: #e6e6ea;
+    --fg-dim: #aaaab4;
+    --fg-mute: #6a6a76;
+    --line: #3a3a46;
+    --accent: #e6a878;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'Inter', 'Noto Sans JP', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 18px 48px;
+  }
+  a { color: var(--fg); text-decoration: none; border-bottom: 1px solid var(--line); }
+  a:hover { border-bottom-color: var(--fg); }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--fg-mute);
+    letter-spacing: 0.08em;
+  }
+  .btn {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--fg-dim);
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    padding: 6px 12px;
+    border-radius: 3px;
+  }
+  .hero {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 22px;
+    margin-bottom: 16px;
+  }
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 76px 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+  .icon {
+    width: 76px;
+    height: 76px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    overflow: hidden;
+    background: #111;
+  }
+
+  .icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  h1 {
+    font-family: var(--mono);
+    font-size: clamp(24px, 5vw, 34px);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    color: var(--fg-dim);
+  }
+  .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg-mute);
+    margin-top: 10px;
+  }
+  .panel {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  h2 {
+    font-family: var(--mono);
+    font-size: 14px;
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+  }
+  p, li { color: var(--fg-dim); }
+  ul { padding-left: 1.2em; }
+  li + li { margin-top: 6px; }
+  strong { color: var(--fg); font-weight: 600; }
+  code {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+  }
+  footer {
+    margin-top: 22px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg-mute);
+  }
+  @media (max-width: 560px) {
+    .hero-inner { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body id="shelfnavigator">
+  <div class="top">
+    <div class="brand">RUSTYWORKS / SHELFNAVIGATOR</div>
+    <a class="btn" href="index.html#tools">Back to Tools</a>
+  </div>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="icon"><img src="assets/icons/shelfnavigator.png" alt="ShelfNavigator" onerror="this.remove()"></div>
+      <div>
+        <h1>フォルダもドライブも、ひと目で。</h1>
+        <p class="subtitle">散らばったフォルダと外付けドライブを、1つの棚にまとめる macOS 用ビューア。</p>
+        <div class="meta">macOS</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+      <h2>フォルダを越えて、ひと目で</h2>
+      <p>ファイルは、フォルダや外付けドライブ、何年分ものダウンロードに散らばっていきます。どこに何があるのか、だんだん分からなくなります。</p>
+      <p>ShelfNavigator は、登録したフォルダを索引し、<strong>そのすべてを1つの棚としてまとめて閲覧・検索</strong>できるようにします。コピーも取り込みも整理も不要。ファイルは元の場所に置いたままです。</p>
+  </section>
+  <section class="panel">
+      <h2>すべてを1つのビューで</h2>
+      <p>フォルダは何個でも登録できます（内蔵・外付け・ネットワーク）。それらが1つのグリッドに並びます。</p>
+      <p>外付けを取り外しても、その中身は一覧に残ります。どのドライブに入れたか思い出せなくても、検索で見つかります。</p>
+  </section>
+  <section class="panel">
+      <h2>大量のファイルを前提に</h2>
+      <p>カタログはローカルの索引なので、数十万件でもスクロールは滑らかで、検索は即座です。</p>
+      <p>新しいファイルや変更は、バックグラウンドで自動的に反映されます。</p>
+  </section>
+  <section class="panel">
+      <h2>素早く絞り込める検索</h2>
+      <p>普通の言葉でも、正確な指定でも検索できます。</p>
+      <ul>
+        <li><code>beach ext:png size&gt;10mb</code></li>
+        <li><code>kind:video duration&gt;60</code></li>
+        <li><code>tag:family modified:2024</code></li>
+      </ul>
+      <p>サイズ・解像度・長さ・日付はパネルから、Finder タグはサイドバーから絞り込めます。</p>
+  </section>
+  <section class="panel">
+      <h2>画像・動画・テキスト</h2>
+      <p>サムネイルの大きさを変えられるタイル表示と、フィルムストリップ付きのプレビュー表示。</p>
+      <p>動画はアプリ内で再生でき、QuickTime が開けない形式にも対応します。テキストファイルは中身を表示。RAW 写真にも対応しています。</p>
+  </section>
+  <section class="panel">
+      <h2>Finder と喧嘩しない</h2>
+      <p>Finder のタグを読み取り、サイドバーに表示します。任意のファイルを Finder で表示できます。</p>
+      <p>ファイルの種類ごとに開くアプリを指定できますが、システムの既定は変更しません。</p>
+  </section>
+  <section class="panel">
+      <h2>重複を見つける</h2>
+      <p>登録したすべてのフォルダを横断し、名前ではなく内容で比較します。</p>
+      <p>一致したファイルは、移動する直前にもう一度バイト単位で検証されます。</p>
+  </section>
+  <section class="panel">
+      <h2>既定で安全</h2>
+      <p>ShelfNavigator がファイルを消去することはありません。削除はゴミ箱への移動で、<strong>⌘Z ですぐに元へ戻せます</strong>。</p>
+      <p>通信機能を持たないため、ファイルの情報が外部へ出ることはありません。</p>
+  </section>
+  <section class="panel">
+      <h2>リンク</h2>
+      <p><a href="https://rustyworks.jp/shelfnavigator_manual.html">マニュアル</a> ／ <a href="https://rustyworks.jp/shelfnavigator_privacy.html">プライバシーポリシー</a></p>
+  </section>
+
+  <footer>© RustyWorks — ShelfNavigator</footer>
+</body>
+</html>

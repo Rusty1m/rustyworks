@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShelfNavigator Manual | RustyWorks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #1e1e24;
+    --bg-elev: #26262e;
+    --bg-panel: #2a2a33;
+    --fg: #e6e6ea;
+    --fg-dim: #aaaab4;
+    --fg-mute: #6a6a76;
+    --line: #3a3a46;
+    --accent: #e6a878;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'Inter', 'Noto Sans JP', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 18px 48px;
+  }
+  a { color: var(--fg); text-decoration: none; border-bottom: 1px solid var(--line); }
+  a:hover { border-bottom-color: var(--fg); }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--fg-mute);
+    letter-spacing: 0.08em;
+  }
+  .btn {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--fg-dim);
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    padding: 6px 12px;
+    border-radius: 3px;
+  }
+  .hero {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 22px;
+    margin-bottom: 16px;
+  }
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 76px 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+  .icon {
+    width: 76px;
+    height: 76px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    overflow: hidden;
+    background: #111;
+  }
+
+  .icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  h1 {
+    font-family: var(--mono);
+    font-size: clamp(24px, 5vw, 34px);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    color: var(--fg-dim);
+  }
+  .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg-mute);
+    margin-top: 10px;
+  }
+  .panel {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  h2 {
+    font-family: var(--mono);
+    font-size: 14px;
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+  }
+  p, li { color: var(--fg-dim); }
+  ul { padding-left: 1.2em; }
+  li + li { margin-top: 6px; }
+  strong { color: var(--fg); font-weight: 600; }
+  code {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+  }
+  footer {
+    margin-top: 22px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg-mute);
+  }
+  @media (max-width: 560px) {
+    .hero-inner { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body id="shelfnavigator">
+  <div class="top">
+    <div class="brand">RUSTYWORKS / SHELFNAVIGATOR</div>
+    <a class="btn" href="index.html#tools">Back to Tools</a>
+  </div>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="icon"><img src="assets/icons/shelfnavigator.png" alt="ShelfNavigator" onerror="this.remove()"></div>
+      <div>
+        <h1>ShelfNavigator 取説 / Manual</h1>
+        <p class="subtitle">登録したフォルダを索引して、まとめて閲覧・検索する macOS 用アプリ。</p>
+        <div class="meta">Last updated: 2026-07-25</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+      <h2>はじめに</h2>
+      <p>ShelfNavigator は、登録したフォルダを索引して、まとめて閲覧・検索するアプリです。ファイルを移動したりコピーしたりはしません。</p>
+  </section>
+  <section class="panel">
+      <h2>1. フォルダを登録する</h2>
+      <p>サイドバー下部の <strong>Add Folder…</strong>（または ⌘O）でフォルダを選びます。内蔵・外付け・ネットワークのいずれでも構いません。</p>
+      <p>登録すると索引（スキャン）が始まります。完了するとサイドバーに件数が表示されます。複数登録すると、<strong>All Files</strong> で全部が1つの一覧になります。</p>
+  </section>
+  <section class="panel">
+      <h2>2. 表示を切り替える</h2>
+      <ul>
+        <li><strong>タイル表示</strong>（T）— サムネイルを並べる。下部のスライダーで大きさを変更</li>
+        <li><strong>プレビュー表示</strong>（P）— 1つを大きく表示し、下部のフィルムストリップで移動</li>
+        <li>上部の種類フィルタで、画像・動画・テキストだけに絞り込み</li>
+      </ul>
+  </section>
+  <section class="panel">
+      <h2>3. 探す</h2>
+      <p>検索欄には、普通の言葉のほか、次のような指定が使えます。</p>
+      <ul>
+        <li><code>name:</code> <code>folder:</code> <code>ext:</code> <code>kind:</code> <code>tag:</code></li>
+        <li><code>size&gt;10mb</code> <code>w&gt;=1920</code> <code>h&lt;=1080</code> <code>duration&gt;60</code></li>
+        <li><code>modified:2024</code> <code>created:2024-03</code></li>
+        <li><code>AND</code> <code>OR</code> <code>NOT</code>（大文字）、<code>-語</code> で除外、<code>&quot;引用符&quot;</code> で語順を固定</li>
+        <li>範囲は <code>size:1mb..2mb</code> のように指定</li>
+      </ul>
+      <p>フィルタボタンからは、サイズ・解像度・長さ・日付をGUIで指定できます。Finder タグはサイドバーから選べます。</p>
+  </section>
+  <section class="panel">
+      <h2>4. 選択する</h2>
+      <ul>
+        <li>クリック — 単一選択</li>
+        <li>⇧クリック — 範囲選択</li>
+        <li>⌘クリック — 追加・解除</li>
+        <li>⌘A — すべて選択</li>
+        <li>矢印キーで移動、⇧＋矢印で選択を拡張</li>
+      </ul>
+  </section>
+  <section class="panel">
+      <h2>5. 開く・表示する</h2>
+      <ul>
+        <li><strong>Return</strong> または ダブルクリック — 既定のアプリで開く</li>
+        <li><strong>Space</strong> — 動画の再生／一時停止</li>
+        <li><strong>⌘⇧R</strong> — Finder で表示</li>
+        <li><strong>I</strong> — 情報パネルの表示切替</li>
+      </ul>
+      <p>設定の「開くアプリ」で、種類ごとに使うアプリを指定できます。macOS の既定は変更されません。</p>
+  </section>
+  <section class="panel">
+      <h2>6. 重複を探す</h2>
+      <p>ツールバーの <strong>Duplicates</strong>（⌘⇧D）で、登録した全フォルダを横断して重複を検出します。名前ではなく内容で比較します。</p>
+      <p>結果画面では、残すファイルを選んでから他をゴミ箱へ移動できます。移動の直前にもう一度バイト単位で照合するので、内容が変わっていたものは自動的に除外されます。</p>
+      <p>「Duplicate」タグを付けるだけにして、後で Finder で確認することもできます。</p>
+  </section>
+  <section class="panel">
+      <h2>7. 削除と取り消し</h2>
+      <p><strong>⌘⌫</strong> でゴミ箱へ移動します。ShelfNavigator がファイルを完全に消去することはありません。</p>
+      <p>直後であれば <strong>⌘Z</strong> で元の場所に戻せます（同じ起動中のみ）。それ以降は Finder のゴミ箱から手動で戻してください。</p>
+  </section>
+  <section class="panel">
+      <h2>8. 設定</h2>
+      <ul>
+        <li><strong>ホバーで動画を再生</strong> — タイルにカーソルを乗せたときのプレビュー再生</li>
+        <li><strong>サムネイルのメモリ</strong> — 256MB〜4GB。多いほどスクロールが速く、メモリを使う</li>
+        <li><strong>開くアプリ</strong> — 画像・動画・テキストごとに指定</li>
+      </ul>
+  </section>
+  <section class="panel">
+      <h2>困ったとき</h2>
+      <ul>
+        <li><strong>一覧に何も出ない</strong> — 上部の種類フィルタや検索条件が残っていないか確認してください。絞り込み中はその旨がバーに表示されます</li>
+        <li><strong>フォルダに「アクセス許可が必要」と出る</strong> — 外付けを繋ぎ直したか、macOS の許可が切れています。その項目から再度アクセスを許可してください</li>
+        <li><strong>サムネイルが出ない</strong> — 破損したファイルや、拡張子と中身が食い違うファイルでは出ないことがあります</li>
+      </ul>
+  </section>
+  <section class="panel">
+      <h2>リンク</h2>
+      <p><a href="https://rustyworks.jp/shelfnavigator.html">製品ページ</a> ／ <a href="https://rustyworks.jp/shelfnavigator_privacy.html">プライバシーポリシー</a></p>
+  </section>
+
+  <footer>© RustyWorks — ShelfNavigator</footer>
+</body>
+</html>

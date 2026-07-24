@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShelfNavigator Privacy Policy | RustyWorks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #1e1e24;
+    --bg-elev: #26262e;
+    --bg-panel: #2a2a33;
+    --fg: #e6e6ea;
+    --fg-dim: #aaaab4;
+    --fg-mute: #6a6a76;
+    --line: #3a3a46;
+    --accent: #e6a878;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'Inter', 'Noto Sans JP', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 18px 48px;
+  }
+  a { color: var(--fg); text-decoration: none; border-bottom: 1px solid var(--line); }
+  a:hover { border-bottom-color: var(--fg); }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--fg-mute);
+    letter-spacing: 0.08em;
+  }
+  .btn {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--fg-dim);
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    padding: 6px 12px;
+    border-radius: 3px;
+  }
+  .hero {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 22px;
+    margin-bottom: 16px;
+  }
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 76px 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+  .icon {
+    width: 76px;
+    height: 76px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    overflow: hidden;
+    background: #111;
+  }
+
+  .icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  h1 {
+    font-family: var(--mono);
+    font-size: clamp(24px, 5vw, 34px);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    color: var(--fg-dim);
+  }
+  .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg-mute);
+    margin-top: 10px;
+  }
+  .panel {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  h2 {
+    font-family: var(--mono);
+    font-size: 14px;
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+  }
+  p, li { color: var(--fg-dim); }
+  ul { padding-left: 1.2em; }
+  li + li { margin-top: 6px; }
+  strong { color: var(--fg); font-weight: 600; }
+  code {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+  }
+  footer {
+    margin-top: 22px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg-mute);
+  }
+  @media (max-width: 560px) {
+    .hero-inner { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body id="shelfnavigator">
+  <div class="top">
+    <div class="brand">RUSTYWORKS / SHELFNAVIGATOR</div>
+    <a class="btn" href="index.html#tools">Back to Tools</a>
+  </div>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="icon"><img src="assets/icons/shelfnavigator.png" alt="ShelfNavigator" onerror="this.remove()"></div>
+      <div>
+        <h1>ShelfNavigator Privacy Policy</h1>
+        <p class="subtitle">ShelfNavigator は、登録した複数のフォルダを索引し、1つの棚としてまとめて閲覧・検索する macOS 用アプリです。</p>
+        <div class="meta">Last updated: 2026-07-25</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="ja">
+      <h2>1. 収集する情報</h2>
+      <p>RustyWorks は、ShelfNavigator を通じて個人情報、利用統計、解析データ、広告識別子を収集しません。アプリには独自のユーザー追跡、広告SDK、解析SDKは含まれていません。</p>
+  </section>
+  <section class="panel">
+      <h2>2. ネットワーク通信</h2>
+      <p><strong>ShelfNavigator はネットワーク通信を行いません。</strong>アプリにはネットワーク接続の権限そのものが与えられておらず、外部と通信することができません。</p>
+      <p>したがって、ファイル名・フォルダ構成・サムネイル・利用状況などが外部へ送信されることはありません。更新確認やテレメトリの送信もありません。</p>
+  </section>
+  <section class="panel">
+      <h2>3. ローカルに保存される情報</h2>
+      <p>アプリは、動作のために以下の情報をMac内にのみ保存します。</p>
+      <ul>
+        <li>登録したフォルダのファイル一覧（名前・パス・サイズ・日時・寸法・長さなど）を収めたカタログ（索引）</li>
+        <li>サムネイル画像のキャッシュ</li>
+        <li>登録したフォルダへ再びアクセスするためのセキュリティスコープ付きブックマーク</li>
+        <li>表示モード、並び順、サムネイルの大きさなどのアプリ設定</li>
+      </ul>
+      <p>これらはすべてお使いのMac内に留まり、開発者のサーバーへ送信されません。</p>
+  </section>
+  <section class="panel">
+      <h2>4. ファイルとフォルダへのアクセス</h2>
+      <p>ShelfNavigator は App Sandbox 上で動作し、<strong>ユーザーが明示的に登録したフォルダにのみ</strong>アクセスします。</p>
+      <p>登録したフォルダは索引され、変更があれば自動的に反映されます。ファイルの内容が外部へ送信されることはありません。</p>
+      <p>Finder のタグを読み取り、サイドバーに表示します。重複ファイルの検出時には、ユーザーの操作に応じて対象ファイルに「Duplicate」タグを付与する場合があります。</p>
+  </section>
+  <section class="panel">
+      <h2>5. 写真ライブラリ</h2>
+      <p>ユーザーが「Photos」を選択した場合にのみ、ShelfNavigator は macOS の写真ライブラリへアクセスし、写真とビデオを表示します。アクセスの可否は macOS の許可ダイアログで制御されます。</p>
+      <p>写真ライブラリの内容が外部へ送信されることはありません。</p>
+  </section>
+  <section class="panel">
+      <h2>6. ファイルの削除について</h2>
+      <p>ShelfNavigator がファイルを完全に消去することはありません。削除操作は macOS のゴミ箱への移動であり、⌘Z ですぐに元へ戻すことができます。</p>
+      <p>最終的な消去は、ユーザーが Finder でゴミ箱を空にしたときにのみ行われます。</p>
+  </section>
+  <section class="panel">
+      <h2>7. お問い合わせ</h2>
+      <p>このプライバシーポリシーに関するお問い合わせは、<a href="mailto:info@rustyworks.jp">info@rustyworks.jp</a> までご連絡ください。</p>
+  </section>
+  <section class="panel" id="en">
+      <h2>English Privacy Policy</h2>
+      <p>ShelfNavigator is a macOS app that indexes the folders you register and browses them as one searchable shelf.</p>
+  </section>
+  <section class="panel">
+      <h2>1. Information We Collect</h2>
+      <p>RustyWorks does not collect personal information, usage statistics, analytics data, advertising identifiers, or tracking data through ShelfNavigator. The app contains no user tracking, advertising SDK, or analytics SDK.</p>
+  </section>
+  <section class="panel">
+      <h2>2. Network Communication</h2>
+      <p><strong>ShelfNavigator does not communicate over the network.</strong> The app is not granted the network client entitlement at all, so it is unable to connect to anything outside your Mac.</p>
+      <p>No file names, folder structures, thumbnails, or usage data ever leave your machine. There is no update check and no telemetry.</p>
+  </section>
+  <section class="panel">
+      <h2>3. Information Stored Locally</h2>
+      <p>The app stores the following on your Mac only, in order to work.</p>
+      <ul>
+        <li>A catalogue (index) of the files in the folders you register — names, paths, sizes, dates, dimensions, durations and similar</li>
+        <li>A cache of thumbnail images</li>
+        <li>Security-scoped bookmarks so registered folders can be reopened later</li>
+        <li>App settings such as view mode, sort order, and thumbnail size</li>
+      </ul>
+      <p>All of it stays on your Mac and is never sent to RustyWorks servers.</p>
+  </section>
+  <section class="panel">
+      <h2>4. File and Folder Access</h2>
+      <p>ShelfNavigator runs in the App Sandbox and accesses <strong>only the folders you explicitly register</strong>.</p>
+      <p>Registered folders are indexed and kept up to date automatically. File contents are never transmitted.</p>
+      <p>Finder tags are read and shown in the sidebar. When reviewing duplicates, the app may add a "Duplicate" tag to files you select.</p>
+  </section>
+  <section class="panel">
+      <h2>5. Photos Library</h2>
+      <p>Only when you choose "Photos" does ShelfNavigator access your macOS Photos library to display its photos and videos. Access is governed by the standard macOS permission prompt.</p>
+      <p>Nothing from your Photos library is transmitted anywhere.</p>
+  </section>
+  <section class="panel">
+      <h2>6. Deleting Files</h2>
+      <p>ShelfNavigator never erases a file. Deleting moves it to the macOS Trash, and ⌘Z puts it straight back.</p>
+      <p>Permanent removal happens only when you empty the Trash yourself in the Finder.</p>
+  </section>
+  <section class="panel">
+      <h2>7. Contact</h2>
+      <p>For questions about this privacy policy, contact <a href="mailto:info@rustyworks.jp">info@rustyworks.jp</a>.</p>
+  </section>
+
+  <footer>© RustyWorks — ShelfNavigator</footer>
+</body>
+</html>

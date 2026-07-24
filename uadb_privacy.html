@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UADB Privacy Policy | RustyWorks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #1e1e24;
+    --bg-elev: #26262e;
+    --bg-panel: #2a2a33;
+    --fg: #e6e6ea;
+    --fg-dim: #aaaab4;
+    --fg-mute: #6a6a76;
+    --line: #3a3a46;
+    --accent: #e6a878;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'Inter', 'Noto Sans JP', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 18px 48px;
+  }
+  a { color: var(--fg); text-decoration: none; border-bottom: 1px solid var(--line); }
+  a:hover { border-bottom-color: var(--fg); }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--fg-mute);
+    letter-spacing: 0.08em;
+  }
+  .btn {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--fg-dim);
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    padding: 6px 12px;
+    border-radius: 3px;
+  }
+  .hero {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 22px;
+    margin-bottom: 16px;
+  }
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 76px 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+  .icon {
+    width: 76px;
+    height: 76px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    overflow: hidden;
+    background: #111;
+  }
+
+  .icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  h1 {
+    font-family: var(--mono);
+    font-size: clamp(24px, 5vw, 34px);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    color: var(--fg-dim);
+  }
+  .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg-mute);
+    margin-top: 10px;
+  }
+  .panel {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  h2 {
+    font-family: var(--mono);
+    font-size: 14px;
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+  }
+  p, li { color: var(--fg-dim); }
+  ul { padding-left: 1.2em; }
+  li + li { margin-top: 6px; }
+  strong { color: var(--fg); font-weight: 600; }
+  code {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+  }
+  footer {
+    margin-top: 22px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg-mute);
+  }
+  @media (max-width: 560px) {
+    .hero-inner { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body id="uadb">
+  <div class="top">
+    <div class="brand">RUSTYWORKS / UADB</div>
+    <a class="btn" href="index.html#tools">Back to Tools</a>
+  </div>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="icon"><img src="assets/icons/uadb.png" alt="UADB"></div>
+      <div>
+        <h1>UADB Privacy Policy</h1>
+        <p class="subtitle">UADB（Universal Asset Database）は、プロジェクトアセットの検索・整理・タグ管理を行う Unity エディタ拡張です。</p>
+        <div class="meta">Last updated: 2026-07-25</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="ja">
+      <h2>1. 収集する情報</h2>
+      <p>RustyWorks は、UADB を通じて個人情報、利用統計、解析データ、広告識別子を収集しません。UADB には、ユーザー追跡、広告SDK、解析SDK、テレメトリ送信の仕組みは一切含まれていません。</p>
+  </section>
+  <section class="panel">
+      <h2>2. ローカルに保存される情報</h2>
+      <p>UADB は Unity エディタ拡張として動作し、以下の情報をお使いの環境内にのみ保持します。</p>
+      <ul>
+        <li>アセット一覧・検索のための索引情報</li>
+        <li>ユーザーが付与したタグ</li>
+        <li>並び順、表示列、選択状態などの表示設定</li>
+      </ul>
+      <p>これらはお使いの Mac／PC およびプロジェクト内に留まり、開発者のサーバーへ送信されません。</p>
+  </section>
+  <section class="panel">
+      <h2>3. プロジェクトファイルの扱い</h2>
+      <p>UADB は、アセットの一覧表示・検索・タグ管理のためにプロジェクト内のアセット情報を読み取ります。</p>
+      <p>非破壊的な運用を前提としており、ユーザーが明示的に操作しない限り、元のファイルを移動・改名・削除することはありません。</p>
+  </section>
+  <section class="panel">
+      <h2>4. ネットワーク通信</h2>
+      <p>UADB はネットワーク通信を行いません。ツール内に通信処理は実装されていません。</p>
+      <p>したがって、プロジェクトの内容やアセット情報が外部へ送信されることはありません。</p>
+  </section>
+  <section class="panel">
+      <h2>5. お問い合わせ</h2>
+      <p>このプライバシーポリシーに関するお問い合わせは、<a href="mailto:info@rustyworks.jp">info@rustyworks.jp</a> までご連絡ください。</p>
+  </section>
+  <section class="panel" id="en">
+      <h2>English Privacy Policy</h2>
+      <p>UADB (Universal Asset Database) is a Unity Editor extension for browsing, searching, and tagging project assets.</p>
+  </section>
+  <section class="panel">
+      <h2>1. Information We Collect</h2>
+      <p>RustyWorks does not collect personal information, usage statistics, analytics data, advertising identifiers, or tracking data through UADB. UADB contains no user tracking, advertising SDK, analytics SDK, or telemetry of any kind.</p>
+  </section>
+  <section class="panel">
+      <h2>2. Information Stored Locally</h2>
+      <p>UADB runs as a Unity Editor extension and keeps the following only within your own environment.</p>
+      <ul>
+        <li>Index data used to list and search assets</li>
+        <li>Tags you assign</li>
+        <li>View preferences such as sort order, visible columns, and selection state</li>
+      </ul>
+      <p>This data stays on your machine and inside your project. It is not sent to RustyWorks servers.</p>
+  </section>
+  <section class="panel">
+      <h2>3. Project Files</h2>
+      <p>UADB reads asset information from your project in order to list, search, and tag assets.</p>
+      <p>It is designed for a non-destructive workflow and does not move, rename, or delete your files unless you explicitly ask it to.</p>
+  </section>
+  <section class="panel">
+      <h2>4. Network Communication</h2>
+      <p>UADB does not communicate over the network. No networking code is implemented in the tool.</p>
+      <p>Consequently, no project contents or asset information leave your machine.</p>
+  </section>
+  <section class="panel">
+      <h2>5. Contact</h2>
+      <p>For questions about this privacy policy, contact <a href="mailto:info@rustyworks.jp">info@rustyworks.jp</a>.</p>
+  </section>
+
+
+  <footer>© RustyWorks — UADB</footer>
+</body>
+</html>
