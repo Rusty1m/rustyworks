@@ -1,244 +1,519 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ShelfNavigator Manual | RustyWorks</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #1e1e24;
-    --bg-elev: #26262e;
-    --bg-panel: #2a2a33;
-    --fg: #e6e6ea;
-    --fg-dim: #aaaab4;
-    --fg-mute: #6a6a76;
-    --line: #3a3a46;
-    --accent: #e6a878;
-    --mono: 'JetBrains Mono', ui-monospace, monospace;
-    --sans: 'Inter', 'Noto Sans JP', sans-serif;
-  }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ShelfNavigator Manual</title>
+  <style>
+    :root {
+      --bg: #0d0e12;
+      --panel: #16171d;
+      --panel-2: #1c1d25;
+      --line: #2c2e3a;
+      --text: #eef2f7;
+      --muted: #aeb4c2;
+      --accent: #ff8f6b;
+      --accent-2: #ffbe63;
+      --ok: #9ad67f;
+      --max: 1120px;
+    }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body {
-    background: var(--bg);
-    color: var(--fg);
-    font-family: var(--sans);
-    font-size: 14px;
-    line-height: 1.8;
-    -webkit-font-smoothing: antialiased;
-  }
-  body {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 24px 18px 48px;
-  }
-  a { color: var(--fg); text-decoration: none; border-bottom: 1px solid var(--line); }
-  a:hover { border-bottom-color: var(--fg); }
-  .top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--line);
-    margin-bottom: 18px;
-    flex-wrap: wrap;
-  }
-  .brand {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--fg-mute);
-    letter-spacing: 0.08em;
-  }
-  .btn {
-    font-family: var(--mono);
-    font-size: 11.5px;
-    color: var(--fg-dim);
-    background: var(--bg-elev);
-    border: 1px solid var(--line);
-    padding: 6px 12px;
-    border-radius: 3px;
-  }
-  .hero {
-    background: var(--bg-elev);
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    padding: 22px;
-    margin-bottom: 16px;
-  }
-  .hero-inner {
-    display: grid;
-    grid-template-columns: 76px 1fr;
-    gap: 16px;
-    align-items: center;
-  }
-  .icon {
-    width: 76px;
-    height: 76px;
-    border-radius: 14px;
-    border: 1px solid var(--line);
-    overflow: hidden;
-    background: #111;
-  }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
-  .icon img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  h1 {
-    font-family: var(--mono);
-    font-size: clamp(24px, 5vw, 34px);
-    line-height: 1.15;
-    letter-spacing: -0.03em;
-    margin-bottom: 6px;
-  }
-  .subtitle {
-    color: var(--fg-dim);
-  }
-  .meta {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--fg-mute);
-    margin-top: 10px;
-  }
-  .panel {
-    background: var(--bg-elev);
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    padding: 18px 20px;
-    margin-bottom: 14px;
-  }
-  h2 {
-    font-family: var(--mono);
-    font-size: 14px;
-    margin-bottom: 8px;
-    letter-spacing: 0.05em;
-  }
-  p, li { color: var(--fg-dim); }
-  ul { padding-left: 1.2em; }
-  li + li { margin-top: 6px; }
-  strong { color: var(--fg); font-weight: 600; }
-  code {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--accent);
-  }
-  footer {
-    margin-top: 22px;
-    padding-top: 14px;
-    border-top: 1px solid var(--line);
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--fg-mute);
-  }
-  @media (max-width: 560px) {
-    .hero-inner { grid-template-columns: 1fr; }
-  }
-</style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+        Arial, "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(255,143,107,0.10), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(255,190,99,0.07), transparent 22%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 24px; }
+
+    .hero {
+      margin-top: 12px;
+      padding: 32px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+    .hero-top { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+    .app-icon {
+      width: 72px; height: 72px; border-radius: 16px; flex-shrink: 0;
+      border: 1px solid var(--line); object-fit: cover;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,143,107,0.14);
+      color: var(--accent);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    h1, h2, h3 { margin: 0 0 12px 0; line-height: 1.2; }
+    h1 { font-size: clamp(34px, 6vw, 56px); letter-spacing: -0.03em; }
+    h2 { font-size: 28px; margin-top: 6px; }
+    h3 { font-size: 20px; margin-top: 6px; }
+
+    .hero p { margin: 10px 0 0 0; color: var(--muted); max-width: 880px; font-size: 16px; }
+
+    .hero-actions { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 12px; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 14px; border-radius: 12px;
+      border: 1px solid var(--line); background: var(--panel);
+      color: var(--text); font-weight: 600;
+    }
+    .btn.primary {
+      border-color: rgba(255,143,107,0.4);
+      background: rgba(255,143,107,0.12);
+      color: #ffd9cc;
+    }
+
+    .layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 24px; margin-top: 24px; }
+
+    .toc {
+      position: sticky; top: 24px; align-self: start;
+      padding: 18px; border: 1px solid var(--line); border-radius: 16px;
+      background: rgba(22,23,29,0.84); backdrop-filter: blur(8px);
+    }
+    .toc h2 { font-size: 16px; margin-bottom: 10px; }
+    .toc ol { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+    .toc li + li { margin-top: 8px; }
+
+    .content { min-width: 0; }
+
+    section {
+      margin-bottom: 22px; padding: 26px;
+      border: 1px solid var(--line); border-radius: 18px;
+      background: rgba(22,23,29,0.88);
+    }
+    section > p:first-of-type { margin-top: 0; }
+
+    .bilingual { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 14px; }
+    .lang { padding: 16px; border-radius: 14px; background: var(--panel-2); border: 1px solid var(--line); }
+    .lang h4 { margin: 0 0 10px 0; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+    .lang p, .lang li { color: var(--text); font-size: 15px; }
+    .lang .subtle { color: var(--muted); }
+
+    ul, ol { margin: 10px 0 0 0; padding-left: 20px; }
+    li + li { margin-top: 7px; }
+
+    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+    .card { padding: 16px; border-radius: 14px; background: var(--panel-2); border: 1px solid var(--line); }
+    .card h3 { font-size: 18px; }
+
+    .keys { list-style: none; padding-left: 0; margin-top: 12px; }
+    .keys li { display: flex; gap: 14px; align-items: baseline; padding: 7px 0; border-bottom: 1px solid rgba(44,46,58,0.6); }
+    .keys li:last-child { border-bottom: 0; }
+    .keys kbd {
+      flex: 0 0 116px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 13px; color: var(--accent-2);
+      background: rgba(255,190,99,0.10);
+      border: 1px solid var(--line); border-radius: 8px;
+      padding: 3px 8px; text-align: center;
+    }
+    .keys span { color: var(--muted); font-size: 15px; }
+    .keys span b { color: var(--text); font-weight: 600; }
+
+    .note {
+      margin-top: 14px; padding: 14px 16px;
+      border-left: 3px solid var(--accent-2);
+      background: rgba(255,190,99,0.08); color: #f6e4c5;
+      border-radius: 0 12px 12px 0;
+    }
+    .note.ok { border-left-color: var(--ok); background: rgba(154,214,127,0.08); color: #d6efca; }
+
+    code { padding: 2px 6px; border-radius: 8px; background: rgba(255,255,255,0.08); font-size: 0.95em; }
+
+    .footer { margin: 18px 0 40px 0; text-align: center; color: var(--muted); font-size: 14px; }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .toc { position: static; }
+    }
+    @media (max-width: 720px) {
+      .wrap { padding: 16px; }
+      .hero { padding: 24px; }
+      section { padding: 20px; }
+      .bilingual, .cards { grid-template-columns: 1fr; }
+      .keys li { flex-direction: column; gap: 4px; }
+      .keys kbd { flex: none; align-self: flex-start; }
+    }
+  </style>
 </head>
-<body id="shelfnavigator">
-  <div class="top">
-    <div class="brand">RUSTYWORKS / SHELFNAVIGATOR</div>
-    <a class="btn" href="index.html#tools">Back to Tools</a>
-  </div>
-
-  <section class="hero">
-    <div class="hero-inner">
-      <div class="icon"><img src="assets/icons/shelfnavigator.png" alt="ShelfNavigator" onerror="this.remove()"></div>
-      <div>
-        <h1>ShelfNavigator 取説 / Manual</h1>
-        <p class="subtitle">登録したフォルダを索引して、まとめて閲覧・検索する macOS 用アプリ。</p>
-        <div class="meta">Last updated: 2026-07-25</div>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="hero-top">
+        <img class="app-icon" src="assets/icons/shelfnavigator.png" alt="ShelfNavigator" onerror="this.style.display='none'">
+        <div>
+          <div class="eyebrow">ShelfNavigator Manual</div>
+          <h1>ShelfNavigator 取説 / Manual</h1>
+        </div>
       </div>
+      <p>
+        ShelfNavigator は、登録したフォルダを索引して、まとめて閲覧・検索する macOS 用アプリです。ドライブをまたいだ写真・動画・テキストが、フォルダの区切りなく1つの一覧になります。
+        <br>
+        ShelfNavigator is a macOS app that indexes the folders you register and browses them as one. Photos, videos and text spread across several drives appear in a single grid, with the folder boundaries out of the way.
+      </p>
+      <div class="hero-actions">
+        <a class="btn primary" href="shelfnavigator.html">製品ページ / Product Page</a>
+        <a class="btn" href="#quick-start">クイックスタート / Quick Start</a>
+        <a class="btn" href="#window-overview">画面概要 / Window Overview</a>
+        <a class="btn" href="#search">探す / Search</a>
+        <a class="btn" href="#duplicates">重複を探す / Duplicates</a>
+        <a class="btn" href="#shortcuts">ショートカット / Shortcuts</a>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="toc">
+        <h2>目次 / Contents</h2>
+        <ol>
+          <li><a href="#overview">概要 / Overview</a></li>
+          <li><a href="#environment">動作環境 / Environment</a></li>
+          <li><a href="#quick-start">クイックスタート / Quick Start</a></li>
+          <li><a href="#window-overview">画面概要 / Window Overview</a></li>
+          <li><a href="#search">探す / Search</a></li>
+          <li><a href="#selection">選択と表示 / Selecting &amp; Opening</a></li>
+          <li><a href="#duplicates">重複を探す / Duplicates</a></li>
+          <li><a href="#trash">削除と取り消し / Trash &amp; Undo</a></li>
+          <li><a href="#settings">設定 / Settings</a></li>
+          <li><a href="#shortcuts">ショートカット / Shortcuts</a></li>
+          <li><a href="#troubleshooting">困ったとき / Troubleshooting</a></li>
+          <li><a href="#links">リンク / Links</a></li>
+        </ol>
+      </aside>
+
+      <main class="content">
+
+        <section id="overview">
+          <h2>概要 / Overview</h2>
+          <div class="bilingual">
+            <div class="lang">
+              <h4>Japanese</h4>
+              <p>ShelfNavigator は、登録したフォルダを索引して、まとめて閲覧・検索するアプリです。</p>
+              <p class="subtle">ファイルを移動したりコピーしたりはしません。読み取って一覧にするだけで、元のフォルダ構成はそのまま残ります。</p>
+            </div>
+            <div class="lang">
+              <h4>English</h4>
+              <p>ShelfNavigator indexes the folders you register so you can browse and search them together.</p>
+              <p class="subtle">It never moves or copies your files. It reads them and lists them; your folder structure is left exactly as it was.</p>
+            </div>
+          </div>
+          <div class="note ok">
+            フォルダは入れ子で登録できます。ドライブ全体と、その中のプロジェクトフォルダを両方登録すれば、どちらもそれぞれの中身を表示します。<br>
+            Registered folders may nest. Add a whole drive and a project folder inside it, and each lists its own contents.
+          </div>
+        </section>
+
+        <section id="environment">
+          <h2>動作環境 / Environment</h2>
+          <div class="bilingual">
+            <div class="lang">
+              <h4>日本語</h4>
+              <ul>
+                <li><code>macOS 26</code> 以降</li>
+                <li><strong>Apple Silicon</strong>（M1 以降）専用</li>
+                <li>Mac App Store で配布</li>
+                <li>対象：画像・動画・テキストファイル</li>
+                <li>内蔵・外付け・ネットワークのフォルダに対応</li>
+              </ul>
+            </div>
+            <div class="lang">
+              <h4>English</h4>
+              <ul>
+                <li><code>macOS 26</code> or later</li>
+                <li><strong>Apple Silicon</strong> only (M1+)</li>
+                <li>Distributed on the Mac App Store</li>
+                <li>Handles images, video and text files</li>
+                <li>Works with internal, external and network folders</li>
+              </ul>
+            </div>
+          </div>
+          <div class="note">
+            ネットワークに接続しません。索引はこの Mac の中だけに保存され、外部へ送信されることはありません。<br>
+            The app has no network access. The index stays on this Mac and is never sent anywhere.
+          </div>
+        </section>
+
+        <section id="quick-start">
+          <h2>クイックスタート / Quick Start</h2>
+          <div class="bilingual">
+            <div class="lang">
+              <h4>日本語</h4>
+              <ol>
+                <li>サイドバー下部の <strong>Add Folder…</strong>（<code>⌘O</code>）でフォルダを選ぶ</li>
+                <li>索引（スキャン）が自動で始まる</li>
+                <li>完了するとサイドバーに件数が表示される</li>
+                <li>フォルダをもう1つ追加すると、<strong>All Files</strong> で全部が1つの一覧になる</li>
+              </ol>
+            </div>
+            <div class="lang">
+              <h4>English</h4>
+              <ol>
+                <li>Choose a folder with <strong>Add Folder…</strong> (<code>⌘O</code>) at the bottom of the sidebar</li>
+                <li>Indexing starts on its own</li>
+                <li>The sidebar shows a count when it finishes</li>
+                <li>Add a second folder and <strong>All Files</strong> lists everything together</li>
+              </ol>
+            </div>
+          </div>
+          <div class="note">
+            大きなドライブの初回スキャンには時間がかかります。進行中も一覧は使えて、見つかった順に増えていきます。<br>
+            The first scan of a large drive takes a while. You can keep using the grid while it runs; results fill in as they are found.
+          </div>
+        </section>
+
+        <section id="window-overview">
+          <h2>画面概要 / Window Overview</h2>
+          <div class="cards">
+            <div class="card">
+              <h3>サイドバー / Sidebar</h3>
+              <p class="subtle">登録したフォルダと Finder タグの一覧。件数付き。<br>
+                Registered folders and Finder tags, with counts.</p>
+            </div>
+            <div class="card">
+              <h3>グリッド / Grid</h3>
+              <p class="subtle">サムネイルの一覧。下部のスライダーで大きさを変更。<br>
+                The thumbnail grid. The slider at the bottom changes tile size.</p>
+            </div>
+            <div class="card">
+              <h3>情報パネル / Info Pane</h3>
+              <p class="subtle">選択中のファイルの寸法・長さ・場所・タグ。<code>I</code> で表示切替。<br>
+                Dimensions, duration, location and tags for the selected file. <code>I</code> toggles it.</p>
+            </div>
+            <div class="card">
+              <h3>検索とフィルタ / Search &amp; Filters</h3>
+              <p class="subtle">上部の検索欄、種類フィルタ、並び替え。<br>
+                The search field, kind filter and sort control along the top.</p>
+            </div>
+          </div>
+          <div class="bilingual">
+            <div class="lang">
+              <h4>表示モード / View Modes</h4>
+              <ul>
+                <li><strong>タイル表示</strong>（<code>T</code> / <code>⌘1</code>）— サムネイルを並べる</li>
+                <li><strong>プレビュー表示</strong>（<code>P</code> / <code>⌘2</code>）— 1つを大きく表示し、下部のフィルムストリップで移動</li>
+              </ul>
+            </div>
+            <div class="lang">
+              <h4>View Modes</h4>
+              <ul>
+                <li><strong>Tile</strong> (<code>T</code> / <code>⌘1</code>) — a grid of thumbnails</li>
+                <li><strong>Preview</strong> (<code>P</code> / <code>⌘2</code>) — one file large, with a filmstrip below to move through them</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="search">
+          <h2>探す / Search</h2>
+          <div class="bilingual">
+            <div class="lang">
+              <h4>日本語</h4>
+              <p>検索欄には、普通の言葉のほか、次の指定が使えます。</p>
+              <ul>
+                <li><code>name:</code> <code>folder:</code> <code>ext:</code> <code>kind:</code> <code>tag:</code></li>
+                <li><code>size&gt;10mb</code> <code>w&gt;=1920</code> <code>h&lt;=1080</code> <code>duration&gt;60</code></li>
+                <li><code>modified:2024</code> <code>created:2024-03</code></li>
+                <li><code>AND</code> <code>OR</code> <code>NOT</code>（大文字）</li>
+                <li><code>-語</code> で除外、<code>"引用符"</code> で語順を固定</li>
+                <li>範囲は <code>size:1mb..2mb</code> のように指定</li>
+              </ul>
+            </div>
+            <div class="lang">
+              <h4>English</h4>
+              <p>The search field takes plain words, and also:</p>
+              <ul>
+                <li><code>name:</code> <code>folder:</code> <code>ext:</code> <code>kind:</code> <code>tag:</code></li>
+                <li><code>size&gt;10mb</code> <code>w&gt;=1920</code> <code>h&lt;=1080</code> <code>duration&gt;60</code></li>
+                <li><code>modified:2024</code> <code>created:2024-03</code></li>
+                <li><code>AND</code> <code>OR</code> <code>NOT</code> (uppercase)</li>
+                <li><code>-word</code> excludes; <code>"quotes"</code> keep words in order</li>
+                <li>Ranges are written <code>size:1mb..2mb</code></li>
+              </ul>
+            </div>
+          </div>
+          <p style="margin-top:16px">
+            フィルタボタンからは、サイズ・解像度・長さ・日付を画面上で指定できます。Finder タグはサイドバーから選べます。<br>
+            <span style="color:var(--muted)">The filter button sets size, resolution, duration and dates without typing. Finder tags are picked from the sidebar.</span>
+          </p>
+        </section>
+
+        <section id="selection">
+          <h2>選択と表示 / Selecting &amp; Opening</h2>
+          <div class="bilingual">
+            <div class="lang">
+              <h4>選択 / Selecting</h4>
+              <ul>
+                <li>クリック — 単一選択 / click to select one</li>
+                <li><code>⇧</code> クリック — 範囲選択 / extend the range</li>
+                <li><code>⌘</code> クリック — 追加・解除 / add or remove one</li>
+                <li><code>⌘A</code> — すべて選択 / select all</li>
+                <li>矢印キーで移動、<code>⇧</code>＋矢印で拡張 / arrows move, shift-arrows extend</li>
+              </ul>
+            </div>
+            <div class="lang">
+              <h4>開く / Opening</h4>
+              <ul>
+                <li><code>Return</code> / ダブルクリック — 既定のアプリで開く / open in the default app</li>
+                <li><code>Space</code> — 動画の再生・一時停止 / play or pause video</li>
+                <li><code>F</code> または <code>⌘⇧R</code> — Finder で表示 / show in Finder</li>
+                <li><code>I</code> または <code>⌘⌥I</code> — 情報パネル / toggle the info pane</li>
+              </ul>
+            </div>
+          </div>
+          <div class="note">
+            設定の「開くアプリ」で、種類ごとに使うアプリを指定できます。macOS の既定は変更されません。<br>
+            Settings → Open With picks an app per file kind. Your macOS defaults are left unchanged.
+          </div>
+        </section>
+
+        <section id="duplicates">
+          <h2>重複を探す / Finding Duplicates</h2>
+          <div class="bilingual">
+            <div class="lang">
+              <h4>日本語</h4>
+              <p>ツールバーの <strong>Duplicates</strong>（<code>⌘⇧D</code>）で、登録した全フォルダを横断して重複を検出します。名前ではなく<strong>内容</strong>で比較します。</p>
+              <p>結果画面では、残すファイルを選んでから他をゴミ箱へ移動できます。移動の直前にもう一度バイト単位で照合するので、内容が変わっていたものは自動的に除外されます。</p>
+              <p class="subtle">「Duplicate」タグを付けるだけにして、後で Finder で確認することもできます。</p>
+            </div>
+            <div class="lang">
+              <h4>English</h4>
+              <p><strong>Duplicates</strong> in the toolbar (<code>⌘⇧D</code>) looks across every registered folder. It compares file <strong>contents</strong>, not names.</p>
+              <p>In the results you choose which copy to keep and send the rest to the Trash. Each file is compared byte for byte once more immediately before it is moved, so anything that changed in the meantime is dropped from the operation.</p>
+              <p class="subtle">You can also just apply the “Duplicate” tag and review them in Finder later.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="trash">
+          <h2>削除と取り消し / Trash &amp; Undo</h2>
+          <div class="bilingual">
+            <div class="lang">
+              <h4>日本語</h4>
+              <p><code>⌘⌫</code> でゴミ箱へ移動します。<strong>ShelfNavigator がファイルを完全に消去することはありません。</strong></p>
+              <p>直後であれば <code>⌘Z</code> で元の場所に戻せます（同じ起動中のみ）。それ以降は Finder のゴミ箱から手動で戻してください。</p>
+            </div>
+            <div class="lang">
+              <h4>English</h4>
+              <p><code>⌘⌫</code> moves files to the Trash. <strong>ShelfNavigator never deletes anything permanently.</strong></p>
+              <p><code>⌘Z</code> puts them back where they were, for as long as the app stays open. After that, restore them from the Finder Trash.</p>
+            </div>
+          </div>
+          <div class="note">
+            別のボリュームのファイルをゴミ箱へ移すと、そのボリューム上のゴミ箱に入ります。容量が足りない場合は、移動するファイルを選び直すよう確認が出ます。<br>
+            Files on another volume go to that volume’s Trash. If there is not enough room, the app asks you to choose which files to move.
+          </div>
+        </section>
+
+        <section id="settings">
+          <h2>設定 / Settings</h2>
+          <div class="cards">
+            <div class="card">
+              <h3>タイル / Tiles</h3>
+              <p class="subtle">ホバーで動画を再生するかどうか。<br>
+                Whether video previews start when you hover a tile.</p>
+            </div>
+            <div class="card">
+              <h3>パフォーマンス / Performance</h3>
+              <p class="subtle">サムネイルのメモリを 256MB〜4GB から選択。多いほどスクロールが滑らかで、メモリを使います。<br>
+                Thumbnail memory, from 256 MB to 4 GB. More means smoother scrolling and a larger footprint.</p>
+            </div>
+            <div class="card">
+              <h3>サムネイルのキャッシュ / Thumbnail Cache</h3>
+              <p class="subtle">ディスク使用量の表示と消去。フォルダの登録を解除すると、そのサムネイルは自動で削除されます。<br>
+                Shows what is on disk and clears it. Unregistering a folder discards its thumbnails automatically.</p>
+            </div>
+            <div class="card">
+              <h3>開くアプリ / Open With</h3>
+              <p class="subtle">画像・動画・テキストごとに使うアプリを指定。<br>
+                Pick an app per file kind.</p>
+            </div>
+          </div>
+          <p style="margin-top:16px">
+            「About」からは、同梱しているオープンソースライブラリのライセンスを確認できます。<br>
+            <span style="color:var(--muted)">About lists the licences of the open-source libraries the app bundles.</span>
+          </p>
+        </section>
+
+        <section id="shortcuts">
+          <h2>ショートカット / Keyboard Shortcuts</h2>
+          <ul class="keys">
+            <li><kbd>⌘O</kbd><span><b>フォルダを追加</b> / Add Folder</span></li>
+            <li><kbd>⌘R</kbd><span><b>全フォルダを再スキャン</b> / Rescan All Folders</span></li>
+            <li><kbd>T</kbd> <span><b>タイル表示</b> / Tile Mode（<code>⌘1</code>）</span></li>
+            <li><kbd>P</kbd> <span><b>プレビュー表示</b> / Preview Mode（<code>⌘2</code>）</span></li>
+            <li><kbd>I</kbd> <span><b>情報パネル</b> / Toggle Info Pane（<code>⌘⌥I</code>）</span></li>
+            <li><kbd>F</kbd> <span><b>Finder で表示</b> / Show in Finder（<code>⌘⇧R</code>）</span></li>
+            <li><kbd>Return</kbd><span><b>開く</b> / Open（<code>⌘↓</code>）</span></li>
+            <li><kbd>Space</kbd><span><b>動画の再生・一時停止</b> / Play or Pause</span></li>
+            <li><kbd>⌘A</kbd><span><b>すべて選択</b> / Select All</span></li>
+            <li><kbd>⌘⇧D</kbd><span><b>重複を探す</b> / Find Duplicates</span></li>
+            <li><kbd>⌘⌫</kbd><span><b>ゴミ箱へ移動</b> / Move to Trash</span></li>
+            <li><kbd>⌘Z</kbd><span><b>ゴミ箱への移動を取り消す</b> / Undo Move to Trash</span></li>
+          </ul>
+        </section>
+
+        <section id="troubleshooting">
+          <h2>困ったとき / Troubleshooting</h2>
+          <div class="bilingual">
+            <div class="lang">
+              <h4>日本語</h4>
+              <ul>
+                <li><strong>一覧に何も出ない</strong> — 種類フィルタや検索条件が残っていないか確認してください。絞り込み中はその旨がバーに表示されます</li>
+                <li><strong>「アクセス許可が必要」と出る</strong> — 外付けを繋ぎ直したか、macOS の許可が切れています。その項目から再度許可してください</li>
+                <li><strong>サムネイルが出ない</strong> — 破損したファイルや、拡張子と中身が食い違うファイルでは出ないことがあります</li>
+                <li><strong>件数が想定と違う</strong> — フォルダを入れ子で登録している場合、内側のファイルは外側にも含まれるため、合計は一致しません</li>
+              </ul>
+            </div>
+            <div class="lang">
+              <h4>English</h4>
+              <ul>
+                <li><strong>The grid is empty</strong> — check whether a kind filter or search is still applied; the bar says so while one is active</li>
+                <li><strong>“Access needed” on a folder</strong> — the drive was reconnected, or the macOS permission lapsed. Grant access again from that row</li>
+                <li><strong>No thumbnail</strong> — damaged files, and files whose extension disagrees with their contents, may not produce one</li>
+                <li><strong>The counts do not add up</strong> — with nested folders a file belongs to every folder above it, so the totals deliberately overlap</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="links">
+          <h2>リンク / Links</h2>
+          <p>
+            <a href="shelfnavigator.html">製品ページ / Product Page</a> ・
+            <a href="shelfnavigator_privacy.html">プライバシーポリシー / Privacy Policy</a> ・
+            <a href="index.html#tools">RustyWorks Tools</a>
+          </p>
+          <p style="color:var(--muted);margin-top:10px">
+            お問い合わせ / Contact: <a href="mailto:rustyworks.games@gmail.com">rustyworks.games@gmail.com</a>
+          </p>
+        </section>
+
+      </main>
     </div>
-  </section>
 
-  <section class="panel">
-      <h2>はじめに</h2>
-      <p>ShelfNavigator は、登録したフォルダを索引して、まとめて閲覧・検索するアプリです。ファイルを移動したりコピーしたりはしません。</p>
-  </section>
-  <section class="panel">
-      <h2>1. フォルダを登録する</h2>
-      <p>サイドバー下部の <strong>Add Folder…</strong>（または ⌘O）でフォルダを選びます。内蔵・外付け・ネットワークのいずれでも構いません。</p>
-      <p>登録すると索引（スキャン）が始まります。完了するとサイドバーに件数が表示されます。複数登録すると、<strong>All Files</strong> で全部が1つの一覧になります。</p>
-  </section>
-  <section class="panel">
-      <h2>2. 表示を切り替える</h2>
-      <ul>
-        <li><strong>タイル表示</strong>（T）— サムネイルを並べる。下部のスライダーで大きさを変更</li>
-        <li><strong>プレビュー表示</strong>（P）— 1つを大きく表示し、下部のフィルムストリップで移動</li>
-        <li>上部の種類フィルタで、画像・動画・テキストだけに絞り込み</li>
-      </ul>
-  </section>
-  <section class="panel">
-      <h2>3. 探す</h2>
-      <p>検索欄には、普通の言葉のほか、次のような指定が使えます。</p>
-      <ul>
-        <li><code>name:</code> <code>folder:</code> <code>ext:</code> <code>kind:</code> <code>tag:</code></li>
-        <li><code>size&gt;10mb</code> <code>w&gt;=1920</code> <code>h&lt;=1080</code> <code>duration&gt;60</code></li>
-        <li><code>modified:2024</code> <code>created:2024-03</code></li>
-        <li><code>AND</code> <code>OR</code> <code>NOT</code>（大文字）、<code>-語</code> で除外、<code>&quot;引用符&quot;</code> で語順を固定</li>
-        <li>範囲は <code>size:1mb..2mb</code> のように指定</li>
-      </ul>
-      <p>フィルタボタンからは、サイズ・解像度・長さ・日付をGUIで指定できます。Finder タグはサイドバーから選べます。</p>
-  </section>
-  <section class="panel">
-      <h2>4. 選択する</h2>
-      <ul>
-        <li>クリック — 単一選択</li>
-        <li>⇧クリック — 範囲選択</li>
-        <li>⌘クリック — 追加・解除</li>
-        <li>⌘A — すべて選択</li>
-        <li>矢印キーで移動、⇧＋矢印で選択を拡張</li>
-      </ul>
-  </section>
-  <section class="panel">
-      <h2>5. 開く・表示する</h2>
-      <ul>
-        <li><strong>Return</strong> または ダブルクリック — 既定のアプリで開く</li>
-        <li><strong>Space</strong> — 動画の再生／一時停止</li>
-        <li><strong>⌘⇧R</strong> — Finder で表示</li>
-        <li><strong>I</strong> — 情報パネルの表示切替</li>
-      </ul>
-      <p>設定の「開くアプリ」で、種類ごとに使うアプリを指定できます。macOS の既定は変更されません。</p>
-  </section>
-  <section class="panel">
-      <h2>6. 重複を探す</h2>
-      <p>ツールバーの <strong>Duplicates</strong>（⌘⇧D）で、登録した全フォルダを横断して重複を検出します。名前ではなく内容で比較します。</p>
-      <p>結果画面では、残すファイルを選んでから他をゴミ箱へ移動できます。移動の直前にもう一度バイト単位で照合するので、内容が変わっていたものは自動的に除外されます。</p>
-      <p>「Duplicate」タグを付けるだけにして、後で Finder で確認することもできます。</p>
-  </section>
-  <section class="panel">
-      <h2>7. 削除と取り消し</h2>
-      <p><strong>⌘⌫</strong> でゴミ箱へ移動します。ShelfNavigator がファイルを完全に消去することはありません。</p>
-      <p>直後であれば <strong>⌘Z</strong> で元の場所に戻せます（同じ起動中のみ）。それ以降は Finder のゴミ箱から手動で戻してください。</p>
-  </section>
-  <section class="panel">
-      <h2>8. 設定</h2>
-      <ul>
-        <li><strong>ホバーで動画を再生</strong> — タイルにカーソルを乗せたときのプレビュー再生</li>
-        <li><strong>サムネイルのメモリ</strong> — 256MB〜4GB。多いほどスクロールが速く、メモリを使う</li>
-        <li><strong>開くアプリ</strong> — 画像・動画・テキストごとに指定</li>
-      </ul>
-  </section>
-  <section class="panel">
-      <h2>困ったとき</h2>
-      <ul>
-        <li><strong>一覧に何も出ない</strong> — 上部の種類フィルタや検索条件が残っていないか確認してください。絞り込み中はその旨がバーに表示されます</li>
-        <li><strong>フォルダに「アクセス許可が必要」と出る</strong> — 外付けを繋ぎ直したか、macOS の許可が切れています。その項目から再度アクセスを許可してください</li>
-        <li><strong>サムネイルが出ない</strong> — 破損したファイルや、拡張子と中身が食い違うファイルでは出ないことがあります</li>
-      </ul>
-  </section>
-  <section class="panel">
-      <h2>リンク</h2>
-      <p><a href="https://rustyworks.jp/shelfnavigator.html">製品ページ</a> ／ <a href="https://rustyworks.jp/shelfnavigator_privacy.html">プライバシーポリシー</a></p>
-  </section>
-
-  <footer>© RustyWorks — ShelfNavigator</footer>
+    <div class="footer">© RustyWorks — ShelfNavigator</div>
+  </div>
 </body>
 </html>
