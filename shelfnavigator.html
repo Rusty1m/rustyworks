@@ -1,213 +1,277 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ShelfNavigator — フォルダもドライブも、ひと目で｜RustyWorks</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FileShelf — フォルダもドライブも、ひと目で。</title>
+<meta name="description" content="散らばったフォルダと外付けドライブを、1つの棚にまとめる macOS 用ビューア。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;family=Inter:wght@400;500;600;700&amp;family=Noto+Sans+JP:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #1e1e24;
-    --bg-elev: #26262e;
-    --bg-panel: #2a2a33;
-    --fg: #e6e6ea;
-    --fg-dim: #aaaab4;
-    --fg-mute: #6a6a76;
-    --line: #3a3a46;
-    --accent: #e6a878;
-    --mono: 'JetBrains Mono', ui-monospace, monospace;
-    --sans: 'Inter', 'Noto Sans JP', sans-serif;
-  }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body {
-    background: var(--bg);
-    color: var(--fg);
-    font-family: var(--sans);
-    font-size: 14px;
-    line-height: 1.8;
-    -webkit-font-smoothing: antialiased;
-  }
+  html { scroll-behavior: smooth; }
   body {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 24px 18px 48px;
+    background: #0a0a0b;
+    color: #f2f2f0;
+    font-family: 'Zen Kaku Gothic New', system-ui, sans-serif;
+    font-weight: 400;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
-  a { color: var(--fg); text-decoration: none; border-bottom: 1px solid var(--line); }
-  a:hover { border-bottom-color: var(--fg); }
-  .top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--line);
-    margin-bottom: 18px;
-    flex-wrap: wrap;
+  a { color: #e8a33d; text-decoration: none; transition: color .18s ease; }
+  a:hover { color: #f2c07a; }
+  ::selection { background: rgba(232,163,61,.28); color: #fff; }
+  @keyframes fs-rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
-  .brand {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--fg-mute);
-    letter-spacing: 0.08em;
+  @keyframes fs-converge {
+    0%, 100% { transform: translateX(0); opacity: .55; }
+    50%      { transform: translateX(10px); opacity: 1; }
   }
-  .btn {
-    font-family: var(--mono);
-    font-size: 11.5px;
-    color: var(--fg-dim);
-    background: var(--bg-elev);
-    border: 1px solid var(--line);
-    padding: 6px 12px;
-    border-radius: 3px;
-  }
-  .hero {
-    background: var(--bg-elev);
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    padding: 22px;
-    margin-bottom: 16px;
-  }
-  .hero-inner {
-    display: grid;
-    grid-template-columns: 76px 1fr;
-    gap: 16px;
-    align-items: center;
-  }
-  .icon {
-    width: 76px;
-    height: 76px;
-    border-radius: 14px;
-    border: 1px solid var(--line);
-    overflow: hidden;
-    background: #111;
-  }
-
-  .icon img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  h1 {
-    font-family: var(--mono);
-    font-size: clamp(24px, 5vw, 34px);
-    line-height: 1.15;
-    letter-spacing: -0.03em;
-    margin-bottom: 6px;
-  }
-  .subtitle {
-    color: var(--fg-dim);
-  }
-  .meta {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--fg-mute);
-    margin-top: 10px;
-  }
-  .panel {
-    background: var(--bg-elev);
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    padding: 18px 20px;
-    margin-bottom: 14px;
-  }
-  h2 {
-    font-family: var(--mono);
-    font-size: 14px;
-    margin-bottom: 8px;
-    letter-spacing: 0.05em;
-  }
-  p, li { color: var(--fg-dim); }
-  ul { padding-left: 1.2em; }
-  li + li { margin-top: 6px; }
-  strong { color: var(--fg); font-weight: 600; }
-  code {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--accent);
-  }
-  footer {
-    margin-top: 22px;
-    padding-top: 14px;
-    border-top: 1px solid var(--line);
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--fg-mute);
-  }
-  @media (max-width: 560px) {
-    .hero-inner { grid-template-columns: 1fr; }
+  @media (max-width: 760px) {
+    #fs-nav-links { display: none !important; }
+    .fs-two-col { grid-template-columns: 1fr !important; }
+    .fs-conv { grid-template-columns: 1fr !important; gap: 40px !important; }
+    .fs-conv-arrow { display: none !important; }
+    .fs-pad { padding-left: 24px !important; padding-right: 24px !important; }
   }
 </style>
+<template id="__bundler_thumbnail" data-bg-color="#0a0a0b">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#0a0a0b"/>
+    <rect x="330" y="250" width="180" height="120" rx="8" fill="#e8a33d"/>
+    <rect x="330" y="400" width="180" height="120" rx="8" fill="#2a2a2c"/>
+    <rect x="690" y="250" width="180" height="120" rx="8" fill="#2a2a2c"/>
+    <rect x="690" y="400" width="180" height="120" rx="8" fill="#2a2a2c"/>
+    <rect x="330" y="180" width="540" height="10" rx="5" fill="#8a8a86"/>
+  </svg>
+</template>
 </head>
-<body id="shelfnavigator">
-  <div class="top">
-    <div class="brand">RUSTYWORKS / SHELFNAVIGATOR</div>
-    <a class="btn" href="index.html#tools">Back to Tools</a>
-  </div>
+<body>
+<div style="min-height:100vh; display:flex; flex-direction:column;">
 
-  <section class="hero">
-    <div class="hero-inner">
-      <div class="icon"><img src="assets/icons/shelfnavigator.png" alt="ShelfNavigator" onerror="this.remove()"></div>
-      <div>
-        <h1>フォルダもドライブも、ひと目で。</h1>
-        <p class="subtitle">散らばったフォルダと外付けドライブを、1つの棚にまとめる macOS 用ビューア。</p>
-        <div class="meta">macOS</div>
+  <nav style="position:sticky; top:0; z-index:50; background:rgba(5,5,6,.86); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:1px solid rgba(255,255,255,.06);">
+    <div class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px; height:64px; display:flex; align-items:center; justify-content:space-between; gap:24px;">
+      <a href="#top" style="font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:.14em; font-size:15px; color:#f2f2f0;">FILESHELF</a>
+      <div id="fs-nav-links" style="display:flex; align-items:center; gap:32px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.04em;">
+        <a href="#one" style="color:#8a8a86;">一覧</a>
+        <a href="#search" style="color:#8a8a86;">検索</a>
+        <a href="#formats" style="color:#8a8a86;">対応形式</a>
+        <a href="#safe" style="color:#8a8a86;">安全性</a>
+      </div>
+      <a href="" style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.03em; color:#0a0a0b; background:#e8a33d; padding:9px 18px; border-radius:6px; font-weight:500;">Mac App Store</a>
+    </div>
+  </nav>
+
+  <main id="top" style="flex:1;">
+
+    <!-- HERO -->
+    <section class="fs-pad" style="max-width:1200px; margin:0 auto; padding:140px 40px 120px; animation:fs-rise .7s ease both;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.16em; color:#e8a33d; margin-bottom:34px;">macOS APP</div>
+      <h1 id="fs-hero-title" style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(7.4vw, 88px); line-height:1.1; letter-spacing:-.01em; white-space:nowrap;">フォルダもドライブも、<br>ひと目で。</h1>
+      <p style="margin-top:38px; font-size:20px; line-height:1.9; color:#8a8a86; max-width:52ch;">散らばったフォルダと外付けドライブを、1つの棚にまとめる macOS 用ビューア。</p>
+
+      <div style="margin-top:44px; display:flex; flex-wrap:wrap; gap:12px;">
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.02em; color:#f2f2f0; border:1px solid rgba(255,255,255,.14); padding:8px 15px; border-radius:6px;">数十万件</span>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.02em; color:#f2f2f0; border:1px solid rgba(255,255,255,.14); padding:8px 15px; border-radius:6px;">全ドライブ横断</span>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.02em; color:#f2f2f0; border:1px solid rgba(255,255,255,.14); padding:8px 15px; border-radius:6px;">通信しない</span>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.02em; color:#f2f2f0; border:1px solid rgba(255,255,255,.14); padding:8px 15px; border-radius:6px;">RAW対応</span>
+      </div>
+
+      <div style="margin-top:48px;">
+        <a href="" style="display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:14px; letter-spacing:.02em; color:#0a0a0b; background:#e8a33d; padding:15px 30px; border-radius:8px; font-weight:500;">Mac App Store</a>
+      </div>
+
+      <div style="margin-top:72px;">
+        <img src="assets/grid-and-info-panel.jpg" alt="FileShelf のグリッド表示と情報パネル" style="display:block; width:100%; height:auto;">
+      </div>
+    </section>
+
+    <!-- PROBLEM -->
+    <section class="fs-pad" style="border-top:1px solid rgba(255,255,255,.06); background:#08080a;">
+      <div style="max-width:1200px; margin:0 auto; padding:88px 40px;">
+        <p style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:400; font-size:34px; line-height:1.7; letter-spacing:-.005em; color:#f2f2f0; max-width:32ch;">ファイルは、フォルダや外付けドライブ、何年分ものダウンロードに散らばっていきます。どこに何があるのか、だんだん分からなくなります。</p>
+      </div>
+    </section>
+
+    <!-- 01 — HERO FEATURE: convergence -->
+    <section id="one" class="fs-pad" style="border-top:1px solid rgba(255,255,255,.06);">
+      <div style="max-width:1200px; margin:0 auto; padding:120px 40px;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:#e8a33d; margin-bottom:26px;">01 — すべてを1つのビューで</div>
+
+        <div class="fs-conv" style="display:grid; grid-template-columns:0.9fr 60px 1.1fr; align-items:center; gap:32px; margin-bottom:56px;">
+          <!-- scattered sources -->
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <div style="border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:16px 18px; display:flex; align-items:center; gap:12px; animation:fs-converge 4s ease-in-out infinite;">
+              <span style="width:9px; height:9px; border-radius:2px; background:#8a8a86; flex:none;"></span>
+              <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8a8a86;">内蔵ドライブ</span>
+            </div>
+            <div style="border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:16px 18px; display:flex; align-items:center; gap:12px; animation:fs-converge 4s ease-in-out .5s infinite;">
+              <span style="width:9px; height:9px; border-radius:2px; background:#8a8a86; flex:none;"></span>
+              <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8a8a86;">外付けSSD</span>
+            </div>
+            <div style="border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:16px 18px; display:flex; align-items:center; gap:12px; animation:fs-converge 4s ease-in-out 1s infinite;">
+              <span style="width:9px; height:9px; border-radius:2px; background:#8a8a86; flex:none;"></span>
+              <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8a8a86;">ネットワーク</span>
+            </div>
+            <div style="border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:16px 18px; display:flex; align-items:center; gap:12px; animation:fs-converge 4s ease-in-out 1.5s infinite;">
+              <span style="width:9px; height:9px; border-radius:2px; background:#8a8a86; flex:none;"></span>
+              <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8a8a86;">ダウンロード</span>
+            </div>
+          </div>
+
+          <div class="fs-conv-arrow" style="display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; color:#e8a33d; font-size:24px;">→</div>
+
+          <!-- unified grid -->
+          <div style="border:1px solid rgba(232,163,61,.35); border-radius:10px; padding:16px; background:rgba(232,163,61,.03);">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em; color:#e8a33d; margin-bottom:12px;">ONE SHELF</div>
+            <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:8px;">
+              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.07);"></span>
+              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.11);"></span>
+              <span style="aspect-ratio:1; border-radius:4px; background:rgba(232,163,61,.4);"></span>
+              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.07);"></span>
+              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.14);"></span>
+              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.07);"></span>
+              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.11);"></span>
+              <span style="aspect-ratio:1; border-radius:4px; background:rgba(232,163,61,.25);"></span>
+              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.07);"></span>
+              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.14);"></span>
+              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.07);"></span>
+              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.1);"></span>
+              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.11);"></span>
+              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.07);"></span>
+              <span style="aspect-ratio:1; border-radius:4px; background:rgba(232,163,61,.3);"></span>
+              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.07);"></span>
+              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.14);"></span>
+              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.09);"></span>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:56px;">
+          <img src="assets/libraries-one-grid.jpg" alt="サイドバーに並んだ複数のライブラリと、1つに統合されたグリッド" style="display:block; width:100%; height:auto;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; color:#8a8a86; margin-top:14px;">7 libraries — 4,946 items — one grid</div>
+        </div>
+
+        <div class="fs-two-col" style="display:grid; grid-template-columns:1fr 1fr; gap:40px; max-width:none;">
+          <p style="font-size:18px; line-height:1.95; color:#c9c9c4;">フォルダは何個でも登録できます（内蔵・外付け・ネットワーク）。それらが1つのグリッドに並びます。コピーも取り込みも整理も不要。ファイルは元の場所に置いたままです。</p>
+          <p style="font-size:18px; line-height:1.95; color:#c9c9c4;">外付けを取り外しても、その中身は一覧に残ります。どのドライブに入れたか思い出せなくても、検索で見つかります。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 -->
+    <section class="fs-pad" style="border-top:1px solid rgba(255,255,255,.06); background:#08080a;">
+      <div class="fs-two-col" style="max-width:1200px; margin:0 auto; padding:104px 40px 56px; display:grid; grid-template-columns:0.85fr 1.15fr; gap:56px; align-items:start;">
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:#e8a33d; margin-bottom:22px;">02 — 大量のファイルを前提に</div>
+          <div style="font-family:'Space Grotesk',sans-serif; font-weight:500; font-size:56px; letter-spacing:-.01em; color:#f2f2f0;">100,000+</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.06em; color:#8a8a86; margin-top:6px;">LOCAL CATALOG</div>
+        </div>
+        <p style="font-size:19px; line-height:1.95; color:#c9c9c4; padding-top:38px;">カタログはローカルの索引なので、数十万件でもスクロールは滑らかで、検索は即座です。新しいファイルや変更は、バックグラウンドで自動的に反映されます。</p>
+      </div>
+      <div style="max-width:1200px; margin:0 auto; padding:0 40px 104px;">
+        <img src="assets/dense-grid.jpg" alt="サムネイルを小さくして大量のファイルを一度に見渡す" style="display:block; width:100%; height:auto;">
+      </div>
+    </section>
+
+    <!-- 03 — search -->
+    <section id="search" class="fs-pad" style="border-top:1px solid rgba(255,255,255,.06);">
+      <div style="max-width:1200px; margin:0 auto; padding:120px 40px;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:#e8a33d; margin-bottom:22px;">03 — 素早く絞り込める検索</div>
+        <p style="font-size:22px; line-height:1.85; color:#f2f2f0; max-width:34ch; margin-bottom:44px;">普通の言葉でも、正確な指定でも検索できます。</p>
+
+        <div style="display:flex; flex-direction:column; gap:12px; max-width:640px;">
+          <div style="border:1px solid rgba(255,255,255,.1); border-radius:8px; background:#050506; padding:16px 20px; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#f2f2f0;"><span style="color:#e8a33d; margin-right:12px;">&gt;</span>beach ext:png size&gt;10mb</div>
+          <div style="border:1px solid rgba(255,255,255,.1); border-radius:8px; background:#050506; padding:16px 20px; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#f2f2f0;"><span style="color:#e8a33d; margin-right:12px;">&gt;</span>kind:video duration&gt;60</div>
+          <div style="border:1px solid rgba(255,255,255,.1); border-radius:8px; background:#050506; padding:16px 20px; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#f2f2f0;"><span style="color:#e8a33d; margin-right:12px;">&gt;</span>tag:family modified:2024</div>
+        </div>
+
+        <p style="font-size:18px; line-height:1.95; color:#8a8a86; max-width:56ch; margin-top:40px;">サイズ・解像度・長さ・日付はパネルから、Finder タグはサイドバーから絞り込めます。</p>
+
+        <div style="margin-top:56px;">
+          <img src="assets/filters-panel.jpg" alt="サイズ・解像度・長さ・日付で絞り込むフィルタパネル" style="display:block; width:100%; height:auto;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; color:#8a8a86; margin-top:12px;">FILTERS — サイズ・解像度・長さ・日付</div>
+        </div>
+
+        <div style="margin-top:40px;">
+          <img src="assets/sort-menu.jpg" alt="名前・サイズ・種類・解像度・長さでの並び替え" style="display:block; width:100%; height:auto;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; color:#8a8a86; margin-top:12px;">SORT — 並び替え</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 — formats -->
+    <section id="formats" class="fs-pad" style="border-top:1px solid rgba(255,255,255,.06); background:#08080a;">
+      <div style="max-width:1200px; margin:0 auto; padding:120px 40px;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:#e8a33d; margin-bottom:22px;">04 — 画像・動画・テキスト</div>
+        <p style="font-size:20px; line-height:1.95; color:#c9c9c4; max-width:56ch; margin-bottom:48px;">サムネイルの大きさを変えられるタイル表示と、フィルムストリップ付きのプレビュー表示。動画はアプリ内で再生でき、QuickTime が開けない形式にも対応します。テキストファイルは中身を表示。RAW 写真にも対応しています。</p>
+        <div style="display:flex; flex-wrap:wrap; gap:10px;">
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#8a8a86; border:1px solid rgba(255,255,255,.1); padding:7px 14px; border-radius:6px;">タイル表示</span>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#8a8a86; border:1px solid rgba(255,255,255,.1); padding:7px 14px; border-radius:6px;">フィルムストリップ</span>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#8a8a86; border:1px solid rgba(255,255,255,.1); padding:7px 14px; border-radius:6px;">アプリ内再生</span>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#8a8a86; border:1px solid rgba(255,255,255,.1); padding:7px 14px; border-radius:6px;">テキスト表示</span>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#8a8a86; border:1px solid rgba(255,255,255,.1); padding:7px 14px; border-radius:6px;">RAW対応</span>
+        </div>
+
+        <div style="margin-top:56px;">
+          <img src="assets/preview-filmstrip.jpg" alt="フィルムストリップ付きのプレビュー表示" style="display:block; width:100%; height:auto;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; color:#8a8a86; margin-top:12px;">PREVIEW — フィルムストリップ</div>
+        </div>
+
+        <div style="margin-top:40px;">
+          <img src="assets/text-and-video.jpg" alt="テキストファイルの中身と動画が同じグリッドに並ぶ" style="display:block; width:100%; height:auto;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; color:#8a8a86; margin-top:12px;">TEXT + VIDEO — 同じグリッド上で</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 & 06 two-up -->
+    <section class="fs-pad" style="border-top:1px solid rgba(255,255,255,.06);">
+      <div class="fs-two-col" style="max-width:1200px; margin:0 auto; padding:104px 40px 56px; display:grid; grid-template-columns:1fr 1fr; gap:0;">
+        <div style="padding-right:56px; border-right:1px solid rgba(255,255,255,.06);">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:#e8a33d; margin-bottom:22px;">05 — Finder と喧嘩しない</div>
+          <p style="font-size:18px; line-height:1.95; color:#c9c9c4;">Finder のタグを読み取り、サイドバーに表示します。任意のファイルを Finder で表示できます。ファイルの種類ごとに開くアプリを指定できますが、システムの既定は変更しません。</p>
+        </div>
+        <div id="dup" style="padding-left:56px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:#e8a33d; margin-bottom:22px;">06 — 重複を見つける</div>
+          <p style="font-size:18px; line-height:1.95; color:#c9c9c4;">登録したすべてのフォルダを横断し、名前ではなく内容で比較します。一致したファイルは、移動する直前にもう一度バイト単位で検証されます。</p>
+        </div>
+      </div>
+      <div style="max-width:1200px; margin:0 auto; padding:0 40px 104px;">
+        <img src="assets/duplicate-scan.jpg" alt="重複スキャンの設定と推定コスト" style="display:block; width:100%; height:auto;">
+      </div>
+    </section>
+
+    <!-- 07 — safe -->
+    <section id="safe" class="fs-pad" style="border-top:1px solid rgba(255,255,255,.06); background:#08080a;">
+      <div style="max-width:1200px; margin:0 auto; padding:120px 40px;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:#e8a33d; margin-bottom:26px;">07 — 既定で安全</div>
+        <div class="fs-two-col" style="display:grid; grid-template-columns:1fr 1fr; gap:40px;">
+          <p style="font-size:20px; line-height:1.95; color:#f2f2f0;">FileShelf がファイルを消去することはありません。削除はゴミ箱への移動で、<span style="font-family:'IBM Plex Mono',monospace; color:#e8a33d;">⌘Z</span> ですぐに元へ戻せます。</p>
+          <p style="font-size:20px; line-height:1.95; color:#f2f2f0;">通信機能を持たないため、ファイルの情報が外部へ出ることはありません。</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer style="background:#050506; border-top:1px solid rgba(255,255,255,.06);">
+    <div class="fs-pad" style="max-width:1200px; margin:0 auto; padding:56px 40px; display:flex; flex-wrap:wrap; gap:32px; justify-content:space-between; align-items:center;">
+      <div style="font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:.14em; font-size:15px; color:#f2f2f0;">FILESHELF</div>
+      <div style="display:flex; flex-wrap:wrap; gap:28px; font-family:'IBM Plex Mono',monospace; font-size:13px;">
+        <a href="https://rustyworks.jp/fileshelf_manual.html" style="color:#8a8a86;">マニュアル</a>
+        <a href="https://rustyworks.jp/fileshelf_privacy.html" style="color:#8a8a86;">プライバシーポリシー</a>
+        <a href="index.html#tools" style="color:#8a8a86;">Back to Tools</a>
       </div>
     </div>
-  </section>
+    <div class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px 40px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8a8a86;">© RustyWorks — FileShelf</div>
+  </footer>
 
-  <section class="panel">
-      <h2>フォルダを越えて、ひと目で</h2>
-      <p>ファイルは、フォルダや外付けドライブ、何年分ものダウンロードに散らばっていきます。どこに何があるのか、だんだん分からなくなります。</p>
-      <p>ShelfNavigator は、登録したフォルダを索引し、<strong>そのすべてを1つの棚としてまとめて閲覧・検索</strong>できるようにします。コピーも取り込みも整理も不要。ファイルは元の場所に置いたままです。</p>
-  </section>
-  <section class="panel">
-      <h2>すべてを1つのビューで</h2>
-      <p>フォルダは何個でも登録できます（内蔵・外付け・ネットワーク）。それらが1つのグリッドに並びます。</p>
-      <p>外付けを取り外しても、その中身は一覧に残ります。どのドライブに入れたか思い出せなくても、検索で見つかります。</p>
-  </section>
-  <section class="panel">
-      <h2>大量のファイルを前提に</h2>
-      <p>カタログはローカルの索引なので、数十万件でもスクロールは滑らかで、検索は即座です。</p>
-      <p>新しいファイルや変更は、バックグラウンドで自動的に反映されます。</p>
-  </section>
-  <section class="panel">
-      <h2>素早く絞り込める検索</h2>
-      <p>普通の言葉でも、正確な指定でも検索できます。</p>
-      <ul>
-        <li><code>beach ext:png size&gt;10mb</code></li>
-        <li><code>kind:video duration&gt;60</code></li>
-        <li><code>tag:family modified:2024</code></li>
-      </ul>
-      <p>サイズ・解像度・長さ・日付はパネルから、Finder タグはサイドバーから絞り込めます。</p>
-  </section>
-  <section class="panel">
-      <h2>画像・動画・テキスト</h2>
-      <p>サムネイルの大きさを変えられるタイル表示と、フィルムストリップ付きのプレビュー表示。</p>
-      <p>動画はアプリ内で再生でき、QuickTime が開けない形式にも対応します。テキストファイルは中身を表示。RAW 写真にも対応しています。</p>
-  </section>
-  <section class="panel">
-      <h2>Finder と喧嘩しない</h2>
-      <p>Finder のタグを読み取り、サイドバーに表示します。任意のファイルを Finder で表示できます。</p>
-      <p>ファイルの種類ごとに開くアプリを指定できますが、システムの既定は変更しません。</p>
-  </section>
-  <section class="panel">
-      <h2>重複を見つける</h2>
-      <p>登録したすべてのフォルダを横断し、名前ではなく内容で比較します。</p>
-      <p>一致したファイルは、移動する直前にもう一度バイト単位で検証されます。</p>
-  </section>
-  <section class="panel">
-      <h2>既定で安全</h2>
-      <p>ShelfNavigator がファイルを消去することはありません。削除はゴミ箱への移動で、<strong>⌘Z ですぐに元へ戻せます</strong>。</p>
-      <p>通信機能を持たないため、ファイルの情報が外部へ出ることはありません。</p>
-  </section>
-  <section class="panel">
-      <h2>リンク</h2>
-      <p><a href="https://rustyworks.jp/shelfnavigator_manual.html">マニュアル</a> ／ <a href="https://rustyworks.jp/shelfnavigator_privacy.html">プライバシーポリシー</a></p>
-  </section>
-
-  <footer>© RustyWorks — ShelfNavigator</footer>
+</div>
 </body>
 </html>
