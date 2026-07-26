@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recoup Privacy Policy</title>
+<meta name="description" content="Recoup のプライバシーポリシー。通信を一切行わず、データを収集しません。">
+<link rel="icon" href="assets/icons/recoup.png">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0a0a0b; color: #f2f2f0;
+    font-family: 'Zen Kaku Gothic New', system-ui, sans-serif;
+    line-height: 1.9; -webkit-font-smoothing: antialiased;
+  }
+  a { color: #4c8dff; text-decoration: none; }
+  a:hover { color: #8fb6ff; }
+  ::selection { background: rgba(76,141,255,.28); color: #fff; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 40px 24px 100px; }
+  .card {
+    background: #111113; border: 1px solid rgba(255,255,255,.07);
+    border-radius: 12px; padding: 30px; margin-bottom: 18px;
+  }
+  .card h2 {
+    font-size: 17px; font-weight: 700; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .card p { color: #c9c9c4; margin-bottom: 10px; }
+  .card ul { color: #c9c9c4; padding-left: 22px; margin: 10px 0; }
+  .card li { margin-bottom: 6px; }
+  strong { color: #f2f2f0; }
+  @media (max-width: 640px) { .wrap { padding: 24px 16px 70px; } .card { padding: 22px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; padding-bottom:22px; border-bottom:1px solid rgba(255,255,255,.08); margin-bottom:30px;">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.12em; color:#8a8a86;">RUSTYWORKS / RECOUP</div>
+    <a href="index.html" style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; border:1px solid rgba(255,255,255,.16); padding:8px 16px; border-radius:6px; color:#f2f2f0;">Back to Tools</a>
+  </div>
+
+  <div class="card" style="display:flex; gap:22px; align-items:flex-start; flex-wrap:wrap;">
+    <img src="assets/icons/recoup.png" alt="Recoup" style="width:76px; height:76px; border-radius:16px;">
+    <div style="flex:1; min-width:240px;">
+      <h1 style="font-family:'IBM Plex Mono',monospace; font-size:29px; font-weight:500; margin-bottom:12px;">Recoup Privacy Policy</h1>
+      <p style="color:#c9c9c4;">Recoup は、外付けHDD・SSD・SDカード・USBメモリから、削除された写真や動画を復元する macOS 用アプリです。</p>
+      <p style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#8a8a86; margin-top:12px;">Last updated: 2026-07-26</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>1．収集する情報</h2>
+    <p>RustyWorks は、Recoup を通じて個人情報、利用統計、解析データ、広告識別子を収集しません。アプリには独自のユーザー追跡、広告SDK、解析SDKは含まれていません。</p>
+  </div>
+
+  <div class="card">
+    <h2>2．ネットワーク通信</h2>
+    <p><strong>Recoup はネットワーク通信を行いません。</strong>アプリにはネットワーク機能そのものが実装されておらず、外部と通信することができません。</p>
+    <p>したがって、スキャンしたディスクの内容、復元したファイル、ファイル名、利用状況などが外部へ送信されることはありません。更新確認やテレメトリの送信もありません。</p>
+  </div>
+
+  <div class="card">
+    <h2>3．ローカルに保存される情報</h2>
+    <p>アプリは、動作のために以下の情報をお使いの Mac 内にのみ保存します。</p>
+    <ul>
+      <li>復元したファイル（お客様が指定した保存先フォルダ内）</li>
+      <li>スキャン結果の一覧（保存先フォルダ内の <code style="font-family:'IBM Plex Mono',monospace; color:#8fb6ff;">report.csv</code>）</li>
+      <li>中断したスキャンを再開するための進行状況（<code style="font-family:'IBM Plex Mono',monospace; color:#8fb6ff;">scan.progress</code>）</li>
+      <li>表示モード、サムネイルの大きさなどのアプリ設定</li>
+    </ul>
+    <p>これらはすべてお使いの Mac 内に留まり、開発者のサーバーへ送信されません。</p>
+  </div>
+
+  <div class="card">
+    <h2>4．ディスクへのアクセス</h2>
+    <p>Recoup は、お客様が明示的に選択したディスクおよびディスクイメージにのみアクセスします。</p>
+    <p><strong>復元元のディスクは常に読み取り専用で開かれ、書き込みは一切行いません。</strong>書き込みが発生するのは、お客様が指定した保存先フォルダに対してのみです。</p>
+    <p>生のディスクを読み取る際には、macOS 標準の認証ダイアログを通じて管理者パスワードの入力を求められます。入力されたパスワードはアプリが受け取ることはなく、macOS が処理します。</p>
+  </div>
+
+  <div class="card">
+    <h2>5．購入と決済</h2>
+    <p>本アプリの購入・決済は itch.io を通じて行われ、それらの取引情報は itch.io のプライバシーポリシーに従って扱われます。開発者がクレジットカード情報等を受け取ることはありません。</p>
+  </div>
+
+  <div class="card">
+    <h2>6．お問い合わせ</h2>
+    <p>本ポリシーに関するご質問は、<a href="index.html#contact">RustyWorks のお問い合わせ</a>までご連絡ください。</p>
+  </div>
+
+  <div class="card">
+    <h2>English Summary</h2>
+    <p><strong>No network access.</strong> Recoup makes no internet connections and has no networking capability.</p>
+    <p><strong>No data collection.</strong> No analytics, crash reporting, or telemetry of any kind.</p>
+    <p><strong>Read-only source.</strong> The app never writes to the disk you are recovering from; recovered files are written only to the destination you choose.</p>
+    <p><strong>Local only.</strong> Recovered files, the scan report, and resume state stay on your Mac.</p>
+    <p>Purchases are handled by itch.io under its own privacy policy; the developer does not receive your payment details.</p>
+  </div>
+
+  <div style="margin-top:34px; text-align:center; font-family:'IBM Plex Mono',monospace; font-size:12.5px;">
+    <a href="recoup.html" style="color:#8a8a86;">Product</a>
+    <span style="color:#3a3a3c; margin:0 12px;">·</span>
+    <a href="recoup_manual.html" style="color:#8a8a86;">Manual</a>
+    <span style="color:#3a3a3c; margin:0 12px;">·</span>
+    <a href="https://rustyworks.itch.io/recoup" style="color:#8a8a86;">itch.io</a>
+  </div>
+
+</div>
+</body>
+</html>
