@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plain Video Saver | RustyWorks</title>
-    <meta name="description" content="Plain Video Saverは、URLを入れて保存先と画質を選ぶだけのmacOS用動画保存ツールです。Beta版をitch.ioで購入できます。">
+    <meta name="description" content="Plain Video Saverは、URLを入れて保存先と画質を選ぶだけのmacOS用動画保存ツールです。itch.ioで購入できます。">
     <meta property="og:title" content="Plain Video Saver | RustyWorks">
     <meta property="og:description" content="URLを入れて、保存先と画質を選ぶだけ。macOS用のシンプルな動画保存ツール。">
-    <meta property="og:image" content="https://rustyworks.jp/pvs-main.png">
+    <meta property="og:image" content="https://rustyworks.jp/pvs.png">
     <meta property="og:type" content="website">
     <style>
         :root {
@@ -178,6 +178,18 @@
             border-radius: 24px;
             border: 1px solid var(--hairline);
             box-shadow: 0 28px 90px rgba(0, 0, 0, 0.48);
+        }
+        /* 製品スクリーンショット差し替え中の暫定レイアウト。画像を戻すときは
+           hero-textonly クラスを外し、.visual と .app-shot を復活させる。 */
+        .hero-textonly {
+            grid-template-columns: minmax(0, 1fr);
+            min-height: 0;
+            padding-top: 56px;
+        }
+        .hero-textonly .badges {
+            grid-template-columns: repeat(2, 1fr);
+            max-width: 640px;
+            margin-top: 28px;
         }
         .badges {
             display: grid;
@@ -415,7 +427,7 @@
                 <ul>
                     <li><a href="#features">Features</a></li>
                     <li><a href="#howto">How to Use</a></li>
-                    <li><a href="#buy">Buy Beta</a></li>
+                    <li><a href="#buy">Buy</a></li>
                     <li><a href="pvs_privacy.html">Privacy</a></li>
                 </ul>
             </nav>
@@ -423,22 +435,20 @@
     </header>
 
     <main class="page">
-        <section class="hero" aria-labelledby="title">
+        <section class="hero hero-textonly" aria-labelledby="title">
             <div>
-                <div class="eyebrow">macOS app / beta</div>
+                <div class="eyebrow">macOS app</div>
                 <h1 id="title">Plain Video Saver</h1>
                 <p class="lead">URLを入れて、保存先と画質を選ぶだけ。YouTube、m3u8、対応サイトの動画保存をシンプルに扱うmacOS用ツールです。</p>
                 <div class="actions">
-                    <a class="button button-primary" href="https://rustyworks.itch.io/pvs" target="_blank" rel="noopener">Buy(Beta)</a>
+                    <a class="button button-primary" href="https://rustyworks.itch.io/pvs" target="_blank" rel="noopener">Buy</a>
                     <a class="button button-secondary" href="#howto">使い方を見る</a>
                 </div>
-                <p class="note">Buy(Beta)からitch.ioの購入ページへ移動します。購入後、itch.ioから公証済みmacOS ZIPをダウンロードできます。現在はBeta版のため、サイト側の仕様変更により一部URLで動作しない場合があります。</p>
-            </div>
-            <div class="visual">
-                <img class="app-shot" src="pvs-main.png" alt="Plain Video Saverのメイン画面">
+                <p class="note">Buyからitch.ioの購入ページへ移動します。購入後、itch.ioから公証済みのmacOS用DMGをダウンロードできます。</p>
                 <div class="badges" aria-label="Product highlights">
-                    <div class="badge"><span class="k">PLATFORM</span><span class="v">macOS</span></div>
-                    <div class="badge"><span class="k">PRICE</span><span class="v">Beta $3.50 USD</span></div>
+                    <div class="badge"><span class="k">VERSION</span><span class="v">1.0</span></div>
+                    <div class="badge"><span class="k">REQUIRES</span><span class="v">macOS 13+ / Apple Silicon</span></div>
+                    <div class="badge"><span class="k">PRICE</span><span class="v">$9.99 USD</span></div>
                     <div class="badge"><span class="k">DELIVERY</span><span class="v">Download on itch.io</span></div>
                 </div>
             </div>
@@ -459,7 +469,7 @@
                 <article class="card">
                     <div class="card-num">2</div>
                     <h3>画質と保存先を選択</h3>
-                    <p>Best、4K、1440p、1080pなどの解像度設定を選べます。通常は保存先と画質だけ見れば十分です。</p>
+                    <p>Best、4K、1440p、1080p、720p、480p、360pから上限を選べます。通常は保存先と画質だけ見れば十分です。</p>
                 </article>
                 <article class="card">
                     <div class="card-num">3</div>
@@ -497,12 +507,12 @@
         <section id="buy">
             <div class="split">
                 <div class="price-card">
-                    <p class="section-tagline">Buy Beta</p>
-                    <h2>Beta版を購入</h2>
-                    <div class="price">$3.50 <small>USD</small></div>
-                    <p class="section-desc">itch.ioの購入ページへ移動します。購入後、itch.ioから公証済みmacOS ZIPをダウンロードできます。</p>
+                    <p class="section-tagline">Buy</p>
+                    <h2>購入する</h2>
+                    <div class="price">$9.99 <small>USD</small></div>
+                    <p class="section-desc">itch.ioの購入ページへ移動します。購入後、itch.ioから公証済みのmacOS用DMGをダウンロードできます。バージョン1.x内のアップデートは無料です。</p>
                     <div class="actions" style="margin-top: 24px;">
-                        <a class="button button-primary" href="https://rustyworks.itch.io/pvs" target="_blank" rel="noopener">Buy(Beta)</a>
+                        <a class="button button-primary" href="https://rustyworks.itch.io/pvs" target="_blank" rel="noopener">Buy</a>
                         <a class="button button-secondary" href="pvs_privacy.html">Privacy Policy</a>
                     </div>
                 </div>
@@ -510,7 +520,7 @@
                     <div class="flow-item">
                         <span>1</span>
                         <div>
-                            <strong>Buy(Beta)を押す</strong>
+                            <strong>Buyを押す</strong>
                             <p>itch.ioの購入ページへ移動します。</p>
                         </div>
                     </div>
@@ -524,8 +534,8 @@
                     <div class="flow-item">
                         <span>3</span>
                         <div>
-                            <strong>ZIPをダウンロード</strong>
-                            <p>購入後、itch.ioから公証済みmacOS ZIPをダウンロードできます。</p>
+                            <strong>DMGをダウンロード</strong>
+                            <p>DMGを開き、アプリをアプリケーションフォルダへドラッグしてください。</p>
                         </div>
                     </div>
                 </div>
@@ -534,8 +544,9 @@
 
         <section>
             <div class="warning">
-                <h3>Beta版としての注意</h3>
-                <p>動画配信サイト側の仕様変更により、一時的にダウンロードできないURLが発生する場合があります。YouTubeなどは仕様変更が多いため、必要に応じてアプリ更新で対応します。</p>
+                <h3>ご利用にあたって</h3>
+                <p>動作環境はmacOS 13 Ventura以降、Apple Silicon（M1以降）です。Intel Macには対応していません。</p>
+                <p style="margin-top: 10px;">動画配信サイト側の仕様変更により、一時的にダウンロードできないURLが発生する場合があります。YouTubeなどは仕様変更が多いため、必要に応じてアプリ更新で対応します。</p>
                 <p style="margin-top: 10px;">Plain Video SaverはDRMで保護されたコンテンツの解除を目的としたものではありません。保存するコンテンツについて必要な権利または許可を持っている場合にのみ利用してください。</p>
             </div>
         </section>
@@ -548,7 +559,7 @@
             <div class="faq">
                 <details>
                     <summary>購入後すぐにダウンロードできますか？</summary>
-                    <p>はい。購入後、itch.ioのダウンロードページから公証済みmacOS ZIPをダウンロードできます。</p>
+                    <p>はい。購入後、itch.ioのダウンロードページから公証済みのmacOS用DMGをダウンロードできます。</p>
                 </details>
                 <details>
                     <summary>yt-dlpやffmpegの準備は必要ですか？</summary>
@@ -560,17 +571,17 @@
                 </details>
                 <details>
                     <summary>対応していないURLがありますか？</summary>
-                    <p>あります。対応状況はサイト側仕様、URL形式、公開範囲、DRMの有無に依存します。Beta版では動作確認範囲を広げながら改善します。</p>
+                    <p>あります。対応状況はサイト側仕様、URL形式、公開範囲、DRMの有無に依存します。動作確認範囲を広げながら継続的に改善します。</p>
                 </details>
             </div>
         </section>
 
         <section>
             <div class="final-cta">
-                <p class="section-tagline">Plain Video Saver Beta</p>
+                <p class="section-tagline">Plain Video Saver</p>
                 <h2>URL保存を、1つの画面で。</h2>
                 <p>コマンド操作ではなく、アプリとして使える動画保存ツールが必要な人向けです。</p>
-                <a class="button button-primary" href="https://rustyworks.itch.io/pvs" target="_blank" rel="noopener">Buy(Beta)</a>
+                <a class="button button-primary" href="https://rustyworks.itch.io/pvs" target="_blank" rel="noopener">Buy</a>
             </div>
         </section>
 
