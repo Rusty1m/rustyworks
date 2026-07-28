@@ -71,6 +71,31 @@
   button.primary.applied { background:transparent; color:#e5484d; }
   .note { font-family:'Zen Kaku Gothic New',sans-serif; font-size:13px; line-height:1.8; color:#7a7a76; margin-top:22px; }
   .fallback { padding:40px; text-align:center; font-family:'Zen Kaku Gothic New',sans-serif; color:#a4a4a0; }
+
+  /* --- Narrow screens -------------------------------------------------------
+     The page is laid out with a fixed 72px gutter, which on a 390px phone left
+     the content 246px wide — the interactive demo ended up SMALLER than it had
+     been on its own page, and a 96px headline wrapped one character per line.
+     These overrides only apply below 780px, so the desktop layout is untouched.
+     !important is needed because the values they replace are inline. */
+  @media (max-width: 780px) {
+    .pad { padding-left:20px !important; padding-right:20px !important; }
+    .hero { height:auto !important; padding-bottom:44px !important; }
+    .hero-h { font-size:40px !important; line-height:1.15 !important; }
+    .h-xl { font-size:32px !important; }
+    .h-l  { font-size:27px !important; }
+    .h-m  { font-size:23px !important; }
+    .two-col { grid-template-columns:1fr !important; gap:24px !important; }
+    .stats { flex-wrap:wrap !important; }
+    .stats > div { flex:1 1 50% !important; padding:20px 12px !important; }
+    .navlinks { gap:16px !important; flex-wrap:wrap !important; justify-content:flex-end !important;
+                font-size:12px !important; }
+    .pricecard { padding:28px !important; }
+    .pricecard ul { grid-template-columns:1fr !important; }
+    /* Section rhythm: the vertical padding is as oversized as the horizontal. */
+    #try, #features, #pro { padding-top:56px !important; padding-bottom:48px !important; }
+    #dl { padding-top:64px !important; padding-bottom:64px !important; }
+  }
 </style>
 </head>
 <body>
@@ -78,11 +103,11 @@
 <div style="background:#0a0a0b;font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif;overflow:hidden;">
 
   <!-- nav -->
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:24px 72px;background:#050506;border-bottom:1px solid rgba(255,255,255,.06);position:sticky;top:0;z-index:20;">
+  <div class="pad" style="display:flex;align-items:center;justify-content:space-between;padding:24px 72px;background:#050506;border-bottom:1px solid rgba(255,255,255,.06);position:sticky;top:0;z-index:20;">
     <div style="display:flex;align-items:center;gap:11px;color:#f2f2f0;font-size:21px;font-weight:700;letter-spacing:.12em;">
       <span style="width:20px;height:20px;border-radius:5px;background:#0a0a0b;border:1.5px solid #e5484d;display:inline-block;"></span>KURO
     </div>
-    <div style="display:flex;align-items:center;gap:30px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#8a8a86;">
+    <div class="navlinks" style="display:flex;align-items:center;gap:30px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#8a8a86;">
       <a href="#try" style="color:#8a8a86;">試す</a>
       <a href="#play" style="color:#8a8a86;">再生</a>
       <a href="#color" style="color:#8a8a86;">色</a>
@@ -95,13 +120,13 @@
   </div>
 
   <!-- full-bleed hero -->
-  <div style="position:relative;height:660px;background:repeating-linear-gradient(135deg,#111114 0 16px,#0c0c0f 16px 32px);display:flex;flex-direction:column;">
+  <div class="hero" style="position:relative;height:660px;background:repeating-linear-gradient(135deg,#111114 0 16px,#0c0c0f 16px 32px);display:flex;flex-direction:column;">
     <div style="height:52px;background:#050506;"></div>
-    <div style="flex:1;position:relative;display:flex;flex-direction:column;justify-content:center;padding:0 72px;overflow:hidden;">
+    <div class="pad" style="flex:1;position:relative;display:flex;flex-direction:column;justify-content:center;padding:0 72px;overflow:hidden;">
       <div style="position:absolute;top:0;bottom:0;left:0;width:140px;background:linear-gradient(90deg,#e5484d,transparent);opacity:.06;"></div>
       <div style="position:absolute;top:0;left:0;height:2px;width:60px;background:#e5484d;animation:kuroScan 4s linear infinite;"></div>
       <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.3em;color:#e5484d;margin-bottom:22px;">A VIDEO PLAYER, GRADED · macOS</div>
-      <h1 style="font-size:96px;line-height:.98;font-weight:700;color:#f2f2f0;letter-spacing:-.03em;max-width:920px;">その映像の、<br>本当の色を。</h1>
+      <h1 class="hero-h" style="font-size:96px;line-height:.98;font-weight:700;color:#f2f2f0;letter-spacing:-.03em;max-width:920px;">その映像の、<br>本当の色を。</h1>
       <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:19px;line-height:1.7;color:#c4c4c0;max-width:580px;margin-top:28px;">プロ品質のカラーグレーディングを積んだ、macOS 用の動画プレーヤー。再生しながら、リファレンス基準の色へ。</p>
       <div style="display:flex;gap:16px;align-items:center;margin-top:36px;">
         <a href="#dl" style="background:#e5484d;color:#0a0a0b;font-weight:600;font-size:16px;padding:17px 34px;border-radius:8px;">無料ダウンロード</a>
@@ -112,7 +137,7 @@
   </div>
 
   <!-- stat strip -->
-  <div style="display:flex;border-bottom:1px solid rgba(255,255,255,.06);">
+  <div class="stats" style="display:flex;border-bottom:1px solid rgba(255,255,255,.06);">
     <div style="flex:1;padding:32px;text-align:center;border-right:1px solid rgba(255,255,255,.06);"><div style="font-size:26px;color:#f2f2f0;font-weight:700;">Rec.709</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;margin-top:6px;">Gamma 2.4 準拠</div></div>
     <div style="flex:1;padding:32px;text-align:center;border-right:1px solid rgba(255,255,255,.06);"><div style="font-size:26px;color:#f2f2f0;font-weight:700;">HDR→EDR</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;margin-top:6px;">正確なトーンマップ</div></div>
     <div style="flex:1;padding:32px;text-align:center;border-right:1px solid rgba(255,255,255,.06);"><div style="font-size:26px;color:#f2f2f0;font-weight:700;">Metal</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;margin-top:6px;">自前レンダリング</div></div>
@@ -121,10 +146,10 @@
 
 
   <!-- interactive demo -->
-  <div id="try" style="padding:88px 72px 72px;border-bottom:1px solid rgba(255,255,255,.06);">
+  <div class="pad" id="try" style="padding:88px 72px 72px;border-bottom:1px solid rgba(255,255,255,.06);">
     <div style="max-width:1080px;margin:0 auto;">
       <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;color:#e5484d;">TRY IT IN YOUR BROWSER</div>
-      <h2 style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;margin:14px 0 12px;">触ってみてください。</h2>
+      <h2 class="h-l" style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;margin:14px 0 12px;">触ってみてください。</h2>
       <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.75;color:#a4a4a0;max-width:640px;">下の映像は加工していない素材です。スライダーを動かすと、Kuro が実際に使っているのと同じ計算がその場で走ります。仕切りを左右にドラッグすると、元映像と見比べられます。</p>
 
   <div class="stage" id="stage">
@@ -167,9 +192,9 @@
   </div>
 
   <!-- player showcase -->
-  <div style="padding:96px 72px 40px;display:flex;flex-direction:column;align-items:center;gap:14px;">
+  <div class="pad" style="padding:96px 72px 40px;display:flex;flex-direction:column;align-items:center;gap:14px;">
     <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;color:#e5484d;">THE PLAYER</div>
-    <h2 style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;text-align:center;">再生と、グレーディングを、ひとつの窓で。</h2>
+    <h2 class="h-l" style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;text-align:center;">再生と、グレーディングを、ひとつの窓で。</h2>
     <div style="width:100%;max-width:1040px;margin-top:36px;border:1px solid rgba(255,255,255,.1);border-radius:12px;overflow:hidden;background:#0d0d10;">
       <div style="display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.06);">
         <span style="width:11px;height:11px;border-radius:50%;background:#ff5f57;"></span>
@@ -190,20 +215,20 @@
   </div>
 
   <!-- features stacked -->
-  <div style="padding:64px 72px 80px;display:flex;flex-direction:column;gap:72px;">
-    <div id="play" style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;">
+  <div class="pad" style="padding:64px 72px 80px;display:flex;flex-direction:column;gap:72px;">
+    <div id="play" class="two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;">
       <div style="display:flex;flex-direction:column;gap:16px;">
         <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#e5484d;">01 — 再生</div>
-        <h3 style="font-size:36px;color:#f2f2f0;font-weight:600;line-height:1.15;">何でも開く、忠実に。</h3>
+        <h3 class="h-m" style="font-size:36px;color:#f2f2f0;font-weight:600;line-height:1.15;">何でも開く、忠実に。</h3>
         <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.85;color:#a4a4a0;">libmpv ベースで幅広いコンテナ・コーデックに対応。HDR コンテンツは EDR 表示へマッピングし、Mac の画面でハイライトを飛ばさず再現します。</p>
       </div>
       <div style="aspect-ratio:16/10;border-radius:10px;overflow:hidden;background:#0d0d10;border:1px solid rgba(255,255,255,.08);"><img src="assets/lp/02_hero_coastal.webp" alt="暗い海岸の映像を補正で再現した比較" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
     </div>
-    <div id="color" style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;">
+    <div id="color" class="two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;">
       <div style="aspect-ratio:16/10;border-radius:10px;overflow:hidden;background:#0d0d10;border:1px solid rgba(255,255,255,.08);"><img src="assets/lp/anime_jp.webp" alt="カラーホイール・カーブを備えた補正パネル" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
       <div style="display:flex;flex-direction:column;gap:16px;">
         <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#e5484d;">02 — 色</div>
-        <h3 style="font-size:36px;color:#f2f2f0;font-weight:600;line-height:1.15;">正確な色を、再生しながら。</h3>
+        <h3 class="h-m" style="font-size:36px;color:#f2f2f0;font-weight:600;line-height:1.15;">正確な色を、再生しながら。</h3>
         <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.85;color:#a4a4a0;">Metal 製の自前レンダリングパイプラインで Rec.709 / Gamma 2.4 に準拠。本格的な補正をリアルタイムに適用できます。</p>
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;">
           <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#c4c4c0;border:1px solid rgba(255,255,255,.14);padding:7px 13px;border-radius:20px;">Color Wheels</span>
@@ -214,29 +239,29 @@
         </div>
       </div>
     </div>
-    <div id="quality" style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;">
+    <div id="quality" class="two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;">
       <div style="display:flex;flex-direction:column;gap:16px;">
         <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#e5484d;">03 — 画質</div>
-        <h3 style="font-size:36px;color:#f2f2f0;font-weight:600;line-height:1.15;">眠い映像を、見られる映像に。</h3>
+        <h3 class="h-m" style="font-size:36px;color:#f2f2f0;font-weight:600;line-height:1.15;">眠い映像を、見られる映像に。</h3>
         <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.85;color:#a4a4a0;">MetalFX / Anime4K によるアップスケール、ノイズ除去、シャープ、Wiener デコンボリューションによるデブラー、そしてデバンド。mpv / madVR 系が踏み込まない領域まで実装しています。</p>
       </div>
       <div style="aspect-ratio:16/10;border-radius:10px;overflow:hidden;background:#0d0d10;border:1px solid rgba(255,255,255,.08);"><img src="assets/lp/04_skin.webp" alt="ディテールと肌トーンの比較" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
     </div>
-    <div id="scopes" style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;">
+    <div id="scopes" class="two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;">
       <div style="aspect-ratio:16/10;border-radius:10px;overflow:hidden;background:#0d0d10;border:1px solid rgba(255,255,255,.08);"><img src="assets/lp/sunflower_jp.webp" alt="波形・ベクトルスコープ・RGB パレード・ヒストグラムを表示したスコープ窓" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
       <div style="display:flex;flex-direction:column;gap:16px;">
         <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#e5484d;">04 — スコープ</div>
-        <h3 style="font-size:36px;color:#f2f2f0;font-weight:600;line-height:1.15;">感覚ではなく、基準で。</h3>
+        <h3 class="h-m" style="font-size:36px;color:#f2f2f0;font-weight:600;line-height:1.15;">感覚ではなく、基準で。</h3>
         <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.85;color:#a4a4a0;">波形・ベクトルスコープ・RGB パレード・ヒストグラムを、再生しながらリアルタイムに表示。目視だけに頼らず、基準に沿って色を追い込めます。</p>
       </div>
     </div>
   </div>
 
   <!-- all features -->
-  <div id="features" style="padding:88px 72px;border-top:1px solid rgba(255,255,255,.06);">
+  <div class="pad" id="features" style="padding:88px 72px;border-top:1px solid rgba(255,255,255,.06);">
     <div style="max-width:1000px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:14px;">
       <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;color:#e5484d;">ALL FEATURES</div>
-      <h2 style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;text-align:center;">できることの、全部。</h2>
+      <h2 class="h-l" style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;text-align:center;">できることの、全部。</h2>
       <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;color:#a4a4a0;text-align:center;max-width:640px;">プレーヤーとしての基本、音声、そして計測はすべて無料で使えます。PRO で解放されるのは、色を自分で追い込むための道具です。</p>
 
       <div style="width:100%;margin-top:36px;overflow-x:auto;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:#0d0d10;">
@@ -302,12 +327,12 @@
   </div>
 
   <!-- pricing -->
-  <div id="pro" style="padding:88px 72px;background:#0d0d10;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;align-items:center;gap:14px;">
+  <div class="pad" id="pro" style="padding:88px 72px;background:#0d0d10;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;align-items:center;gap:14px;">
     <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;color:#e5484d;">PRICING</div>
-    <h2 style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;text-align:center;">まず無料で、必要なら PRO を解放。</h2>
+    <h2 class="h-l" style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;text-align:center;">まず無料で、必要なら PRO を解放。</h2>
     <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;color:#a4a4a0;text-align:center;max-width:600px;">無料版でも自動調整（バランス）でワンタッチで色を整えられます。さらに追い込みたいときは、PRO 機能をアプリ内課金（買い切り）でいつでも解放。</p>
     <div style="display:inline-flex;align-items:center;gap:10px;margin-top:8px;border:1px solid rgba(255,255,255,.14);border-radius:24px;padding:9px 18px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#c4c4c0;"><span style="width:7px;height:7px;border-radius:50%;background:#e5484d;"></span>無料版：自動調整（バランス）搭載</div>
-    <div style="border:1px solid #e5484d;border-radius:14px;padding:44px;display:flex;flex-direction:column;gap:26px;background:#0a0a0b;width:100%;max-width:720px;margin-top:36px;position:relative;">
+    <div class="pricecard" style="border:1px solid #e5484d;border-radius:14px;padding:44px;display:flex;flex-direction:column;gap:26px;background:#0a0a0b;width:100%;max-width:720px;margin-top:36px;position:relative;">
       <span style="position:absolute;top:-12px;left:44px;background:#e5484d;color:#0a0a0b;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;">アプリ内課金 · 買い切り</span>
       <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:12px;">
         <div style="font-size:24px;color:#f2f2f0;font-weight:600;">Kuro PRO</div>
@@ -325,17 +350,17 @@
   </div>
 
   <!-- download -->
-  <div id="dl" style="position:relative;padding:104px 72px;text-align:center;background:#050506;overflow:hidden;">
+  <div class="pad" id="dl" style="position:relative;padding:104px 72px;text-align:center;background:#050506;overflow:hidden;">
     <div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(229,72,77,.1),transparent 70%);"></div>
     <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:22px;">
-      <h2 style="font-size:56px;color:#f2f2f0;font-weight:700;letter-spacing:-.02em;">本当の色を、無料で。</h2>
+      <h2 class="h-xl" style="font-size:56px;color:#f2f2f0;font-weight:700;letter-spacing:-.02em;">本当の色を、無料で。</h2>
       <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;color:#a4a4a0;">本体無料。Kuro PRO は $14.99 / ¥2,000 の買い切り。</p>
       <a href="https://apps.apple.com/app/id6782262572" style="background:#e5484d;color:#0a0a0b;font-weight:600;font-size:17px;padding:18px 40px;border-radius:8px;margin-top:8px;">Mac App Store で無料ダウンロード</a>
     </div>
   </div>
 
   <!-- footer -->
-  <div style="padding:40px 72px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;border-top:1px solid rgba(255,255,255,.06);">
+  <div class="pad" style="padding:40px 72px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;border-top:1px solid rgba(255,255,255,.06);">
     <div style="display:flex;align-items:center;gap:10px;color:#f2f2f0;font-size:16px;font-weight:700;letter-spacing:.12em;"><span style="width:16px;height:16px;border-radius:4px;background:#0a0a0b;border:1.5px solid #e5484d;display:inline-block;"></span>KURO</div>
     <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6a6a66;">© 2026 RustyWorks · <a href="https://apps.apple.com/app/id6782262572" style="color:#6a6a66;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(255,255,255,.2);">Mac App Store で配信中</a></div>
   </div>
