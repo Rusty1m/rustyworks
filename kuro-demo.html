@@ -16,8 +16,13 @@
   .lede { font-family:'Zen Kaku Gothic New',sans-serif; font-size:16px; line-height:1.75; color:#a4a4a0; max-width:640px; }
 
   .stage { position:relative; margin-top:34px; border:1px solid rgba(255,255,255,.1); border-radius:12px;
-           overflow:hidden; background:#0d0d10 center/cover no-repeat; touch-action:none; cursor:ew-resize;
-           aspect-ratio:16/9; }
+           overflow:hidden; background:#0d0d10 center/cover no-repeat; cursor:ew-resize;
+           aspect-ratio:16/9;
+           /* pan-y, NOT none: the divider needs horizontal drags, but `none`
+              also swallows vertical swipes, and on a phone this element fills
+              most of the screen — the page would refuse to scroll wherever the
+              reader happened to put their thumb. */
+           touch-action:pan-y; }
   /* The poster sits on the stage background and the canvas fades in over it, so
      the section is never a black hole while a multi-megabyte clip downloads. */
   .stage canvas { display:block; width:100%; height:auto; opacity:0; transition:opacity .25s; }
@@ -349,7 +354,12 @@
     divider.style.left = knob.style.left = (split * 100) + '%';
     if (!touched) { touched = true; hint.style.opacity = 0; }
   }
-  stage.addEventListener('pointerdown', e => { dragging = true; stage.setPointerCapture(e.pointerId); setSplit(e.clientX); });
+  stage.addEventListener('pointerdown', e => {
+    // A tap doubles as the user gesture that unblocks playback when autoplay
+    // was refused (Low Power Mode), so the demo isn't a dead poster.
+    if (needsGesture) { needsGesture = false; loadingEl.textContent = '読み込み中…'; resume(); }
+    dragging = true; stage.setPointerCapture(e.pointerId); setSplit(e.clientX);
+  });
   stage.addEventListener('pointermove', e => { if (dragging) setSplit(e.clientX); });
   stage.addEventListener('pointerup',   () => dragging = false);
 
@@ -393,12 +403,24 @@
     video.src = want;
     video.load();
   }
+  // Autoplay is refused outright in iOS Low Power Mode, and a clip can simply
+  // fail to load. Both used to leave "読み込み中…" on screen forever with no way
+  // out, so surface the state and let a tap recover it.
+  const loadingEl = document.getElementById('loading');
+  let needsGesture = false;
+
   function resume() {
     if (!onScreen) return;
     ensureLoaded();
-    video.play().catch(() => {});
+    video.play()
+      .then(() => { needsGesture = false; })
+      .catch(() => { needsGesture = true; loadingEl.textContent = 'タップして再生'; });
     if (!running) { running = true; requestAnimationFrame(draw); }
   }
+  video.addEventListener('error', () => {
+    loadingEl.textContent = '映像を読み込めませんでした';
+    stage.classList.remove('ready');
+  });
   function suspend() { video.pause(); }
 
   document.addEventListener('visibilitychange', () => { if (!document.hidden) resume(); });
