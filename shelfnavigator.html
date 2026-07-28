@@ -5,6 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ShelfNavigator — フォルダもドライブも、ひと目で。</title>
 <meta name="description" content="散らばったフォルダと外付けドライブを、1つの棚にまとめる macOS 用ビューア。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RustyWorks">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:url" content="https://rustyworks.jp/shelfnavigator.html">
+<meta property="og:title" content="ShelfNavigator | RustyWorks">
+<meta property="og:description" content="散らばったフォルダと外付けドライブを、1つの棚にまとめる macOS 用ビューア。">
+<meta property="og:image" content="https://rustyworks.jp/assets/og/shelfnavigator-og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ShelfNavigator | RustyWorks">
+<meta name="twitter:description" content="散らばったフォルダと外付けドライブを、1つの棚にまとめる macOS 用ビューア。">
+<meta name="twitter:image" content="https://rustyworks.jp/assets/og/shelfnavigator-og.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -58,6 +71,7 @@
       <a href="#top" style="font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:.14em; font-size:15px; color:#f2f2f0;">SHELFNAVIGATOR</a>
       <div id="fs-nav-links" style="display:flex; align-items:center; gap:32px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.04em;">
         <a href="#one" style="color:#8a8a86;">一覧</a>
+        <a href="#demo" style="color:#8a8a86;">デモ</a>
         <a href="#search" style="color:#8a8a86;">検索</a>
         <a href="#formats" style="color:#8a8a86;">対応形式</a>
         <a href="#safe" style="color:#8a8a86;">安全性</a>
@@ -102,57 +116,50 @@
       <div style="max-width:1200px; margin:0 auto; padding:120px 40px;">
         <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:#e8a33d; margin-bottom:26px;">01 — すべてを1つのビューで</div>
 
-        <div class="fs-conv" style="display:grid; grid-template-columns:0.9fr 60px 1.1fr; align-items:center; gap:32px; margin-bottom:56px;">
-          <!-- scattered sources -->
-          <div style="display:flex; flex-direction:column; gap:14px;">
-            <div style="border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:16px 18px; display:flex; align-items:center; gap:12px; animation:fs-converge 4s ease-in-out infinite;">
-              <span style="width:9px; height:9px; border-radius:2px; background:#8a8a86; flex:none;"></span>
-              <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8a8a86;">内蔵ドライブ</span>
+        <p style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-size:22px; line-height:1.8; color:#c9c9c4; max-width:44ch; margin:0 0 34px;">3つのフォルダを、別々のドライブに置いた状態です。左のリストを切り替えてみてください。</p>
+
+        <div id="demo"><div class="sn-demo">
+          <div class="sn-win">
+            <div class="sn-titlebar">
+              <span class="sn-dot" style="background:#ff5f57"></span>
+              <span class="sn-dot" style="background:#febc2e"></span>
+              <span class="sn-dot" style="background:#28c840"></span>
+              <span class="sn-title">ShelfNavigator</span>
             </div>
-            <div style="border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:16px 18px; display:flex; align-items:center; gap:12px; animation:fs-converge 4s ease-in-out .5s infinite;">
-              <span style="width:9px; height:9px; border-radius:2px; background:#8a8a86; flex:none;"></span>
-              <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8a8a86;">外付けSSD</span>
-            </div>
-            <div style="border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:16px 18px; display:flex; align-items:center; gap:12px; animation:fs-converge 4s ease-in-out 1s infinite;">
-              <span style="width:9px; height:9px; border-radius:2px; background:#8a8a86; flex:none;"></span>
-              <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8a8a86;">ネットワーク</span>
-            </div>
-            <div style="border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:16px 18px; display:flex; align-items:center; gap:12px; animation:fs-converge 4s ease-in-out 1.5s infinite;">
-              <span style="width:9px; height:9px; border-radius:2px; background:#8a8a86; flex:none;"></span>
-              <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8a8a86;">ダウンロード</span>
+
+            <div class="sn-body">
+              <aside class="sn-side">
+                <div class="sn-side-head">Libraries</div>
+                <button class="sn-lib is-on" data-lib="all">
+                  <span class="sn-lib-main"><span class="sn-sq" style="background:#e8a33d"></span><span class="sn-lib-txt"><span class="sn-lib-name">All Files</span></span></span><span class="sn-count">18</span>
+                </button>
+                <button class="sn-lib" data-lib="a">
+                  <span class="sn-lib-main"><span class="sn-sq"></span><span class="sn-lib-txt"><span class="sn-lib-name">写真フォルダ</span><span class="sn-vol">SDカード</span></span></span><span class="sn-count">8</span>
+                </button>
+                <button class="sn-lib" data-lib="b">
+                  <span class="sn-lib-main"><span class="sn-sq"></span><span class="sn-lib-txt"><span class="sn-lib-name">動画フォルダ</span><span class="sn-vol">外付けHDD</span></span></span><span class="sn-count">4</span>
+                </button>
+                <button class="sn-lib" data-lib="c">
+                  <span class="sn-lib-main"><span class="sn-sq"></span><span class="sn-lib-txt"><span class="sn-lib-name">テキストフォルダ</span><span class="sn-vol">USBメモリ</span></span></span><span class="sn-count">6</span>
+                </button>
+                <div class="sn-side-note">3つの別々のドライブ。<br>アプリの中では区別なく並びます。</div>
+              </aside>
+
+              <div class="sn-main">
+                <div class="sn-bar">
+                  <span class="sn-scope">All Files</span>
+                  <span class="sn-num"><b>18</b> 件</span>
+                </div>
+                <div class="sn-grid" id="snGrid"></div>
+              </div>
             </div>
           </div>
 
-          <div class="fs-conv-arrow" style="display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; color:#e8a33d; font-size:24px;">→</div>
-
-          <!-- unified grid -->
-          <div style="border:1px solid rgba(232,163,61,.35); border-radius:10px; padding:16px; background:rgba(232,163,61,.03);">
-            <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em; color:#e8a33d; margin-bottom:12px;">ONE SHELF</div>
-            <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:8px;">
-              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.07);"></span>
-              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.11);"></span>
-              <span style="aspect-ratio:1; border-radius:4px; background:rgba(232,163,61,.4);"></span>
-              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.07);"></span>
-              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.14);"></span>
-              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.07);"></span>
-              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.11);"></span>
-              <span style="aspect-ratio:1; border-radius:4px; background:rgba(232,163,61,.25);"></span>
-              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.07);"></span>
-              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.14);"></span>
-              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.07);"></span>
-              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.1);"></span>
-              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.11);"></span>
-              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.07);"></span>
-              <span style="aspect-ratio:1; border-radius:4px; background:rgba(232,163,61,.3);"></span>
-              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.07);"></span>
-              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.14);"></span>
-              <span style="aspect-ratio:1; border-radius:4px; background:rgba(255,255,255,.09);"></span>
-            </div>
-          </div>
-        </div>
+          <p class="sn-hint">動画のタイルにカーソルを乗せると再生されます。アプリと同じ挙動です。</p>
+        </div></div>
 
         <div style="margin-bottom:56px;">
-          <img src="assets/libraries-one-grid.jpg" alt="サイドバーに並んだ複数のライブラリと、1つに統合されたグリッド" style="display:block; width:100%; height:auto;">
+          <img src="assets/libraries-one-grid.jpg" alt="サイドバーに並んだ複数のライブラリと、1つに統合されたグリッド" style="display:block; width:100%; height:auto;" loading="lazy" decoding="async">
           <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; color:#8a8a86; margin-top:14px;">7 libraries — 4,946 items — one grid</div>
         </div>
 
@@ -162,6 +169,234 @@
         </div>
       </div>
     </section>
+
+    <style>
+      .sn-demo { --line: rgba(255,255,255,.10); }
+      .sn-win {
+        border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+        background: #141416; box-shadow: 0 30px 80px rgba(0,0,0,.5);
+      }
+      .sn-titlebar {
+        display: flex; align-items: center; gap: 8px;
+        padding: 11px 14px; background: #1b1b1e; border-bottom: 1px solid var(--line);
+      }
+      .sn-dot { width: 11px; height: 11px; border-radius: 50%; flex: none; }
+      .sn-title {
+        margin-left: 10px; font-family: 'IBM Plex Mono', monospace;
+        font-size: 12px; color: #8a8a86; letter-spacing: .04em;
+      }
+      .sn-body { display: grid; grid-template-columns: 208px minmax(0, 1fr); min-height: 430px; }
+      .sn-side { border-right: 1px solid var(--line); padding: 16px 12px; background: #161618; }
+      .sn-side-head {
+        font-family: 'IBM Plex Mono', monospace; font-size: 10.5px;
+        letter-spacing: .12em; color: #6f6f6b; text-transform: uppercase;
+        padding: 0 8px 10px;
+      }
+      .sn-lib {
+        display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
+        width: 100%; margin-bottom: 3px; padding: 9px 10px;
+        border: 0; border-radius: 7px; background: transparent; cursor: pointer;
+        font-family: 'Space Grotesk', 'Zen Kaku Gothic New', sans-serif;
+        font-size: 13.5px; color: #c9c9c4; text-align: left;
+        transition: background .16s ease, color .16s ease;
+      }
+      .sn-lib:hover { background: rgba(255,255,255,.05); color: #f2f2f0; }
+      .sn-lib.is-on { background: #e8a33d; color: #0a0a0b; }
+      .sn-lib.is-on .sn-count { color: rgba(10,10,11,.65); }
+      .sn-lib.is-on em { background: rgba(10,10,11,.15); color: #0a0a0b; }
+      .sn-lib-main { display: flex; align-items: flex-start; gap: 8px; min-width: 0; }
+      .sn-lib-txt { display: flex; flex-direction: column; min-width: 0; }
+      .sn-lib-name { line-height: 1.35; }
+      /* The volume the folder actually lives on, as the app's sidebar shows it. */
+      .sn-vol {
+        font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+        line-height: 1.5; color: #6f6f6b;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      }
+      .sn-lib:hover .sn-vol { color: #8a8a86; }
+      .sn-lib.is-on .sn-vol { color: rgba(10,10,11,.6); }
+      .sn-sq { width: 9px; height: 9px; border-radius: 2px; background: #8a8a86; flex: none; margin-top: 5px; }
+      .sn-lib.is-on .sn-sq { background: #0a0a0b; }
+      .sn-count { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: #6f6f6b; flex: none; margin-top: 2px; }
+      .sn-side-note {
+        margin-top: 18px; padding: 10px 10px 0; border-top: 1px solid var(--line);
+        font-size: 11.5px; line-height: 1.7; color: #6f6f6b;
+      }
+
+      .sn-main { display: flex; flex-direction: column; min-width: 0; }
+      .sn-bar {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 12px 16px; border-bottom: 1px solid var(--line);
+      }
+      .sn-scope {
+        font-family: 'Space Grotesk', 'Zen Kaku Gothic New', sans-serif;
+        font-size: 14px; color: #f2f2f0;
+      }
+      .sn-num { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: #6f6f6b; }
+      .sn-num b { color: #e8a33d; font-weight: 500; }
+
+      .sn-grid {
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(124px, 1fr));
+        gap: 10px; padding: 16px; align-content: start;
+      }
+      .sn-tile {
+        position: relative; aspect-ratio: 1; border-radius: 7px; overflow: hidden;
+        background: #1d1d20; border: 1px solid rgba(255,255,255,.07); cursor: default;
+        animation: sn-in .26s ease both;
+      }
+      .sn-tile img, .sn-tile video {
+        width: 100%; height: 100%; object-fit: cover; display: block;
+      }
+      .sn-tile video { position: absolute; inset: 0; opacity: 0; transition: opacity .2s ease; }
+      .sn-tile.is-playing video { opacity: 1; }
+      @keyframes sn-in { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: none; } }
+
+      .sn-badge {
+        position: absolute; right: 6px; bottom: 6px; z-index: 2;
+        display: flex; align-items: center; gap: 4px;
+        padding: 2px 6px; border-radius: 4px;
+        background: rgba(10,10,11,.72); backdrop-filter: blur(4px);
+        font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #f2f2f0;
+      }
+      .sn-name {
+        position: absolute; inset: auto 0 0 0; z-index: 2;
+        padding: 16px 8px 6px;
+        background: linear-gradient(transparent, rgba(10,10,11,.85));
+        font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; color: #d8d8d4;
+        opacity: 0; transition: opacity .18s ease;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      }
+      .sn-tile:hover .sn-name { opacity: 1; }
+
+      .sn-text { padding: 11px 10px; height: 100%; background: #202024; }
+      .sn-text-h {
+        font-family: 'IBM Plex Mono', monospace; font-size: 9.5px;
+        color: #e8a33d; margin-bottom: 7px;
+      }
+      .sn-text-b {
+        margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 8px;
+        line-height: 1.6; color: #9a9a95; white-space: pre-wrap;
+        word-break: break-all; overflow: hidden;
+      }
+
+      .sn-hint {
+        margin: 14px 0 0; font-family: 'IBM Plex Mono', monospace;
+        font-size: 11.5px; color: #6f6f6b;
+      }
+
+      @media (max-width: 720px) {
+        .sn-body { grid-template-columns: 1fr; min-height: 0; }
+        .sn-side { border-right: 0; border-bottom: 1px solid var(--line); }
+        .sn-side-note { display: none; }
+        .sn-grid { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); }
+      }
+    </style>
+
+    <script>
+      (function () {
+        var GRID = document.getElementById('snGrid');
+        if (!GRID) return;
+
+        var IMAGES = [
+          ['nebula',            '30_doradus_nebula.jpg',   '3840×2160'],
+          ['california_nebula', 'california_nebula.jpg',   '4096×2304'],
+          ['earth_from_iss',    'iss036e02642.jpg',        '4256×2832'],
+          ['egress_training',   'egress_training.jpg',     '3000×2000'],
+          ['fallow_deer',       'fallow_deer.jpg',         '5184×3456'],
+          ['nile_felucca',      'nile_felucca.jpg',        '4000×2667'],
+          ['city_fireworks',    'city_fireworks.jpg',      '5472×3648'],
+          ['media_harbour',     'media_harbour.jpg',       '4928×3264']
+        ];
+        var VIDEOS = [
+          ['robin_branch',    'robin_perched.mp4',     '0:08'],
+          ['winter_cliff',    'winter_cliff.mp4',      '0:08'],
+          ['swiss_mountains', 'swiss_mountains.mp4',   '0:07'],
+          ['forest_canopy',   'forest_canopy.mp4',     '0:17']
+        ];
+        var NOTES = [
+          ['README.md',       '# Observation Archive'],
+          ['field-notes.txt', 'Field Notes\n===========\n\nClear night, no moon.'],
+          ['haiku.txt',       'Five Seasonal Haiku\n===================\n\n  spring —'],
+          ['packing-list.txt','Packing List — Overnight Ridge Trip'],
+          ['observations.csv','date,time,target,instrument,seeing'],
+          ['settings.json',   '{\n  "session": {\n    "name": "Ridge Overlook",']
+        ];
+
+        var items = [];
+        IMAGES.forEach(function (m) {
+          items.push({ lib: 'a', kind: 'image', src: m[0], name: m[1], meta: m[2] });
+        });
+        VIDEOS.forEach(function (m) {
+          items.push({ lib: 'b', kind: 'video', src: m[0], name: m[1], meta: m[2] });
+        });
+        NOTES.forEach(function (n) {
+          items.push({ lib: 'c', kind: 'text', name: n[0], body: n[1] });
+        });
+
+        var LABEL = { all: 'All Files', a: '写真フォルダ', b: '動画フォルダ', c: 'テキストフォルダ' };
+
+        function tile(it) {
+          var el = document.createElement('div');
+          el.className = 'sn-tile';
+
+          if (it.kind === 'text') {
+            var ext = it.name.split('.').pop().toUpperCase();
+            var body = it.body.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+            el.innerHTML = '<div class="sn-text"><div class="sn-text-h">' + ext + '</div>' +
+                           '<pre class="sn-text-b">' + body + '</pre></div>' +
+                           '<div class="sn-name">' + it.name + '</div>';
+            return el;
+          }
+
+          var img = '<img src="assets/lp/demo/' + it.src + '.webp" alt="" loading="lazy">';
+          var badge = it.kind === 'video'
+            ? '<div class="sn-badge">▶ ' + it.meta + '</div>'
+            : '<div class="sn-badge">' + it.meta + '</div>';
+          el.innerHTML = img + badge + '<div class="sn-name">' + it.name + '</div>';
+
+          if (it.kind === 'video') {
+            // Loaded only on hover, the way the app only decodes a preview when
+            // the pointer is actually over the tile.
+            var v = document.createElement('video');
+            v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'none';
+            v.src = 'assets/lp/demo/' + it.src + '.mp4';
+            el.insertBefore(v, el.firstChild.nextSibling);
+            el.addEventListener('mouseenter', function () {
+              el.classList.add('is-playing');
+              var p = v.play();
+              if (p && p.catch) p.catch(function () {});
+            });
+            el.addEventListener('mouseleave', function () {
+              el.classList.remove('is-playing');
+              v.pause();
+            });
+          }
+          return el;
+        }
+
+        function render(lib) {
+          var shown = items.filter(function (it) { return lib === 'all' || it.lib === lib; });
+          GRID.innerHTML = '';
+          shown.forEach(function (it, i) {
+            var el = tile(it);
+            el.style.animationDelay = Math.min(i * 22, 320) + 'ms';
+            GRID.appendChild(el);
+          });
+          document.querySelector('.sn-scope').textContent = LABEL[lib];
+          document.querySelector('.sn-num b').textContent = shown.length;
+        }
+
+        document.querySelectorAll('.sn-lib').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            document.querySelectorAll('.sn-lib').forEach(function (b) { b.classList.remove('is-on'); });
+            btn.classList.add('is-on');
+            render(btn.dataset.lib);
+          });
+        });
+
+        render('all');
+      })();
+    </script>
 
     <!-- 02 -->
     <section class="fs-pad" style="border-top:1px solid rgba(255,255,255,.06); background:#08080a;">
@@ -174,9 +409,10 @@
         <p style="font-size:19px; line-height:1.95; color:#c9c9c4; padding-top:38px;">カタログはローカルの索引なので、数十万件でもスクロールは滑らかで、検索は即座です。新しいファイルや変更は、バックグラウンドで自動的に反映されます。</p>
       </div>
       <div style="max-width:1200px; margin:0 auto; padding:0 40px 104px;">
-        <img src="assets/dense-grid.jpg" alt="サムネイルを小さくして大量のファイルを一度に見渡す" style="display:block; width:100%; height:auto;">
+        <img src="assets/dense-grid.jpg" alt="サムネイルを小さくして大量のファイルを一度に見渡す" style="display:block; width:100%; height:auto;" loading="lazy" decoding="async">
       </div>
     </section>
+
 
     <!-- 03 — search -->
     <section id="search" class="fs-pad" style="border-top:1px solid rgba(255,255,255,.06);">
@@ -193,12 +429,12 @@
         <p style="font-size:18px; line-height:1.95; color:#8a8a86; max-width:56ch; margin-top:40px;">サイズ・解像度・長さ・日付はパネルから、Finder タグはサイドバーから絞り込めます。</p>
 
         <div style="margin-top:56px;">
-          <img src="assets/filters-panel.jpg" alt="サイズ・解像度・長さ・日付で絞り込むフィルタパネル" style="display:block; width:100%; height:auto;">
+          <img src="assets/filters-panel.jpg" alt="サイズ・解像度・長さ・日付で絞り込むフィルタパネル" style="display:block; width:100%; height:auto;" loading="lazy" decoding="async">
           <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; color:#8a8a86; margin-top:12px;">FILTERS — サイズ・解像度・長さ・日付</div>
         </div>
 
         <div style="margin-top:40px;">
-          <img src="assets/sort-menu.jpg" alt="名前・サイズ・種類・解像度・長さでの並び替え" style="display:block; width:100%; height:auto;">
+          <img src="assets/sort-menu.jpg" alt="名前・サイズ・種類・解像度・長さでの並び替え" style="display:block; width:100%; height:auto;" loading="lazy" decoding="async">
           <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; color:#8a8a86; margin-top:12px;">SORT — 並び替え</div>
         </div>
       </div>
@@ -218,12 +454,12 @@
         </div>
 
         <div style="margin-top:56px;">
-          <img src="assets/preview-filmstrip.jpg" alt="フィルムストリップ付きのプレビュー表示" style="display:block; width:100%; height:auto;">
+          <img src="assets/preview-filmstrip.jpg" alt="フィルムストリップ付きのプレビュー表示" style="display:block; width:100%; height:auto;" loading="lazy" decoding="async">
           <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; color:#8a8a86; margin-top:12px;">PREVIEW — フィルムストリップ</div>
         </div>
 
         <div style="margin-top:40px;">
-          <img src="assets/text-and-video.jpg" alt="テキストファイルの中身と動画が同じグリッドに並ぶ" style="display:block; width:100%; height:auto;">
+          <img src="assets/text-and-video.jpg" alt="テキストファイルの中身と動画が同じグリッドに並ぶ" style="display:block; width:100%; height:auto;" loading="lazy" decoding="async">
           <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; color:#8a8a86; margin-top:12px;">TEXT + VIDEO — 同じグリッド上で</div>
         </div>
       </div>
@@ -242,7 +478,7 @@
         </div>
       </div>
       <div style="max-width:1200px; margin:0 auto; padding:0 40px 104px;">
-        <img src="assets/duplicate-scan.jpg" alt="重複スキャンの設定と推定コスト" style="display:block; width:100%; height:auto;">
+        <img src="assets/duplicate-scan.jpg" alt="重複スキャンの設定と推定コスト" style="display:block; width:100%; height:auto;" loading="lazy" decoding="async">
       </div>
     </section>
 
