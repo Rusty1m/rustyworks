@@ -649,7 +649,12 @@
       if (!sized) {
         canvas.width = video.videoWidth; canvas.height = video.videoHeight;
         gl.viewport(0, 0, canvas.width, canvas.height);
-        divider.style.left = knob.style.left = '50%';
+        // Draw the divider at the CURRENT split, not a hard-coded 50%. This
+        // block runs again on every clip change (sized is reset to re-fit the
+        // canvas), so the literal used to snap the line back to the middle
+        // while the shader kept splitting where the visitor had dragged it —
+        // line and seam ended up in different places.
+        divider.style.left = knob.style.left = (split * 100) + '%';
         gl.uniform1f(uni.split, split);
         push();
         sized = true;
