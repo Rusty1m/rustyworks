@@ -150,7 +150,7 @@
     <div style="max-width:1080px;margin:0 auto;">
       <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;color:#e5484d;">TRY IT IN YOUR BROWSER</div>
       <h2 class="h-l" style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;margin:14px 0 12px;">触ってみてください。</h2>
-      <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.75;color:#a4a4a0;max-width:640px;">下の映像は加工していない素材です。スライダーを動かすと、Kuro が実際に使っているのと同じ計算がその場で走ります。仕切りを左右にドラッグすると、元映像と見比べられます。</p>
+      <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.75;color:#a4a4a0;max-width:640px;">下の映像は加工していない素材です。まず「自動調整」を押してみてください — Kuro が実際に使っているのと同じ計算が、その場で走ります。スライダーで自分で追い込んだり、仕切りをドラッグして元映像と見比べたりもできます。</p>
 
   <div class="stage" id="stage">
     <canvas id="gl"></canvas>
@@ -164,6 +164,11 @@
 
   <div class="clips" id="clips"></div>
 
+  <div class="actions">
+    <button class="primary" id="auto">自動調整</button>
+    <button id="reset">リセット</button>
+  </div>
+
   <div class="panel" id="panel">
     <div class="row"><label>露出</label><input type="range" id="gain"     min="0.5"  max="1.8"  step="0.01" value="1"><span class="val" id="gain_v">1.00</span></div>
     <div class="row"><label>黒レベル</label><input type="range" id="lift"  min="-0.06" max="0.06" step="0.002" value="0"><span class="val" id="lift_v">0.000</span></div>
@@ -173,10 +178,6 @@
     <div class="row"><label>ティント</label><input type="range" id="tint"  min="-0.5" max="0.5"  step="0.01" value="0"><span class="val" id="tint_v">0.00</span></div>
   </div>
 
-  <div class="actions">
-    <button class="primary" id="auto">自動調整</button>
-    <button id="reset">リセット</button>
-  </div>
 
   <p class="note">
     ※ 移植しているのは Kuro の色処理そのものです（Rec.709 Gamma 2.4 で符号化した空間での
