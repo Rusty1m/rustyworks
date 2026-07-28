@@ -14,6 +14,63 @@
   a { color: #e5484d; text-decoration: none; }
   a:hover { color: #ff6b6f; }
   @keyframes kuroScan { 0% { transform: translateX(-100%) } 100% { transform: translateX(1400%) } }
+  .stage { position:relative; margin-top:34px; border:1px solid rgba(255,255,255,.1); border-radius:12px;
+           overflow:hidden; background:#0d0d10 center/cover no-repeat; cursor:ew-resize;
+           aspect-ratio:16/9;
+           /* pan-y, NOT none: the divider needs horizontal drags, but `none`
+              also swallows vertical swipes, and on a phone this element fills
+              most of the screen — the page would refuse to scroll wherever the
+              reader happened to put their thumb. */
+           touch-action:pan-y; }
+  /* The poster sits on the stage background and the canvas fades in over it, so
+     the section is never a black hole while a multi-megabyte clip downloads. */
+  .stage canvas { display:block; width:100%; height:auto; opacity:0; transition:opacity .25s; }
+  .stage.ready canvas { opacity:1; }
+  .loading { position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+             font-family:'IBM Plex Mono',monospace; font-size:12px; color:#f2f2f0; letter-spacing:.1em;
+             background:rgba(10,10,11,.45); backdrop-filter:blur(2px); transition:opacity .25s; }
+  .stage.ready .loading { opacity:0; pointer-events:none; }
+  .tag { position:absolute; top:12px; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em;
+         padding:5px 10px; border-radius:5px; background:rgba(10,10,11,.72); color:#c4c4c0; pointer-events:none;
+         backdrop-filter:blur(6px); }
+  .tag.l { left:12px; } .tag.r { right:12px; color:#f2f2f0; border:1px solid rgba(229,72,77,.55); }
+  .divider { position:absolute; top:0; bottom:0; width:2px; background:#e5484d; pointer-events:none; }
+  .knob { position:absolute; top:50%; width:34px; height:34px; margin:-17px 0 0 -17px; border-radius:50%;
+          background:#e5484d; pointer-events:none; display:flex; align-items:center; justify-content:center;
+          color:#0a0a0b; font-size:13px; font-weight:700; }
+  .hint { position:absolute; left:50%; bottom:12px; transform:translateX(-50%); font-family:'IBM Plex Mono',monospace;
+          font-size:11px; color:#c4c4c0; background:rgba(10,10,11,.72); padding:5px 12px; border-radius:20px;
+          pointer-events:none; backdrop-filter:blur(6px); transition:opacity .4s; }
+
+  .panel { margin-top:22px; display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px 28px;
+           border:1px solid rgba(255,255,255,.08); border-radius:12px; background:#0d0d10; padding:24px; }
+  .row { display:flex; align-items:center; gap:12px; }
+  .row label { font-family:'Zen Kaku Gothic New',sans-serif; font-size:13px; color:#c4c4c0; width:78px; flex:none; }
+  .row input[type=range] { flex:1; accent-color:#e5484d; min-width:0; }
+  .row .val { font-family:'IBM Plex Mono',monospace; font-size:12px; color:#7a7a76; width:46px; text-align:right; flex:none; }
+
+  .clips { margin-top:16px; display:flex; gap:8px; flex-wrap:wrap; }
+  .clips button { font-family:'Zen Kaku Gothic New',sans-serif; font-size:13px; font-weight:500;
+                  padding:8px 15px; border-radius:20px; }
+  .clips button[aria-pressed="true"] { border-color:#e5484d; color:#e5484d; }
+  .actions { margin-top:18px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  button { font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; padding:11px 20px; border-radius:8px;
+           border:1px solid rgba(255,255,255,.16); background:transparent; color:#f2f2f0; cursor:pointer;
+           transition:transform .07s ease, background .15s, border-color .15s, color .15s, opacity .15s; }
+  button.primary { background:#e5484d; border-color:#e5484d; color:#0a0a0b; }
+  button:hover:not(:disabled) { border-color:#e5484d; }
+  /* Pressed state — without this the button gives no feedback at all, and with
+     an animated transition the change can read as "nothing happened". */
+  button:active:not(:disabled) { transform:scale(.96); filter:brightness(.88); }
+  button:focus-visible { outline:2px solid #e5484d; outline-offset:2px; }
+  button:disabled { opacity:.38; cursor:default; }
+  /* Auto-adjust, once its values are actually in effect: flips from a filled
+     call-to-action to an outlined "this is on" state, so the button reports
+     whether the grade is currently the auto one. */
+  #auto { min-width:132px; }
+  button.primary.applied { background:transparent; color:#e5484d; }
+  .note { font-family:'Zen Kaku Gothic New',sans-serif; font-size:13px; line-height:1.8; color:#7a7a76; margin-top:22px; }
+  .fallback { padding:40px; text-align:center; font-family:'Zen Kaku Gothic New',sans-serif; color:#a4a4a0; }
 </style>
 </head>
 <body>
@@ -26,6 +83,7 @@
       <span style="width:20px;height:20px;border-radius:5px;background:#0a0a0b;border:1.5px solid #e5484d;display:inline-block;"></span>KURO
     </div>
     <div style="display:flex;align-items:center;gap:30px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#8a8a86;">
+      <a href="#try" style="color:#8a8a86;">試す</a>
       <a href="#play" style="color:#8a8a86;">再生</a>
       <a href="#color" style="color:#8a8a86;">色</a>
       <a href="#quality" style="color:#8a8a86;">画質</a>
@@ -59,6 +117,53 @@
     <div style="flex:1;padding:32px;text-align:center;border-right:1px solid rgba(255,255,255,.06);"><div style="font-size:26px;color:#f2f2f0;font-weight:700;">HDR→EDR</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;margin-top:6px;">正確なトーンマップ</div></div>
     <div style="flex:1;padding:32px;text-align:center;border-right:1px solid rgba(255,255,255,.06);"><div style="font-size:26px;color:#f2f2f0;font-weight:700;">Metal</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;margin-top:6px;">自前レンダリング</div></div>
     <div style="flex:1;padding:32px;text-align:center;"><div style="font-size:26px;color:#f2f2f0;font-weight:700;">libmpv</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;margin-top:6px;">幅広い形式に対応</div></div>
+  </div>
+
+
+  <!-- interactive demo -->
+  <div id="try" style="padding:88px 72px 72px;border-bottom:1px solid rgba(255,255,255,.06);">
+    <div style="max-width:1080px;margin:0 auto;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;color:#e5484d;">TRY IT IN YOUR BROWSER</div>
+      <h2 style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;margin:14px 0 12px;">触ってみてください。</h2>
+      <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.75;color:#a4a4a0;max-width:640px;">下の映像は加工していない素材です。スライダーを動かすと、Kuro が実際に使っているのと同じ計算がその場で走ります。仕切りを左右にドラッグすると、元映像と見比べられます。</p>
+
+  <div class="stage" id="stage">
+    <canvas id="gl"></canvas>
+    <span class="tag l">元映像</span>
+    <span class="tag r">Kuro</span>
+    <div class="divider" id="divider"></div>
+    <div class="knob" id="knob">⇔</div>
+    <div class="hint" id="hint">ドラッグして比較</div>
+    <div class="loading" id="loading">読み込み中…</div>
+  </div>
+
+  <div class="clips" id="clips"></div>
+
+  <div class="panel" id="panel">
+    <div class="row"><label>露出</label><input type="range" id="gain"     min="0.5"  max="1.8"  step="0.01" value="1"><span class="val" id="gain_v">1.00</span></div>
+    <div class="row"><label>黒レベル</label><input type="range" id="lift"  min="-0.06" max="0.06" step="0.002" value="0"><span class="val" id="lift_v">0.000</span></div>
+    <div class="row"><label>コントラスト</label><input type="range" id="con" min="0.5"  max="1.6"  step="0.01" value="1"><span class="val" id="con_v">1.00</span></div>
+    <div class="row"><label>色温度</label><input type="range" id="temp"    min="-0.5" max="0.5"  step="0.01" value="0"><span class="val" id="temp_v">0.00</span></div>
+    <div class="row"><label>彩度</label><input type="range" id="sat"       min="0"    max="2"    step="0.01" value="1"><span class="val" id="sat_v">1.00</span></div>
+    <div class="row"><label>ティント</label><input type="range" id="tint"  min="-0.5" max="0.5"  step="0.01" value="0"><span class="val" id="tint_v">0.00</span></div>
+  </div>
+
+  <div class="actions">
+    <button class="primary" id="auto">自動調整</button>
+    <button id="reset">リセット</button>
+  </div>
+
+  <p class="note">
+    ※ 移植しているのは Kuro の色処理そのものです（Rec.709 Gamma 2.4 で符号化した空間での
+    リフト／ゲイン、実測に基づく色温度の RGB ゲイン、輝度を保つ彩度、ピボット付きコントラスト）。
+    アップスケールやノイズ除去、HDR 表示といった機能はブラウザでは再現できないため含まれていません。
+  </p>
+
+      <div style="margin-top:26px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
+        <a href="https://apps.apple.com/app/id6782262572" style="background:#e5484d;color:#0a0a0b;font-weight:600;font-size:16px;padding:15px 30px;border-radius:8px;">Mac App Store で無料ダウンロード</a>
+        <span style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#7a7a76;">アプリなら、これを自分の動画で。</span>
+      </div>
+    </div>
   </div>
 
   <!-- player showcase -->
@@ -271,5 +376,329 @@
   </div>
 
 </div>
+<!-- No src / preload="none": the clip is only fetched once the demo is actually
+     scrolled to, so a reader who never reaches it pays nothing for it. -->
+<video id="vid" playsinline muted loop preload="none" style="display:none"></video>
+
+<script>
+(function () {
+  const video  = document.getElementById('vid');
+  const canvas = document.getElementById('gl');
+  const gl = canvas.getContext('webgl2', { antialias:false, alpha:false });
+
+  if (!gl) {
+    document.getElementById('stage').innerHTML =
+      '<div class="fallback">お使いのブラウザは WebGL2 に対応していないため、このデモを表示できません。</div>';
+    return;
+  }
+
+  // ---- shaders -------------------------------------------------------------
+  // Faithful port of Kuro's correctFragment. The video texture carries the same
+  // Rec.709 signal mpv hands the app, so the pipeline is identical: decode with
+  // Gamma 2.4, grade, re-encode.
+  const VS = `#version 300 es
+  out vec2 vUv;
+  void main() {
+    vec2 p = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
+    vUv = p;                       // 0..1
+    gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0);
+  }`;
+
+  const FS = `#version 300 es
+  precision highp float;
+  in vec2 vUv;
+  out vec4 frag;
+
+  uniform sampler2D uTex;
+  uniform vec3  uWBGain;    // measured temperature x tint channel gains
+  uniform vec3  uLift;
+  uniform vec3  uGamma;     // effective exponent, already converted CPU-side
+  uniform vec3  uGain;
+  uniform float uContrast;
+  uniform float uPivot;
+  uniform float uSat;
+  uniform float uSplit;     // 0..1 — left of this shows the untouched source
+
+  vec3 g24Decode(vec3 v) { return sign(v) * pow(abs(v), vec3(2.4)); }
+  vec3 g24Encode(vec3 v) { return sign(v) * pow(abs(v), vec3(1.0 / 2.4)); }
+
+  void main() {
+    vec3 src = texture(uTex, vec2(vUv.x, 1.0 - vUv.y)).rgb;
+
+    if (vUv.x < uSplit) { frag = vec4(src, 1.0); return; }
+
+    // Pass 1 — source transfer to linear BT.709
+    vec3 c = g24Decode(src);
+
+    // Pass 1.5 — white balance: a constant per-channel gain in linear light
+    c *= uWBGain;
+
+    // Pass 2 — lift / gamma / gain, applied on the Gamma-2.4 encoded signal
+    {
+      vec3 g = g24Encode(c);
+      g = g * uGain;
+      g = g + uLift * (vec3(1.0) - g);
+      g = pow(max(g, vec3(0.0)), vec3(1.0) / max(uGamma, vec3(0.001)));
+      c = g24Decode(g);
+    }
+
+    // Pass 3.5 — contrast about a pivot, also in encoded space
+    if (abs(uContrast - 1.0) > 0.001) {
+      float e = pow(max(2.0 - uContrast, 1e-3), -1.17);
+      float pv = clamp(uPivot, 0.01, 0.99);
+      vec3 enc = g24Encode(c);
+      vec3 below = pow(max(enc / pv, 0.0), vec3(e)) * pv;
+      vec3 above = 1.0 - pow(max((1.0 - enc) / (1.0 - pv), 0.0), vec3(e)) * (1.0 - pv);
+      enc = mix(below, above, step(vec3(pv), enc));
+      c = g24Decode(enc);
+    }
+
+    // Pass 4 — saturation, luma-preserving, around the 2.4 luma
+    if (abs(uSat - 1.0) > 0.001) {
+      vec3 enc = g24Encode(clamp(c, 0.0, 1.0));
+      float y = dot(enc, vec3(0.2126, 0.7152, 0.0722));
+      enc = mix(vec3(y), enc, uSat);
+      c = g24Decode(clamp(enc, 0.0, 1.0));
+    }
+
+    frag = vec4(clamp(g24Encode(c), 0.0, 1.0), 1.0);
+  }`;
+
+  function compile(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, compile(gl.VERTEX_SHADER, VS));
+  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FS));
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
+  gl.useProgram(prog);
+
+  const U = n => gl.getUniformLocation(prog, n);
+  const uni = { tex:U('uTex'), wb:U('uWBGain'), lift:U('uLift'), gamma:U('uGamma'), gain:U('uGain'),
+                con:U('uContrast'), pivot:U('uPivot'), sat:U('uSat'), split:U('uSplit') };
+
+  const tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.uniform1i(uni.tex, 0);
+  gl.uniform1f(uni.pivot, 0.435);   // Kuro's default contrast pivot
+
+  // ---- white balance model -------------------------------------------------
+  // Same measured anchors the app uses; gains interpolate and compose
+  // multiplicatively, exactly as in WhiteBalance.channelGains().
+  const ANCH_T = [-2000,-1000,0,1000,2000];
+  const T_R = [0.740,0.840,1.0,1.257,1.735];
+  const T_G = [1.016,1.016,1.0,0.970,0.907];
+  const T_B = [1.700,1.360,1.0,0.660,0.327];
+  const ANCH_U = [-100,0,50,100];
+  const U_R = [0.711,1.0,1.177,1.349];
+  const U_G = [1.117,1.0,0.945,0.874];
+  const U_B = [0.757,1.0,1.136,1.283];
+
+  function interp(x, xs, ys) {
+    const n = xs.length;
+    if (x <= xs[0])     return Math.max(0, ys[0] + (ys[1]-ys[0])/(xs[1]-xs[0]) * (x-xs[0]));
+    if (x >= xs[n-1])   return Math.max(0, ys[n-1] + (ys[n-1]-ys[n-2])/(xs[n-1]-xs[n-2]) * (x-xs[n-1]));
+    for (let i = 1; i < n; i++) if (x <= xs[i])
+      return ys[i-1] + (x-xs[i-1])/(xs[i]-xs[i-1]) * (ys[i]-ys[i-1]);
+    return ys[n-1];
+  }
+  function wbGain(temp, tint) {
+    const t = temp * 4000, u = tint * 100;
+    return [ interp(t,ANCH_T,T_R) * interp(u,ANCH_U,U_R),
+             interp(t,ANCH_T,T_G) * interp(u,ANCH_U,U_G),
+             interp(t,ANCH_T,T_B) * interp(u,ANCH_U,U_B) ];
+  }
+
+  // ---- controls ------------------------------------------------------------
+  const ids = ['gain','lift','con','temp','sat','tint'];
+  const el = {}; ids.forEach(i => { el[i] = document.getElementById(i); el[i+'_v'] = document.getElementById(i+'_v'); });
+  const DEFAULTS = { gain:1, lift:0, con:1, temp:0, sat:1, tint:0 };
+
+  // Each clip carries its own "自動調整" target, because that is what the app
+  // does — auto-adjust reads the picture, so one fixed set of numbers would be
+  // wrong for footage this different (a hazy forest vs a backlit sunset).
+  const CLIPS = [
+    { label:'森の川',   file:'assets/lp/demo-river.mp4',  poster:'assets/lp/demo-river.jpg',
+      auto:{ gain:1.10, lift:-0.018, con:1.20, temp:0.06, sat:1.28, tint:0 } },
+    { label:'花畑',     file:'assets/lp/demo-flower.mp4', poster:'assets/lp/demo-flower.jpg',
+      auto:{ gain:1.04, lift:-0.014, con:1.16, temp:0.03, sat:1.20, tint:0 } },
+    { label:'夕景',     file:'assets/lp/demo-sunset.mp4', poster:'assets/lp/demo-sunset.jpg',
+      auto:{ gain:1.14, lift:-0.010, con:1.14, temp:0.10, sat:1.18, tint:0 } },
+    { label:'オーロラ', file:'assets/lp/demo-aurora.mp4', poster:'assets/lp/demo-aurora.jpg',
+      auto:{ gain:1.32, lift:-0.006, con:1.18, temp:-0.05, sat:1.26, tint:0 } },
+  ];
+  let clipIndex = 0, loadedSrc = null;
+
+  function readable(id, v) { return (id === 'lift') ? v.toFixed(3) : v.toFixed(2); }
+
+  function push() {
+    const v = {}; ids.forEach(i => v[i] = parseFloat(el[i].value));
+    ids.forEach(i => el[i+'_v'].textContent = readable(i, v[i]));
+    gl.uniform3fv(uni.wb, wbGain(v.temp, v.tint));
+    gl.uniform3f(uni.gain, v.gain, v.gain, v.gain);
+    gl.uniform3f(uni.lift, v.lift, v.lift, v.lift);
+    gl.uniform3f(uni.gamma, 1, 1, 1);      // gamma untouched in this prototype
+    gl.uniform1f(uni.con, v.con);
+    gl.uniform1f(uni.sat, v.sat);
+    syncButtons(v);
+  }
+
+  // Report, on the buttons themselves, what state the grade is actually in:
+  // whether the auto values are the ones in effect, and whether there is
+  // anything left to reset. Without this the controls give no acknowledgement
+  // of a press, which reads as the button being broken.
+  const autoBtn = document.getElementById('auto'), resetBtn = document.getElementById('reset');
+  function matches(v, set) {
+    return ids.every(i => Math.abs(v[i] - set[i]) <= (i === 'lift' ? 5e-4 : 5e-3));
+  }
+  function syncButtons(v) {
+    const isAuto = matches(v, CLIPS[clipIndex].auto);
+    autoBtn.classList.toggle('applied', isAuto);
+    autoBtn.textContent = isAuto ? '✓ 自動調整' : '自動調整';
+    resetBtn.disabled = matches(v, DEFAULTS);
+  }
+  ids.forEach(i => el[i].addEventListener('input', push));
+
+  function applySet(set, animate) {
+    if (!animate) { ids.forEach(i => el[i].value = set[i]); push(); return; }
+    const from = {}; ids.forEach(i => from[i] = parseFloat(el[i].value));
+    const t0 = performance.now(), dur = 420;
+    (function step(now) {
+      const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      ids.forEach(i => el[i].value = from[i] + (set[i] - from[i]) * e);
+      push();
+      if (k < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+  document.getElementById('auto').addEventListener('click',  () => applySet(CLIPS[clipIndex].auto, true));
+  document.getElementById('reset').addEventListener('click', () => applySet(DEFAULTS, true));
+
+  // ---- clip switching ------------------------------------------------------
+  // The grade is deliberately KEPT when switching, so the same settings can be
+  // judged against very different footage.
+  const clipBar = document.getElementById('clips');
+  CLIPS.forEach((c, i) => {
+    const b = document.createElement('button');
+    b.textContent = c.label;
+    b.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
+    b.addEventListener('click', () => selectClip(i));
+    clipBar.appendChild(b);
+  });
+  function selectClip(i) {
+    if (i === clipIndex) return;
+    clipIndex = i;
+    [...clipBar.children].forEach((b, j) => b.setAttribute('aria-pressed', j === i ? 'true' : 'false'));
+    sized = false;                 // clips may differ in size — re-fit the canvas
+    stage.classList.remove('ready');
+    stage.style.backgroundImage = `url("${CLIPS[i].poster}")`;
+    push();                        // this clip has its own auto target, so the
+                                   // "✓ 自動調整" state has to be re-evaluated
+    resume();                      // resume() performs the actual load
+  }
+
+  // ---- split divider -------------------------------------------------------
+  const stage = document.getElementById('stage');
+  const divider = document.getElementById('divider'), knob = document.getElementById('knob');
+  const hint = document.getElementById('hint');
+  let split = 0.5, dragging = false, touched = false;
+
+  function setSplit(clientX) {
+    const r = stage.getBoundingClientRect();
+    split = Math.min(1, Math.max(0, (clientX - r.left) / r.width));
+    gl.uniform1f(uni.split, split);
+    divider.style.left = knob.style.left = (split * 100) + '%';
+    if (!touched) { touched = true; hint.style.opacity = 0; }
+  }
+  stage.addEventListener('pointerdown', e => {
+    // A tap doubles as the user gesture that unblocks playback when autoplay
+    // was refused (Low Power Mode), so the demo isn't a dead poster.
+    if (needsGesture) { needsGesture = false; loadingEl.textContent = '読み込み中…'; resume(); }
+    dragging = true; stage.setPointerCapture(e.pointerId); setSplit(e.clientX);
+  });
+  stage.addEventListener('pointermove', e => { if (dragging) setSplit(e.clientX); });
+  stage.addEventListener('pointerup',   () => dragging = false);
+
+  // ---- render loop ---------------------------------------------------------
+  // Gated on visibility of the SECTION only. A background tab needs no guard of
+  // its own — requestAnimationFrame already stops firing there — and gating on
+  // `document.hidden` as well is actively harmful: if it reads true at load the
+  // loop never starts. The browser may still pause the video in the background,
+  // which is what the visibilitychange resume below is for.
+  // Starts FALSE when an observer is available, so nothing is fetched until the
+  // section is genuinely in view. Initialising it to true meant the trailing
+  // resume() below loaded the clip immediately and the laziness did nothing.
+  // Without an observer there is no signal to wait for, so run straight away.
+  let sized = false, running = false;
+  let onScreen = !('IntersectionObserver' in window);
+
+  function draw() {
+    if (!onScreen) { running = false; return; }
+    if (video.readyState >= 2) {
+      if (!sized) {
+        canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        divider.style.left = knob.style.left = '50%';
+        gl.uniform1f(uni.split, split);
+        push();
+        sized = true;
+        stage.classList.add('ready');   // first real frame — fade off the poster
+      }
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    }
+    requestAnimationFrame(draw);
+  }
+  // Fetches the clip the first time it is genuinely needed — i.e. when the demo
+  // scrolls into view, not on page load.
+  function ensureLoaded() {
+    const want = CLIPS[clipIndex].file;
+    if (loadedSrc === want) return;
+    loadedSrc = want;
+    video.src = want;
+    video.load();
+  }
+  // Autoplay is refused outright in iOS Low Power Mode, and a clip can simply
+  // fail to load. Both used to leave "読み込み中…" on screen forever with no way
+  // out, so surface the state and let a tap recover it.
+  const loadingEl = document.getElementById('loading');
+  let needsGesture = false;
+
+  function resume() {
+    if (!onScreen) return;
+    ensureLoaded();
+    video.play()
+      .then(() => { needsGesture = false; })
+      .catch(() => { needsGesture = true; loadingEl.textContent = 'タップして再生'; });
+    if (!running) { running = true; requestAnimationFrame(draw); }
+  }
+  video.addEventListener('error', () => {
+    loadingEl.textContent = '映像を読み込めませんでした';
+    stage.classList.remove('ready');
+  });
+  function suspend() { video.pause(); }
+
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) resume(); });
+  video.addEventListener('loadeddata', resume);
+
+  stage.style.backgroundImage = `url("${CLIPS[clipIndex].poster}")`;
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(entries => {
+      onScreen = entries[0].isIntersecting;
+      onScreen ? resume() : suspend();
+    }, { threshold: 0.1 }).observe(stage);
+  }
+  resume();
+})();
+</script>
 </body>
 </html>
