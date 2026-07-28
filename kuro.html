@@ -150,7 +150,7 @@
     <div style="max-width:1080px;margin:0 auto;">
       <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;color:#e5484d;">TRY IT IN YOUR BROWSER</div>
       <h2 class="h-l" style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;margin:14px 0 12px;">触ってみてください。</h2>
-      <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.75;color:#a4a4a0;max-width:640px;">下の映像は加工していない素材です。まず「自動調整」を押してみてください — Kuro が実際に使っているのと同じ計算が、その場で走ります。スライダーで自分で追い込んだり、仕切りをドラッグして元映像と見比べたりもできます。</p>
+      <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.75;color:#a4a4a0;max-width:640px;">右半分は Kuro が自動調整した結果、左半分は元のままの映像です。仕切りを左右にドラッグして見比べてみてください。動いているのは、Kuro が実際に使っているのと同じ計算です。スライダーで自分で追い込むことも、「リセット」で元に戻すこともできます。</p>
 
   <div class="stage" id="stage">
     <canvas id="gl"></canvas>
@@ -530,8 +530,11 @@
 
   function readable(id, v) { return (id === 'lift') ? v.toFixed(3) : v.toFixed(2); }
 
+  function readValues() {
+    const v = {}; ids.forEach(i => v[i] = parseFloat(el[i].value)); return v;
+  }
   function push() {
-    const v = {}; ids.forEach(i => v[i] = parseFloat(el[i].value));
+    const v = readValues();
     ids.forEach(i => el[i+'_v'].textContent = readable(i, v[i]));
     gl.uniform3fv(uni.wb, wbGain(v.temp, v.tint));
     gl.uniform3f(uni.gain, v.gain, v.gain, v.gain);
@@ -585,15 +588,25 @@
   });
   function selectClip(i) {
     if (i === clipIndex) return;
+    // If the grade is still this clip's auto — i.e. the visitor hasn't dialled
+    // anything themselves — carry that over as the NEXT clip's auto, since auto
+    // is the default state. Anything they set by hand is left alone instead of
+    // being wiped by a clip change.
+    const wasAuto = matches(readValues(), CLIPS[clipIndex].auto);
     clipIndex = i;
     [...clipBar.children].forEach((b, j) => b.setAttribute('aria-pressed', j === i ? 'true' : 'false'));
     sized = false;                 // clips may differ in size — re-fit the canvas
     stage.classList.remove('ready');
     stage.style.backgroundImage = `url("${CLIPS[i].poster}")`;
-    push();                        // this clip has its own auto target, so the
-                                   // "✓ 自動調整" state has to be re-evaluated
+    if (wasAuto) applySet(CLIPS[i].auto, false);
+    else push();                   // re-evaluates "✓ 自動調整" against the new target
     resume();                      // resume() performs the actual load
   }
+
+  // Auto-adjust is the state the demo OPENS in: the split then shows the
+  // difference the moment it scrolls into view, rather than depending on the
+  // visitor finding a button first.
+  applySet(CLIPS[clipIndex].auto, false);
 
   // ---- split divider -------------------------------------------------------
   const stage = document.getElementById('stage');
