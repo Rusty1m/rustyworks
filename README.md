@@ -53,6 +53,7 @@ URL が `rustyworks.jp/autodub/` の形になり、拡張子が出ません。
 |---|---|
 | 実体 | `autodub/index.html`（1ファイル完結・外部依存なし・ビルド不要） |
 | OGP画像 | `assets/og/autodub-og.jpg`（1200×630） |
+| アイコン | `autodub/icon.png`（ファビコン用・相対参照）と `assets/icons/autodub.png`（トップのカード用）の2か所 |
 | 旧URL | `autodub.html` は転送用に残置。**消さないこと** |
 
 開発は `~/オートダビング構文/` で行い、そこからコピーして公開します。
