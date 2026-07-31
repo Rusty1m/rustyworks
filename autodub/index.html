@@ -129,9 +129,9 @@
 <div class="row">
   <button id="postResult" class="primary">変換結果を 𝕏 に投稿</button>
   <button id="copy">返信用にコピー</button>
+  <span class="count" id="fit" title="X に投稿できる長さ（全角換算）。超えた分は末尾が切り詰められます。">0 / 0</span>
 </div>
-<p class="hint">本文をそのまま投稿 → <b>その投稿への返信</b>に変換結果を貼ると、前後の対比が伝わります。<br>
-<span id="fit"></span></p>
+<p class="hint">本文をそのまま投稿 → <b>その投稿への返信</b>に変換結果を貼ると、前後の対比が伝わります。</p>
 
 <h2>例文</h2>
 <div class="row" id="presets"></div>
@@ -873,17 +873,11 @@ function render(){
   $note.textContent=MODES[mode].note;
   $out.textContent=convert(v.slice(0,LIMIT), mode);
 
-  // X は全角を2文字と数える＝日本語は実質140字。切り詰めが起きるか事前に示す
-  if(!$out.textContent){ $fit.textContent=""; return; }
-  const body = $out.textContent.trim().replace(/\n+/g," ");
-  const room = 280 - 23 - xLen(`\n\n${HASHTAG}\n`);
-  const used = xLen(body);
-  const over = used > room;
-  $fit.innerHTML = over
-    ? `<b>返信は全角 ${Math.floor((used-room)/2)} 字ぶん切り詰められます。</b>`
-      + `本文を短くすると全文が入ります。`
-    : `返信の長さ: ${Math.ceil(used/2)} / ${Math.floor(room/2)} 字（全角換算）`;
-  $fit.style.color = over ? "var(--accent)" : "";
+  // X は全角を2文字と数える＝日本語は実質140字。本文と同じ形で残量を出す
+  const room = Math.floor((280 - 23 - xLen(`\n\n${HASHTAG}\n`)) / 2);
+  const used = Math.ceil(xLen($out.textContent.trim().replace(/\n+/g," ")) / 2);
+  $fit.textContent = `${$out.textContent ? used : 0} / ${room}`;
+  $fit.classList.toggle("over", used > room);
 }
 
 for(const [key,m] of Object.entries(MODES)){
