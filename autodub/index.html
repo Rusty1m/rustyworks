@@ -1,0 +1,879 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>オートダビング構文 | RustyWorks</title>
+    <meta name="description" content="日本語を、YouTube の自動吹き替えっぽい日本語に変換するジョークアプリ。ブラウザだけで動きます。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RustyWorks">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:url" content="https://rustyworks.jp/autodub/">
+<meta property="og:title" content="オートダビング構文 | RustyWorks">
+<meta property="og:description" content="日本語を、YouTube の自動吹き替えっぽい日本語に変換するジョークアプリ。ブラウザだけで動きます。">
+<meta property="og:image" content="https://rustyworks.jp/assets/og/autodub-og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="オートダビング構文 | RustyWorks">
+<meta name="twitter:description" content="日本語を、YouTube の自動吹き替えっぽい日本語に変換するジョークアプリ。ブラウザだけで動きます。">
+<meta name="twitter:image" content="https://rustyworks.jp/assets/og/autodub-og.jpg">
+<style>
+  :root{
+    --bg:#faf8f5; --fg:#1c1a17; --muted:#6b6560; --line:#e0dad2;
+    --card:#fff; --accent:#b4541f; --accent-soft:#fdf1e8;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{ --bg:#16151a; --fg:#e8e4de; --muted:#8f8880; --line:#2e2c33;
+           --card:#1e1d23; --accent:#e0854a; --accent-soft:#2a211c; }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:24px 16px 64px; background:var(--bg); color:var(--fg);
+    font-family:"Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+    line-height:1.75; -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:720px; margin:0 auto}
+  header{margin-bottom:24px}
+  h1{font-size:1.5rem; margin:0 0 6px; letter-spacing:.02em}
+  .sub{color:var(--muted); font-size:.85rem; margin:0}
+
+  textarea{
+    width:100%; min-height:110px; padding:14px; resize:vertical;
+    background:var(--card); color:var(--fg);
+    border:1px solid var(--line); border-radius:10px; font:inherit; line-height:1.7;
+  }
+  textarea:focus{outline:2px solid var(--accent); outline-offset:-1px}
+
+  .row{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:12px 0}
+  .count{margin-left:auto; color:var(--muted); font-size:.8rem; font-variant-numeric:tabular-nums}
+  .count.over{color:var(--accent); font-weight:700}
+
+  button{
+    font:inherit; font-size:.85rem; padding:7px 13px; cursor:pointer;
+    background:var(--card); color:var(--fg);
+    border:1px solid var(--line); border-radius:999px;
+    transition:border-color .12s, background .12s, color .12s;
+  }
+  button:hover{border-color:var(--accent)}
+  button.primary{background:var(--accent); color:#fff; border-color:var(--accent)}
+
+  .modes{display:flex; flex-wrap:wrap; gap:6px; margin:14px 0 4px}
+  .modes button{padding:8px 14px}
+  .modes button[aria-pressed=true]{
+    background:var(--accent); color:#fff; border-color:var(--accent); font-weight:700;
+  }
+  .modeNote{color:var(--muted); font-size:.78rem; margin:0 0 12px; min-height:1.4em}
+  .hint{color:var(--muted); font-size:.78rem; margin:-4px 0 0; line-height:1.6}
+  .hint b{color:var(--fg); font-weight:600}
+
+  .out{
+    padding:18px; min-height:130px;
+    background:var(--accent-soft); border:1px solid var(--line);
+    border-radius:10px; white-space:pre-wrap; word-break:break-word;
+    font-size:1.05rem; line-height:2;
+  }
+  .out:empty::before{content:"ここに変換結果が出ます"; color:var(--muted); font-size:.9rem}
+
+  h2{font-size:.8rem; color:var(--muted); font-weight:600;
+     letter-spacing:.08em; margin:26px 0 8px; text-transform:uppercase}
+  footer{margin-top:48px; padding-top:18px; border-top:1px solid var(--line);
+         color:var(--muted); font-size:.8rem}
+  footer a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>オートダビング構文</h1>
+  <p class="sub">日本語を、YouTube の自動吹き替えっぽい日本語に変換します。</p>
+</header>
+
+<textarea id="in" maxlength="400" placeholder="ここに日本語を入力（例：今日の会議、3時間もあって死にそうだった。）"></textarea>
+
+<div class="row">
+  <button id="clear">クリア</button>
+  <button id="reroll">引き直す</button>
+  <button id="post" class="primary">本文を 𝕏 に投稿</button>
+  <button id="copy">返信用にコピー</button>
+  <span class="count" id="count">0 / 200</span>
+</div>
+<p class="hint">本文をそのまま投稿 → <b>その投稿への返信</b>に変換結果を貼ると、前後の対比が伝わります。<br>
+<span id="fit"></span></p>
+
+<div class="modes" id="modes"></div>
+<p class="modeNote" id="modeNote"></p>
+
+<div class="out" id="out"></div>
+
+<h2>例文</h2>
+<div class="row" id="presets"></div>
+
+<footer>
+  作った人: <a href="https://rustyworks.jp">RustyWorks</a>
+</footer>
+
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   オートダビング構文 変換エンジン（純JS・依存なし）
+
+   方針: 忠実な再現ではなく「風」。観測された現象を実測より濃く出す。
+   要点: フィラーの振りかけだけでは足りない。文を組み替えること。
+   ============================================================ */
+
+/* ---------- 1. フィラー（実測の出現比率で重み付け） -------- */
+const FILLERS      = [["ええと",57],["ええ",30],["えっと",13]];
+const FILLERS_SUB  = [["ええと",40],["ええ",40],["まあ",20]];
+
+/* ---------- 2. 定型文：完全一致で最高品質の訳を固定 -------- */
+const PHRASES = [
+  [/^チャンネル登録(を)?(よろしく|お願いします|してね|して)?[。!！]*$/,
+   "もしあなたがこのビデオを楽しんだなら、親指を上げることを忘れないでください。そして購読ボタンを押してください。"],
+  [/^(高|グッド)?評価(を)?(よろしく|お願いします)[。!！]*$/, "このビデオに親指を上げることを忘れないでください。"],
+  [/^(それでは|では)?また(次回|ね|会いましょう)?[。!！]*$/, "えぇ、次のビデオでお会いしましょう。"],
+  [/^(こんにちは|こんちは|やあ|どうも)[。!！]*$/, "えぇ、みなさん、こんにちは。"],
+  [/^おはよう(ございます)?[。!！]*$/, "えぇ、みなさん、良い朝です。"],
+  [/^こんばんは[。!！]*$/, "えぇ、みなさん、良い夜です。"],
+  [/^はじめまして[。!！]*$/, "初めてあなたに会います。"],
+  [/^お疲れ(様|さま)?(です|でした)?[。!！]*$/, "あなたの疲れた仕事に感謝します。"],
+  [/^よろしくお願いします[。!！]*$/, "私はあなたの親切をあらかじめ感謝します。"],
+  [/^お世話になっております[。!！]*$/, "私はあなたの継続的なサポートに感謝します。"],
+  [/^ご確認(の程)?よろしくお願いします[。!！]*$/, "あなたはそれを確認することができますか。"],
+  [/^承知(いたし|し)ました[。!！]*$/, "私はそれを理解しました。"],
+  [/^かしこまりました[。!！]*$/, "私はあなたの願いを理解しました。"],
+  [/^申し訳(ございません|ありません|ない)[。!！]*$/, "私は非常に申し訳なく思います。"],
+  [/^すみません[。!！]*$/, "私を許してください。"],
+  [/^ごめん(なさい|ね)?[。!！]*$/, "私は残念に思います。"],
+  [/^ありがとう(ございます|ございました)?[。!！]*$/, "私はあなたにとても感謝しています。"],
+  [/^どういたしまして[。!！]*$/, "それは何でもありません。"],
+  [/^いただきます[。!！]*$/, "私はこの食べ物を受け取ります。"],
+  [/^ごちそうさま(でした)?[。!！]*$/, "それはごちそうでした。"],
+  [/^行ってきます[。!！]*$/, "私は行って、そして戻ってきます。"],
+  [/^行ってらっしゃい[。!！]*$/, "行って、そして戻ってきてください。"],
+  [/^ただいま[。!！]*$/, "えぇ、私は今、戻りました。"],
+  [/^おかえり(なさい)?[。!！]*$/, "あなたは戻ってきました。"],
+  [/^おやすみ(なさい)?[。!！]*$/, "良い夜を持ってください。"],
+  [/^いらっしゃいませ[。!！]*$/, "ようこそ、私たちの店へ。"],
+  [/^お大事に[。!！]*$/, "あなた自身の世話をしてください。"],
+  [/^おめでとう(ございます)?[。!！]*$/, "私はあなたを祝福します。"],
+  [/^頑張って[。!！]*$/, "あなたの足を折ってください。"],
+  [/^乾杯[。!！]*$/, "私たちのグラスを上げましょう。"],
+  [/^お邪魔します[。!！]*$/, "私はあなたを邪魔します。"],
+  [/^失礼します[。!！]*$/, "私は失礼な行動をとります。"],
+  [/^久しぶり(だね|ですね)?[。!！]*$/, "私たちは長い時間、会っていません。"],
+  [/^まじで[。!？!？]*$/, "本当に。"],
+  [/^やばい[。!！]*$/, "それはクレイジーです。"],
+  [/^うける[。!！]*$/, "それは私を笑わせます。"],
+  [/^神[。!！]*$/, "それは神です。"],
+];
+
+/* ---------- 2b. 短い口語：英語化すると必ず膨らむ ----------- */
+/*    短文には構造変換ルールが当たらないので、丸ごと表引きする  */
+const SHORT = {
+  "疲れた":"えぇ、私は本当に疲れています。",
+  "眠い":"私は眠気を感じています。",     "眠たい":"私は眠気を感じています。",
+  "腹減った":"私は空腹を持っています。", "お腹すいた":"私は空腹を持っています。",
+  "喉乾いた":"私は渇きを持っています。",
+  "暑い":"それは本当に暑いです。",       "寒い":"それは本当に寒いです。",
+  "痛い":"それは私を傷つけます。",       "怖い":"私は恐れを感じています。",
+  "だるい":"それは私にとって困難です。", "しんどい":"それは私にとって困難です。",
+  "つらい":"それは私にとって困難です。", "きつい":"それは私にとって困難です。",
+  "面倒くさい":"それはあまりにも多くの努力を必要とします。",
+  "めんどくさい":"それはあまりにも多くの努力を必要とします。",
+  "帰りたい":"私は私の家に帰りたいです。","寝たい":"私は眠りにつきたいです。",
+  "無理":"それは不可能です。",           "できない":"私はそれをすることができません。",
+  "わからない":"私は知りません。",       "分からない":"私は知りません。",
+  "知らない":"私はそれについての知識を持っていません。",
+  "暇":"私は自由な時間を持っています。", "忙しい":"私は忙しいです。",
+  "つまらない":"それは退屈です。",       "うるさい":"それはあまりにも大きな音です。",
+  "楽しい":"それは楽しいです。",         "嬉しい":"私はとても幸せです。",
+  "悲しい":"私は悲しいです。",           "寂しい":"私は孤独を感じています。",
+  "好き":"私はそれが好きです。",         "嫌い":"私はそれが好きではありません。",
+  "うまい":"それは本当に美味しいです。", "おいしい":"それは本当に美味しいです。",
+  "まずい":"それは良い味がしません。",   "すごい":"それは驚くべきことです。",
+  "最高":"それは最高です。",             "最悪":"それは最悪です。",
+  "ありえない":"それは起こり得ません。", "びっくりした":"私は驚かされました。",
+  "助かった":"私は救われました。",       "よかった":"それは良いことでした。",
+  "だめ":"それは良くありません。",       "やめて":"それをやめてください、いいですか？",
+  "待って":"待ってください、いいですか？","違う":"それは正しくありません。",
+};
+// 「疲れたー」「疲れた！」「疲れたわ」なども拾えるようにする
+const SHORT_RULES = Object.entries(SHORT)
+  .sort((a,b)=>b[0].length-a[0].length)
+  .map(([k,v])=>[new RegExp("^"+k+"[ぁ-んー]{0,2}[。、！？!?…～~\\s]*$"), v]);
+
+/* ---------- 3. 述語パターン：語ではなく文型を作り替える ----- */
+/*    ここが「振りかけ」と「組み替え」の差。効果が最も大きい    */
+const PREDICATES = [
+  [/死にそうだった/g, "死ぬところでした"],
+  [/死にそう/g, "死ぬところ"],
+  [/そうになった/g, "するところでした"],
+  [/しちゃった|しちゃっ た/g, "してしまいました"],
+  // 「めっちゃうまい」を「めってしまいますまい」に壊すため文末限定にする
+  [/ちゃった([。、！？]|$)/g, "てしまいました$1"],
+  [/ちゃう([。、！？]|$)/g, "てしまいます$1"],
+  [/すぎる/g, "あまりにも多い"],
+  [/すぎた/g, "あまりにも多かったです"],
+  [/たことがある/g, "した経験を持っています"],
+  [/たことない/g, "した経験を持っていません"],
+  [/しかない/g, "する以外に選択肢はありません"],
+  [/わけがない|はずがない/g, "方法はありません"],
+  [/かもしれない/g, "かもしれません"],
+  [/に違いない/g, "に違いありません"],
+  [/なければならない|ないといけない|なきゃ/g, "しなければなりません"],
+  [/した方がいい|したほうがいい/g, "するべきです"],
+  [/するべき|すべき/g, "するべき"],
+  [/できる/g, "することができます"],
+  [/できた/g, "することができました"],
+  [/できない/g, "することができません"],
+  [/と思う/g, "だと私は思います"],
+  [/と思った/g, "だと私は思いました"],
+  [/気がする/g, "という感じを持っています"],
+  [/ような気がした/g, "のように感じました"],
+  [/てみる/g, "しようとします"],
+  [/てみた/g, "しようとしました"],
+  [/ておく/g, "する準備をします"],
+];
+
+/* ---------- 4. 慣用句：英語イディオムを経由して直訳し戻す -- */
+const IDIOMS = [
+  [/結局(のところ)?、?/g, "一日の終わりに、"],
+  [/要するに、?/g, "長い話を短くすると、"],
+  [/ぶっちゃけ|正直(に言うと)?、?/g, "正直に言うと、"],
+  [/念のため/g, "安全な側にいるために"],
+  [/一石二鳥/g, "1つの石で2羽の鳥を殺すこと"],
+  [/朝飯前|楽勝/g, "ケーキの一切れ"],
+  [/高くつく/g, "腕と脚がかかる"],
+  [/どしゃぶり|土砂降り/g, "猫と犬が降っている"],
+  [/手に負えない/g, "噛める以上に大きく噛みちぎった"],
+  [/大したことない/g, "大きな取引ではない"],
+  [/そんな感じ/g, "そのようなもの"],
+  [/なるほど/g, "私はあなたを見ます"],
+  [/とりあえず/g, "今のところ、"],
+  [/いい感じ/g, "良い感じ"],
+  [/しょうがない|仕方ない/g, "それは人生です"],
+  [/気をつけて/g, "あなた自身の世話をしてください"],
+  [/落ち着いて/g, "冷たくしてください"],
+  [/嘘でしょ|マジか/g, "あなたは私をからかっていますか"],
+  [/ふざけんな|ふざけるな/g, "あなたは私をからかっていますか"],
+  [/二度と/g, "決して再び"],
+  [/めちゃくちゃ|めっちゃ|超|すごく|すっごく|物凄く|ものすごく/g, "本当に、本当に"],
+  [/ちなみに/g, "ところで、"],
+  [/そういえば/g, "そういえば、"],
+  [/とはいえ/g, "そうは言っても、"],
+  [/だからこそ/g, "それがまさに理由です、"],
+  [/なぜなら/g, "なぜなら"],
+  [/例えば/g, "例えば、"],
+  [/実は/g, "実際に、"],
+  [/本当に/g, "本当に"],
+  [/絶対に?/g, "間違いなく"],
+  [/たぶん|多分|おそらく/g, "おそらく"],
+  [/やっぱり|やっぱ/g, "結局のところ"],
+  [/なんか|なんとなく/g, "のような"],
+  [/ちょっと|少し/g, "少しだけ"],
+  [/かなり|わりと|そこそこ/g, "非常に"],
+  [/全然/g, "まったく"],
+  [/もちろん/g, "もちろん、"],
+];
+
+/* ---------- 5. 語彙：和製の物を英語名に迂回させる ---------- */
+const WORDS = [
+  // 飲食
+  [/ラーメン屋/g,"ラーメンのレストラン"], [/寿司屋/g,"寿司のレストラン"],
+  [/居酒屋/g,"日本のバー"], [/焼肉屋?/g,"焼いた肉の店"],
+  [/定食屋/g,"セットメニューのレストラン"], [/喫茶店|カフェ/g,"コーヒーショップ"],
+  [/コンビニ/g,"便利な店"], [/スーパー/g,"食料品店"], [/牛丼/g,"牛肉のボウル"],
+  [/弁当/g,"ランチボックス"], [/おにぎり/g,"米のボール"], [/味噌汁/g,"味噌のスープ"],
+  [/餃子/g,"日本の餃子"], [/唐揚げ/g,"揚げた鶏肉"], [/居間/g,"リビングルーム"],
+  // 仕事
+  [/会議|打ち合わせ|ミーティング/g,"ミーティング"], [/資料/g,"ドキュメント"],
+  [/締め切り|〆切/g,"デッドライン"], [/上司/g,"私のボス"], [/部下/g,"私の部下"],
+  [/同僚/g,"私の同僚"], [/取引先/g,"私たちのクライアント"], [/残業/g,"時間外労働"],
+  [/出張/g,"ビジネスの旅行"], [/有給/g,"有給の休暇"], [/給料|給与/g,"私の給料"],
+  [/会社/g,"私の会社"], [/社長/g,"私たちの社長"], [/新人/g,"新しい人"],
+  [/転職/g,"仕事を変えること"], [/面接/g,"インタビュー"],
+  // 生活
+  [/近所/g,"私の近所"], [/実家/g,"私の両親の家"], [/財布/g,"私の財布"],
+  [/スマホ|携帯/g,"私の携帯電話"], [/部屋/g,"私の部屋"], [/風呂/g,"バスルーム"],
+  [/布団/g,"私のベッド"], [/電車/g,"トレイン"],
+  [/駅前/g,"駅の前"], [/自転車/g,"私の自転車"], [/宿題/g,"私の宿題"],
+  [/学校/g,"私の学校"], [/先生/g,"私の先生"], [/病院/g,"病院"],
+  [/買い物/g,"ショッピング"], [/掃除/g,"クリーニング"], [/洗濯/g,"ランドリー"],
+  // ゲーム・ネット
+  [/無理ゲー/g,"不可能なゲーム"], [/クソゲー/g,"ひどいゲーム"],
+  [/神ゲー/g,"神のゲーム"], [/初見/g,"初めての視聴"],
+  [/実況/g,"ライブの解説"], [/配信/g,"ストリーミング"],
+  [/動画/g,"ビデオ"], [/視聴者/g,"あなたたち"], [/登録者/g,"購読者"],
+  [/コメント/g,"コメント"], [/炎上/g,"燃えること"],
+  // 接続・その他
+  [/でも、|だけど、|けど、/g,"しかし、"], [/だって/g,"なぜなら"],
+  [/そして/g,"そして"], [/それで/g,"それで、"],
+];
+
+/* ---------- 5b. 冠詞・指示詞（日本語には存在しない） -------- */
+/*  英語は名詞に a / the / this / that を必ず付ける。
+    戻すと「そのペン」「一つのペン」になる。最も分かりやすい翻訳臭。 */
+const DETERMINERS = [
+  ["その",30],      // the
+  ["一つの",24],    // a / an
+  ["この",16],      // this
+  ["あの",10],      // that
+  ["いくつかの",8], // some
+  ["それらの",6],   // those
+  ["私たちの",6],   // our（英語は所有格も省けない）
+];
+// 冠詞を付けない語（人称・時を表す語は英語でも無冠詞）
+const NO_DET = new Set(["私","僕","俺","彼","彼女","君","今日","明日","昨日","今","昔",
+                        "毎日","朝","昼","夜","今年","去年","来年","私たち","あなた"]);
+// 複合動詞の一部を名詞と誤認しない（「間に合う」の「間」に冠詞を付けない）
+const NO_DET_PHRASE = ["間に合","気に入","気にな","気にし","目に付","目にす","手に入",
+                       "役に立","身に付","口にす","耳にす","気にせ","物にす"];
+
+/* ---------- 6. 所有格の強制付与（英語は my/your を省けない）- */
+const POSSESS = ["友達","友人","彼女","彼氏","家族","母","父","兄","姉","弟","妹",
+                 "妻","夫","娘","息子","祖母","祖父","仕事","チーム","プロジェクト",
+                 "犬","猫","車","名前","人生","夢","趣味","部屋","町","街","地元"];
+
+/* ---------- 7. 敬体化：た形 → ました形（表引き） ----------- */
+const PAST = {
+  "行った":"行きました","来た":"来ました","した":"しました","見た":"見ました",
+  "食べた":"食べました","飲んだ":"飲みました","買った":"買いました","売った":"売りました",
+  "言った":"言いました","話した":"話しました","聞いた":"聞きました","書いた":"書きました",
+  "読んだ":"読みました","思った":"思いました","考えた":"考えました","知った":"知りました",
+  "なった":"なりました","あった":"ありました","いた":"いました",
+  "出た":"出ました","入った":"入りました","帰った":"帰りました","着いた":"着きました",
+  "作った":"作りました","使った":"使いました","待った":"待ちました","取った":"取りました",
+  "持った":"持ちました","始まった":"始まりました","終わった":"終わりました","会った":"会いました",
+  "寝た":"寝ました","起きた":"起きました","働いた":"働きました","休んだ":"休みました",
+  "送った":"送りました","もらった":"もらいました","くれた":"くれました","あげた":"あげました",
+  "落ちた":"落ちました","負けた":"負けました","勝った":"勝ちました","死んだ":"死にました",
+  "泣いた":"泣きました","笑った":"笑いました","怒った":"怒りました","驚いた":"驚きました",
+  "疲れた":"疲れました","困った":"困りました","忘れた":"忘れました","覚えた":"覚えました",
+  "やった":"やりました","走った":"走りました","歩いた":"歩きました","立った":"立ちました",
+  "座った":"座りました","開けた":"開けました","閉めた":"閉めました",
+  "急いだ":"急ぎました","泳いだ":"泳ぎました","脱いだ":"脱ぎました",
+  "選んだ":"選びました","運んだ":"運びました","呼んだ":"呼びました",
+  "住んだ":"住みました","進んだ":"進みました","並んだ":"並びました",
+};
+
+const ADJ = "うま|おいし|美味し|すご|凄|高|安|早|速|遅|多|少な|新し|古|良|悪|楽し|嬉し"
+          + "|悲し|寂し|怖|痛|熱|暑|寒|冷た|近|遠|長|短|大き|小さ|重|軽|強|弱|忙し"
+          + "|面白|かわい|可愛|きつ|ひど|素晴らし|すばらし|難し|優し|汚|眠|だる|うるさ";
+
+/* ---------- 7b. 文末の終助詞（MODES から参照するのでここで定義）---- */
+/* 実測（rec02 / 11分 / 248セグメント）。女ことばのみ計24回の内訳:
+     わ 46% ／ のよ 25% ／ わよ 21% ／ わね 8% ／ かしら 0% ／ のね 0%
+   「の」は単独で最多（21回）。敬体に付くと「〜ますの」となり翻訳調が際立つので加える。
+   当初入れていた「かしら」「のね」は実測ゼロだったため削除。                  */
+const FEM_TAIL = [["わ",36],["のよ",21],["の",19],["わよ",17],["わね",7]];
+
+/* 男ことば。吹き替え洋画の「〜だぜ」「〜さ」も、実際の日本語男性はまず言わない。
+   女ことばと同じ「翻訳が話者の性別を文末で示す」現象の裏返し。            */
+const MALE_TAIL = [["さ",30],["ぜ",24],["な",20],["ぞ",16],["だろ",10]];
+
+/* 終助詞ごとに「だ」の扱いが違う。表にしておかないと
+   「不可能ださ」「強いんだのよ」のような接続エラーになる。 */
+const DA_NA   = new Set(["の","のよ","のね"]);   // 不可能だ → 不可能なのよ
+const DA_DROP = new Set(["さ","だろ"]);          // 不可能だ → 不可能さ
+
+/* ---------- 8. モード：フレームごと空気を変える ------------ */
+const MODES = {
+  standard:{
+    label:"標準", note:"バランス型。まずはこれで。",
+    fillerHead:.5, fillerMid:.25, double:.15, split:.7, redundant:.3, det:0.35, polite:true, tail:null, tailRate:0,
+    discourse:["だから、","さて、","今、","では、","つまり、"],
+    open:null, close:null,
+  },
+  vlog:{
+    label:"Vlog", note:"挨拶で始まり、チャンネル登録で終わります。えぇが最多。",
+    fillerHead:.9, fillerMid:.5, double:.4, split:.7, redundant:.3, det:0.4, polite:true, tail:null, tailRate:0,
+    discourse:["だから、","そして、","つまり、","ところで、"],
+    open:"えぇ、みなさん、こんにちは。そして、私のチャンネルへようこそ。",
+    close:"えぇ、もしあなたがこのビデオを楽しんだなら、親指を上げて、そして購読することを忘れないでください。",
+  },
+  explain:{
+    label:"解説動画", note:"冗長化が最大。「〜ということです」で押してきます。",
+    fillerHead:.35, fillerMid:.2, double:.1, split:.85, redundant:.85, det:0.55, polite:true, tail:null, tailRate:0,
+    discourse:["ご覧のとおり、","重要なことは、","言い換えると、","ここで、","つまり、"],
+    open:"えぇ、今日、私たちはこれについて話すつもりです。",
+    close:"えぇ、それが、あなたが知る必要のあるすべてです。",
+  },
+  gameplay:{
+    label:"ゲーム実況", note:"短文と感嘆詞。「ああ、私は殺されました」の世界。",
+    fillerHead:.7, fillerMid:.35, double:.3, split:.95, redundant:.15, det:0.25, polite:true, tail:null, tailRate:0,
+    discourse:["ああ、","おっと、","待って、","よし、","なんてことだ、"],
+    open:"えぇ、それでは、行きましょう。",
+    close:"ああ、これはクレイジーです。",
+  },
+  doc:{
+    label:"ドキュメンタリー", note:"フィラーなし。台本読みの荘重な直訳。",
+    fillerHead:0, fillerMid:0, double:0, split:.8, redundant:.6, det:0.5, polite:true, tail:null, tailRate:0,
+    discourse:["しかし、","そして、","やがて、","その時、"],
+    open:"これは、ひとつの物語です。",
+    close:"そして、それは今も続いています。",
+  },
+  wild:{
+    label:"ワイルド（男）", note:"常体＋男ことば。「〜だぜ」「〜さ」は実際の男性は言わない。",
+    fillerHead:.2, fillerMid:.12, double:.08, split:.85, redundant:.25, det:.4,
+    polite:false, tail:MALE_TAIL, tailRate:.6, me:"俺",
+    discourse:["おい、","なあ、","ちくしょう、","まったく、"],
+    open:null, close:null,
+  },
+  cute:{
+    label:"キュート（女）", note:"常体＋女ことば。実測（11分・248セグメント）の分布そのまま。",
+    fillerHead:.15, fillerMid:.1, double:.05, split:.8, redundant:.25, det:.4,
+    polite:false, tail:FEM_TAIL, tailRate:.6, me:"私",
+    discourse:["ねえ、","あら、","ほら、","そうよ、"],
+    open:null, close:null,
+  },
+};
+
+/* ---------- ユーティリティ ---------- */
+function pick(weighted){                       // [[値,重み],...]
+  const total = weighted.reduce((s,[,w])=>s+w, 0);
+  let r = Math.random()*total;
+  for(const [v,w] of weighted){ if((r-=w) < 0) return v; }
+  return weighted[weighted.length-1][0];
+}
+const pickFlat = a => a[Math.floor(Math.random()*a.length)];   // 素の配列用
+const chance = p => Math.random() < p;
+
+/* ---------- 変換ステップ ---------- */
+
+// 終助詞を落とす（あの平板さの源）
+function dropParticles(s){
+  return s
+    .replace(/(だ|です|ます|でした|ました)(ね|よ|な|わ|ぞ|ぜ|さ)+([。、！？]|$)/g,"$1$3")
+    .replace(/(ね|よ|な|わ|ぞ|ぜ)+([。！？]|$)/g,"$2");
+}
+
+/* ★★ 構造変換。ここが本体。
+   日本語の口語は「体言止め・助詞省略・読点による句の羅列」でできている。
+   英語は主語と述語を省略できないので、そこを崩さないと何も変わらない。   */
+function restructure(s, rate){
+  const on = () => chance(rate);
+  const before = s;
+
+  // 1) 文頭「Aの B、」→「A、B は」   今日の会議、→ 今日、会議は
+  //    「静かなので、」の「の」を所有格と誤認しないよう ので/のに/のは を除外
+  s = s.replace(/(^|[。\n])([^、。]{1,8})の(?![でにはがもを])([^、。]{2,10})、/g,
+                (m,p,a,b)=> on() ? `${p}${a}、${b}は` : m);
+
+  // 2) 文頭の名詞＋読点 →「〜は、」  1) が効いた文には二重にかけない
+  if(s === before){
+    s = s.replace(/(^|[。\n])([一-龠ァ-ヶー]{2,12})、/g,
+                  (m,p,a)=> on() ? `${p}${a}は、` : m);
+  }
+
+  return s
+    // 3) 省略された助詞を補う（英語は省略できない）
+    //    「今」は「今日」に食い込んで「今は日」を作るので入れない
+    .replace(/(^|[。、\n])(これ|それ|あれ|ここ|そこ|今日|明日|昨日)([^はがをにでもとのへや、。])/g,
+             (m,p,a,b)=> on() ? `${p}${a}は${b}` : m)
+    // 4) 数量＋も →「なんと〜です。」と切り出して誇張する
+    .replace(/([0-9０-９]+[^、。]{0,4})も(あって|かかって|あった|かかった|して)/g,
+             (m,a)=> on() ? `なんと${a}です。そして、` : m)
+    // 5) 「Aが B で、」→「A は B です。そして、」
+    .replace(/([^、。]{1,12})が([^、。]{1,8})で、/g,
+             (m,a,b)=> on() ? `${a}は${b}です。そして、` : m)
+    /* 6) 接続助詞で切る（英語の短文＋接続詞の連鎖感）
+          「ので/けど/から」の前は連体形なので動詞とは限らない。
+          機械的に「ます」を足すと「同じなます」「暑くました」に壊れる。
+          語尾の種類ごとに分ける。                                   */
+    // 丁寧形＋が →「です。しかし、」   思いますが、→ 思います。しかし、
+    .replace(/(ます|です)が、/g,          (m,a)=> on() ? a+"。しかし、"     : m)
+    // 名詞＋な / 形容詞い の前は「です」で受ける
+    .replace(/([^、。]{2,})な(ので|のに)、/g,(m,a)=> on() ? a+"です。だから、" : m)
+    .replace(/([^、。]{1,}い)(ので|から)、/g,(m,a)=> on() ? a+"です。だから、" : m)
+    .replace(/([^、。]{2,})なけど、/g,     (m,a)=> on() ? a+"です。しかし、"  : m)
+    .replace(/([^、。]{1,}い)けど、/g,     (m,a)=> on() ? a+"です。しかし、"  : m)
+    // 過去形の前は切るだけでよい（politen が「ました」にする）
+    .replace(/([^、。]{2,}[ただ])(ので|から)、/g,(m,a)=> on() ? a+"。だから、"  : m)
+    .replace(/([^、。]{2,}[ただ])けど、/g, (m,a)=> on() ? a+"。しかし、"      : m)
+    // 形容詞の連用「〜くて、」は「いです」で受ける
+    .replace(/([^、。]{2,})くて、/g,       (m,a)=> on() ? a+"いです。そして、" : m)
+    // 動詞の連用中止（「暑くて」を除くため直前が「く」でないもの）
+    .replace(/([^、。]{3,}[^く])て、/g,    (m,a)=> on() ? a+"ました。そして、" : m)
+    // 「〜し、」は敬体化の前に切る（後だと「疲れましたし、」を壊す）
+    //  直前が「か」のものを除外。上のルールが作った「しかし、」を食べてしまうため
+    .replace(/([^、。]{2,}[^か])し、/g,(m,a)=> on() ? a+"。そして、"    : m);
+}
+
+/* ★ 体言止めを存在文にする。「水の音。」→「そこに水の音があります。」
+   俳句のような名詞終わりの文が一切変換されない問題への対処。          */
+function existify(s){
+  const core = s.replace(/[。！？\s]+$/,"");
+  if(!core) return s;
+  // すでに丁寧な述語で終わっていれば何もしない
+  if(/(です|ます|ました|でした|ません|でしょう|ください|ますか|たい)$/.test(core)) return s;
+  // 漢字・カタカナ終わり＝典型的な体言止め → 存在文にする
+  if(/[一-龠ァ-ヶー]$/.test(core)) return "そこに" + core + "があります。";
+  // 活用語で終わっていなければ（「明日は休み。」など）断定を補う
+  if(/([うくすつぬふむゆるぐずぶぷ]|[たっいなだ])$/.test(core)) return s;
+  return core + "です。";
+}
+
+// 「〜がある/いる」を have の直訳に
+function haveify(s){
+  return s
+    .replace(/([^、。]{1,14})が(ある|あります)([。、])/g,"私は$1を持っています$3")
+    .replace(/([^、。]{1,14})が(いる|います)([。、])/g,"私は$1を持っています$3")
+    // 「時間がない」「記憶がない」= 存在の否定。have の否定形に寄せる
+    .replace(/([^、。]{1,14})が(ない|ありません)([。、！？]|$)/g,"私は$1を持っていません$3")
+    .replace(/([^、。]{1,14})を持ってる/g,"$1を持っています");
+}
+
+/* ★ 冠詞・指示詞を補う。日本語に無いものを足すので効果が大きい。
+   the pen → そのペン / a pen → 一つのペン / this → この                */
+function determinize(s, rate){
+  // 直前が漢字・カタカナだとマッチが語の途中から始まる（レ「一つの」ストラン）。
+  // 「の」の直後は既に修飾済みなので除く（私の友達 → 私のその友達 を防ぐ）。
+  return s.replace(/(?<![0-9０-９一-龠ァ-ヶーの])([一-龠ァ-ヶー]{1,7})(を|が|は|に|で|へ|も)/g,
+                   (m, n, p, off, str) => {
+    if(NO_DET.has(n)) return m;                        // 人称・時の語には付けない
+    if(NO_DET_PHRASE.some(w => str.startsWith(w, off))) return m;   // 複合動詞
+    if(!chance(rate)) return m;
+    return pick(DETERMINERS) + n + p;
+  });
+}
+
+// 所有格と一人称を明示する
+function pronounify(s, me="私"){
+  s = s.replace(/僕|俺|自分|わたし|あたし|私/g, me);
+  for(const w of POSSESS){
+    // 「お父さん」を「お私の父さん」に壊さないため お の直後は除外
+    s = s.replace(new RegExp("(?<!"+me+"の)(?<!あなたの)(?<!お)"+w,"g"), me+"の"+w);
+  }
+  return s;
+}
+
+// た形の表引きは長いキーから。かつ「でした」「ました」を壊さないよう
+// 直前が ま / で のときは対象外にする（"した"→"しました" が暴発するため）
+const PAST_RULES = Object.entries(PAST)
+  .sort((a,b)=>b[0].length-a[0].length)
+  .map(([k,v])=>[new RegExp("(?<![まで])"+k,"g"), v]);
+
+// 敬体に寄せる
+function politen(s){
+  for(const [re,v] of PAST_RULES) s = s.replace(re, v);
+  return s
+    .replace(/られた([。、！？]|$)/g,"られました$1")
+    .replace(/れた([。、！？]|$)/g,"れました$1")
+    .replace(/([いっ])てた([。、！？]|$)/g,"$1ていました$2")
+    .replace(/([いっ])てる([。、！？]|$)/g,"$1ています$2")
+    .replace(/んでる([。、！？]|$)/g,"んでいます$1")
+    .replace(new RegExp("("+ADJ+")かった","g"),"$1かったです")
+    .replace(/くない([。！？]|$)/g,"くないです$1")
+    .replace(new RegExp("("+ADJ+")い([。！？]|$)","g"),"$1いです$2")
+    .replace(/(^|[、。])いい([。！？]|$)/g,"$1いいです$2")
+    // ナ形容詞の終止（「犬が好き。」が敬体化されない穴）
+    .replace(/(好き|嫌い|元気|大事|大切|必要|便利|不便|静か|綺麗|きれい|有名|得意|苦手|残念|大丈夫|無理|自由|変|楽)([。！？]|$)/g,"$1です$2")
+    .replace(/だった/g,"でした")
+    .replace(/じゃない/g,"ではありません")
+    .replace(/だろう?([。！？]|$)/g,"でしょう$1")
+    .replace(/でしょ([。！？]|$)/g,"でしょう$1")
+    // 否定の過去（五段は語尾が規則的に変わる）
+    .replace(/わなかった/g,"いませんでした").replace(/かなかった/g,"きませんでした")
+    .replace(/がなかった/g,"ぎませんでした").replace(/さなかった/g,"しませんでした")
+    .replace(/たなかった/g,"ちませんでした").replace(/ばなかった/g,"びませんでした")
+    .replace(/まなかった/g,"みませんでした").replace(/らなかった/g,"りませんでした")
+    .replace(/なかった/g,"ませんでした")
+    // 説明の「〜んだ」→「〜んです」。「読んだ」（動詞の過去）と区別するため、
+    // 「ん」の直前がひらがな（あるんだ／行くんだ／痛いんだ）のときだけ変換する
+    .replace(/(?<=[ぁ-ん])んだ([。！？]|$)/g,"んです$1")
+    // 「急いだ」「読んだ」は動詞の過去。断定の「だ」と間違えない
+    .replace(/(?<![んい])だ([。！？]|$)/g,"です$1")
+    .replace(/かない([。！？]|$)/g,"きません$1")
+    // 「がない」は五段活用より「〜が無い」の方が圧倒的に多いので haveify に任せる
+    .replace(/さない([。！？]|$)/g,"しません$1")
+    .replace(/たない([。！？]|$)/g,"ちません$1")
+    .replace(/ばない([。！？]|$)/g,"びません$1")
+    .replace(/まない([。！？]|$)/g,"みません$1")
+    .replace(/らない([。！？]|$)/g,"りません$1")
+    .replace(/わない([。！？]|$)/g,"いません$1")
+    .replace(/ない([。！？]|$)/g,"ません$1")
+    .replace(/([^ま])する([。、！？]|$)/g,"$1します$2")
+    .replace(/たい([。！？]|$)/g,"たいです$1")
+    .replace(/ないで([。！？]|$)/g,"ないでください$1")
+    .replace(/ありがとう([。！？]|$)/g,"ありがとうございます$1");
+}
+
+// ★ 冗長化。解説動画モードの本体
+// 語幹を食べてしまうので「ました」の丸ごと置換はしない（付け足すだけ）
+function redundify(s, rate){
+  if(!chance(rate)) return s;
+  return s
+    // 「行くんです」→「行くんということです」に壊れるので「ん」の後では止める
+    .replace(/(?<!ん)です([。！？]|$)/,"ということです$1")
+    .replace(/(?<!ん)ます([。！？]|$)/,"ますということです$1");  // 置換ではなく付け足す
+}
+
+/* ★ 短文を膨らませる。
+   英語は主語・目的語・時制を省略できないので、短い日本語ほど戻すと長くなる。
+   構造変換ルール（読点や節が前提）は短文に当たらないので、ここで補う。 */
+function padShort(s){
+  const hasObj = /[をにへ]/.test(s);
+  if(!hasObj){
+    if(/(行き|帰り|来|入り|出|着き)(ました|ます)/.test(s))
+      s = s.replace(/(行き|帰り|来|入り|出|着き)(ました|ます)/, "そこへ$1$2");
+    // 「し」は入れない。「勉強しました」→「勉強それをしました」に壊れる
+    else if(/(食べ|飲み|見|買い|読み|使い|作り|やり|書き|聞き)(ました|ます)/.test(s))
+      s = s.replace(/(食べ|飲み|見|買い|読み|使い|作り|やり|書き|聞き)(ました|ます)/, "それを$1$2");
+  }
+  // 英語は強調副詞を多用する
+  if(chance(.6)) s = s.replace(/^(私は|あなたは|それは)(?!本当に)/, "$1本当に");
+  return s;
+}
+
+/* ★ 常体に戻す。実測では吹き替えの終助詞は常体に付いていた
+     （…てるわ／…あるのよ／…したわ）。敬体化の結果を逆変換する。      */
+const PLAIN_PAST = Object.entries(PAST)
+  .sort((a,b)=>b[1].length-a[1].length)
+  .map(([plain,polite])=>[new RegExp(polite,"g"), plain]);
+
+function plainify(s){
+  for(const [re,v] of PLAIN_PAST) s = s.replace(re, v);   // 行きました → 行った
+  return s
+    .replace(/ています/g,"てる").replace(/でいます/g,"でる")
+    .replace(/ではありません/g,"じゃない")
+    .replace(/がありません/g,"がない").replace(/ありません/g,"ない")
+    .replace(/があります/g,"がある").replace(/あります/g,"ある")
+    .replace(/できません/g,"できない").replace(/できます/g,"できる")
+    .replace(/ますということです/g,"ということだ").replace(/ということです/g,"ということだ")
+    // 否定（五段は語尾が戻る）
+    .replace(/きませんでした/g,"かなかった").replace(/ぎませんでした/g,"がなかった")
+    .replace(/しませんでした/g,"さなかった").replace(/ちませんでした/g,"たなかった")
+    .replace(/びませんでした/g,"ばなかった").replace(/みませんでした/g,"まなかった")
+    .replace(/りませんでした/g,"らなかった").replace(/いませんでした/g,"わなかった")
+    .replace(/ませんでした/g,"なかった")
+    .replace(/きません/g,"かない").replace(/ぎません/g,"がない")
+    .replace(/しません/g,"さない").replace(/ちません/g,"たない")
+    .replace(/びません/g,"ばない").replace(/みません/g,"まない")
+    .replace(/りません/g,"らない").replace(/いません/g,"わない")
+    .replace(/ません/g,"ない")
+    // 形容詞＋です は「です」を落とすだけ（暑いです → 暑い）
+    .replace(new RegExp("("+ADJ+")いです","g"),"$1い")
+    .replace(/たいです/g,"たい").replace(/くないです/g,"くない")
+    .replace(/でしょう/g,"だろう").replace(/でした/g,"だった").replace(/です/g,"だ")
+    // 非過去（五段）
+    .replace(/します/g,"する")
+    .replace(/きます/g,"く").replace(/ぎます/g,"ぐ").replace(/ちます/g,"つ")
+    .replace(/びます/g,"ぶ").replace(/みます/g,"む").replace(/ります/g,"る")
+    .replace(/います/g,"う").replace(/ます/g,"る");
+}
+
+/* ★ 終助詞。実測では吹き替えの最大の特徴。
+   英語は文末に話者の性別が出ないのに、日本語の吹き替えは付ける。
+   丁寧形の末尾に足すだけなので語幹を壊さない。                    */
+
+// 常体の文末に終助詞を足す。付く先は 常体（〜た / 〜る / 〜ない / 〜だ）。
+function tailize(s, rate, tails){
+  if(!tails || !chance(rate)) return s;
+  const t = pick(tails);
+  return s.replace(/(んだ|だ|た|る|う|い|ない|かった|なかった)([。！]|$)/, (m, a, p) => {
+    p = p || "。";
+    // 男ことばは形容詞の言い切りに直接付かない（「強いぜ」は不自然）
+    if(tails === MALE_TAIL && /^(い|かった)$/.test(a)) return m;
+    if(DA_NA.has(t))   return (a === "んだ" ? "" : a === "だ" ? "な" : a) + t + p;
+    if(DA_DROP.has(t)) return (a === "んだ" ? "の" : a === "だ" ? "" : a) + t + p;
+    return a + t + p;                      // だわ / だぜ / だぞ / だな はそのまま
+  });
+}
+
+// 文頭に主語を補う（雑でよい。雑さが芸風と噛み合う）
+let ME='私';
+function addSubject(s, p=.55){
+  if(/^(私|あなた|それ|これ|そこ|なんと|そして|しかし|だから|つまり|ああ|おっと|待って|よし)/.test(s)) return s;
+  if(/^私|私は/.test(s)) return s;
+  // すでに主題（は）や主格（が）がある文に「私は」を足すと二重主語になる
+  if(/[はが]/.test(s.replace(/^[ぁ-ん]{0,3}、/,""))) return s;
+  if(/[？?]$/.test(s)) return chance(.7) ? "あなたは"+s : s;
+  return chance(p) ? (ME||"私")+"は"+s : s;
+}
+
+/* ---------- メイン ---------- */
+function convert(text, modeKey){
+  const M = MODES[modeKey] || MODES.standard;
+  if(!text.trim()) return "";
+
+  const whole = text.trim();
+  for(const [re,rep] of PHRASES){ if(re.test(whole)) return rep; }
+
+  // 構造を崩してから文に分割する（順序が重要）
+  const sents = restructure(text.replace(/\r/g,""), M.split)
+    .split(/(?<=[。！？!?\n])/).map(s=>s.trim()).filter(Boolean);
+
+  ME = M.me || '私';
+  const body = sents.map((raw,i)=>{
+    let s = raw;
+    const bare = s.replace(/\n/g,"");
+    // 表引きで確定した文も、一人称・常体化・終助詞はモードに従わせる
+    const finish = t => {
+      t = pronounify(t, M.me || "私");
+      if(!M.polite) t = plainify(t);
+      return tailize(t, M.tailRate, M.tail);
+    };
+    for(const [re,rep] of PHRASES){    if(re.test(bare)) return finish(rep); }
+    for(const [re,rep] of SHORT_RULES){ if(re.test(bare)) return finish(rep); }
+
+    const short = bare.replace(/[。、！？!?\s]/g,"").length <= 12;
+    s = dropParticles(s);
+    for(const [re,rep] of PREDICATES) s = s.replace(re,rep);
+    for(const [re,rep] of IDIOMS)     s = s.replace(re,rep);
+    for(const [re,rep] of WORDS)      s = s.replace(re,rep);
+    s = haveify(s);
+    s = pronounify(s, M.me || "私");
+    s = determinize(s, M.det);
+    s = politen(s);                  // まず敬体に正規化（活用の判定が一箇所で済む）
+    s = existify(s);                 // 体言止め →「そこに〜があります」
+    s = addSubject(s, short ? .85 : .55);
+    // 短文は構造変換が当たらないので、補完と冗長化を強めにかける
+    if(short){ s = padShort(s); s = redundify(s, Math.max(M.redundant, .55)); }
+    else     { s = redundify(s, M.redundant); }
+    if(!M.polite) s = plainify(s);   // 実測どおり常体へ戻す
+    s = tailize(s, M.tailRate, M.tail);
+
+    s = s.replace(/、/g, m => chance(M.fillerMid) ? "、"+pick(FILLERS_SUB)+"、" : m);
+
+    let head = "";
+    if(chance(M.fillerHead)){
+      head = pick(FILLERS)+"、";
+      if(chance(M.double)) head = pick(FILLERS)+"、"+head;   // 連続がいちばんおかしい
+    }
+    // 構造変換がすでに接続詞を置いた文には重ねない（「では、そして、」を防ぐ）
+    if(i>0 && chance(.35) && !/^(そして|しかし|だから|つまり)/.test(s)) head += pickFlat(M.discourse);
+
+    if(/ください[。！]?$/.test(s) && chance(.5)) s = s.replace(/[。！]?$/,"、いいですか？");
+    if(!/[。！？!?\n]$/.test(s)) s += "。";
+    return head+s;
+  }).join("");
+
+  return [M.open, body, M.close].filter(Boolean).join("\n");
+}
+
+/* ---------- X（旧Twitter）への共有 ---------- */
+
+// 公開後は自動でそのURLになる。ローカルで開いているときだけ既定値を使う。
+// index.html は落とす（/autodub/ の形で共有したいので）。
+const SITE_URL = /^https?:$/.test(location.protocol)
+  ? location.href.split(/[?#]/)[0].replace(/index\.html$/, "")
+  : "https://rustyworks.jp/autodub/";
+
+const HASHTAG = "#オートダビング構文";
+
+// X は全角（CJK）を2文字として数える。URL は実際の長さに関係なく常に23。
+const CJK = /[ᄀ-ᇿ⺀-꓏ꥠ-꥿가-퟿豈-﫿︐-︟︰-﹏＀-｠￠-￦]/;
+const xLen = s => [...s].reduce((n,c) => n + (CJK.test(c) ? 2 : 1), 0);
+
+// 重み付きの上限に収まるよう末尾を落とす
+function clip(s, budget){
+  if(xLen(s) <= budget) return s;
+  let out = "", n = 0;
+  for(const c of s){
+    const w = CJK.test(c) ? 2 : 1;
+    if(n + w > budget - 1) break;        // 「…」の分を残す
+    out += c; n += w;
+  }
+  return out + "…";
+}
+
+/* 前後を1投稿に詰めると、日本語では 140字相当しか入らず必ず溢れる。
+   本文を投稿し、その返信に変換結果を貼る流れにすれば、
+   対比はスレッドの構造が作ってくれるので、片方だけ収まればよい。 */
+function buildReply(out){
+  const fixed = `\n\n${HASHTAG}\n`;
+  const budget = 280 - 23 - xLen(fixed);          // URL は常に23換算
+  return `${clip(out.trim().replace(/\n+/g," "), budget)}\n\n${HASHTAG}\n${SITE_URL}`;
+}
+
+// 本文はユーザー自身の言葉。ハッシュタグもURLも足さずそのまま渡す。
+const buildPost = src => src.trim();
+
+/* ---------- プリセット ---------- */
+const PRESETS = [
+  ["日常","今日の会議、3時間もあって死にそうだった。めっちゃ疲れたし、もう帰りたい。"],
+  ["飲食レポ","近所のラーメン屋に行ってきた。スープが濃厚でめっちゃうまいので、また来ようと思う。"],
+  ["ゲーム実況","うわやられた。これ無理ゲーだろ。もう一回やってみるけど、たぶん勝てない。"],
+  ["親への手紙","お父さん、いつもありがとう。あんまり無理しないでね。今度実家に帰るよ。"],
+  ["退職の挨拶","短い間でしたが、お世話になりました。皆さんのおかげで成長できたと思います。"],
+  ["ビジネス","お世話になっております。標記の件、ご確認いただけますでしょうか。"],
+  ["告白","ずっと好きでした。結婚してください。"],
+  ["怒り","ふざけんな。二度と来るか。"],
+];
+
+/* ---------- UI ---------- */
+const $in=document.getElementById("in"), $out=document.getElementById("out"),
+      $count=document.getElementById("count"), $modes=document.getElementById("modes"),
+      $note=document.getElementById("modeNote");
+const LIMIT=200;
+let mode="standard";
+
+const $fit = document.getElementById("fit");
+
+function render(){
+  const v=$in.value;
+  $count.textContent=`${v.length} / ${LIMIT}`;
+  $count.classList.toggle("over", v.length>LIMIT);
+  $note.textContent=MODES[mode].note;
+  $out.textContent=convert(v.slice(0,LIMIT), mode);
+
+  // X は全角を2文字と数える＝日本語は実質140字。切り詰めが起きるか事前に示す
+  if(!$out.textContent){ $fit.textContent=""; return; }
+  const body = $out.textContent.trim().replace(/\n+/g," ");
+  const room = 280 - 23 - xLen(`\n\n${HASHTAG}\n`);
+  const used = xLen(body);
+  const over = used > room;
+  $fit.innerHTML = over
+    ? `<b>返信は全角 ${Math.floor((used-room)/2)} 字ぶん切り詰められます。</b>`
+      + `本文を短くすると全文が入ります。`
+    : `返信の長さ: ${Math.ceil(used/2)} / ${Math.floor(room/2)} 字（全角換算）`;
+  $fit.style.color = over ? "var(--accent)" : "";
+}
+
+for(const [key,m] of Object.entries(MODES)){
+  const b=document.createElement("button");
+  b.textContent=m.label; b.setAttribute("aria-pressed", key===mode);
+  b.onclick=()=>{
+    mode=key;
+    [...$modes.children].forEach(x=>x.setAttribute("aria-pressed", x===b));
+    render();
+  };
+  $modes.appendChild(b);
+}
+
+$in.addEventListener("input", render);
+document.getElementById("clear").onclick=()=>{ $in.value=""; $in.focus(); render(); };
+document.getElementById("reroll").onclick=render;   // 確率的なので引き直せる
+// 返信に貼る用。変換結果＋ハッシュタグ＋URL。
+document.getElementById("copy").onclick=async e=>{
+  if(!$out.textContent) return;
+  await navigator.clipboard.writeText(buildReply($out.textContent));
+  const b=e.currentTarget, t=b.textContent;
+  b.textContent="コピーしました"; setTimeout(()=>b.textContent=t,1600);
+};
+
+// 投稿はしない。X の作成画面を開くだけで、送信は本人が行う。
+document.getElementById("post").onclick=()=>{
+  const src = buildPost($in.value.slice(0,LIMIT));
+  if(!src) return;
+  window.open("https://x.com/intent/post?text=" + encodeURIComponent(src),
+              "_blank", "noopener,noreferrer");
+};
+
+const $presets=document.getElementById("presets");
+for(const [label,text] of PRESETS){
+  const b=document.createElement("button");
+  b.textContent=label;
+  b.onclick=()=>{ $in.value=text; render(); };
+  $presets.appendChild(b);
+}
+
+render();
+</script>
+</body>
+</html>
