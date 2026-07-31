@@ -91,12 +91,13 @@
 </header>
 
 <textarea id="in" maxlength="400" placeholder="ここに日本語を入力（例：今日の会議、3時間もあって死にそうだった。）"></textarea>
+<p class="hint quote-hint">「かぎ括弧」『二重かぎ』（丸括弧）【すみ付き】"引用符" で囲んだ部分は
+<b>変換されずそのまま出ます</b>。作品名・固有名詞・引用を守るのに使ってください。</p>
 
 <div class="row">
   <button id="clear">クリア</button>
   <button id="reroll">引き直す</button>
   <button id="post" class="primary">本文を 𝕏 に投稿</button>
-  <button id="copy">返信用にコピー</button>
   <span class="count" id="count">0 / 200</span>
 </div>
 <p class="hint">本文をそのまま投稿 → <b>その投稿への返信</b>に変換結果を貼ると、前後の対比が伝わります。<br>
@@ -106,6 +107,11 @@
 <p class="modeNote" id="modeNote"></p>
 
 <div class="out" id="out"></div>
+
+<div class="row">
+  <button id="postResult" class="primary">変換結果を 𝕏 に投稿</button>
+  <button id="copy">返信用にコピー</button>
+</div>
 
 <h2>例文</h2>
 <div class="row" id="presets"></div>
@@ -433,6 +439,27 @@ const MODES = {
   },
 };
 
+/* ---------- 変換しない範囲（引用・括弧） ----------
+   固有名詞・作品名・引用は壊れると困る。囲まれた部分は退避しておき、
+   全ての変換が終わってから元に戻す。
+   退避先の記号には私用領域（U+E000〜）を使う。日本語の文字クラスにも
+   数字にも該当しないので、どの変換ルールにも巻き込まれない。          */
+const QUOTED = /「[^」]*」|『[^』]*』|（[^）]*）|【[^】]*】|\([^)]*\)|"[^"]*"|“[^”]*”/g;
+const MASK0 = 0xE000, MASK_MAX = 200;
+
+function mask(text){
+  const kept = [];
+  const masked = text.replace(QUOTED, m => {
+    if(kept.length >= MASK_MAX) return m;          // 異常に多いときは諦めて通す
+    kept.push(m);
+    return String.fromCharCode(MASK0 + kept.length - 1);
+  });
+  return [masked, kept];
+}
+const unmask = (s, kept) => kept.length
+  ? s.replace(/[\uE000-\uE0C7]/g, c => kept[c.charCodeAt(0) - MASK0] ?? c)
+  : s;
+
 /* ---------- ユーティリティ ---------- */
 function pick(weighted){                       // [[値,重み],...]
   const total = weighted.reduce((s,[,w])=>s+w, 0);
@@ -701,11 +728,14 @@ function convert(text, modeKey){
   const M = MODES[modeKey] || MODES.standard;
   if(!text.trim()) return "";
 
-  const whole = text.trim();
-  for(const [re,rep] of PHRASES){ if(re.test(whole)) return rep; }
+  // 引用・括弧の中身を退避してから変換する（最後に戻す）
+  const [src, kept] = mask(text);
+
+  const whole = src.trim();
+  for(const [re,rep] of PHRASES){ if(re.test(whole)) return unmask(rep, kept); }
 
   // 構造を崩してから文に分割する（順序が重要）
-  const sents = restructure(text.replace(/\r/g,""), M.split)
+  const sents = restructure(src.replace(/\r/g,""), M.split)
     .split(/(?<=[。！？!?\n])/).map(s=>s.trim()).filter(Boolean);
 
   ME = M.me || '私';
@@ -721,7 +751,8 @@ function convert(text, modeKey){
     for(const [re,rep] of PHRASES){    if(re.test(bare)) return finish(rep); }
     for(const [re,rep] of SHORT_RULES){ if(re.test(bare)) return finish(rep); }
 
-    const short = bare.replace(/[。、！？!?\s]/g,"").length <= 12;
+    // 退避記号は1文字なので、長さは元の文字列に戻してから測る
+    const short = unmask(bare, kept).replace(/[。、！？!?\s]/g,"").length <= 12;
     s = dropParticles(s);
     for(const [re,rep] of PREDICATES) s = s.replace(re,rep);
     for(const [re,rep] of IDIOMS)     s = s.replace(re,rep);
@@ -753,7 +784,7 @@ function convert(text, modeKey){
     return head+s;
   }).join("");
 
-  return [M.open, body, M.close].filter(Boolean).join("\n");
+  return unmask([M.open, body, M.close].filter(Boolean).join("\n"), kept);
 }
 
 /* ---------- X（旧Twitter）への共有 ---------- */
@@ -855,6 +886,13 @@ document.getElementById("copy").onclick=async e=>{
   await navigator.clipboard.writeText(buildReply($out.textContent));
   const b=e.currentTarget, t=b.textContent;
   b.textContent="コピーしました"; setTimeout(()=>b.textContent=t,1600);
+};
+
+// 変換結果だけを投稿する（本文を出したくない場合の入口）
+document.getElementById("postResult").onclick=()=>{
+  if(!$out.textContent) return;
+  window.open("https://x.com/intent/post?text=" + encodeURIComponent(buildReply($out.textContent)),
+              "_blank", "noopener,noreferrer");
 };
 
 // 投稿はしない。X の作成画面を開くだけで、送信は本人が行う。
