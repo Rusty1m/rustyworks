@@ -139,7 +139,8 @@
 <div class="row" id="presets"></div>
 
 <footer>
-  作った人: <a href="https://rustyworks.jp">RustyWorks</a>
+  作った人: <a href="https://rustyworks.jp">RustyWorks</a><br>
+  入力した文章はブラウザの中だけで処理され、どこにも送信されません。
 </footer>
 
 </div>
@@ -925,6 +926,19 @@ for(const [label,text] of PRESETS){
   b.textContent=label;
   b.onclick=()=>{ $in.value=text; render(); };
   $presets.appendChild(b);
+}
+
+/* ---------- アクセス計測 ----------
+   Cloudflare Web Analytics。Cookie を使わないので同意バナーは不要。
+   計測されるのは閲覧数・流入元・時系列だけで、入力した文章は送信されない。
+   トークンが空のあいだはスクリプトを読み込まない（＝外部リクエストは0のまま）。 */
+const CF_TOKEN = "";   // ← Cloudflare のダッシュボードで発行した値を入れる
+if(CF_TOKEN){
+  const b = document.createElement("script");
+  b.defer = true;
+  b.src = "https://static.cloudflareinsights.com/beacon.min.js";
+  b.setAttribute("data-cf-beacon", JSON.stringify({token: CF_TOKEN}));
+  document.head.appendChild(b);
 }
 
 // 着地した瞬間に変換結果が見えている状態にする。
