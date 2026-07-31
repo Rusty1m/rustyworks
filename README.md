@@ -39,4 +39,13 @@ HTTPS + キーチェーン。Personal Access Token（fine-grained・`Contents: R
 | Kuro | `kuro.html` / `kuro_manual.html` / `kuro_privacy.html` |
 | Plain Video Saver | `pvs.html` / `pvs_privacy.html` |
 | UADB | `UADB_manual.html` / `uadb_privacy.html` |
+| オートダビング構文（Web アプリ） | `autodub.html` |
 | トップ | `index.html` |
+
+## Web アプリについて
+
+`autodub.html` は **1ファイルで完結**します（外部 JS/CSS なし・ビルド不要）。
+
+開発は `~/オートダビング構文/` で行い、そこからコピーして公開します。
+コピー時に足すのは `<title>` 周りの OGP メタだけで、本体には手を入れません。
+OGP 画像は `assets/og/autodub-og.jpg`（1200×630）。
