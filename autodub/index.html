@@ -63,6 +63,24 @@
   .modes button[aria-pressed=true]{
     background:var(--accent); color:#fff; border-color:var(--accent); font-weight:700;
   }
+  /* 画面が狭いときはモードを1行に畳んで横スクロール。
+     3行に折り返すと結果が画面外へ押し出されるため。 */
+  @media (max-width:560px){
+    .modes{
+      flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none;
+      -webkit-overflow-scrolling:touch;
+      /* 右端をぼかして、まだ続くことを示す */
+      mask-image:linear-gradient(to right,#000 88%,transparent);
+    }
+    .modes::-webkit-scrollbar{display:none}
+    .modes button{flex:0 0 auto}
+  }
+  .tip{
+    color:var(--muted); font-size:.78rem; margin:8px 0 0; line-height:1.6;
+  }
+  .tip summary{cursor:pointer; color:var(--muted)}
+  .tip summary:hover{color:var(--accent)}
+  .tip b{color:var(--fg); font-weight:600}
   .modeNote{color:var(--muted); font-size:.78rem; margin:0 0 12px; min-height:1.4em}
   .hint{color:var(--muted); font-size:.78rem; margin:-4px 0 0; line-height:1.6}
   .hint b{color:var(--fg); font-weight:600}
@@ -91,8 +109,11 @@
 </header>
 
 <textarea id="in" maxlength="400" placeholder="ここに日本語を入力（例：今日の会議、3時間もあって死にそうだった。）"></textarea>
-<p class="hint quote-hint">「かぎ括弧」『二重かぎ』（丸括弧）【すみ付き】"引用符" で囲んだ部分は
-<b>変換されずそのまま出ます</b>。作品名・固有名詞・引用を守るのに使ってください。</p>
+<details class="tip">
+  <summary>括弧で囲むと、その部分は変換されません</summary>
+  「かぎ括弧」『二重かぎ』（丸括弧）【すみ付き】"引用符" で囲んだ部分は
+  <b>そのまま出ます</b>。作品名・固有名詞・引用を守るのに使ってください。
+</details>
 
 <div class="row">
   <button id="clear">クリア</button>
@@ -100,9 +121,6 @@
   <button id="post" class="primary">本文を 𝕏 に投稿</button>
   <span class="count" id="count">0 / 200</span>
 </div>
-<p class="hint">本文をそのまま投稿 → <b>その投稿への返信</b>に変換結果を貼ると、前後の対比が伝わります。<br>
-<span id="fit"></span></p>
-
 <div class="modes" id="modes"></div>
 <p class="modeNote" id="modeNote"></p>
 
@@ -112,6 +130,8 @@
   <button id="postResult" class="primary">変換結果を 𝕏 に投稿</button>
   <button id="copy">返信用にコピー</button>
 </div>
+<p class="hint">本文をそのまま投稿 → <b>その投稿への返信</b>に変換結果を貼ると、前後の対比が伝わります。<br>
+<span id="fit"></span></p>
 
 <h2>例文</h2>
 <div class="row" id="presets"></div>
@@ -911,6 +931,9 @@ for(const [label,text] of PRESETS){
   $presets.appendChild(b);
 }
 
+// 着地した瞬間に変換結果が見えている状態にする。
+// 空欄で始めると、最初の画面に面白いものが何も無い。
+$in.value = PRESETS[0][1];
 render();
 </script>
 </body>
