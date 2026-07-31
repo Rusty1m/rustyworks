@@ -932,7 +932,7 @@ for(const [label,text] of PRESETS){
    Cloudflare Web Analytics。Cookie を使わないので同意バナーは不要。
    計測されるのは閲覧数・流入元・時系列だけで、入力した文章は送信されない。
    トークンが空のあいだはスクリプトを読み込まない（＝外部リクエストは0のまま）。 */
-const CF_TOKEN = "";   // ← Cloudflare のダッシュボードで発行した値を入れる
+const CF_TOKEN = "04f66ad1837a4b63af68beb6e835358f";   // Cloudflare Web Analytics（公開値）
 if(CF_TOKEN){
   const b = document.createElement("script");
   b.defer = true;
