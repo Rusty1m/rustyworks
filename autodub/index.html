@@ -48,7 +48,10 @@
   textarea:focus{outline:2px solid var(--accent); outline-offset:-1px}
 
   .row{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:12px 0}
-  .count{margin-left:auto; color:var(--muted); font-size:.8rem; font-variant-numeric:tabular-nums}
+  /* 文字数は数える対象（入力欄・結果枠）の右下に付ける。
+     ボタン行に混ぜると狭い画面で折り返して迷子になっていた。 */
+  .count{display:block; text-align:right; margin:3px 3px 0;
+         color:var(--muted); font-size:.8rem; font-variant-numeric:tabular-nums}
   .count.over{color:var(--accent); font-weight:700}
 
   button{
@@ -59,6 +62,9 @@
   }
   button:hover{border-color:var(--accent)}
   button.primary{background:var(--accent); color:#fff; border-color:var(--accent)}
+  /* アイコンボタン。意味は title と aria-label が持つ */
+  button.icon{padding:7px 10px; line-height:0}
+  button.icon svg{width:16px; height:16px; display:block}
 
   .modes{display:flex; flex-wrap:wrap; gap:6px; margin:14px 0 4px}
   .modes button{padding:8px 14px}
@@ -101,6 +107,31 @@
   footer{margin-top:48px; padding-top:18px; border-top:1px solid var(--line);
          color:var(--muted); font-size:.8rem}
   footer a{color:var(--accent)}
+
+  /* ================= UI 仕上げ（配置は変えず、見え方だけ） ================= */
+
+  /* 塗りの主役をひとつに。本文の投稿は輪郭だけにして段を落とす */
+  #post{background:transparent; color:var(--accent); border-color:var(--accent)}
+  #post:hover{background:var(--accent-soft)}
+
+  /* クリア・引き直すは補助操作。主要ボタンと同じ重さで並べない */
+  #clear, #reroll{color:var(--muted)}
+  #clear:hover, #reroll:hover{color:var(--fg)}
+
+  /* 結果が主役。入力欄より重く見えるよう縁と影を足す */
+  .out{
+    border-color:color-mix(in srgb, var(--accent) 55%, var(--line));
+    box-shadow:0 10px 26px -20px rgba(0,0,0,.55);
+  }
+  /* 暗い背景では影が見えないので、面の明るさで持ち上げる */
+  @media (prefers-color-scheme:dark){
+    :root{--accent-soft:#33251d}
+    .out{box-shadow:none}
+  }
+
+  /* 補足文が詰まって読み飛ばされていたので行間を戻す */
+  .hint{margin-top:2px; line-height:1.85}
+  .modeNote{line-height:1.7}
 </style>
 </head>
 <body>
@@ -112,6 +143,7 @@
 </header>
 
 <textarea id="in" maxlength="400" placeholder="ここに日本語を入力（例：今日の会議、3時間もあって死にそうだった。）"></textarea>
+<span class="count" id="count">0 / 200</span>
 <details class="tip">
   <summary>括弧で囲むと、その部分は変換されません</summary>
   「かぎ括弧」『二重かぎ』（丸括弧）【すみ付き】"引用符" で囲んだ部分は
@@ -119,22 +151,20 @@
 </details>
 
 <div class="row">
-  <button id="clear">クリア</button>
-  <button id="reroll">引き直す</button>
+  <button id="clear" class="icon" title="入力を消す" aria-label="入力を消す"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button>
+  <button id="reroll" class="icon" title="別の変換を引き直す" aria-label="別の変換を引き直す"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.2 8a5.2 5.2 0 1 1-1.6-3.7"/><path d="M13.4 2.4v3h-3"/></svg></button>
   <button id="post" class="primary">本文を 𝕏 に投稿</button>
-  <span class="count" id="count">0 / 200</span>
 </div>
 <div class="modes" id="modes"></div>
 <p class="modeNote" id="modeNote"></p>
 
 <div class="out" id="out"></div>
 
+<span class="count" id="fit" title="X に投稿できる長さ（全角換算）。超えた分は末尾が切り詰められます。">0 / 0</span>
 <div class="row">
-  <button id="play" hidden>▶ 読み上げ</button>
-  <button id="voice" hidden title="声を切り替える">声: 女性</button>
+  <button id="play" class="icon" hidden title="読み上げる" aria-label="読み上げる"></button>
   <button id="postResult" class="primary">変換結果を 𝕏 に投稿</button>
-  <button id="copy">返信用にコピー</button>
-  <span class="count" id="fit" title="X に投稿できる長さ（全角換算）。超えた分は末尾が切り詰められます。">0 / 0</span>
+  <button id="copy" class="icon" title="返信用にコピー" aria-label="返信用にコピー"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5.8" y="5.8" width="7.7" height="7.7" rx="1.6"/><path d="M10.6 3.4H4a1.6 1.6 0 0 0-1.6 1.6v6.6"/></svg></button>
 </div>
 <p class="hint">本文をそのまま投稿 → <b>その投稿への返信</b>に変換結果を貼ると、前後の対比が伝わります。</p>
 
@@ -899,8 +929,7 @@ for(const [key,m] of Object.entries(MODES)){
   b.onclick=()=>{
     mode=key;
     [...$modes.children].forEach(x=>x.setAttribute("aria-pressed", x===b));
-    // 文体と声を合わせる。「俺は急いだぜ」を女性の声で読むと噛み合わない
-    if(TTS){ stopSpeak(); if(key==="wild") setGender("male"); if(key==="cute") setGender("female"); }
+    if(TTS) stopSpeak();
     render();
   };
   $modes.appendChild(b);
@@ -942,16 +971,19 @@ for(const [label,text] of PRESETS){
 
 /* ---------- 読み上げ ----------
    題材が吹き替えなので、平板な合成音声で読まれて初めて体験が完成する。
-   ブラウザ内蔵の Web Speech API を使うため、外部リクエストは増えない。 */
+   ブラウザ内蔵の Web Speech API を使うため、外部リクエストは増えない。
 
-// Web Speech API に性別の情報は無いので、音声名から推定するしかない
-const MALE_RE   = /otoya|ichiro|keita|hattori|eddy|reed|rocko|grandpa|男/i;
+   声は女性のみ。男性音声を持たない端末が多く、ピッチを下げた代用は
+   作り物とすぐ分かって笑いにならなかった。端末によって声が変わるより、
+   どこで開いても同じ声で鳴るほうを取る。                              */
+
 const FEMALE_RE = /kyoko|haruka|ayumi|sayaka|nanami|o-ren|flo|sandy|shelley|grandma|女/i;
+const ICON_PLAY = '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 3.2l8 4.8-8 4.8z"/></svg>';
+const ICON_STOP = '<svg viewBox="0 0 16 16" fill="currentColor"><rect x="4" y="4" width="8" height="8" rx="1.2"/></svg>';
 
-const $play  = document.getElementById("play");
-const $voice = document.getElementById("voice");
+const $play = document.getElementById("play");
 const TTS = typeof speechSynthesis !== "undefined";
-let vFemale = null, vMale = null, gender = "female", speaking = false;
+let voice = null, speaking = false;
 
 function loadVoices(){
   // 端末内の音声だけを使う。Chrome の「Google 日本語」などは合成をサーバーで行うため、
@@ -959,43 +991,32 @@ function loadVoices(){
   const ja = speechSynthesis.getVoices()
     .filter(v => /^ja/i.test(v.lang) && v.localService !== false);
   if(!ja.length) return;                              // 使える音声が無い環境では出さない
-  vFemale = ja.find(v => FEMALE_RE.test(v.name)) || ja[0];
-  vMale   = ja.find(v => MALE_RE.test(v.name))   || null;
-  $play.hidden = $voice.hidden = false;
-}
-
-function setGender(g){
-  gender = g;
-  $voice.textContent = g === "male" ? "声: 男性" : "声: 女性";
+  voice = ja.find(v => FEMALE_RE.test(v.name)) || ja[0];
+  $play.hidden = false;
 }
 
 function stopSpeak(){
   speechSynthesis.cancel();
   speaking = false;
-  $play.textContent = "▶ 読み上げ";
+  $play.innerHTML = ICON_PLAY;
+  $play.title = $play.ariaLabel = "読み上げる";
 }
 
 function speak(){
   const text = $out.textContent.trim();
   if(!text) return;
   stopSpeak();
-
-  // 男性音声が無い環境では女性音声のピッチを下げて代用する。
-  // 不自然な声になるが、機械が無理に喋っている感じは題材と噛み合う。
-  const male  = gender === "male";
-  const voice = (male && vMale) || vFemale;
-  const pitch = (male && !vMale) ? 0.5 : 1;
-
   // Chrome は長い発話を途中で打ち切るので、文ごとに分けて積む
   const parts = text.match(/[^。！？!?\n]+[。！？!?]?/g) || [text];
   parts.map(t => t.trim()).filter(Boolean).forEach((t, i, a) => {
     const u = new SpeechSynthesisUtterance(t);
-    u.voice = voice; u.lang = "ja-JP"; u.rate = 1.05; u.pitch = pitch;
+    u.voice = voice; u.lang = "ja-JP"; u.rate = 1.05;
     if(i === a.length - 1) u.onend = stopSpeak;
     speechSynthesis.speak(u);
   });
   speaking = true;
-  $play.textContent = "■ 停止";
+  $play.innerHTML = ICON_STOP;
+  $play.title = $play.ariaLabel = "停止";
 }
 
 if(TTS){
@@ -1003,9 +1024,8 @@ if(TTS){
   loadVoices();
   setTimeout(loadVoices, 1200);                       // 非同期で来ない環境の保険
   addEventListener("pagehide", () => speechSynthesis.cancel());
-  setGender("female");
-  $play.onclick  = () => speaking ? stopSpeak() : speak();
-  $voice.onclick = () => { setGender(gender === "male" ? "female" : "male"); if(speaking) speak(); };
+  stopSpeak();                                        // アイコンの初期化を兼ねる
+  $play.onclick = () => speaking ? stopSpeak() : speak();
 }
 
 /* ---------- アクセス計測 ----------
