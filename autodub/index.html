@@ -881,12 +881,6 @@ function convert(text, modeKey){
 
 /* ---------- X（旧Twitter）への共有 ---------- */
 
-// 公開後は自動でそのURLになる。ローカルで開いているときだけ既定値を使う。
-// index.html は落とす（/autodub/ の形で共有したいので）。
-const SITE_URL = /^https?:$/.test(location.protocol)
-  ? location.href.split(/[?#]/)[0].replace(/index\.html$/, "")
-  : "https://rustyworks.jp/autodub/";
-
 const HASHTAG = "#オートダビング構文";
 
 // X は全角（CJK）を2文字として数える。URL は実際の長さに関係なく常に23。
@@ -908,10 +902,13 @@ function clip(s, budget){
 /* 前後を1投稿に詰めると、日本語では 140字相当しか入らず必ず溢れる。
    本文を投稿し、その返信に変換結果を貼る流れにすれば、
    対比はスレッドの構造が作ってくれるので、片方だけ収まればよい。 */
+/* URL は付けない。付けると X が大きなカードを出して、書いた本人のネタが
+   その下に埋もれる。宣伝の投稿にも見える。加えて X は外部リンク付きの
+   投稿を伸ばしにくいので、拡散のたびにブレーキがかかる。
+   リンクを持つのは告知の1本だけでよく、あとはハッシュタグが入口になる。 */
 function buildReply(out){
-  const fixed = `\n\n${HASHTAG}\n`;
-  const budget = 280 - 23 - xLen(fixed);          // URL は常に23換算
-  return `${clip(out.trim().replace(/\n+/g," "), budget)}\n\n${HASHTAG}\n${SITE_URL}`;
+  const fixed = `\n\n${HASHTAG}`;
+  return `${clip(out.trim().replace(/\n+/g," "), 280 - xLen(fixed))}${fixed}`;
 }
 
 // 本文はユーザー自身の言葉。ハッシュタグもURLも足さずそのまま渡す。
@@ -946,7 +943,7 @@ function render(){
   $out.textContent=convert(v.slice(0,LIMIT), mode);
 
   // X は全角を2文字と数える＝日本語は実質140字。本文と同じ形で残量を出す
-  const room = Math.floor((280 - 23 - xLen(`\n\n${HASHTAG}\n`)) / 2);
+  const room = Math.floor((280 - xLen(`\n\n${HASHTAG}`)) / 2);
   const used = Math.ceil(xLen($out.textContent.trim().replace(/\n+/g," ")) / 2);
   $fit.textContent = `${$out.textContent ? used : 0} / ${room}`;
   $fit.classList.toggle("over", used > room);
@@ -968,11 +965,27 @@ $in.addEventListener("input", render);
 document.getElementById("clear").onclick=()=>{ $in.value=""; $in.focus(); render(); };
 document.getElementById("reroll").onclick=render;   // 確率的なので引き直せる
 // 返信に貼る用。変換結果＋ハッシュタグ＋URL。
-document.getElementById("copy").onclick=async e=>{
+// アイコンボタンなので textContent を書き換えると中の SVG ごと消える。
+// 差し替えるのは innerHTML にし、控えは読み込み時に取っておく（連打しても戻せる）。
+const $copy = document.getElementById("copy");
+const COPY_ICON = $copy.innerHTML, COPY_LABEL = $copy.title;
+const ICON_DONE = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.4l3.2 3.2L13 4.8"/></svg>';
+let copyTimer = 0;
+$copy.onclick = async () => {
   if(!$out.textContent) return;
-  await navigator.clipboard.writeText(buildReply($out.textContent));
-  const b=e.currentTarget, t=b.textContent;
-  b.textContent="コピーしました"; setTimeout(()=>b.textContent=t,1600);
+  let ok = true;
+  try { await navigator.clipboard.writeText(buildReply($out.textContent)); }
+  catch { ok = false; }                 // 権限が無いと無反応のボタンに見えてしまう
+  if(ok) $copy.innerHTML = ICON_DONE;
+  const msg = ok ? "コピーしました" : "コピーできませんでした";
+  $copy.title = msg;
+  $copy.setAttribute("aria-label", msg);
+  clearTimeout(copyTimer);
+  copyTimer = setTimeout(() => {
+    $copy.innerHTML = COPY_ICON;
+    $copy.title = COPY_LABEL;
+    $copy.setAttribute("aria-label", COPY_LABEL);
+  }, 1600);
 };
 
 // 変換結果だけを投稿する（本文を出したくない場合の入口）
