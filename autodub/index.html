@@ -601,6 +601,9 @@ function restructure(s, rate){
           語尾の種類ごとに分ける。                                   */
     // 丁寧形＋が →「です。しかし、」   思いますが、→ 思います。しかし、
     .replace(/(ます|です)が、/g,          (m,a)=> on() ? a+"。しかし、"     : m)
+    // 普通形＋が →「。しかし、」  しているが、→ している。しかし、
+    //   主語の「が」と紛れないよう、直前が述語で終わる字のときだけ切る
+    .replace(/([^、。]{2,}[るただい])が、/g,(m,a)=> on() ? a+"。しかし、"     : m)
     // 名詞＋な / 形容詞い の前は「です」で受ける
     .replace(/([^、。]{2,})な(ので|のに)、/g,(m,a)=> on() ? a+"です。だから、" : m)
     .replace(/([^、。]{1,}い)(ので|から)、/g,(m,a)=> on() ? a+"です。だから、" : m)
@@ -686,6 +689,8 @@ function politen(s){
     .replace(/([いっ])てた([。、！？]|$)/g,"$1ていました$2")
     .replace(/([いっ])てる([。、！？]|$)/g,"$1ています$2")
     .replace(/んでる([。、！？]|$)/g,"んでいます$1")
+    // 「している」「読んでいる」。既存の「てる」型では拾えず、常体のまま残っていた
+    .replace(/([てで])いる([。、！？]|$)/g,"$1います$2")
     .replace(new RegExp("("+ADJ+")かった","g"),"$1かったです")
     .replace(/くない([。！？]|$)/g,"くないです$1")
     .replace(new RegExp("("+ADJ+")い([。！？]|$)","g"),"$1いです$2")
@@ -722,13 +727,30 @@ function politen(s){
     .replace(/ありがとう([。！？]|$)/g,"ありがとうございます$1");
 }
 
+/* 普通形の動詞が終止に残ると、敬体のはずの文に「歩く。」が混ざる。
+   ただし五段と一段は表記から見分けられない（走る／見る）ので、機械的に
+   活用させると「走ます」に壊れる。活用は諦めて「〜のです」で受ける。
+   もったいぶった言い回しは、この構文の持ち味でもある。            */
+const POLITE_TAIL = /(ます|です|ました|でした|ません|でしょう|ください|ございます)$/;
+const PLAIN_END = /^(.*[^。、！？\n])([うくぐすつぬぶむる])([。！？]?)$/;
+// 動詞と同じ字で終わるが動詞ではないもの。形容詞の連用（早く）と助数詞（一つ）
+const NOT_VERB = new RegExp("(("+ADJ+")く|[0-9０-９一二三四五六七八九十いく幾]つ|そう|もう|どう|こう)$");
+function wrapPlain(s){
+  const m = s.match(PLAIN_END);
+  if(!m) return s;
+  const clause = m[1] + m[2];
+  if(POLITE_TAIL.test(clause)) return s;              // 既に敬体なら触らない
+  if(NOT_VERB.test(clause))    return s;              // 「早く」「一つ」は動詞ではない
+  return clause + pickFlat(["のです","んです"]) + (m[3] || "。");
+}
+
 // ★ 冗長化。解説動画モードの本体
 // 語幹を食べてしまうので「ました」の丸ごと置換はしない（付け足すだけ）
 function redundify(s, rate){
   if(!chance(rate)) return s;
   return s
     // 「行くんです」→「行くんということです」に壊れるので「ん」の後では止める
-    .replace(/(?<!ん)です([。！？]|$)/,"ということです$1")
+    .replace(/(?<![んの])です([。！？]|$)/,"ということです$1")
     .replace(/(?<!ん)ます([。！？]|$)/,"ますということです$1");  // 置換ではなく付け足す
 }
 
@@ -816,7 +838,42 @@ function addSubject(s, p=.55){
 }
 
 /* ---------- メイン ---------- */
+/* ---- 空振りの受け皿 ----
+   カタカナや専門語が多い文は辞書に当たらず、構造変換のルールも噛まないと
+   語尾が変わるだけで終わる。似すぎていたら引き直し、それでも駄目なら
+   フィラーだけは必ず入れて、何も起きていない状態を避ける。 */
+function lcsLen(a, b){                     // 最長共通部分列の長さ
+  let prev = new Uint16Array(b.length + 1), cur = new Uint16Array(b.length + 1);
+  for(let i = 1; i <= a.length; i++){
+    for(let j = 1; j <= b.length; j++)
+      cur[j] = a[i-1] === b[j-1] ? prev[j-1] + 1 : Math.max(prev[j], cur[j-1]);
+    [prev, cur] = [cur, prev]; cur.fill(0);
+  }
+  return prev[b.length];
+}
+function tooSimilar(src, out){
+  const strip = t => t.replace(/[。、！？!?\s]/g, "");
+  const a = strip(src), b = strip(out);
+  if(!a || !b) return false;
+  return 2 * lcsLen(a, b) / (a.length + b.length) > .88;
+}
+function forceFiller(out, M){
+  if(!M.fillerHead) return out;            // フィラーを使わないモードもある
+  const lines = out.split("\n");
+  const i = lines.findIndex(l => l && l !== M.open);   // 定型の挨拶行は避ける
+  if(i < 0) return out;
+  lines[i] = pick(FILLERS) + "、" + lines[i];
+  return lines.join("\n");
+}
+
 function convert(text, modeKey){
+  const M0 = MODES[modeKey] || MODES.standard;
+  let out = convertOnce(text, modeKey);
+  for(let i = 0; i < 3 && tooSimilar(text, out); i++) out = convertOnce(text, modeKey);
+  return tooSimilar(text, out) ? forceFiller(out, M0) : out;
+}
+
+function convertOnce(text, modeKey){
   const M = MODES[modeKey] || MODES.standard;
   if(!text.trim()) return "";
 
@@ -853,6 +910,7 @@ function convert(text, modeKey){
     s = pronounify(s, M.me || "私");
     s = determinize(s, M.det);
     s = politen(s);                  // まず敬体に正規化（活用の判定が一箇所で済む）
+    s = wrapPlain(s);                // 活用できない普通形は「〜のです」で受ける
     s = existify(s);                 // 体言止め →「そこに〜があります」
     s = addSubject(s, short ? .85 : .55);
     // 短文は構造変換が当たらないので、補完と冗長化を強めにかける
