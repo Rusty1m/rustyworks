@@ -22,14 +22,31 @@
 <meta name="twitter:image" content="https://rustyworks.jp/assets/og/autodub-og.jpg">
 <style>
   :root{
+    color-scheme:light;
     --bg:#faf8f5; --fg:#1c1a17; --muted:#6b6560; --line:#e0dad2;
-    --card:#fff; --accent:#b4541f; --accent-soft:#fdf1e8;
-  }
-  @media (prefers-color-scheme:dark){
-    :root{ --bg:#16151a; --fg:#e8e4de; --muted:#8f8880; --line:#2e2c33;
-           --card:#1e1d23; --accent:#e0854a; --accent-soft:#2a211c; }
+    --card:rgba(255,255,255,.70); --accent:#b4541f; --accent-soft:rgba(253,238,227,.82);
   }
   *{box-sizing:border-box}
+
+  /* 背景の模様。四角と丸をぼかして散らす。
+     文字は白いカードの上に乗るので、模様は面の隙間から覗く程度に留める。
+     position:fixed なのでスクロールしても再描画されない。 */
+  .bg{position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none}
+  .bg i{position:absolute; display:block}
+  .bg i:nth-child(1){left:-7%;  top:5%;   width:150px; height:150px;
+                     background:rgba(180,84,31,.20); border-radius:16%; transform:rotate(15deg); filter:blur(15px)}
+  .bg i:nth-child(2){right:-6%; top:17%;  width:200px; height:200px;
+                     background:rgba(180,84,31,.17); border-radius:50%; filter:blur(20px)}
+  .bg i:nth-child(3){left:4%;   top:44%;  width:96px;  height:96px;
+                     background:rgba(122,88,58,.20); border-radius:50%; filter:blur(13px)}
+  .bg i:nth-child(4){right:-4%; top:60%;  width:160px; height:160px;
+                     background:rgba(180,84,31,.18); border-radius:15%; transform:rotate(-14deg); filter:blur(16px)}
+  .bg i:nth-child(5){left:-8%;  bottom:9%; width:190px; height:190px;
+                     background:rgba(150,110,70,.18); border-radius:50%; filter:blur(19px)}
+  .bg i:nth-child(6){right:10%; bottom:-3%; width:120px; height:120px;
+                     background:rgba(180,84,31,.17); border-radius:17%; transform:rotate(26deg); filter:blur(14px)}
+  /* 内容は模様の上に。負の z-index は環境差があるので使わない */
+  .wrap{position:relative; z-index:1}
   body{
     margin:0; padding:24px 16px 64px; background:var(--bg); color:var(--fg);
     font-family:"Hiragino Sans","Yu Gothic",system-ui,sans-serif;
@@ -125,11 +142,6 @@
     border-color:color-mix(in srgb, var(--accent) 55%, var(--line));
     box-shadow:0 10px 26px -20px rgba(0,0,0,.55);
   }
-  /* 暗い背景では影が見えないので、面の明るさで持ち上げる */
-  @media (prefers-color-scheme:dark){
-    :root{--accent-soft:#33251d}
-    .out{box-shadow:none}
-  }
 
   /* 補足文が詰まって読み飛ばされていたので行間を戻す */
   .hint{margin-top:2px; line-height:1.85}
@@ -137,6 +149,7 @@
 </style>
 </head>
 <body>
+<div class="bg" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
 <div class="wrap">
 
 <header>
