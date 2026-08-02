@@ -500,6 +500,7 @@
                 <li><strong>「アクセス許可が必要」と出る</strong> — 外付けを繋ぎ直したか、macOS の許可が切れています。その項目から再度許可してください</li>
                 <li><strong>サムネイルが出ない</strong> — 破損したファイルや、拡張子と中身が食い違うファイルでは出ないことがあります</li>
                 <li><strong>件数が想定と違う</strong> — フォルダを入れ子で登録している場合、内側のファイルは外側にも含まれるため、合計は一致しません</li>
+                <li><strong>古い WMV のサムネイルが乱れる</strong> — 一部の <code>.wmv</code>（Windows Media Video 9）で、サムネイルにノイズが出ることがあります。ファイルが壊れているわけではなく、<strong>再生とプレビューは正常</strong>です。この形式は内部の索引が不完全なことが多く、途中の位置から画を取り出す際に生じます</li>
               </ul>
             </div>
             <div class="lang">
@@ -509,6 +510,7 @@
                 <li><strong>“Access needed” on a folder</strong> — the drive was reconnected, or the macOS permission lapsed. Grant access again from that row</li>
                 <li><strong>No thumbnail</strong> — damaged files, and files whose extension disagrees with their contents, may not produce one</li>
                 <li><strong>The counts do not add up</strong> — with nested folders a file belongs to every folder above it, so the totals deliberately overlap</li>
+                <li><strong>A garbled thumbnail on an old WMV</strong> — some <code>.wmv</code> files (Windows Media Video 9) produce a noisy thumbnail. The file is not damaged and <strong>playback and preview are unaffected</strong>: the format often carries an incomplete index, which can garble a frame taken from partway in</li>
               </ul>
             </div>
           </div>
