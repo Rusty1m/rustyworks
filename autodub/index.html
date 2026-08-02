@@ -39,6 +39,8 @@
   header{margin-bottom:24px}
   h1{font-size:1.5rem; margin:0 0 6px; letter-spacing:.02em}
   .sub{color:var(--muted); font-size:.85rem; margin:0}
+  /* 本物の再現ではなく誇張だと最初に断る。期待をここで合わせておく */
+  .aside{display:inline-block; opacity:.72; font-size:.95em}
 
   textarea{
     width:100%; min-height:110px; padding:14px; resize:vertical;
@@ -139,7 +141,7 @@
 
 <header>
   <h1>オートダビング構文</h1>
-  <p class="sub">日本語を、YouTube の自動吹き替えっぽい日本語に変換します。</p>
+  <p class="sub">日本語を、YouTube の自動吹き替えっぽい日本語に変換します。<span class="aside">※少しオーバーに変換します</span></p>
 </header>
 
 <textarea id="in" maxlength="400" placeholder="ここに日本語を入力（例：今日の会議、3時間もあって死にそうだった。）"></textarea>
@@ -152,7 +154,6 @@
 
 <div class="row">
   <button id="clear" class="icon" title="入力を消す" aria-label="入力を消す"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button>
-  <button id="reroll" class="icon" title="別の変換を引き直す" aria-label="別の変換を引き直す"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.2 8a5.2 5.2 0 1 1-1.6-3.7"/><path d="M13.4 2.4v3h-3"/></svg></button>
   <button id="post" class="primary">本文を 𝕏 に投稿</button>
 </div>
 <div class="modes" id="modes"></div>
@@ -162,6 +163,7 @@
 
 <span class="count" id="fit" title="X に投稿できる長さ（全角換算）。超えた分は末尾が切り詰められます。">0 / 0</span>
 <div class="row">
+  <button id="reroll" class="icon" title="別の変換を引き直す" aria-label="別の変換を引き直す"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.2 8a5.2 5.2 0 1 1-1.6-3.7"/><path d="M13.4 2.4v3h-3"/></svg></button>
   <button id="play" class="icon" hidden title="読み上げる" aria-label="読み上げる"></button>
   <button id="postResult" class="primary">変換結果を 𝕏 に投稿</button>
   <button id="copy" class="icon" title="返信用にコピー" aria-label="返信用にコピー"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5.8" y="5.8" width="7.7" height="7.7" rx="1.6"/><path d="M10.6 3.4H4a1.6 1.6 0 0 0-1.6 1.6v6.6"/></svg></button>
