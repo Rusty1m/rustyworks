@@ -85,7 +85,20 @@
   button.icon{padding:7px 10px; line-height:0}
   button.icon svg{width:16px; height:16px; display:block}
 
-  .modes{display:flex; flex-wrap:wrap; gap:6px; margin:14px 0 4px}
+  /* 角に浮かせるボタン。枠の外に半分出して、面の操作だと分かるようにする */
+  .field{position:relative}
+  .fab{position:absolute; top:-14px; z-index:2; background:var(--bg);
+       box-shadow:0 1px 3px rgba(0,0,0,.07)}
+  .fab.tl{left:-2px}
+  .fab.tr{right:-2px; top:-12px; width:25px; height:25px; padding:0;
+          border-radius:50%; font-size:.74rem; line-height:1; color:var(--muted)}
+  .fab.tr[aria-expanded=true]{background:var(--accent); color:#fff; border-color:var(--accent)}
+  button.round{width:34px; height:34px; padding:0; display:grid; place-items:center}
+  .speak{margin-top:10px}
+  .speakLabel{color:var(--muted); font-size:.8rem}
+
+  /* 入力の区切りを明確にするため、モードの前を広く取る */
+  .modes{display:flex; flex-wrap:wrap; gap:6px; margin:26px 0 4px}
   .modes button{padding:8px 14px}
   button[hidden]{ display:none; }
   .modes button[aria-pressed=true]{
@@ -103,11 +116,7 @@
     .modes::-webkit-scrollbar{display:none}
     .modes button{flex:0 0 auto}
   }
-  .tip{
-    color:var(--muted); font-size:.78rem; margin:8px 0 0; line-height:1.6;
-  }
-  .tip summary{cursor:pointer; color:var(--muted)}
-  .tip summary:hover{color:var(--accent)}
+  .tip{color:var(--muted); font-size:.78rem; margin:10px 0 0; line-height:1.75}
   .tip b{color:var(--fg); font-weight:600}
   .modeNote{color:var(--muted); font-size:.78rem; margin:0 0 12px; min-height:1.4em}
   .hint{color:var(--muted); font-size:.78rem; margin:-4px 0 0; line-height:1.6}
@@ -157,29 +166,34 @@
   <p class="sub">日本語を、YouTube の自動吹き替えっぽい日本語に変換します。<span class="aside">※少しオーバーに変換します</span></p>
 </header>
 
-<textarea id="in" maxlength="400" placeholder="ここに日本語を入力（例：今日の会議、3時間もあって死にそうだった。）"></textarea>
-<span class="count" id="count">0 / 200</span>
-<details class="tip">
-  <summary>括弧で囲むと、その部分は変換されません</summary>
-  「かぎ括弧」『二重かぎ』（丸括弧）【すみ付き】"引用符" で囲んだ部分は
-  <b>そのまま出ます</b>。作品名・固有名詞・引用を守るのに使ってください。
-</details>
+<div class="field">
+  <button id="clear" class="icon fab tl" title="入力を消す" aria-label="入力を消す"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button>
+  <button id="tipBtn" class="fab tr" aria-expanded="false" aria-controls="tip"
+          title="括弧で囲んだ部分は変換されません" aria-label="使い方">?</button>
+  <textarea id="in" maxlength="400" placeholder="ここに日本語を入力（例：今日の会議、3時間もあって死にそうだった。）"></textarea>
+</div>
+<p class="tip" id="tip" hidden>「かぎ括弧」『二重かぎ』（丸括弧）【すみ付き】"引用符" で囲んだ部分は
+  <b>そのまま出ます</b>。作品名・固有名詞・引用を守るのに使ってください。</p>
 
 <div class="row">
-  <button id="clear" class="icon" title="入力を消す" aria-label="入力を消す"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button>
   <button id="post" class="primary">本文を 𝕏 に投稿</button>
+  <span class="count" id="count">0 / 200</span>
 </div>
 <div class="modes" id="modes"></div>
 <p class="modeNote" id="modeNote"></p>
 
-<div class="out" id="out"></div>
-
-<span class="count" id="fit" title="X に投稿できる長さ（全角換算）。超えた分は末尾が切り詰められます。">0 / 0</span>
+<div class="field">
+  <button id="reroll" class="icon fab tl" title="別の変換を引き直す" aria-label="別の変換を引き直す"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.2 8a5.2 5.2 0 1 1-1.6-3.7"/><path d="M13.4 2.4v3h-3"/></svg></button>
+  <div class="out" id="out"></div>
+</div>
 <div class="row">
-  <button id="reroll" class="icon" title="別の変換を引き直す" aria-label="別の変換を引き直す"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13.2 8a5.2 5.2 0 1 1-1.6-3.7"/><path d="M13.4 2.4v3h-3"/></svg></button>
-  <button id="play" class="icon" hidden title="読み上げる" aria-label="読み上げる"></button>
   <button id="postResult" class="primary">変換結果を 𝕏 に投稿</button>
   <button id="copy" class="icon" title="返信用にコピー" aria-label="返信用にコピー"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5.8" y="5.8" width="7.7" height="7.7" rx="1.6"/><path d="M10.6 3.4H4a1.6 1.6 0 0 0-1.6 1.6v6.6"/></svg></button>
+  <span class="count" id="fit" title="X に投稿できる長さ（全角換算）。超えた分は末尾が切り詰められます。">0 / 0</span>
+</div>
+<div class="row speak" id="speakRow" hidden>
+  <span class="speakLabel">読み上げ</span>
+  <button id="play" class="icon round" title="読み上げる" aria-label="読み上げる"></button>
 </div>
 <p class="hint">本文をそのまま投稿 → <b>その投稿への返信</b>に変換結果を貼ると、前後の対比が伝わります。</p>
 
@@ -976,6 +990,13 @@ document.getElementById("post").onclick=()=>{
               "_blank", "noopener,noreferrer");
 };
 
+// 括弧の説明は畳んでおく。初見で読ませたいのは入力欄そのもの
+const $tipBtn = document.getElementById("tipBtn"), $tip = document.getElementById("tip");
+$tipBtn.onclick = () => {
+  $tip.hidden = !$tip.hidden;
+  $tipBtn.setAttribute("aria-expanded", String(!$tip.hidden));
+};
+
 const $presets=document.getElementById("presets");
 for(const [label,text] of PRESETS){
   const b=document.createElement("button");
@@ -1007,7 +1028,7 @@ function loadVoices(){
     .filter(v => /^ja/i.test(v.lang) && v.localService !== false);
   if(!ja.length) return;                              // 使える音声が無い環境では出さない
   voice = ja.find(v => FEMALE_RE.test(v.name)) || ja[0];
-  $play.hidden = false;
+  document.getElementById("speakRow").hidden = false;
 }
 
 function stopSpeak(){
