@@ -62,6 +62,7 @@
 
   .modes{display:flex; flex-wrap:wrap; gap:6px; margin:14px 0 4px}
   .modes button{padding:8px 14px}
+  button[hidden]{ display:none; }
   .modes button[aria-pressed=true]{
     background:var(--accent); color:#fff; border-color:var(--accent); font-weight:700;
   }
@@ -129,6 +130,8 @@
 <div class="out" id="out"></div>
 
 <div class="row">
+  <button id="play" hidden>▶ 読み上げ</button>
+  <button id="voice" hidden title="声を切り替える">声: 女性</button>
   <button id="postResult" class="primary">変換結果を 𝕏 に投稿</button>
   <button id="copy">返信用にコピー</button>
   <span class="count" id="fit" title="X に投稿できる長さ（全角換算）。超えた分は末尾が切り詰められます。">0 / 0</span>
@@ -358,7 +361,9 @@ const DETERMINERS = [
 ];
 // 冠詞を付けない語（人称・時を表す語は英語でも無冠詞）
 const NO_DET = new Set(["私","僕","俺","彼","彼女","君","今日","明日","昨日","今","昔",
-                        "毎日","朝","昼","夜","今年","去年","来年","私たち","あなた"]);
+                        "毎日","朝","昼","夜","今年","去年","来年","私たち","あなた",
+                        // 「本当に」の「本当」を名詞と読むと「その本当に疲れた」になる
+                        "本当","非常","絶対","実際","完全","十分","一緒","基本的","最終的"]);
 // 複合動詞の一部を名詞と誤認しない（「間に合う」の「間」に冠詞を付けない）
 const NO_DET_PHRASE = ["間に合","気に入","気にな","気にし","目に付","目にす","手に入",
                        "役に立","身に付","口にす","耳にす","気にせ","物にす"];
@@ -551,7 +556,12 @@ function restructure(s, rate){
     .replace(/([^、。]{3,}[^く])て、/g,    (m,a)=> on() ? a+"ました。そして、" : m)
     // 「〜し、」は敬体化の前に切る（後だと「疲れましたし、」を壊す）
     //  直前が「か」のものを除外。上のルールが作った「しかし、」を食べてしまうため
-    .replace(/([^、。]{2,}[^か])し、/g,(m,a)=> on() ? a+"。そして、"    : m);
+    .replace(/([^、。]{2,}[^か])し、/g,(m,a)=> on() ? a+"。そして、"    : m)
+    // ★ 後始末。上のルールは「〜です。そして、」の形で文を割るので、
+    //    元の文が そこで終わっていると接続詞だけが宙に浮き、
+    //    後段が「そして、です。」という中身の無い文を作ってしまう。
+    //    どのルールにも効くよう、最後にまとめて落とす。
+    .replace(/(?:そして|しかし|つまり|それで)、\s*$/, "");
 }
 
 /* ★ 体言止めを存在文にする。「水の音。」→「そこに水の音があります。」
@@ -676,7 +686,7 @@ function padShort(s){
       s = s.replace(/(食べ|飲み|見|買い|読み|使い|作り|やり|書き|聞き)(ました|ます)/, "それを$1$2");
   }
   // 英語は強調副詞を多用する
-  if(chance(.6)) s = s.replace(/^(私は|あなたは|それは)(?!本当に)/, "$1本当に");
+  if(chance(.6)) s = s.replace(/^(私は|あなたは|それは)(?![^、。]{0,4}本当に)/, "$1本当に");
   return s;
 }
 
@@ -889,6 +899,8 @@ for(const [key,m] of Object.entries(MODES)){
   b.onclick=()=>{
     mode=key;
     [...$modes.children].forEach(x=>x.setAttribute("aria-pressed", x===b));
+    // 文体と声を合わせる。「俺は急いだぜ」を女性の声で読むと噛み合わない
+    if(TTS){ stopSpeak(); if(key==="wild") setGender("male"); if(key==="cute") setGender("female"); }
     render();
   };
   $modes.appendChild(b);
@@ -926,6 +938,74 @@ for(const [label,text] of PRESETS){
   b.textContent=label;
   b.onclick=()=>{ $in.value=text; render(); };
   $presets.appendChild(b);
+}
+
+/* ---------- 読み上げ ----------
+   題材が吹き替えなので、平板な合成音声で読まれて初めて体験が完成する。
+   ブラウザ内蔵の Web Speech API を使うため、外部リクエストは増えない。 */
+
+// Web Speech API に性別の情報は無いので、音声名から推定するしかない
+const MALE_RE   = /otoya|ichiro|keita|hattori|eddy|reed|rocko|grandpa|男/i;
+const FEMALE_RE = /kyoko|haruka|ayumi|sayaka|nanami|o-ren|flo|sandy|shelley|grandma|女/i;
+
+const $play  = document.getElementById("play");
+const $voice = document.getElementById("voice");
+const TTS = typeof speechSynthesis !== "undefined";
+let vFemale = null, vMale = null, gender = "female", speaking = false;
+
+function loadVoices(){
+  // 端末内の音声だけを使う。Chrome の「Google 日本語」などは合成をサーバーで行うため、
+  // 使うと入力文が外部へ送られ、「文章はどこにも送信されません」が嘘になる。
+  const ja = speechSynthesis.getVoices()
+    .filter(v => /^ja/i.test(v.lang) && v.localService !== false);
+  if(!ja.length) return;                              // 使える音声が無い環境では出さない
+  vFemale = ja.find(v => FEMALE_RE.test(v.name)) || ja[0];
+  vMale   = ja.find(v => MALE_RE.test(v.name))   || null;
+  $play.hidden = $voice.hidden = false;
+}
+
+function setGender(g){
+  gender = g;
+  $voice.textContent = g === "male" ? "声: 男性" : "声: 女性";
+}
+
+function stopSpeak(){
+  speechSynthesis.cancel();
+  speaking = false;
+  $play.textContent = "▶ 読み上げ";
+}
+
+function speak(){
+  const text = $out.textContent.trim();
+  if(!text) return;
+  stopSpeak();
+
+  // 男性音声が無い環境では女性音声のピッチを下げて代用する。
+  // 不自然な声になるが、機械が無理に喋っている感じは題材と噛み合う。
+  const male  = gender === "male";
+  const voice = (male && vMale) || vFemale;
+  const pitch = (male && !vMale) ? 0.5 : 1;
+
+  // Chrome は長い発話を途中で打ち切るので、文ごとに分けて積む
+  const parts = text.match(/[^。！？!?\n]+[。！？!?]?/g) || [text];
+  parts.map(t => t.trim()).filter(Boolean).forEach((t, i, a) => {
+    const u = new SpeechSynthesisUtterance(t);
+    u.voice = voice; u.lang = "ja-JP"; u.rate = 1.05; u.pitch = pitch;
+    if(i === a.length - 1) u.onend = stopSpeak;
+    speechSynthesis.speak(u);
+  });
+  speaking = true;
+  $play.textContent = "■ 停止";
+}
+
+if(TTS){
+  speechSynthesis.onvoiceschanged = loadVoices;
+  loadVoices();
+  setTimeout(loadVoices, 1200);                       // 非同期で来ない環境の保険
+  addEventListener("pagehide", () => speechSynthesis.cancel());
+  setGender("female");
+  $play.onclick  = () => speaking ? stopSpeak() : speak();
+  $voice.onclick = () => { setGender(gender === "male" ? "female" : "male"); if(speaking) speak(); };
 }
 
 /* ---------- アクセス計測 ----------
