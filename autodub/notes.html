@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>オートダビング構文はどう作ったか | RustyWorks</title>
+<meta name="description" content="YouTube の自動吹き替えの日本語がなぜ一定の壊れ方をするのか。実際に字幕と吹き替え音声を文字起こしして数え、規則として実装するまでの記録。">
+<link rel="icon" href="icon.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="RustyWorks">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:url" content="https://rustyworks.jp/autodub/notes.html">
+<meta property="og:title" content="オートダビング構文はどう作ったか">
+<meta property="og:description" content="YouTube の自動吹き替えの日本語がなぜ一定の壊れ方をするのか。字幕と吹き替え音声を文字起こしして数えた記録。">
+<meta property="og:image" content="https://rustyworks.jp/assets/og/autodub-og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0a0a0b; color: #f2f2f0;
+    font-family: 'Zen Kaku Gothic New', system-ui, sans-serif;
+    line-height: 1.95; -webkit-font-smoothing: antialiased;
+  }
+  a { color: #4c8dff; text-decoration: none; }
+  a:hover { color: #8fb6ff; }
+  ::selection { background: rgba(76,141,255,.28); color: #fff; }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 40px 24px 110px; }
+
+  h1 { font-size: 29px; font-weight: 700; line-height: 1.45; margin-bottom: 14px; }
+  .lead { color: #c9c9c4; margin-bottom: 10px; }
+  .meta { font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: #8a8a86; }
+
+  h2 {
+    font-size: 19px; font-weight: 700; margin: 46px 0 16px;
+    padding-top: 26px; border-top: 1px solid rgba(255,255,255,.08);
+  }
+  h3 { font-size: 16px; font-weight: 700; margin: 30px 0 10px; color: #f2f2f0; }
+  p { color: #c9c9c4; margin-bottom: 16px; }
+  strong { color: #f2f2f0; font-weight: 700; }
+  ul { color: #c9c9c4; padding-left: 22px; margin: 0 0 16px; }
+  li { margin-bottom: 8px; }
+
+  /* 表は幅の狭い画面で自分だけ横に流す。本文は横スクロールさせない */
+  .scroll { overflow-x: auto; margin: 0 0 20px; -webkit-overflow-scrolling: touch; }
+  table { border-collapse: collapse; width: 100%; min-width: 300px; font-size: 14.5px; }
+  th, td { padding: 9px 13px; border-bottom: 1px solid rgba(255,255,255,.08); text-align: left; }
+  th { color: #8a8a86; font-weight: 500; font-size: 13px; white-space: nowrap; }
+  td.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tr.sum td { color: #f2f2f0; font-weight: 700; }
+
+  blockquote {
+    margin: 0 0 20px; padding: 14px 18px;
+    background: #131316; border-left: 3px solid #4c8dff; border-radius: 0 8px 8px 0;
+  }
+  blockquote p { margin: 0; }
+  pre {
+    background: #131316; border: 1px solid rgba(255,255,255,.07); border-radius: 8px;
+    padding: 16px 18px; overflow-x: auto; margin-bottom: 20px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 13px; line-height: 1.85; color: #d8d8d3;
+  }
+  .cta {
+    display: inline-block; margin-top: 8px; padding: 13px 26px;
+    background: #4c8dff; color: #fff; border-radius: 8px; font-weight: 700;
+  }
+  .cta:hover { background: #6ba0ff; color: #fff; }
+  .nav {
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    flex-wrap: wrap; padding-bottom: 22px;
+    border-bottom: 1px solid rgba(255,255,255,.08); margin-bottom: 34px;
+  }
+  .nav a.back {
+    font-family: 'IBM Plex Mono', monospace; font-size: 12.5px;
+    border: 1px solid rgba(255,255,255,.16); padding: 8px 16px; border-radius: 6px; color: #f2f2f0;
+  }
+  footer {
+    margin-top: 60px; padding-top: 22px;
+    border-top: 1px solid rgba(255,255,255,.08); color: #8a8a86; font-size: 13.5px;
+  }
+  @media (max-width: 640px) {
+    .wrap { padding: 24px 16px 80px; }
+    h1 { font-size: 24px; }
+  }
+</style>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4092261578757214"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="nav">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.12em; color:#8a8a86;">RUSTYWORKS / NOTES</div>
+    <a class="back" href="../index.html">Back to Top</a>
+  </div>
+
+  <h1>オートダビング構文はどう作ったか<br>― 自動吹き替えの日本語を数える</h1>
+  <p class="lead">YouTube の自動吹き替えの日本語は、何を言っているのか分からないのに、毎回きっちり同じ壊れ方をします。あの壊れ方には規則があるはずだと考えて、実際に数えて、規則として実装した記録です。</p>
+  <p class="meta">2026-08-02 / RustyWorks</p>
+
+  <h2>1. 壊れ方が一定なら、規則がある</h2>
+
+  <p>自動吹き替えの日本語には、聞いてすぐ分かる癖があります。<strong>やたらと「えぇ」と言う。</strong>主語をいちいち言う。「〜を持っています」が多い。そして女性の声はなぜか「〜だわ」「〜のよ」と喋る。</p>
+
+  <p>おかしいのに、<strong>おかしさが毎回同じ</strong>です。ということは、そこには手続きがあります。手続きがあるなら、逆にたどって再現できます。</p>
+
+  <p>立てた仮説はこうです。<strong>あの日本語は「英語の頭で考えた日本語」である。</strong>英語の音声認識を通し、英語として構造を決め、それを機械的に日本語へ移す。そのとき英語の側にあって日本語には無いもの――主語、冠詞、所有格、フィラー――が、日本語に無理やり持ち込まれる。</p>
+
+  <p>だとすれば、作るべきものは翻訳器ではありません。<strong>「日本語を、いったん英語を経由したかのように書き直す装置」</strong>です。</p>
+
+  <h2>2. 実測1 ― 英語側にフィラーはいくつあるか</h2>
+
+  <p>まず前提を確認しました。「そもそも英語の音声認識はフィラーを拾っているのか」です。拾っていなければ「えぇ」の出どころが説明できません。</p>
+
+  <p>61分の対談動画1本、英語の自動字幕を数えました。</p>
+
+  <div class="scroll">
+  <table>
+    <tr><th>表現</th><th class="n">回数</th><th class="n">毎分</th></tr>
+    <tr><td>you know</td><td class="n">81</td><td class="n">1.33</td></tr>
+    <tr><td>so,</td><td class="n">45</td><td class="n">0.74</td></tr>
+    <tr><td>like,</td><td class="n">31</td><td class="n">0.51</td></tr>
+    <tr><td>uh</td><td class="n">29</td><td class="n">0.48</td></tr>
+    <tr><td>um</td><td class="n">27</td><td class="n">0.44</td></tr>
+    <tr><td>I mean</td><td class="n">25</td><td class="n">0.41</td></tr>
+    <tr><td>well,</td><td class="n">23</td><td class="n">0.38</td></tr>
+    <tr class="sum"><td>合計</td><td class="n">261</td><td class="n">4.3</td></tr>
+  </table>
+  </div>
+
+  <p><strong>61分で261回。</strong>毎分4.3回です。きれいに消されているどころか、たっぷり残っていました。ここが出発点です。</p>
+
+  <h2>3. 実測2 ―「えぇ」は単語ではなかった</h2>
+
+  <p>同じ動画の日本語側を数えて、思っていたものと違うことが分かりました。</p>
+
+  <div class="scroll">
+  <table>
+    <tr><th>日本語</th><th class="n">回数</th></tr>
+    <tr><td>ええと</td><td class="n">38</td></tr>
+    <tr><td>ええ（単独）</td><td class="n">20</td></tr>
+    <tr><td>えっと</td><td class="n">9</td></tr>
+    <tr class="sum"><td>え系 小計</td><td class="n">67</td></tr>
+    <tr><td>うん</td><td class="n">54</td></tr>
+    <tr><td>まあ</td><td class="n">19</td></tr>
+    <tr class="sum"><td>相槌を含む合計</td><td class="n">140</td></tr>
+  </table>
+  </div>
+
+  <p><strong>「えぇ」の正体は、ひとつの語ではなく「え」で始まる一群でした。</strong>聞いているぶんには「ええと」「えっと」「ええ」はすべて同じ「え」の音で始まるので区別されず、まとめて「やたら『えぇ』と言う」と知覚されます。</p>
+
+  <p>もうひとつ、英語側との対応で予想が外れました。</p>
+
+  <div class="scroll">
+  <table>
+    <tr><th>英語</th><th class="n">回数</th><th>日本語での対応</th><th class="n">保持率</th></tr>
+    <tr><td>yeah</td><td class="n">80</td><td>うん(54) + ええ(20) = 74</td><td class="n">93%</td></tr>
+    <tr><td>um / uh</td><td class="n">113</td><td>ええと(38) + えっと(9) + まあ(19) = 66</td><td class="n">58%</td></tr>
+  </table>
+  </div>
+
+  <p><strong>主犯は <code>um</code>／<code>uh</code> ではなく、相槌の <code>yeah</code> でした。</strong>対談形式でフィラーが濃く感じるのは、話し手が交互に <code>yeah</code> を打ち続けるからです。</p>
+
+  <p>実装への含意は明確でした。<strong>単一の「えぇ」を挿入するのは間違いで、重み付きの集合から引く必要があります。</strong></p>
+
+  <pre>ええと  57%
+ええ    30%
+えっと  13%</pre>
+
+  <h2>4. 実測3 ― レジスタが2つあった</h2>
+
+  <p>ここが一番の収穫です。ジャンルの違う動画を測ったら、<strong>同じ「自動吹き替え」なのに、まったく別の喋り方が出てきました。</strong></p>
+
+  <div class="scroll">
+  <table>
+    <tr><th></th><th class="n">対談（61分）</th><th class="n">vlog（11分）</th></tr>
+    <tr><td>ええと / えっと</td><td class="n">38 / 9</td><td class="n">0 / 0</td></tr>
+    <tr><td>わよ・のよ・るわ・わね</td><td class="n">ほぼ無し</td><td class="n">32回（2.9回/分）</td></tr>
+    <tr><td>その・この</td><td class="n">—</td><td class="n">15回（1.4回/分）</td></tr>
+  </table>
+  </div>
+
+  <ul>
+    <li><strong>会話・対談</strong> → フィラーが濃く、平板</li>
+    <li><strong>ナレーション・vlog</strong> → <strong>女ことば</strong>が濃く、フィラーはほぼゼロ</li>
+  </ul>
+
+  <pre>千人の戦士の精神と1万人の男の力を間違いなく持ってるわ
+一番の態度と一番の意思を持ってるわ
+これには秘密のトリックがあるのよ</pre>
+
+  <p>女ことばは翻訳日本語の最も有名な特徴です。<strong>英語は文末に話し手の性別が出ないのに、日本語の吹き替えは付けます。</strong>日本語話者にとっては「えぇ」よりも即座に「これは翻訳だ」と分かる目印です。</p>
+
+  <p>アプリに複数のモードがあるのは、<strong>趣味で分けたのではなく、測ったら2つ出てきたから</strong>です。</p>
+
+  <h2>5.「かしら」は一度も出てこなかった</h2>
+
+  <p>吹き替え音声248セグメントのうち、82（33%）が終助詞で終わっていました。その内訳です。</p>
+
+  <div class="scroll">
+  <table>
+    <tr><th>女ことば</th><th class="n">重み</th></tr>
+    <tr><td>わ</td><td class="n">46</td></tr>
+    <tr><td>のよ</td><td class="n">25</td></tr>
+    <tr><td>わよ</td><td class="n">21</td></tr>
+    <tr><td>わね</td><td class="n">8</td></tr>
+    <tr class="sum"><td>かしら</td><td class="n">0</td></tr>
+    <tr class="sum"><td>のね</td><td class="n">0</td></tr>
+  </table>
+  </div>
+
+  <p><strong>「かしら」「のね」は0回です。</strong>翻訳の女ことばと言われて反射的に入れていた語が、実データには存在しませんでした。</p>
+
+  <blockquote>
+    <p>思い込みで入れた語を消せたことが、実測の最大の収穫でした。数えなければ、ありもしない「かしら」を出し続けるアプリになっていました。</p>
+  </blockquote>
+
+  <p>もうひとつ。<strong>終助詞が付く先はすべて常体でした。</strong>実物は「持って<strong>る</strong>わ」であって「持っています<strong>わ</strong>」ではありません。丁寧語のまま終助詞を足していた実装を、ここで書き直しています。</p>
+
+  <h2>6. 実装 ― 敬体に正規化してから常体へ戻す</h2>
+
+  <p>変換は 65KB ほどの JavaScript 1ファイルで、外部への通信はありません。入力した文章はブラウザの中だけで処理されます。</p>
+
+  <pre>入力
+ ├ 引用・括弧の中身を退避
+ ├ 定型文・短い口語の表引き
+ ├ 構造変換   ← 文に割る前に、テキスト全体へ
+ ↓ ここで文に分割
+ ├ 語彙・慣用句・述語パターン
+ ├ 一人称／所有格／冠詞の付与
+ ├ 敬体に正規化   ← 活用の判定はここ一箇所だけ
+ ├ 主語の補完・冗長化
+ ├ 常体へ逆変換   ← 常体モードのみ
+ ├ 終助詞
+ └ フィラーの挿入</pre>
+
+  <p>設計上の要点は<strong>「いったん敬体に揃えてから常体へ戻す」</strong>ところです。日本語の活用は面倒なので、判定を一箇所に集めないと、モードの数だけ活用ルールを二重に持つことになります。常体化はその逆写像として書けば済みます。</p>
+
+  <p>もうひとつ、途中で諦めた判断があります。<strong>五段活用と一段活用は、表記から見分けられません。</strong>「走る」と「見る」は字面が同じ形です。機械的に活用させると「走ます」のような壊れ方をします。</p>
+
+  <p>そこで<strong>活用を諦めて「〜のです」で受ける</strong>ことにしました。「彼は走るのです」なら活用の判別が要りません。しかも、もったいぶった言い回しはこの構文の持ち味そのものなので、逃げが逃げに見えないという副産物が付いてきました。</p>
+
+  <h2>7. ハマったところ</h2>
+
+  <p>日本語を規則で書き換えるとき、繰り返し踏んだ穴です。</p>
+
+  <h3>語尾の「置換」が語幹を食う</h3>
+  <p>最頻出でした。<code>"した"→"しました"</code> という単純な置換が、「で<strong>した</strong>」の中に当たって「でしました」を作ります。<strong>長いキーから当てる、直前の文字で除外する、そして置換ではなく付け足す。</strong></p>
+
+  <h3>規則が自分の出力を再処理する</h3>
+  <p>「ますが、」を「ます。<strong>しかし、</strong>」に変えた直後、別の規則がその「しかし、」を切って「しか。そして、」になりました。<strong>生成物にマッチしない条件が要ります。</strong></p>
+
+  <h3>確率的な不具合は1回では見えない</h3>
+  <p>文末に接続詞だけが残って「そして、です。」という中身の無い文が出る不具合がありました。<strong>発生率は 2.3%。</strong>数回試した限りでは気づけません。<strong>率が知りたい欠陥は、数千回まわして率で出す</strong>しかありませんでした。</p>
+
+  <h3>検出器も実装物である</h3>
+  <p>壊れた出力を自動で見つける検出器を書きましたが、その検出器が2回バグりました。既知の型しか見ておらず新しい壊れ方を素通りさせた回と、「く<strong>ださ</strong>い」を誤りとして12件誤検出した回です。</p>
+  <blockquote>
+    <p>同じ罠は <code>grep</code> にもあります。<code>MALE_RE</code> を消したか確認しようとして <code>grep MALE_RE</code> を打つと、<code>FEMALE_RE</code> に当たって「まだ残っている」と読めてしまいます。<strong>部分一致で判定しない。</strong></p>
+  </blockquote>
+
+  <h2>8. できないこと</h2>
+
+  <p>正直に書いておくと、<strong>カタカナの専門語ばかりの文は、あまり変わりません。</strong></p>
+
+  <p>「リポジトリの CI がタイムアウトするのでワークフローのキャッシュ設定を見直した」のような文には、当てる辞書がありません。日常語の言い換え表を持っていても引っかからないので、できるのは文を分割することとフィラーを入れることくらいです。</p>
+
+  <p>これは辞書を厚くすれば減りますが、<strong>ゼロにはなりません。</strong>手法の限界です。</p>
+
+  <h2>9. 試す</h2>
+
+  <p>ブラウザだけで動きます。読み上げも付いているので、<strong>あの平板な合成音声で読ませる</strong>ところまで再現できます。題材が吹き替えなので、音が出て初めて完成する種類のものです。</p>
+
+  <p><a class="cta" href="./">オートダビング構文を開く</a></p>
+
+  <footer>
+    作った人: <a href="https://rustyworks.jp">RustyWorks</a><br>
+    お問い合わせ: <a href="mailto:rustyworks.games@gmail.com">rustyworks.games@gmail.com</a><br>
+    <a href="../site_privacy.html">サイトのプライバシーポリシー</a>
+  </footer>
+
+</div>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "04f66ad1837a4b63af68beb6e835358f"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

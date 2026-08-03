@@ -39,7 +39,7 @@ HTTPS + キーチェーン。Personal Access Token（fine-grained・`Contents: R
 | Kuro | `kuro.html` / `kuro_manual.html` / `kuro_privacy.html` |
 | Plain Video Saver | `pvs.html` / `pvs_privacy.html` |
 | UADB | `UADB_manual.html` / `uadb_privacy.html` |
-| オートダビング構文（Web アプリ） | `autodub/index.html` |
+| オートダビング構文（Web アプリ） | `autodub/index.html` / `autodub/notes.html`（解説記事） |
 | トップ | `index.html` |
 
 ## Web アプリについて
