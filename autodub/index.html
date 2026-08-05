@@ -204,7 +204,7 @@
 <div class="row" id="presets"></div>
 
 <footer>
-  <span class="ver">v1.1.1 (2026-08-04)</span>
+  <span class="ver">v1.2.0 (2026-08-04)</span>
   作った人: <a href="https://rustyworks.jp">RustyWorks</a> ／
   <a href="notes.html">どう作ったか（実測データ）</a><br>
   入力した文章はブラウザの中だけで処理され、どこにも送信されません。
@@ -632,7 +632,11 @@ function restructure(s, rate){
     //    元の文が そこで終わっていると接続詞だけが宙に浮き、
     //    後段が「そして、です。」という中身の無い文を作ってしまう。
     //    どのルールにも効くよう、最後にまとめて落とす。
-    .replace(/(?:そして|しかし|つまり|それで)、\s*$/, "");
+    //    元の文が続いていても「〜です。そして、。」の形で句点に突き当たる。
+    //    末尾だけを見ていたので、この型を取り逃がしていた。
+    .replace(/(?:そして|しかし|つまり|それで)、\s*(?=[。！？\n]|$)/g, "")
+    //    接続詞を抜いた跡に句点が二つ残る。空の文になって主語だけ補われる
+    .replace(/。[。、]+/g, "。");
 }
 
 /* ★ 体言止めを存在文にする。「水の音。」→「そこに水の音があります。」
@@ -741,7 +745,9 @@ function politen(s){
    活用させると「走ます」に壊れる。活用は諦めて「〜のです」で受ける。
    もったいぶった言い回しは、この構文の持ち味でもある。            */
 const POLITE_TAIL = /(ます|です|ました|でした|ません|でしょう|ください|ございます)$/;
-const PLAIN_END = /^(.*[^。、！？\n])([うくぐすつぬぶむる])([。！？]?)$/;
+//   「帰った」のように た形の表に無い動詞も、敬体の文に常体のまま残る。
+//   活用させずに同じ手で受ける（帰った → 帰ったのです）。
+const PLAIN_END = /^(.*[^。、！？\n])([うくぐすつぬぶむるた])([。！？]?)$/;
 // 動詞と同じ字で終わるが動詞ではないもの。形容詞の連用（早く）と助数詞（一つ）
 const NOT_VERB = new RegExp("(("+ADJ+")く|[0-9０-９一二三四五六七八九十いく幾]つ|そう|もう|どう|こう)$");
 function wrapPlain(s){
@@ -897,6 +903,16 @@ function convertOnce(text, modeKey){
     .split(/(?<=[。！？!?\n])/).map(s=>s.trim()).filter(Boolean);
 
   ME = M.me || '私';
+  /* フィラーは均等に散らばらず固まって出る。実測では、相槌がまばらな
+     区間は毎分0.1回なのに、応酬になる区間だけ毎分6.9回まで跳ねた。
+
+     2状態で扱う。固まりの平均長を L とすると継続確率は 1-1/L、
+     開始確率を p/(L(1-p)) に取れば、全体の出現率は元の p のまま保たれる。
+     係数を掛ける形だと fillerHead の高いモードで上限に張り付き、
+     一度始まると終わらなくなる（実際そうなった）。            */
+  const RUN = 2.5;                                   // 固まりの平均の長さ（文）
+  const fhBegin = Math.min(1, M.fillerHead / (RUN * (1 - M.fillerHead) || 1));
+  let ran = false;
   const body = sents.map((raw,i)=>{
     let s = raw;
     const bare = s.replace(/\n/g,"");
@@ -931,10 +947,11 @@ function convertOnce(text, modeKey){
     s = s.replace(/、/g, m => chance(M.fillerMid) ? "、"+pick(FILLERS_SUB)+"、" : m);
 
     let head = "";
-    if(chance(M.fillerHead)){
+    if(chance(ran ? 1 - 1/RUN : fhBegin)){
       head = pick(FILLERS)+"、";
       if(chance(M.double)) head = pick(FILLERS)+"、"+head;   // 連続がいちばんおかしい
-    }
+      ran = true;
+    } else ran = false;
     // 構造変換がすでに接続詞を置いた文には重ねない（「では、そして、」を防ぐ）
     if(i>0 && chance(.35) && !/^(そして|しかし|だから|つまり)/.test(s)) head += pickFlat(M.discourse);
 
