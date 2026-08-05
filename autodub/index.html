@@ -204,7 +204,7 @@
 <div class="row" id="presets"></div>
 
 <footer>
-  <span class="ver">v1.1.0 (2026-08-04)</span>
+  <span class="ver">v1.1.1 (2026-08-04)</span>
   作った人: <a href="https://rustyworks.jp">RustyWorks</a> ／
   <a href="notes.html">どう作ったか（実測データ）</a><br>
   入力した文章はブラウザの中だけで処理され、どこにも送信されません。
@@ -484,7 +484,10 @@ const MODES = {
   standard:{
     label:"標準", note:"バランス型。まずはこれで。",
     fillerHead:.5, fillerMid:.25, double:.15, split:.7, redundant:.3, det:0.35, polite:true, tail:null, tailRate:0,
-    discourse:["だから、","さて、","今、","では、","つまり、"],
+    // 実測（18分・404組）で多かった順。つまり11／ですから10／ですが10／
+    // そして9／しかし8／もちろん6。全体の17%が接続表現で始まっていた
+    discourse:["つまり、","ですから、","ですが、","そして、","しかし、",
+               "もちろん、","さて、","では、","実は、"],
     open:null, close:null,
   },
   vlog:{
@@ -497,7 +500,8 @@ const MODES = {
   explain:{
     label:"解説動画", note:"冗長化が最大。「〜ということです」で押してきます。",
     fillerHead:.35, fillerMid:.2, double:.1, split:.85, redundant:.85, det:0.55, polite:true, tail:null, tailRate:0,
-    discourse:["ご覧のとおり、","重要なことは、","言い換えると、","ここで、","つまり、"],
+    discourse:["ご覧のとおり、","重要なことは、","言い換えると、","ここで、","つまり、",
+               "要するに、","そのため、","ちなみに、","もちろん、"],
     open:"えぇ、今日、私たちはこれについて話すつもりです。",
     close:"えぇ、それが、あなたが知る必要のあるすべてです。",
   },
