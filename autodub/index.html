@@ -204,7 +204,7 @@
 <div class="row" id="presets"></div>
 
 <footer>
-  <span class="ver">v1.0.2 (2026-08-02)</span>
+  <span class="ver">v1.1.0 (2026-08-04)</span>
   作った人: <a href="https://rustyworks.jp">RustyWorks</a> ／
   <a href="notes.html">どう作ったか（実測データ）</a><br>
   入力した文章はブラウザの中だけで処理され、どこにも送信されません。
@@ -1093,6 +1093,13 @@ const FEMALE_RE = /kyoko|haruka|ayumi|sayaka|nanami|o-ren|flo|sandy|shelley|gran
 const ICON_PLAY = '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 3.2l8 4.8-8 4.8z"/></svg>';
 const ICON_STOP = '<svg viewBox="0 0 16 16" fill="currentColor"><rect x="4" y="4" width="8" height="8" rx="1.2"/></svg>';
 
+/* 読み上げ速度の振れ。18分34秒の吹き替え音声を文字起こしして、
+   1区間あたりの文字数÷秒数を393件集め、中央値を1とした十分位。
+   実測では速度は文の長さと相関しなかった（r=0.09）ので、長さから
+   決めずに文ごとにこの分布から引く。極端値はタイムスタンプの誤差
+   なので、人間の発話速度を超える域は落としてある。 */
+const RATE_SPREAD = [0.82, 0.89, 0.95, 1.01, 1.05, 1.09, 1.19, 1.25, 1.39];
+
 const $play = document.getElementById("play");
 const TTS = typeof speechSynthesis !== "undefined";
 let voice = null, speaking = false;
@@ -1122,7 +1129,8 @@ function speak(){
   const parts = text.match(/[^。！？!?\n]+[。！？!?]?/g) || [text];
   parts.map(t => t.trim()).filter(Boolean).forEach((t, i, a) => {
     const u = new SpeechSynthesisUtterance(t);
-    u.voice = voice; u.lang = "ja-JP"; u.rate = 1.05;
+    u.voice = voice; u.lang = "ja-JP";
+    u.rate = pickFlat(RATE_SPREAD);      // 文ごとに緩急がつく
     if(i === a.length - 1) u.onend = stopSpeak;
     speechSynthesis.speak(u);
   });
