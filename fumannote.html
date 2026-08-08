@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>不満ノート — 書いた不満を、相手の言い分に書き直す iOS アプリ</title>
+<meta name="description" content="モヤモヤしたことを書き出すと、相手が本当は言うべきだった言葉を、相手の視点で書き直します。時間をおいてから、その怒りについての振り返りも表示します。iOS アプリ。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RustyWorks">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:url" content="https://rustyworks.jp/fumannote.html">
+<meta property="og:title" content="不満ノート — 書いた不満を、相手の言い分に書き直す iOS アプリ">
+<meta property="og:description" content="モヤモヤしたことを書き出すと、相手が本当は言うべきだった言葉を、相手の視点で書き直します。iOS アプリ。">
+<meta property="og:image" content="https://rustyworks.jp/assets/og/fumannote-og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="不満ノート — 書いた不満を、相手の言い分に書き直す iOS アプリ">
+<meta name="twitter:description" content="モヤモヤしたことを書き出すと、相手が本当は言うべきだった言葉を、相手の視点で書き直します。iOS アプリ。">
+<meta name="twitter:image" content="https://rustyworks.jp/assets/og/fumannote-og.jpg">
+<link rel="icon" href="assets/icons/fumannote.png">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: #0a0a0b;
+    color: #f2f2f0;
+    font-family: 'Zen Kaku Gothic New', system-ui, sans-serif;
+    font-weight: 400;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: #e86e54; text-decoration: none; transition: color .18s ease; }
+  a:hover { color: #f4a08e; }
+  ::selection { background: rgba(232,110,84,.28); color: #fff; }
+  @keyframes fs-rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @media (max-width: 760px) {
+    #fs-nav-links { display: none !important; }
+    .fs-two-col { grid-template-columns: 1fr !important; }
+    .fs-pad { padding-left: 24px !important; padding-right: 24px !important; }
+    #fs-hero-title { white-space: normal !important; font-size: 34px !important; }
+  }
+</style>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4092261578757214"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+<div style="min-height:100vh; display:flex; flex-direction:column;">
+
+  <nav style="position:sticky; top:0; z-index:50; background:rgba(5,5,6,.86); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:1px solid rgba(255,255,255,.06);">
+    <div class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px; height:64px; display:flex; align-items:center; justify-content:space-between; gap:24px;">
+      <a href="#top" style="font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:.14em; font-size:15px; color:#f2f2f0;">FUMANNOTE</a>
+      <div id="fs-nav-links" style="display:flex; align-items:center; gap:32px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.04em;">
+        <a href="#what" style="color:#8a8a86;">できること</a>
+        <a href="#later" style="color:#8a8a86;">時間をおく</a>
+        <a href="#price" style="color:#8a8a86;">料金</a>
+        <a href="#limits" style="color:#8a8a86;">正直なところ</a>
+        <a href="fumannote_manual.html" style="color:#8a8a86;">使い方</a>
+      </div>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.03em; color:#8a8a86; border:1px solid rgba(255,255,255,.16); padding:8px 18px; border-radius:6px;">準備中</span>
+    </div>
+  </nav>
+
+  <main id="top" style="flex:1;">
+
+    <!-- HERO -->
+    <section class="fs-pad" style="max-width:1200px; margin:0 auto; padding:140px 40px 120px; animation:fs-rise .7s ease both;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.16em; color:#e86e54; margin-bottom:34px;">iOS APP</div>
+      <h1 id="fs-hero-title" style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(7.4vw, 88px); line-height:1.1; letter-spacing:-.01em; white-space:nowrap;">言ってほしかった言葉を、<br>代わりに書きます。</h1>
+      <p style="margin-top:38px; font-size:20px; line-height:1.9; color:#8a8a86; max-width:52ch;">腹が立ったことを、そのままの言葉で書き出すノートです。書いたものを、相手が本当は言うべきだった言葉に書き直します。謝ってもらえなかった相手の代わりに。</p>
+
+      <div style="margin-top:44px; display:flex; flex-wrap:wrap; gap:12px;">
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#f2f2f0; border:1px solid rgba(255,255,255,.14); padding:8px 15px; border-radius:6px;">相手目線の釈明</span>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#f2f2f0; border:1px solid rgba(255,255,255,.14); padding:8px 15px; border-radius:6px;">時間をおいた振り返り</span>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#f2f2f0; border:1px solid rgba(255,255,255,.14); padding:8px 15px; border-radius:6px;">アカウント不要</span>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#f2f2f0; border:1px solid rgba(255,255,255,.14); padding:8px 15px; border-radius:6px;">無料でも使える</span>
+      </div>
+
+      <div style="margin-top:48px; display:flex; flex-wrap:wrap; gap:14px; align-items:center;">
+        <span style="display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:14px; color:#8a8a86; border:1px solid rgba(255,255,255,.16); padding:15px 30px; border-radius:8px;">App Store 準備中</span>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8a8a86;">iOS · 日本語 · 無料 + 月額300円</span>
+      </div>
+    </section>
+
+    <!-- WHAT -->
+    <section id="what" class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px 120px;">
+      <div style="border-top:1px solid rgba(255,255,255,.08); padding-top:80px;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.16em; color:#e86e54; margin-bottom:28px;">WHAT IT DOES</div>
+        <h2 style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(5vw,44px); line-height:1.3; margin-bottom:32px;">気の利いた言い換えでは<br>ありません。</h2>
+        <div class="fs-two-col" style="display:grid; grid-template-columns:1fr 1fr; gap:56px; margin-top:48px;">
+          <div>
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#e86e54; margin-bottom:14px;">FROM THE OTHER SIDE</div>
+            <p style="color:#c9c9c4; line-height:1.9;">書いた不満を、<strong style="color:#f2f2f0;">相手の一人称で</strong>書き直します。何が起きたのかを認め、こちら側の事情を説明し、それを言い訳にせず非を認める。相手がそう言ってくれていたら、こじれずに済んだはずの言葉です。</p>
+          </div>
+          <div>
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#e86e54; margin-bottom:14px;">YOUR OWN WORDS FIRST</div>
+            <p style="color:#c9c9c4; line-height:1.9;">まず<strong style="color:#f2f2f0;">そのままの言葉で書けること</strong>を大事にしています。丁寧に書き直す必要も、誰かに見せる必要もありません。整えるのは、書き終わってからで足ります。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LATER -->
+    <section id="later" class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px 120px;">
+      <div style="border-top:1px solid rgba(255,255,255,.08); padding-top:80px;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.16em; color:#e86e54; margin-bottom:28px;">NOT RIGHT NOW</div>
+        <h2 style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(5vw,44px); line-height:1.3; margin-bottom:32px;">その場では、何も言いません。</h2>
+        <p style="color:#c9c9c4; line-height:1.9; max-width:64ch;">書いた直後に「あなたはこういう前提を持っています」と返されても、説教にしかなりません。この振り返りは<strong style="color:#f2f2f0;">日をまたいで、しばらく経ってから</strong>表示されます。</p>
+        <div class="fs-two-col" style="display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:48px;">
+          <div style="background:#111113; border:1px solid rgba(255,255,255,.07); border-radius:10px; padding:28px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#e86e54; margin-bottom:10px;">書いた直後</div>
+            <p style="color:#8a8a86; line-height:1.9;">相手の言い分だけが表示されます。分析も、助言も、評価も出しません。</p>
+          </div>
+          <div style="background:#111113; border:1px solid rgba(255,255,255,.07); border-radius:10px; padding:28px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#e86e54; margin-bottom:10px;">しばらく経ってから</div>
+            <p style="color:#8a8a86; line-height:1.9;">そのとき何に引っかかっていたのか、その下にどんな気持ちがあったのか、いま自分で動かせる範囲はどこかを表示します。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICE -->
+    <section id="price" class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px 120px;">
+      <div style="border-top:1px solid rgba(255,255,255,.08); padding-top:80px;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.16em; color:#e86e54; margin-bottom:28px;">PRICING</div>
+        <h2 style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(5vw,44px); line-height:1.3; margin-bottom:32px;">違うのは、回数だけです。</h2>
+        <p style="color:#c9c9c4; line-height:1.9; max-width:64ch;">無料と有料で、書き直しの質は変わりません。変わるのは月に使える回数だけです。使い切っても、簡易版に切り替わって書き続けられます。<strong style="color:#f2f2f0;">アプリが使えなくなることはありません。</strong></p>
+        <div class="fs-two-col" style="display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:48px;">
+          <div style="background:#111113; border:1px solid rgba(255,255,255,.10); border-radius:10px; padding:28px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#8a8a86; margin-bottom:16px;">無料</div>
+            <p style="font-size:28px; font-weight:700; margin-bottom:16px;">0円</p>
+            <ul style="color:#8a8a86; line-height:2; padding-left:20px;">
+              <li>ノートは無制限に書ける</li>
+              <li>書き直しは月5回まで</li>
+              <li>使い切ると簡易版に切り替わる</li>
+            </ul>
+          </div>
+          <div style="background:#111113; border:1px solid rgba(232,110,84,.28); border-radius:10px; padding:28px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#e86e54; margin-bottom:16px;">使い放題</div>
+            <p style="font-size:28px; font-weight:700; margin-bottom:16px;">月額300円</p>
+            <ul style="color:#c9c9c4; line-height:2; padding-left:20px;">
+              <li>回数を気にせず使える</li>
+              <li>自動更新・いつでも解約できる</li>
+              <li>解約は iOS の設定アプリから</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIMITS -->
+    <section id="limits" class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px 120px;">
+      <div style="border-top:1px solid rgba(255,255,255,.08); padding-top:80px;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.16em; color:#e86e54; margin-bottom:28px;">HONEST LIMITS</div>
+        <h2 style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(5vw,44px); line-height:1.3; margin-bottom:48px;">正直に書いておくこと</h2>
+        <div class="fs-two-col" style="display:grid; grid-template-columns:1fr 1fr; gap:40px;">
+          <div style="background:#111113; border:1px solid rgba(255,255,255,.10); border-radius:10px; padding:28px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#8a8a86; margin-bottom:16px;">これは医療でも治療でもありません</div>
+            <p style="color:#8a8a86; line-height:1.9;">気持ちの整理を助ける道具であって、症状を診断したり治したりするものではありません。つらさが続くときは、医療機関や相談窓口を頼ってください。</p>
+          </div>
+          <div style="background:#111113; border:1px solid rgba(255,255,255,.10); border-radius:10px; padding:28px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#8a8a86; margin-bottom:16px;">書いた文章は外部のAIへ送られます</div>
+            <p style="color:#8a8a86; line-height:1.9;">書き直しは外部のAIサービスで行われるため、本文が送信されます。<strong style="color:#f2f2f0;">実名や社名を書いた場合、それも送られ、生成された文章にもそのまま残ります。</strong>共有する前に必ず確認してください。詳細は<a href="fumannote_privacy.html">プライバシーポリシー</a>にあります。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px 140px;">
+      <div style="border-top:1px solid rgba(255,255,255,.08); padding-top:80px; text-align:center;">
+        <h2 style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(5.5vw,48px); line-height:1.3; margin-bottom:24px;">不満ノート</h2>
+        <p style="color:#8a8a86; margin-bottom:36px;">iOS · 日本語のみ · 無料 + 月額300円で使い放題</p>
+        <span style="display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:14px; color:#8a8a86; border:1px solid rgba(255,255,255,.16); padding:15px 34px; border-radius:8px;">App Store 準備中</span>
+        <div style="margin-top:28px; font-family:'IBM Plex Mono',monospace; font-size:13px;">
+          <a href="fumannote_manual.html" style="color:#8a8a86;">Manual</a>
+          <span style="color:#3a3a3c; margin:0 12px;">·</span>
+          <a href="fumannote_privacy.html" style="color:#8a8a86;">Privacy</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer style="border-top:1px solid rgba(255,255,255,.06); padding:40px;">
+    <div style="max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#8a8a86;">
+      <a href="index.html" style="color:#8a8a86;">&larr; RustyWorks</a>
+      <a href="site_privacy.html" style="color:#8a8a86;">サイトのポリシー</a>
+      <span>&copy; RustyWorks</span>
+    </div>
+  </footer>
+
+</div>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "04f66ad1837a4b63af68beb6e835358f"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
