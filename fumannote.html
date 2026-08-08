@@ -39,6 +39,21 @@
     from { opacity: 0; transform: translateY(14px); }
     to   { opacity: 1; transform: translateY(0); }
   }
+  .fs-shots {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    align-items: start;
+  }
+  .fs-shots img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.07);
+    background: #111113;
+  }
+  @media (max-width: 1000px) { .fs-shots { grid-template-columns: repeat(2, 1fr); gap: 16px; } }
+  @media (max-width: 520px)  { .fs-shots { grid-template-columns: 1fr; } }
   @media (max-width: 760px) {
     #fs-nav-links { display: none !important; }
     .fs-two-col { grid-template-columns: 1fr !important; }
@@ -56,6 +71,7 @@
     <div class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px; height:64px; display:flex; align-items:center; justify-content:space-between; gap:24px;">
       <a href="#top" style="font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:.14em; font-size:15px; color:#f2f2f0;">FUMANNOTE</a>
       <div id="fs-nav-links" style="display:flex; align-items:center; gap:32px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.04em;">
+        <a href="#screens" style="color:#8a8a86;">画面</a>
         <a href="#what" style="color:#8a8a86;">できること</a>
         <a href="#later" style="color:#8a8a86;">時間をおく</a>
         <a href="#price" style="color:#8a8a86;">料金</a>
@@ -84,6 +100,19 @@
       <div style="margin-top:48px; display:flex; flex-wrap:wrap; gap:14px; align-items:center;">
         <span style="display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:14px; color:#8a8a86; border:1px solid rgba(255,255,255,.16); padding:15px 30px; border-radius:8px;">App Store 準備中</span>
         <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8a8a86;">iOS · 日本語 · 無料 + 月額300円</span>
+      </div>
+    </section>
+
+    <!-- SCREENS -->
+    <section id="screens" class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px 120px;">
+      <div style="border-top:1px solid rgba(255,255,255,.08); padding-top:80px;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.16em; color:#e86e54; margin-bottom:28px;">SCREENS</div>
+        <div class="fs-shots">
+          <img src="assets/shots/fumannote-01.jpg" width="780" height="1688" loading="lazy" decoding="async" alt="ノートの一覧。「実家」「役所」「友だち」「近所」など、書き出した不満が日付とともに並んでいる。">
+          <img src="assets/shots/fumannote-02.jpg" width="780" height="1688" loading="lazy" decoding="async" alt="ノートの入力画面。「誰に？何に？」と本文の欄、そして「相手目線の釈明」ボタン。">
+          <img src="assets/shots/fumannote-03.jpg" width="780" height="1688" loading="lazy" decoding="async" alt="生成された文章。相手の一人称で、何が起きたかを認め、事情を説明し、非を認める内容が並んでいる。">
+          <img src="assets/shots/fumannote-04.jpg" width="780" height="1688" loading="lazy" decoding="async" alt="文章の続きと「AIアドバイス」。自分で実行できる現実的な行動が箇条書きで並んでいる。">
+        </div>
       </div>
     </section>
 
