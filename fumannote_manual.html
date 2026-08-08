@@ -1,226 +1,337 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>不満ノート 取説 / Manual</title>
-<meta name="description" content="不満ノートの使い方。書き方、相手目線の釈明、この怒りについて調べる、料金と解約、簡易版になる条件。">
-<link rel="icon" href="assets/icons/fumannote.png">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    background: #0a0a0b; color: #f2f2f0;
-    font-family: 'Zen Kaku Gothic New', system-ui, sans-serif;
-    line-height: 1.9; -webkit-font-smoothing: antialiased;
-  }
-  a { color: #e86e54; text-decoration: none; }
-  a:hover { color: #f4a08e; }
-  ::selection { background: rgba(232,110,84,.28); color: #fff; }
-  code { font-family: 'IBM Plex Mono', monospace; font-size: .92em; background: rgba(255,255,255,.06); padding: 2px 6px; border-radius: 4px; color: #f4a08e; }
-  .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 100px; }
-  .card { background: #111113; border: 1px solid rgba(255,255,255,.07); border-radius: 12px; padding: 30px; margin-bottom: 20px; }
-  .sec-title { font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-size: 27px; font-weight: 500; margin-bottom: 26px; }
-  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .lang { background:#0e0e10; border:1px solid rgba(255,255,255,.06); border-radius:10px; padding:22px; }
-  .lang .tag { font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:.1em; color:#e86e54; margin-bottom:12px; }
-  .lang p, .lang li { color: #c9c9c4; }
-  .lang ul { padding-left: 20px; margin-top: 6px; }
-  .note { border-left: 3px solid #e86e54; background: rgba(232,110,84,.07); padding: 16px 20px; border-radius: 0 8px 8px 0; margin-top: 18px; }
-  .warn { border-left: 3px solid #e8a33d; background: rgba(232,163,61,.07); padding: 16px 20px; border-radius: 0 8px 8px 0; margin-top: 18px; }
-  .toc a { color: #e86e54; }
-  .toc li { margin-bottom: 5px; }
-  h3 { font-size: 17px; font-weight: 700; margin: 22px 0 8px; }
-  p, li { color: #c9c9c4; }
-  ul { padding-left: 22px; margin: 10px 0; }
-  li { margin-bottom: 6px; }
-  strong { color: #f2f2f0; }
-  .step { font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.1em; color:#e86e54; margin-bottom:10px; }
-  @media (max-width: 860px) {
-    .two { grid-template-columns: 1fr; }
-    .wrap { padding: 24px 16px 70px; }
-    .card { padding: 22px; }
-  }
-</style>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4092261578757214"
-     crossorigin="anonymous"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>不満ノート 取説 / Manual</title>
+  <meta name="description" content="不満ノートの使い方。書き方、相手目線の釈明、この怒りについて調べる、料金と解約、簡易版になる条件。">
+  <link rel="icon" href="assets/icons/fumannote.png">
+  <style>
+    :root {
+      --bg: #0a0a0b;
+      --panel: #111113;
+      --panel-2: #16161a;
+      --line: #26262c;
+      --text: #f2f2f0;
+      --muted: #8a8a86;
+      --accent: #e86e54;
+      --accent-2: #e8a33d;
+      --max: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+        Arial, "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(232,110,84,0.10), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(232,163,61,0.06), transparent 22%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    ::selection { background: rgba(232,110,84,.28); color: #fff; }
+
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 24px; }
+
+    .hero {
+      margin-top: 12px;
+      padding: 32px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+    .hero-top { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+    .app-icon {
+      width: 72px; height: 72px; border-radius: 16px; flex-shrink: 0;
+      border: 1px solid var(--line); object-fit: cover;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(232,110,84,0.14);
+      color: var(--accent);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    h1, h2, h3 { margin: 0 0 12px 0; line-height: 1.3; }
+    h1 { font-size: clamp(32px, 6vw, 52px); letter-spacing: -0.02em; }
+    h2 { font-size: 27px; margin-top: 6px; }
+    h3 { font-size: 18px; margin-top: 18px; }
+
+    .hero p { margin: 10px 0 0 0; color: var(--muted); max-width: 880px; font-size: 16px; }
+
+    .hero-actions { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 12px; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 14px; border-radius: 12px;
+      border: 1px solid var(--line); background: var(--panel);
+      color: var(--text); font-weight: 600; font-size: 14px;
+    }
+    .btn:hover { text-decoration: none; border-color: rgba(232,110,84,0.4); }
+    .btn.primary {
+      border-color: rgba(232,110,84,0.4);
+      background: rgba(232,110,84,0.12);
+      color: #ffd9cc;
+    }
+    .btn.disabled {
+      color: var(--muted);
+      cursor: default;
+    }
+
+    .layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 24px; margin-top: 24px; }
+
+    .toc {
+      position: sticky; top: 24px; align-self: start;
+      padding: 18px; border: 1px solid var(--line); border-radius: 16px;
+      background: rgba(17,17,19,0.84); backdrop-filter: blur(8px);
+    }
+    .toc h2 { font-size: 16px; margin-bottom: 10px; }
+    .toc ol { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+    .toc li + li { margin-top: 8px; }
+
+    .content { min-width: 0; }
+
+    section {
+      margin-bottom: 22px; padding: 26px;
+      border: 1px solid var(--line); border-radius: 18px;
+      background: rgba(17,17,19,0.88);
+    }
+    section > p:first-of-type { margin-top: 0; }
+    p, li { color: #c9c9c4; }
+    strong { color: var(--text); }
+
+    ul, ol { margin: 10px 0 0 0; padding-left: 20px; }
+    li + li { margin-top: 7px; }
+
+    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+    .card { padding: 16px; border-radius: 14px; background: var(--panel-2); border: 1px solid var(--line); }
+    .card h3 { font-size: 17px; margin-top: 0; }
+    .card .tag {
+      font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--accent); font-weight: 700; margin-bottom: 8px;
+    }
+
+    .note {
+      margin-top: 14px; padding: 14px 16px;
+      border-left: 3px solid var(--accent);
+      background: rgba(232,110,84,0.08); color: #f0ddd6;
+      border-radius: 0 12px 12px 0;
+    }
+    .note.warn { border-left-color: var(--accent-2); background: rgba(232,163,61,0.08); color: #f6e4c5; }
+    .note p { color: inherit; margin: 0; }
+
+    code { padding: 2px 6px; border-radius: 8px; background: rgba(255,255,255,0.08); font-size: 0.95em; color: #f4a08e; }
+
+    .footer { margin: 18px 0 40px 0; text-align: center; color: var(--muted); font-size: 14px; }
+    .footer a { color: var(--muted); }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .toc { position: static; }
+    }
+    @media (max-width: 720px) {
+      .wrap { padding: 16px; }
+      .hero { padding: 24px; }
+      section { padding: 20px; }
+      .cards { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4092261578757214"
+       crossorigin="anonymous"></script>
 </head>
 <body>
-<div class="wrap">
-
-  <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; padding-bottom:22px; border-bottom:1px solid rgba(255,255,255,.08); margin-bottom:30px;">
-    <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.12em; color:#8a8a86;">RUSTYWORKS / FUMANNOTE</div>
-    <a href="index.html" style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; border:1px solid rgba(255,255,255,.16); padding:8px 16px; border-radius:6px; color:#f2f2f0;">Back to Tools</a>
-  </div>
-
-  <div class="card" style="display:flex; gap:22px; align-items:flex-start; flex-wrap:wrap;">
-    <img src="assets/icons/fumannote.png" alt="不満ノート" style="width:76px; height:76px; border-radius:16px;">
-    <div style="flex:1; min-width:240px;">
-      <h1 style="font-family:'IBM Plex Mono',monospace; font-size:29px; font-weight:500; margin-bottom:12px;">不満ノート 取説</h1>
-      <p>腹が立ったことを書き出し、相手が本当は言うべきだった言葉に書き直すアプリです。</p>
-    </div>
-  </div>
-
-  <div class="card toc">
-    <h2 class="sec-title" style="font-size:20px; margin-bottom:16px;">目次</h2>
-    <ul>
-      <li><a href="#write">1. 書く</a></li>
-      <li><a href="#rewrite">2. 書き直す</a></li>
-      <li><a href="#share">3. コピーと共有</a></li>
-      <li><a href="#later">4. この怒りについて調べる</a></li>
-      <li><a href="#plan">5. 料金・購入・解約</a></li>
-      <li><a href="#simple">6. 簡易版になるとき</a></li>
-      <li><a href="#delete">7. ノートを消す</a></li>
-    </ul>
-  </div>
-
-  <!-- 1 -->
-  <div class="card" id="write">
-    <div class="step">STEP 01</div>
-    <h2 class="sec-title">書く</h2>
-    <p>右上の <strong>＋</strong> から新しいノートを作ります。</p>
-
-    <h3>誰に？何に？</h3>
-    <p>その不満が誰に向いているのかを短く入れます。「仕事」「家族」「配送」のような大まかなもので十分です。一度入れた言葉は次から候補として出るので、同じ相手のことを続けて書けます。</p>
-
-    <h3>本文</h3>
-    <p><strong>整えずに書いてください。</strong>そのままの言葉で構いません。丁寧に書き直す必要も、誰かに見せる必要もありません。</p>
-
-    <h3>日付を指定したいとき</h3>
-    <p>本文の1行目を <code>2026/08/08</code> または <code>2026-08-08</code> の形にすると、その日付として扱われます。過去の出来事を書き足すときに使えます。指定しなければ書いた日になります。</p>
-
-    <div class="note">
-      <p style="margin:0;"><strong>書いたものは自動で保存されます。</strong>保存ボタンを押し忘れても、入力が止まったところ、アプリを閉じたところ、他のアプリへ切り替えたところで保存されます。</p>
-    </div>
-  </div>
-
-  <!-- 2 -->
-  <div class="card" id="rewrite">
-    <div class="step">STEP 02</div>
-    <h2 class="sec-title">書き直す</h2>
-    <div class="two">
-      <div class="lang">
-        <div class="tag">MAIN</div>
-        <h3 style="margin-top:0;">相手目線の釈明</h3>
-        <p>このアプリの中心です。書いた不満を<strong>相手の一人称</strong>で書き直します。何が起きたのかを認め、こちら側の事情を説明し、それを言い訳にせず非を認め、次にどうするかを述べる——相手がそう言ってくれていたら、こじれずに済んだはずの言葉です。</p>
+  <div class="wrap">
+    <header class="hero">
+      <div class="hero-top">
+        <img class="app-icon" src="assets/icons/fumannote.png" alt="不満ノート" onerror="this.style.display='none'">
+        <div>
+          <div class="eyebrow">FumanNote Manual</div>
+          <h1>不満ノート 取説</h1>
+        </div>
       </div>
-      <div class="lang">
-        <div class="tag">OTHERS</div>
-        <h3 style="margin-top:0;">その他の整理</h3>
-        <p>要約、論点の整理など、別の形にまとめる機能をまとめてあります。使う場面は少ないので、メニューの中に入れています。</p>
+      <p>
+        腹が立ったことを書き出すと、相手が本当は言うべきだった言葉を、相手の一人称で書き直します。
+        書いた直後には何も言いません。振り返りたくなったときだけ、押して調べられます。
+      </p>
+      <div class="hero-actions">
+        <!-- 公開後、下の span を次のリンクに差し替える:
+             <a class="btn primary" href="https://apps.apple.com/jp/app/idXXXXXXXXX" target="_blank" rel="noopener">App Store で入手 ↗</a> -->
+        <span class="btn disabled">App Store 準備中</span>
+        <a class="btn" href="#write">書く</a>
+        <a class="btn" href="#rewrite">書き直す</a>
+        <a class="btn" href="#plan">料金</a>
+        <a class="btn" href="fumannote.html">製品ページ</a>
       </div>
+    </header>
+
+    <div class="layout">
+      <aside class="toc">
+        <h2>目次</h2>
+        <ol>
+          <li><a href="#write">書く</a></li>
+          <li><a href="#rewrite">書き直す</a></li>
+          <li><a href="#share">コピーと共有</a></li>
+          <li><a href="#analysis">この怒りについて調べる</a></li>
+          <li><a href="#plan">料金・購入・解約</a></li>
+          <li><a href="#simple">簡易版になるとき</a></li>
+          <li><a href="#delete">ノートを消す</a></li>
+          <li><a href="#contact">お問い合わせ</a></li>
+        </ol>
+      </aside>
+
+      <main class="content">
+
+        <section id="write">
+          <h2>1. 書く</h2>
+          <p>右上の <strong>＋</strong> から新しいノートを作ります。</p>
+
+          <h3>誰に？何に？</h3>
+          <p>その不満が誰に向いているのかを短く入れます。「仕事」「家族」「配送」のような大まかなもので十分です。一度入れた言葉は次から候補として出るので、同じ相手のことを続けて書けます。</p>
+
+          <h3>本文</h3>
+          <p><strong>整えずに書いてください。</strong>そのままの言葉で構いません。丁寧に書き直す必要も、誰かに見せる必要もありません。</p>
+
+          <h3>日付を指定したいとき</h3>
+          <p>本文の1行目を <code>2026/08/08</code> または <code>2026-08-08</code> の形にすると、その日付として扱われます。過去の出来事を書き足すときに使えます。指定しなければ書いた日になります。</p>
+
+          <div class="note">
+            <p><strong>書いたものは自動で保存されます。</strong>保存ボタンを押し忘れても、入力が止まったところ、アプリを閉じたところ、他のアプリへ切り替えたところで保存されます。</p>
+          </div>
+        </section>
+
+        <section id="rewrite">
+          <h2>2. 書き直す</h2>
+          <div class="cards">
+            <div class="card">
+              <div class="tag">Main</div>
+              <h3>相手目線の釈明</h3>
+              <p>このアプリの中心です。書いた不満を<strong>相手の一人称</strong>で書き直します。何が起きたのかを認め、こちら側の事情を説明し、それを言い訳にせず非を認め、次にどうするかを述べる——相手がそう言ってくれていたら、こじれずに済んだはずの言葉です。</p>
+            </div>
+            <div class="card">
+              <div class="tag">Others</div>
+              <h3>その他の整理</h3>
+              <p>要約、論点の整理など、別の形にまとめる機能をまとめてあります。使う場面は少ないので、メニューの中に入れています。</p>
+            </div>
+          </div>
+          <p style="margin-top:20px;">生成には数秒から十数秒かかります。終わると結果まで自動でスクロールします。<strong>結果はそのまま編集できます。</strong>納得のいかない部分は直してください。</p>
+        </section>
+
+        <section id="share">
+          <h2>3. コピーと共有</h2>
+          <p>結果の下に、コピーと共有のボタンがあります。共有を押すと、送る前に確認のダイアログが出ます。</p>
+          <div class="note warn">
+            <p><strong>固有名詞は伏せ字になりません。</strong>本文に実名・社名・店名を書いた場合、生成された文章にもそのまま残ります。アプリは自動で伏せません。送る相手と内容を、必ずご自身で確認してください。</p>
+          </div>
+        </section>
+
+        <section id="analysis">
+          <h2>4. この怒りについて調べる</h2>
+          <p>本文の下に<strong>「この怒りについて調べる」</strong>があります。<strong>押したときだけ実行します。</strong>自動では走りません。</p>
+          <p>書いた直後に「あなたはこういう前提を持っています」と返されても、説教にしかならないからです。押さなければ、相手の言い分以外は何も出ません。</p>
+          <p>押すと、次が整理されます。</p>
+          <ul>
+            <li>そのとき何に引っかかっていたのか</li>
+            <li>その下にあった気持ち</li>
+            <li>大事にしていたこと</li>
+            <li>いま自分で動かせる範囲</li>
+          </ul>
+          <p>怒りの強さも目盛りで表示されます。<strong>点数をつけて評価するためのものではありません。</strong>後から見返したときに、そのときの自分の状態が分かるようにしてあります。</p>
+          <div class="note">
+            <p>落ち着いてから読みたい場合は、その日は押さずに置いてください。<strong>翌日でも、一週間後でも、押せば同じように出ます。</strong></p>
+          </div>
+        </section>
+
+        <section id="plan">
+          <h2>5. 料金・購入・解約</h2>
+          <p>左上の歯車から設定を開くと、いまのプランと今月の残り回数が確認できます。</p>
+          <div class="cards">
+            <div class="card">
+              <div class="tag" style="color:var(--muted);">Free</div>
+              <h3>無料</h3>
+              <ul>
+                <li>ノートは無制限に書ける</li>
+                <li>書き直しは月5回まで</li>
+                <li>使い切っても簡易版で書き続けられる</li>
+              </ul>
+            </div>
+            <div class="card" style="border-color:rgba(232,110,84,0.28);">
+              <div class="tag">Pro</div>
+              <h3>たっぷり使える — 月額300円</h3>
+              <ul>
+                <li><strong>月300回まで</strong>（通常200回 → ローンチ特典で1.5倍）</li>
+                <li>1日10回に相当する枠</li>
+                <li>上限に達しても簡易版で書き続けられる</li>
+                <li>自動更新・いつでも解約できる</li>
+              </ul>
+            </div>
+          </div>
+          <p style="margin-top:20px;"><strong>無料と有料で文章の質は変わりません。</strong>違うのは月に使える回数だけです。残り回数は設定画面で確認できます。</p>
+
+          <h3>購入を復元する</h3>
+          <p>機種を変えたときや、一度アプリを削除したあとは、設定画面の「購入を復元」から契約を戻せます。同じ Apple アカウントであれば、追加の支払いは発生しません。</p>
+
+          <h3>解約する</h3>
+          <p>iPhone の「設定」アプリ → 一番上の自分の名前 → 「サブスクリプション」から解約できます。設定画面の「サブスクリプションを管理」からも同じ場所へ移動できます。</p>
+          <div class="note">
+            <p>解約しても、支払い済みの期間の終わりまでは使えます。期間の途中で使えなくなることはありません。</p>
+          </div>
+        </section>
+
+        <section id="simple">
+          <h2>6. 簡易版になるとき</h2>
+          <p>結果の上に灰色で「簡易版で表示しています」と出ることがあります。<strong>エラーではありません。</strong>次のいずれかの場合です。</p>
+          <ul>
+            <li><strong>今月の回数を使い切った</strong>（無料5回 / 有料300回）— 来月になると戻ります</li>
+            <li><strong>短い時間に何度も実行した</strong> — 少し時間をおいてください</li>
+            <li><strong>うまく生成できなかった</strong> — 通信の状況などによります。時間をおくと直ることがあります</li>
+          </ul>
+          <p>どの場合も、書くこと・保存すること・見返すことは普通にできます。<strong>アプリが使えなくなることはありません。</strong></p>
+        </section>
+
+        <section id="delete">
+          <h2>7. ノートを消す</h2>
+          <p>消し方は2通りあります。</p>
+          <ul>
+            <li>一覧で、消したい行を<strong>左へスワイプ</strong></li>
+            <li>ノートを開いて、一番下の<strong>「このノートを削除」</strong></li>
+          </ul>
+          <div class="note warn">
+            <p><strong>削除したノートは元に戻せません。</strong>ノートは端末の中だけに保存されており、開発者側にも控えはありません。アプリを削除した場合も同じです。</p>
+          </div>
+        </section>
+
+        <section id="contact">
+          <h2>お問い合わせ</h2>
+          <p>使い方のご質問、不具合のご報告は下記までご連絡ください。</p>
+          <p style="color:var(--accent);">rustyworks.games@gmail.com</p>
+        </section>
+
+      </main>
     </div>
-    <p style="margin-top:20px;">生成には数秒から十数秒かかります。終わると結果まで自動でスクロールします。<strong>結果はそのまま編集できます。</strong>納得のいかない部分は直してください。</p>
-  </div>
 
-  <!-- 3 -->
-  <div class="card" id="share">
-    <div class="step">STEP 03</div>
-    <h2 class="sec-title">コピーと共有</h2>
-    <p>結果の下に「コピー」と「共有」があります。共有を押すと、送る前に確認のダイアログが出ます。</p>
-    <div class="warn">
-      <p style="margin:0;"><strong>固有名詞は伏せ字になりません。</strong>本文に実名・社名・店名を書いた場合、生成された文章にもそのまま残ります。アプリは自動で伏せません。送る相手と内容を、必ずご自身で確認してください。</p>
+    <div class="footer">
+      <a href="fumannote.html">製品ページ</a>
+      　·
+      <a href="fumannote_privacy.html">プライバシーポリシー</a>
+      　·
+      <a href="index.html">RustyWorks</a>
     </div>
   </div>
-
-  <!-- 4 -->
-  <div class="card" id="later">
-    <div class="step">STEP 04</div>
-    <h2 class="sec-title">この怒りについて調べる</h2>
-    <p>本文の下に<strong>「この怒りについて調べる」</strong>があります。<strong>押したときだけ実行します。</strong>自動では走りません。</p>
-    <p>書いた直後に「あなたはこういう前提を持っています」と返されても、説教にしかならないからです。押さなければ、相手の言い分以外は何も出ません。</p>
-    <p>押すと、次が整理されます。</p>
-    <ul>
-      <li>そのとき何に引っかかっていたのか</li>
-      <li>その下にあった気持ち</li>
-      <li>大事にしていたこと</li>
-      <li>いま自分で動かせる範囲</li>
-    </ul>
-    <p>怒りの強さも目盛りで表示されます。<strong>点数をつけて評価するためのものではありません。</strong>後から見返したときに、そのときの自分の状態が分かるようにしてあります。</p>
-    <div class="note">
-      <p style="margin:0;">落ち着いてから読みたい場合は、その日は押さずに置いてください。<strong>翌日でも、一週間後でも、押せば同じように出ます。</strong></p>
-    </div>
-  </div>
-
-  <!-- 5 -->
-  <div class="card" id="plan">
-    <div class="step">STEP 05</div>
-    <h2 class="sec-title">料金・購入・解約</h2>
-    <p>左上の歯車から設定を開くと、いまのプランと今月の残り回数が確認できます。</p>
-    <div class="two" style="margin-top:18px;">
-      <div class="lang">
-        <div class="tag" style="color:#8a8a86;">FREE</div>
-        <h3 style="margin-top:0;">無料</h3>
-        <ul>
-          <li>ノートは無制限に書ける</li>
-          <li>書き直しは月5回まで</li>
-          <li>使い切っても簡易版で書き続けられる</li>
-        </ul>
-      </div>
-      <div class="lang" style="border-color:rgba(232,110,84,.28);">
-        <div class="tag">PRO</div>
-        <h3 style="margin-top:0;">たっぷり使える — 月額300円</h3>
-        <ul>
-          <li><strong>月300回まで</strong>（通常200回 → ローンチ特典で1.5倍）</li>
-          <li>1日10回に相当する枠</li>
-          <li>上限に達しても簡易版で書き続けられる</li>
-          <li>自動更新・いつでも解約できる</li>
-        </ul>
-      </div>
-    </div>
-    <p style="margin-top:20px;"><strong>無料と有料で文章の質は変わりません。</strong>違うのは月に使える回数だけです。残り回数は設定画面で確認できます。</p>
-
-    <h3>購入を復元する</h3>
-    <p>機種を変えたときや、一度アプリを削除したあとは、設定画面の「購入を復元」から契約を戻せます。同じ Apple アカウントであれば、追加の支払いは発生しません。</p>
-
-    <h3>解約する</h3>
-    <p>iPhone の「設定」アプリ → 一番上の自分の名前 → 「サブスクリプション」から解約できます。設定画面の「サブスクリプションを管理」からも同じ場所へ移動できます。</p>
-    <div class="note">
-      <p style="margin:0;">解約しても、支払い済みの期間の終わりまでは使い放題のままです。期間の途中で使えなくなることはありません。</p>
-    </div>
-  </div>
-
-  <!-- 6 -->
-  <div class="card" id="simple">
-    <div class="step">STEP 06</div>
-    <h2 class="sec-title">簡易版になるとき</h2>
-    <p>結果の上に灰色で「簡易版で表示しています」と出ることがあります。<strong>エラーではありません。</strong>次のいずれかの場合です。</p>
-    <ul>
-      <li><strong>今月の回数を使い切った</strong>（無料5回 / 有料300回）— 来月になると戻ります</li>
-      <li><strong>短い時間に何度も実行した</strong> — 少し時間をおいてください</li>
-      <li><strong>うまく生成できなかった</strong> — 通信の状況などによります。時間をおくと直ることがあります</li>
-    </ul>
-    <p>どの場合も、書くこと・保存すること・見返すことは普通にできます。<strong>アプリが使えなくなることはありません。</strong></p>
-  </div>
-
-  <!-- 7 -->
-  <div class="card" id="delete">
-    <div class="step">STEP 07</div>
-    <h2 class="sec-title">ノートを消す</h2>
-    <p>消し方は2通りあります。</p>
-    <ul>
-      <li>一覧で、消したい行を<strong>左へスワイプ</strong></li>
-      <li>ノートを開いて、一番下の<strong>「このノートを削除」</strong></li>
-    </ul>
-    <div class="warn">
-      <p style="margin:0;"><strong>削除したノートは元に戻せません。</strong>ノートは端末の中だけに保存されており、開発者側にも控えはありません。アプリを削除した場合も同じです。</p>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2 class="sec-title" style="font-size:20px;">お問い合わせ</h2>
-    <p>使い方のご質問、不具合のご報告は下記までご連絡ください。</p>
-    <p style="font-family:'IBM Plex Mono',monospace; color:#f4a08e;">rustyworks.games@gmail.com</p>
-  </div>
-
-  <div style="margin-top:34px; text-align:center; font-family:'IBM Plex Mono',monospace; font-size:12.5px;">
-    <a href="fumannote.html" style="color:#8a8a86;">Product</a>
-    <span style="color:#3a3a3c; margin:0 12px;">·</span>
-    <a href="fumannote_privacy.html" style="color:#8a8a86;">Privacy</a>
-  </div>
-
-</div>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "04f66ad1837a4b63af68beb6e835358f"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
