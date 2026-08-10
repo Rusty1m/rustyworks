@@ -38,21 +38,41 @@
     from { opacity: 0; transform: translateY(14px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  .fs-shots {
+  .fs-screen {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    align-items: start;
+    grid-template-columns: 340px 1fr;
+    gap: 56px;
+    align-items: center;
+    padding: 56px 0;
+    border-top: 1px solid rgba(31,30,26,.08);
   }
-  .fs-shots img {
+  .fs-screen:first-of-type { border-top: none; padding-top: 8px; }
+  .fs-screen img {
     width: 100%;
     height: auto;
-    border-radius: 12px;
+    border-radius: 14px;
     border: 1px solid rgba(31,30,26,.10);
     background: #fffdf7;
   }
-  @media (max-width: 1000px) { .fs-shots { grid-template-columns: repeat(2, 1fr); gap: 16px; } }
-  @media (max-width: 520px)  { .fs-shots { grid-template-columns: 1fr; } }
+  .fs-screen-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    letter-spacing: .16em;
+    color: #a8421f;
+    margin-bottom: 14px;
+  }
+  .fs-screen h3 {
+    font-family: 'Space Grotesk', 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 500;
+    font-size: 26px;
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  .fs-screen p { color: #3d3a33; line-height: 1.9; }
+  @media (max-width: 860px) {
+    .fs-screen { grid-template-columns: 1fr; gap: 28px; padding: 44px 0; }
+    .fs-screen img { max-width: 320px; }
+  }
   @media (max-width: 760px) {
     #fs-nav-links { display: none !important; }
     .fs-two-col { grid-template-columns: 1fr !important; }
@@ -103,14 +123,48 @@
     </section>
 
     <!-- SCREENS -->
-    <section id="screens" class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px 120px;">
+    <section id="screens" class="fs-pad" style="max-width:1100px; margin:0 auto; padding:0 40px 120px;">
       <div style="border-top:1px solid rgba(31,30,26,.10); padding-top:80px;">
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.16em; color:#a8421f; margin-bottom:28px;">SCREENS</div>
-        <div class="fs-shots">
-          <img src="assets/shots/fumannote-01.jpg" width="780" height="1688" loading="lazy" decoding="async" alt="ノートの一覧。「実家」「役所」「友だち」「近所」など、書き出した不満が日付とともに並んでいる。">
-          <img src="assets/shots/fumannote-02.jpg" width="780" height="1688" loading="lazy" decoding="async" alt="ノートの入力画面。「誰に？何に？」と本文の欄、「相手目線の釈明」ボタン、そして押したときだけ実行される「この怒りについて調べる」。">
-          <img src="assets/shots/fumannote-03.jpg" width="780" height="1688" loading="lazy" decoding="async" alt="生成された文章。相手の一人称で、何が起きたかを認め、事情を説明し、非を認める内容が並んでいる。">
-          <img src="assets/shots/fumannote-04.jpg" width="780" height="1688" loading="lazy" decoding="async" alt="文章の末尾と、押したときだけ出る「この怒りについて」。怒りの強さ、その下にあった気持ち、大事にしていたこと、いま動かせる範囲が並んでいる。">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.16em; color:#a8421f; margin-bottom:44px;">SCREENS</div>
+        <div class="fs-screen">
+          <img src="assets/shots/fumannote-01.jpg" width="780" height="1687" loading="lazy" decoding="async" alt="生成された文章。相手の一人称で、金曜の18時に月曜朝までの対応を依頼したことを認め、事情を説明し、非を認める内容が並んでいる。">
+          <div>
+            <div class="fs-screen-num">01</div>
+            <h3>相手の一人称で返ってくる</h3>
+            <p>「本当はこう言ってほしかった」を、相手の立場から書きます。何が起きたかを認め、事情を説明し、非を認めるところまで。書いた人の感情を否定しません。</p>
+          </div>
+        </div>
+        <div class="fs-screen">
+          <img src="assets/shots/fumannote-02.jpg" width="780" height="1687" loading="lazy" decoding="async" alt="ノートの入力画面。「誰に？何に？」に「仕事」、本文に金曜18時の依頼についての不満。下に「相手目線の釈明」と「この怒りについて調べる」。">
+          <div>
+            <div class="fs-screen-num">02</div>
+            <h3>うまく言えなくていい</h3>
+            <p>整った言葉である必要はありません。誰にも見せないので、思ったままの言い方で書けます。1行目に日付を書けば、その日の記録として扱われます。</p>
+          </div>
+        </div>
+        <div class="fs-screen">
+          <img src="assets/shots/fumannote-03.jpg" width="780" height="1687" loading="lazy" decoding="async" alt="「この怒りについて」。怒りの強さ7、その下にあった気持ちは「軽視された感覚」、大事にしていたこと、いま動かせる範囲が並んでいる。">
+          <div>
+            <div class="fs-screen-num">03</div>
+            <h3>押したときだけ調べる</h3>
+            <p>怒りの強さ、その下にあった気持ち、大事にしていた前提。決めつけではなく、書かれた文章から読み取れた範囲で示します。自動では走りません。</p>
+          </div>
+        </div>
+        <div class="fs-screen">
+          <img src="assets/shots/fumannote-04.jpg" width="780" height="1687" loading="lazy" decoding="async" alt="「AIアドバイス」。依頼日時を記録する、対応できる範囲を区切って伝える、負担が続く場合は相談窓口へ共有する、といった行動が並んでいる。">
+          <div>
+            <div class="fs-screen-num">04</div>
+            <h3>自分だけで動ける一歩</h3>
+            <p>相手に期待することは書きません。記録の残し方、次に同じことが起きたときの伝え方など、自分の意思だけで実行できることを並べます。</p>
+          </div>
+        </div>
+        <div class="fs-screen">
+          <img src="assets/shots/fumannote-05.jpg" width="780" height="1687" loading="lazy" decoding="async" alt="ホーム画面。「ここに書いて大丈夫」の見出しと「今の気持ちを書き出す」ボタン。その下に「役所」「友だち」「近所」「買い物」のノートが並んでいる。">
+          <div>
+            <div class="fs-screen-num">05</div>
+            <h3>開くたび、すぐ書ける</h3>
+            <p>腹が立った瞬間に開くものなので、書き始めるまでを最短にしてあります。過去のノートは下に並び、同じ相手や場面が繰り返していれば、それも見えます。</p>
+          </div>
         </div>
       </div>
     </section>
