@@ -185,7 +185,8 @@ section{padding:56px 0;}
   transform:translateY(-2px);
 }
 /* OGP画像をそのまま流用するので、比率は 16:9 ではなく
-   OGP の 1200×630 に合わせる。切り取ると焼き込みの文字が欠ける。 */
+   OGP の 1200×630 に合わせる。切り取ると焼き込みの文字が欠ける。
+   カード専用に描いた絵は、この比率に切ってから置くこと。 */
 .work-art{
   aspect-ratio:1200/630;
   background:var(--bg-soft);
@@ -417,7 +418,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;}
         </a>
 
         <a class="work" href="fumannote.html">
-          <div class="work-art"><img src="assets/cards/fumannote.webp" alt="" loading="lazy" width="720" height="378"></div>
+          <div class="work-art"><img src="assets/cards/fumannote.webp" alt="" loading="lazy" width="760" height="400"></div>
           <div class="work-foot">
             <span class="work-name" data-ja="不満ノート" data-en="FumanNote">不満ノート</span>
             <span class="dot review" title="App Store 審査中" aria-label="App Store 審査中"></span>
