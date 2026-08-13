@@ -37,6 +37,7 @@ HTTPS + キーチェーン。Personal Access Token（fine-grained・`Contents: R
 | Recoup | `recoup.html` / `recoup_manual.html` / `recoup_privacy.html` |
 | ShelfNavigator | `shelfnavigator.html` / `_manual` / `_privacy` |
 | Kuro | `kuro.html` / `kuro_manual.html` / `kuro_privacy.html` |
+| 不満ノート（FumanNote） | `fumannote.html` / `fumannote_manual.html` / `fumannote_privacy.html` |
 | Plain Video Saver | `pvs.html` / `pvs_privacy.html` |
 | UADB | `UADB_manual.html` / `uadb_privacy.html` |
 | オートダビング構文（Web アプリ） | `autodub/index.html` / `autodub/notes.html`（解説記事） |
