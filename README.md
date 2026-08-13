@@ -125,7 +125,57 @@ SNS やチャットに貼られたときに出るカードの中身です。**�
 - `index.html` の作品カード（横送り）
 - `works.html` の一覧（説明文・状態バッジ・取説やプライバシーへのリンク）
 
-### 4. 全ページ共通で入れるもの
+### 4. 問い合わせの対象に足す（**2か所あります**）
+
+新しい製品を出したら、お問い合わせフォームの「対象」に足します。
+**サイト側とクラウドフレア側の両方を直さないと、黙って取りこぼします。**
+
+| 直す場所 | 何を |
+|---|---|
+| `contact.html` の `<select id="product">` | `<option value="DocPane">DocPane</option>` を1行 |
+| `~/git_HomePage用/contact-worker/worker.js` の `PRODUCTS` | 同じ文字列を配列に追加 |
+
+**片方だけだと、送信は成功して 200 が返るのに、届いたメールでは
+「指定なし」になります。** Worker は知らない値を弾かずに寄せる作りだからです。
+送った人にも受け取った側にも、失敗したことが分かりません。
+
+> `worker.js` はこのリポジトリにはありません。**一時置き場の
+> `~/git_HomePage用/contact-worker/`** にあります。受け口の設計と
+> デプロイ手順は、そこの README が正典です。
+
+**`worker.js` は直しただけでは効きません。上げるまで反映されません。**
+
+```bash
+cd ~/git_HomePage用/contact-worker && npx wrangler deploy
+```
+
+`option` の `value` と `PRODUCTS` の文字列は**完全一致**させます。表示名と
+値を変えている項目があるので注意（`UADB / UADB Lite` は `value="UADB"`、
+`このサイト` は `value="サイト"`）。
+
+### 5. Latest Updates に1行足す
+
+トップの更新履歴です。**新しいものが一番上**で、日付は降順に並べます。
+
+```html
+<a class="update" href="docpane/">
+  <time datetime="2026-08-14">2026.08.14</time>
+  <span class="badge news">NEWS</span>
+  <span class="update-title" data-ja="…" data-en="…">…</span>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 5 16 12 9 19"/></svg>
+</a>
+```
+
+| バッジ | 使いどころ |
+|---|---|
+| `news` | 新しく出したもの・公開したもの |
+| `update` | 既にあるものの更新 |
+| `lab` | 実験的なもの、解説記事 |
+
+`<time>` は `datetime` 属性と表示の両方を書きます（`2026-08-14` と `2026.08.14`）。
+`href` は、その話題の行き先へ。**日本語だけでなく `data-en` も書きます。**
+
+### 6. 全ページ共通で入れるもの
 
 | | |
 |---|---|
@@ -135,7 +185,7 @@ SNS やチャットに貼られたときに出るカードの中身です。**�
 | 解析タグ | `</body>` の直前に Cloudflare Web Analytics のタグ（トークンは全ページ共通） |
 | フッター | トップへ戻る導線と `site_privacy.html` へのリンク |
 
-### 5. 公開したあとに見る
+### 7. 公開したあとに見る
 
 ```bash
 curl -s -o /dev/null -w '%{http_code}\n' https://rustyworks.jp/xxx.html
