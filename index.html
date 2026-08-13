@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RustyWorks</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RustyWorks</title>
 <meta name="description" content="macOS / iOS アプリと、Unity・RPGツクール向けのツールをつくっています。">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="RustyWorks">
@@ -19,757 +19,554 @@
 <meta name="twitter:description" content="macOS / iOS アプリと、Unity・RPGツクール向けのツールをつくっています。">
 <meta name="twitter:image" content="https://rustyworks.jp/assets/og/rustyworks-og.jpg">
 
-    <style>
-        /* --- Apple-like Design System & Variables --- */
-        :root {
-            --bg-color: #000000;
-            --panel-bg: #161617;
-            --panel-bg-2: #1c1c1e;
-            --text-primary: #f5f5f7;
-            --text-secondary: #86868b;
-            --text-tertiary: #6e6e73;
-            --accent-color: #2997ff;
-            --hairline: rgba(255, 255, 255, 0.1);
-            --hairline-soft: rgba(255, 255, 255, 0.06);
-            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Hiragino Sans", "Noto Sans JP", Arial, sans-serif;
-            --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
 
-            --st-green-bg:  rgba(48, 209, 88, 0.14);  --st-green-fg:  #4cd970;
-            --st-orange-bg: rgba(255, 159, 10, 0.14); --st-orange-fg: #ffb340;
-            --st-blue-bg:   rgba(41, 151, 255, 0.16); --st-blue-fg:   #5cabff;
-            --st-teal-bg:   rgba(100, 210, 255, 0.14);--st-teal-fg:   #7fd8ff;
-            --st-gray-bg:   rgba(255, 255, 255, 0.07);--st-gray-fg:   #a1a1a6;
-        }
+<style>
+:root{
+  --bg:#ffffff;
+  --bg-soft:#f5f5f6;
+  --ink:#111214;
+  --ink-2:#5f6368;
+  --ink-3:#8a8d93;
+  --line:#e4e4e7;
+  --blue:#1a4fd8;
+  --blue-ink:#143fb0;
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+  --dot-released:#2f9e5e;
+  --dot-review:#e08a1e;
+  --dot-dev:#a8abb2;
 
-        html { scroll-behavior: smooth; }
+  --sans:"Inter","Zen Kaku Gothic New",-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            font-family: var(--font-sans);
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
-        }
+  --pad:64px;
+  --maxw:1408px;
+  --header-h:72px;
+}
 
-        a {
-            color: var(--accent-color);
-            text-decoration: none;
-            transition: opacity 0.3s ease;
-        }
-        a:hover { opacity: 0.75; }
+*{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none;}
+img{display:block;max-width:100%;}
 
-        /* --- Global Navigation --- */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            height: 48px;
-            background-color: rgba(22, 22, 23, 0.72);
-            backdrop-filter: saturate(180%) blur(20px);
-            -webkit-backdrop-filter: saturate(180%) blur(20px);
-            z-index: 9999;
-            border-bottom: 1px solid var(--hairline);
-        }
-        .nav-container {
-            max-width: 1024px;
-            margin: 0 auto;
-            height: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 22px;
-        }
-        .logo {
-            font-weight: 600;
-            font-size: 18px;
-            letter-spacing: -0.5px;
-            color: var(--text-primary);
-        }
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 22px;
-        }
-        nav ul a {
-            color: var(--text-secondary);
-            font-size: 12px;
-            font-weight: 400;
-            letter-spacing: 0.4px;
-        }
-        nav ul a:hover { color: var(--text-primary); opacity: 1; }
-        .nav-toggle { display: none; }
+.container{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad);}
 
-        /* --- Layout & Typography --- */
-        section {
-            padding: 110px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-        .container { max-width: 1024px; width: 100%; }
+/* ── ヘッダー ───────────────────────────── */
+header{
+  position:sticky;top:0;z-index:50;
+  background:var(--bg);
+  border-bottom:1px solid var(--line);
+}
+.header-inner{
+  height:var(--header-h);
+  display:flex;align-items:stretch;
+  max-width:var(--maxw);margin:0 auto;
+  padding-left:var(--pad);
+}
+.logo{
+  display:flex;align-items:center;
+  font-weight:800;font-size:23px;letter-spacing:-.02em;
+}
+.nav{flex:1;display:flex;align-items:center;justify-content:center;gap:56px;}
+.nav a{
+  font-size:13px;font-weight:600;letter-spacing:.12em;
+  color:var(--ink);
+  padding:6px 0;border-bottom:2px solid transparent;
+  transition:color .15s,border-color .15s;
+}
+.nav a:hover{color:var(--blue);border-bottom-color:var(--blue);}
 
-        .section-tagline {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--accent-color);
-            text-transform: uppercase;
-            letter-spacing: 1.4px;
-            margin-bottom: 10px;
-        }
-        .section-title {
-            font-size: 46px;
-            font-weight: 700;
-            letter-spacing: -0.6px;
-            line-height: 1.08;
-            margin-bottom: 16px;
-        }
-        .section-desc {
-            font-size: 19px;
-            color: var(--text-secondary);
-            max-width: 620px;
-            margin: 0 auto;
-            font-weight: 400;
-        }
+.header-end{display:flex;align-items:stretch;}
+.lang{
+  display:flex;align-items:center;gap:2px;
+  font-family:var(--mono);font-size:12px;
+  padding-right:20px;
+}
+.lang button{
+  font:inherit;background:none;border:0;cursor:pointer;
+  color:var(--ink-3);padding:4px 6px;border-radius:4px;
+  transition:color .15s,background-color .15s;
+}
+.lang button:hover{color:var(--ink);background:var(--bg-soft);}
+.lang button[aria-pressed="true"]{color:var(--ink);font-weight:500;}
+.lang .sep{color:var(--line);}
 
-        /* --- Hero Section --- */
-        .hero {
-            min-height: 100vh;
-            justify-content: center;
-            background: radial-gradient(circle at 50% 30%, #1c1c1e 0%, #000000 70%);
-            padding-top: 48px;
-        }
-        .hero .section-tagline { color: var(--text-secondary); }
-        .hero-title {
-            font-size: clamp(56px, 9vw, 88px);
-            font-weight: 700;
-            letter-spacing: -1.5px;
-            line-height: 1;
-            margin-bottom: 22px;
-            background: linear-gradient(180deg, #ffffff 0%, #a1a1a6 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .hero .section-desc { font-size: 20px; max-width: 640px; margin-bottom: 34px; }
+.btn-support{
+  display:flex;align-items:center;gap:9px;
+  background:var(--blue);color:#fff;
+  padding:0 34px;
+  font-size:14px;font-weight:600;letter-spacing:.02em;
+  transition:background-color .15s;
+}
+.btn-support:hover{background:var(--blue-ink);}
+.btn-support svg{width:18px;height:18px;flex:none;}
 
-        .profile-strip {
-            display: inline-flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0;
-            border: 1px solid var(--hairline);
-            border-radius: 999px;
-            overflow: hidden;
-            background: rgba(255, 255, 255, 0.02);
-        }
-        .profile-item {
-            padding: 10px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 1px;
-            border-right: 1px solid var(--hairline-soft);
-        }
-        .profile-item:last-child { border-right: none; }
-        .profile-item .k {
-            font-family: var(--font-mono);
-            font-size: 9.5px;
-            color: var(--text-tertiary);
-            letter-spacing: 1px;
-        }
-        .profile-item .v { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+.nav-toggle{display:none;}
 
-        .scroll-cue {
-            margin-top: 42px;
-            font-size: 17px;
-            color: var(--accent-color);
-        }
+/* ── ヒーロー ───────────────────────────── */
+.hero{
+  display:grid;
+  grid-template-columns:minmax(0,47fr) minmax(0,53fr);
+  border-bottom:1px solid var(--line);
+}
+.hero-copy{
+  padding:76px 56px 78px max(var(--pad), calc((100vw - var(--maxw)) / 2 + var(--pad)));
+  align-self:center;
+}
+.hero h1{
+  font-size:clamp(32px,4.3vw,58px);
+  font-weight:800;
+  line-height:1.06;
+  letter-spacing:-.025em;
+  text-transform:uppercase;
+}
+.hero-sub{
+  margin-top:22px;
+  font-size:16px;font-weight:500;
+  color:var(--ink-2);
+  letter-spacing:.01em;
+}
+.hero-rule{
+  margin-top:30px;
+  width:56px;height:3px;background:var(--blue);
+}
+.hero-media{position:relative;min-height:330px;background:var(--bg-soft);}
+.hero-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
 
-        /* --- Section shells --- */
-        .section-alt { background-color: var(--panel-bg); }
-        .section-line { border-top: 1px solid var(--hairline-soft); }
-        .section-head { margin-bottom: 48px; }
-        .section-head .section-title { font-size: 38px; margin-bottom: 12px; }
-        .section-head .section-desc { font-size: 17px; }
+/* ── セクション共通 ─────────────────────── */
+/* モックは縦に詰まっているので、節ごとに上下を個別指定する。
+   作品→サポートは続きものとして近づけ、更新情報の前で一段あける。 */
+section{padding:56px 0;}
+#works{padding:60px 0 0;}
+#support{padding:24px 0 0;}
+#news{padding:56px 0 60px;}
+.sec-head{
+  display:flex;align-items:baseline;justify-content:space-between;
+  gap:24px;margin-bottom:26px;
+}
+.sec-title{
+  font-size:20px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;
+}
+.sec-more{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:14px;font-weight:600;color:var(--blue);
+  white-space:nowrap;
+}
+.sec-more:hover{color:var(--blue-ink);}
+.sec-more svg{width:14px;height:14px;}
 
-        /* --- Product Grid --- */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            text-align: left;
-        }
-        .products-grid.single { grid-template-columns: minmax(0, 520px); justify-content: center; }
+/* ── 作品カード ─────────────────────────── */
+.works{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:22px;
+}
+.work{
+  border:1px solid var(--line);
+  border-radius:10px;
+  overflow:hidden;
+  background:var(--bg);
+  transition:border-color .15s,box-shadow .15s,transform .15s;
+}
+.work:hover{
+  border-color:#cfd2d8;
+  box-shadow:0 6px 22px rgba(17,18,20,.07);
+  transform:translateY(-2px);
+}
+/* OGP画像をそのまま流用するので、比率は 16:9 ではなく
+   OGP の 1200×630 に合わせる。切り取ると焼き込みの文字が欠ける。 */
+.work-art{
+  aspect-ratio:1200/630;
+  background:var(--bg-soft);
+  border-bottom:1px solid var(--line);
+}
+.work-art img{width:100%;height:100%;object-fit:cover;}
+.work-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:14px 16px;
+}
+.work-name{font-size:14px;font-weight:600;letter-spacing:.01em;}
+.dot{width:9px;height:9px;border-radius:50%;flex:none;}
+.dot.released{background:var(--dot-released);}
+.dot.review{background:var(--dot-review);}
+.dot.dev{background:var(--dot-dev);}
 
-        .product-card {
-            background-color: var(--panel-bg-2);
-            border-radius: 20px;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid var(--hairline-soft);
-            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s ease;
-        }
-        .section-alt .product-card { background-color: #202022; }
-        .product-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--hairline);
-        }
+/* ── サポート帯 ─────────────────────────── */
+.support-box{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  border:1px solid var(--line);
+  border-radius:12px;
+  overflow:hidden;
+}
+.support-item{
+  display:flex;align-items:center;gap:16px;
+  padding:26px 30px;
+  transition:background-color .15s;
+}
+.support-item + .support-item{border-left:1px solid var(--line);}
+.support-item:hover{background:var(--bg-soft);}
+.support-item svg.ico{width:22px;height:22px;flex:none;color:var(--ink-2);}
+.support-label{flex:1;font-size:15px;font-weight:600;letter-spacing:.06em;}
+.support-note{display:block;font-size:13px;font-weight:400;letter-spacing:0;color:var(--ink-3);margin-top:2px;}
+.support-item svg.arw{width:14px;height:14px;flex:none;color:var(--ink-3);}
 
-        .card-head {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .card-icon {
-            width: 56px; height: 56px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, #2c2c2e 0%, #1c1c1e 100%);
-            border: 1px solid var(--hairline-soft);
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden; flex-shrink: 0;
-            color: var(--text-tertiary);
-        }
-        .card-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .card-icon svg { width: 26px; height: 26px; opacity: 0.55; }
+/* ── 更新情報 ───────────────────────────── */
+.updates{border-top:1px solid var(--line);}
+.update{
+  display:flex;align-items:center;gap:22px;
+  padding:16px 4px;
+  border-bottom:1px solid var(--line);
+  transition:background-color .15s;
+}
+.update:hover{background:var(--bg-soft);}
+.update time{
+  font-family:var(--mono);font-size:13px;color:var(--ink-2);
+  flex:none;width:96px;
+}
+.badge{
+  flex:none;width:74px;text-align:center;
+  font-size:11px;font-weight:600;letter-spacing:.08em;
+  color:#fff;padding:3px 0;border-radius:3px;
+}
+.badge.update{background:var(--blue);}
+.badge.news{background:#8a8d93;}
+.badge.lab{background:#8a8d93;}
+.update-title{flex:1;font-size:14.5px;}
+.update svg{width:14px;height:14px;flex:none;color:var(--ink-3);}
 
-        .status {
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.2px;
-            padding: 5px 11px;
-            border-radius: 999px;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-        .st-released { background: var(--st-green-bg);  color: var(--st-green-fg); }
-        .st-dev      { background: var(--st-orange-bg); color: var(--st-orange-fg); }
-        .st-beta     { background: var(--st-blue-bg);   color: var(--st-blue-fg); }
-        .st-date     { background: var(--st-teal-bg);   color: var(--st-teal-fg); }
-        .st-soon     { background: var(--st-gray-bg);   color: var(--st-gray-fg); }
+/* ── ABOUT ─────────────────────────────── */
+.about{background:var(--bg-soft);border-top:1px solid var(--line);}
+.about-body{max-width:680px;}
+.about-body p{color:var(--ink-2);font-size:15.5px;}
+.about-meta{
+  display:flex;flex-wrap:wrap;gap:10px 34px;margin-top:26px;
+  font-family:var(--mono);font-size:12.5px;color:var(--ink-3);
+}
+.about-meta b{color:var(--ink-2);font-weight:500;margin-right:8px;}
+.about-links{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px;}
+.social{
+  display:inline-flex;align-items:center;gap:9px;
+  border:1px solid var(--line);border-radius:999px;
+  background:var(--bg);
+  padding:9px 18px 9px 15px;
+  font-size:13.5px;font-weight:600;letter-spacing:.01em;
+  transition:border-color .15s,background-color .15s,color .15s;
+}
+.social:hover{border-color:var(--ink);background:var(--ink);color:#fff;}
+.social svg{width:15px;height:15px;flex:none;}
+.social .handle{font-family:var(--mono);font-weight:400;color:var(--ink-3);}
+.social:hover .handle{color:rgba(255,255,255,.72);}
 
-        .card-name {
-            font-size: 22px;
-            font-weight: 600;
-            letter-spacing: -0.3px;
-            margin-bottom: 4px;
-        }
-        .card-path {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--text-tertiary);
-            margin-bottom: 12px;
-            word-break: break-all;
-        }
-        .card-desc {
-            font-size: 14.5px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-        }
-        .card-tags {
-            display: flex; flex-wrap: wrap; gap: 6px;
-            margin-bottom: 18px;
-        }
-        .tag {
-            font-family: var(--font-mono);
-            font-size: 10.5px;
-            color: var(--text-secondary);
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--hairline-soft);
-            padding: 3px 8px;
-            border-radius: 5px;
-            letter-spacing: 0.2px;
-        }
-        .card-foot {
-            margin-top: auto;
-            padding-top: 16px;
-            border-top: 1px solid var(--hairline-soft);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .card-meta {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--text-tertiary);
-            letter-spacing: 0.3px;
-        }
-        .card-links { display: flex; gap: 14px; flex-wrap: wrap; }
-        .card-links a {
-            font-size: 13px;
-            font-weight: 500;
-        }
+/* ── フッター ───────────────────────────── */
+footer{border-top:1px solid var(--line);padding:30px 0;}
+.footer-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:20px;flex-wrap:wrap;
+}
+.copy{font-size:13px;color:var(--ink-2);}
+.footer-links{display:flex;align-items:center;gap:26px;font-size:13px;color:var(--ink-2);}
+.footer-links a:hover{color:var(--blue);}
 
-        /* --- Contact --- */
-        .contact-list {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            text-align: left;
-            margin-top: 8px;
-        }
-        .contact-card {
-            background-color: var(--panel-bg-2);
-            border: 1px solid var(--hairline-soft);
-            border-radius: 20px;
-            padding: 28px 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .contact-card .k {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--text-tertiary);
-            letter-spacing: 1.4px;
-        }
-        .contact-card .v {
-            font-size: 19px;
-            font-weight: 500;
-            word-break: break-all;
-        }
-        .contact-card .v a { color: var(--text-primary); }
-        .contact-card .v a:hover { color: var(--accent-color); opacity: 1; }
+/* ── レスポンシブ ───────────────────────── */
+@media (max-width:1080px){
+  .works{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media (max-width:860px){
+  :root{--pad:22px;}
+  .header-inner{padding-left:var(--pad);}
+  .nav{
+    position:fixed;top:var(--header-h);left:0;right:0;
+    flex-direction:column;align-items:stretch;justify-content:flex-start;
+    gap:0;background:var(--bg);border-bottom:1px solid var(--line);
+    padding:6px var(--pad) 18px;
+    display:none;
+  }
+  .nav.open{display:flex;}
+  .nav a{padding:13px 0;border-bottom:1px solid var(--line);}
+  .nav-toggle{
+    display:flex;align-items:center;
+    background:none;border:0;cursor:pointer;color:var(--ink);
+    padding:0 14px;
+  }
+  .nav-toggle svg{width:24px;height:24px;}
+  .btn-support{padding:0 20px;font-size:13px;}
+  .btn-support span{display:none;}
+  .lang{padding-right:10px;}
 
-        /* --- Footer --- */
-        footer {
-            background-color: var(--panel-bg);
-            color: var(--text-secondary);
-            font-size: 12px;
-            padding: 54px 20px;
-            border-top: 1px solid var(--hairline);
-        }
-        .footer-container { max-width: 1024px; margin: 0 auto; }
-        .footer-container > p { max-width: 620px; }
-        .footer-legal {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid var(--hairline-soft);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-        }
-        .footer-legal a { color: var(--text-secondary); }
-        .footer-legal a:hover { color: var(--text-primary); }
+  .hero{grid-template-columns:1fr;}
+  .hero-copy{padding:52px var(--pad) 44px;order:2;}
+  .hero-media{order:1;min-height:230px;}
 
-        /* --- Responsive --- */
-        @media (max-width: 768px) {
-            section { padding: 84px 18px; }
-            .hero-title { letter-spacing: -1px; }
-            .section-title { font-size: 32px; }
-            .section-head .section-title { font-size: 30px; }
-            .section-desc { font-size: 16px; }
-            .products-grid,
-            .products-grid.single,
-            .contact-list { grid-template-columns: 1fr; }
-            .footer-legal { flex-direction: column; align-items: flex-start; gap: 10px; }
+  section{padding:48px 0;}
+  .support-box{grid-template-columns:1fr;}
+  .support-item + .support-item{border-left:0;border-top:1px solid var(--line);}
 
-            nav ul {
-                position: fixed;
-                top: 48px; left: 0; right: 0;
-                flex-direction: column;
-                gap: 0;
-                background-color: rgba(22, 22, 23, 0.96);
-                backdrop-filter: blur(20px);
-                -webkit-backdrop-filter: blur(20px);
-                border-bottom: 1px solid var(--hairline);
-                transform: translateY(-120%);
-                transition: transform 0.32s ease;
-                padding: 6px 0;
-            }
-            nav ul.open { transform: translateY(0); }
-            nav ul li { border-top: 1px solid var(--hairline-soft); }
-            nav ul a { display: block; padding: 14px 22px; font-size: 15px; }
-            .nav-toggle {
-                display: inline-flex;
-                background: none; border: none; cursor: pointer;
-                padding: 8px; color: var(--text-primary);
-            }
-            .nav-toggle svg { width: 20px; height: 20px; }
-        }
+  .update{flex-wrap:wrap;gap:10px 14px;padding:15px 4px;}
+  .update time{width:auto;}
+  .update-title{flex:1 0 100%;order:3;}
 
-        @media (prefers-reduced-motion: reduce) {
-            html { scroll-behavior: auto; }
-            * { transition: none !important; }
-        }
-    </style>
+  /* 狭い幅では見出しの字間を詰める。「FEATURED WORKS」が
+     2行に折れて「すべての作品を見る」と高さが揃わなくなるため。 */
+  .sec-title{font-size:17px;letter-spacing:.07em;}
+  .sec-head{margin-bottom:20px;}
+}
+@media (max-width:560px){
+  .works{grid-template-columns:1fr;}
+}
+</style>
+
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4092261578757214"
      crossorigin="anonymous"></script>
 </head>
 <body>
 
-    <header>
-        <div class="nav-container">
-            <div class="logo">RustyWorks</div>
-            <nav>
-                <button class="nav-toggle" aria-label="メニュー" aria-expanded="false">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
-                </button>
-                <ul>
-                    <li><a href="#games">Games</a></li>
-                    <li><a href="#tools">Tools</a></li>
-                    <li><a href="#apps">iOS Apps</a></li>
-                    <li><a href="#webapps">Web Apps</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
+<header>
+  <div class="header-inner">
+    <a class="logo" href="#top">RustyWorks</a>
+
+    <nav class="nav" id="nav">
+      <a href="#works">WORKS</a>
+      <a href="#support">SUPPORT</a>
+      <a href="#news">NEWS</a>
+      <a href="#about">ABOUT</a>
+    </nav>
+
+    <div class="header-end">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="ja" aria-pressed="true">JA</button>
+        <span class="sep">/</span>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+
+      <button class="nav-toggle" id="navToggle" aria-label="メニュー" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+      </button>
+
+      <a class="btn-support" href="#support">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.2a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.7-.9 1.3v.5"/><circle cx="12" cy="17" r=".9" fill="currentColor" stroke="none"/></svg>
+        <span data-ja="サポート" data-en="Support">サポート</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ヒーロー -->
+  <section class="hero" style="padding:0;">
+    <div class="hero-copy">
+      <h1>Made for play.<br>Made with care.</h1>
+      <p class="hero-sub" data-ja="アプリ、ゲーム、実験的なプロジェクト。" data-en="Apps, games, and experiments.">アプリ、ゲーム、実験的なプロジェクト。</p>
+      <div class="hero-rule"></div>
+    </div>
+    <div class="hero-media">
+      <img src="assets/hero/workbench.webp"
+           srcset="assets/hero/workbench-1024.webp 1024w, assets/hero/workbench.webp 1672w"
+           sizes="(max-width:860px) 100vw, 53vw"
+           width="1672" height="941"
+           alt="工具とRUSTYWORKSの札が並ぶ作業机">
+    </div>
+  </section>
+
+  <!-- 作品 -->
+  <section id="works">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="sec-title">Featured Works</h2>
+        <a class="sec-more" href="#works">
+          <span data-ja="すべての作品を見る" data-en="View all works">すべての作品を見る</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 5 16 12 9 19"/></svg>
+        </a>
+      </div>
+
+      <div class="works">
+        <a class="work" href="kuro.html">
+          <div class="work-art"><img src="assets/cards/kuro.webp" alt="" loading="lazy" width="720" height="378"></div>
+          <div class="work-foot">
+            <span class="work-name">Kuro</span>
+            <span class="dot released" title="リリース済み" aria-label="リリース済み"></span>
+          </div>
+        </a>
+
+        <a class="work" href="shelfnavigator.html">
+          <div class="work-art"><img src="assets/cards/shelfnavigator.webp" alt="" loading="lazy" width="720" height="378"></div>
+          <div class="work-foot">
+            <span class="work-name">ShelfNavigator</span>
+            <span class="dot released" title="リリース済み" aria-label="リリース済み"></span>
+          </div>
+        </a>
+
+        <a class="work" href="recoup.html">
+          <div class="work-art"><img src="assets/cards/recoup.webp" alt="" loading="lazy" width="720" height="378"></div>
+          <div class="work-foot">
+            <span class="work-name">Recoup</span>
+            <span class="dot released" title="リリース済み" aria-label="リリース済み"></span>
+          </div>
+        </a>
+
+        <a class="work" href="fumannote.html">
+          <div class="work-art"><img src="assets/cards/fumannote.webp" alt="" loading="lazy" width="720" height="378"></div>
+          <div class="work-foot">
+            <span class="work-name" data-ja="不満ノート" data-en="FumanNote">不満ノート</span>
+            <span class="dot review" title="App Store 審査中" aria-label="App Store 審査中"></span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- サポート -->
+  <section id="support">
+    <div class="container">
+      <div class="support-box">
+        <a class="support-item" href="#support">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12a9 9 0 1 0-3.2 6.9L21 21z"/><path d="M9.7 9.4a2.4 2.4 0 1 1 3.2 2.3c-.6.2-.9.6-.9 1.2v.4"/><circle cx="12" cy="16.4" r=".8" fill="currentColor" stroke="none"/></svg>
+          <span class="support-label">
+            FAQ
+            <span class="support-note" data-ja="よくある質問（準備中）" data-en="Frequently asked questions (coming soon)">よくある質問（準備中）</span>
+          </span>
+          <svg class="arw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 5 16 12 9 19"/></svg>
+        </a>
+
+        <a class="support-item" href="mailto:rustyworks.games@gmail.com">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M3 7l9 6 9-6"/></svg>
+          <span class="support-label">
+            CONTACT
+            <span class="support-note">rustyworks.games@gmail.com</span>
+          </span>
+          <svg class="arw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 5 16 12 9 19"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 更新情報 -->
+  <section id="news">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="sec-title">Latest Updates</h2>
+      </div>
+
+      <div class="updates">
+        <a class="update" href="shelfnavigator.html">
+          <time datetime="2026-08-13">2026.08.13</time>
+          <span class="badge update">UPDATE</span>
+          <span class="update-title" data-ja="ShelfNavigator のページをライトテーマに刷新しました" data-en="Redesigned the ShelfNavigator page in a light theme">ShelfNavigator のページをライトテーマに刷新しました</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 5 16 12 9 19"/></svg>
+        </a>
+
+        <a class="update" href="fumannote.html">
+          <time datetime="2026-08-08">2026.08.08</time>
+          <span class="badge news">NEWS</span>
+          <span class="update-title" data-ja="不満ノートのページを公開しました（App Store 審査中）" data-en="Published the FumanNote page (currently in App Store review)">不満ノートのページを公開しました（App Store 審査中）</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 5 16 12 9 19"/></svg>
+        </a>
+
+        <a class="update" href="autodub/notes.html">
+          <time datetime="2026-08-04">2026.08.04</time>
+          <span class="badge lab">LAB</span>
+          <span class="update-title" data-ja="オートダビング構文の解説記事を公開しました" data-en="Published a write-up on how AutoDub works">オートダビング構文の解説記事を公開しました</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 5 16 12 9 19"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="about">
+    <div class="container">
+      <div class="sec-head"><h2 class="sec-title">About</h2></div>
+      <div class="about-body">
+        <p data-ja="RustyWorks は、macOS / iOS のアプリとゲームをつくっている個人ブランドです。Unity / Godot / Swift を使っています。" data-en="RustyWorks is a one-person studio making macOS and iOS apps and games, built with Unity, Godot, and Swift.">RustyWorks は、macOS / iOS のアプリとゲームをつくっている個人ブランドです。Unity / Godot / Swift を使っています。</p>
+        <div class="about-meta">
+          <span><b>NAME</b>Rusty</span>
+          <span><b>BASE</b>Japan</span>
+          <span><b>STACK</b>Unity / Godot / Swift / C#</span>
         </div>
-    </header>
 
-    <!-- HERO -->
-    <section class="hero">
-        <div class="container">
-            <p class="section-tagline">Indie Game Developer</p>
-            <h1 class="hero-title">RustyWorks</h1>
-            <p class="section-desc">インディーゲームとツールをつくる個人ブランド。Unity / Godot / Swift を軸に、RPG・開発ツール・アプリを制作しています。</p>
-            <div class="profile-strip">
-                <div class="profile-item"><span class="k">NAME</span><span class="v">Rusty</span></div>
-                <div class="profile-item"><span class="k">CLASS</span><span class="v">Indie Game Developer</span></div>
-                <div class="profile-item"><span class="k">BASE</span><span class="v">Japan</span></div>
-                <div class="profile-item"><span class="k">STACK</span><span class="v">Unity / Swift / C#</span></div>
-            </div>
-            <div class="scroll-cue"><a href="#games">プロダクトを見る &darr;</a></div>
+        <div class="about-links">
+          <a class="social" href="https://x.com/RustyWorksGames" target="_blank" rel="noopener" aria-label="X: @RustyWorksGames">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.65l-5.22-6.82-5.96 6.82H1.68l7.73-8.84L1.25 2.25h6.82l4.71 6.23 5.46-6.23Zm-1.16 17.52h1.83L7.01 4.13H5.05l12.03 15.64Z"/></svg>
+            <span class="handle">@RustyWorksGames</span>
+          </a>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- GAMES -->
-    <section id="games" class="section-line">
-        <div class="container">
-            <div class="section-head">
-                <p class="section-tagline">Games · 2</p>
-                <h2 class="section-title">Game Projects</h2>
-                <p class="section-desc">RPG の制作と、RPGツクールMZ 向けプラグインの配布。</p>
-            </div>
-            <div class="products-grid">
+</main>
 
-                <article class="product-card">
-                    <div class="card-head">
-                        <div class="card-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 3h6v3a2 2 0 0 0 4 0h2v5a2 2 0 0 1 0 4v3H9a2 2 0 0 1-2-2h0a2 2 0 0 0 0-4h0a2 2 0 0 1-2-2V6a3 3 0 0 1 3-3z"/></svg>
-                        </div>
-                        <span class="status st-released">Released</span>
-                    </div>
-                    <h3 class="card-name">戦闘画面UIカスタマイザー</h3>
-                    <div class="card-path">RustyWorks/Plugins/BattleUICustomizer</div>
-                    <p class="card-desc">RPGツクールMZ の戦闘画面のレイアウトを、プラグインパラメータから組み替えられるようにするプラグイン。</p>
-                    <div class="card-tags">
-                        <span class="tag">rpgmaker-mz</span><span class="tag">battle</span><span class="tag">ui</span><span class="tag">free</span>
-                    </div>
-                    <div class="card-foot">
-                        <span class="card-meta">Platform · RPGツクールMZ</span>
-                        <div class="card-links">
-                            <a href="https://note.com/legit_fowl8567/n/n3992c3e5129e" target="_blank" rel="noopener">note &nearr;</a>
-                        </div>
-                    </div>
-                </article>
+<footer>
+  <div class="container footer-inner">
+    <span class="copy">© RustyWorks</span>
+    <div class="footer-links">
+      <a href="site_privacy.html" data-ja="プライバシーポリシー" data-en="Privacy Policy">プライバシーポリシー</a>
+      <a href="mailto:rustyworks.games@gmail.com" data-ja="お問い合わせ" data-en="Contact">お問い合わせ</a>
+    </div>
+  </div>
+</footer>
 
-                <article class="product-card">
-                    <div class="card-head">
-                        <div class="card-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="10" rx="5"/><line x1="7" y1="12" x2="9" y2="12"/><line x1="8" y1="11" x2="8" y2="13"/><circle cx="15.5" cy="11" r="0.6" fill="currentColor" stroke="none"/><circle cx="17.5" cy="13" r="0.6" fill="currentColor" stroke="none"/></svg>
-                        </div>
-                        <span class="status st-dev">In Development</span>
-                    </div>
-                    <h3 class="card-name">RPGゲーム(仮)</h3>
-                    <div class="card-path">RustyWorks/Games/RPG</div>
-                    <div class="card-tags">
-                        <span class="tag">godot</span><span class="tag">rpg</span>
-                    </div>
-                    <div class="card-foot">
-                        <span class="card-meta">Genre · RPG</span>
-                    </div>
-                </article>
+<script>
+(function () {
+  'use strict';
 
-            </div>
-        </div>
-    </section>
+  // ── 言語切替 ────────────────────────────
+  // 日本語は HTML にそのまま書いてあるので、JS が動かなくても
+  // 日本語表示は成立する。EN を選んだときだけ差し替える。
+  var KEY = 'rw-lang';
+  var buttons = document.querySelectorAll('.lang button');
+  var nodes = document.querySelectorAll('[data-ja][data-en]');
 
-    <!-- TOOLS -->
-    <section id="tools" class="section-alt">
-        <div class="container">
-            <div class="section-head">
-                <p class="section-tagline">Tools · 6</p>
-                <h2 class="section-title">Apps &amp; Editor Tools</h2>
-                <p class="section-desc">macOS 用のシンプルなデスクトップアプリと、Unity Editor 拡張ツール。</p>
-            </div>
-            <div class="products-grid">
+  function apply(lang) {
+    document.documentElement.lang = lang;
+    nodes.forEach(function (el) {
+      var text = el.getAttribute('data-' + lang);
+      if (text !== null) el.textContent = text;
+    });
+    buttons.forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
+    });
+    try { localStorage.setItem(KEY, lang); } catch (e) {}
+  }
 
-                <article class="product-card">
-                    <div class="card-head">
-                        <div class="card-icon">
-                            <img src="assets/icons/pvs.png" alt="Plain Video Saver" onerror="this.remove()">
-                        </div>
-                        <span class="status st-released">Released</span>
-                    </div>
-                    <h3 class="card-name">Plain Video Saver</h3>
-                    <div class="card-path">RustyWorks/Tools/PVS</div>
-                    <p class="card-desc">URLを入れて保存先と画質を選ぶ、macOS用のシンプルな動画保存ツール。</p>
-                    <div class="card-tags">
-                        <span class="tag">macos</span><span class="tag">video</span><span class="tag">downloader</span><span class="tag">native</span>
-                    </div>
-                    <div class="card-foot">
-                        <span class="card-meta">Platform · macOS</span>
-                        <div class="card-links">
-                            <a href="https://rustyworks.jp/pvs.html">Product</a>
-                            <a href="https://rustyworks.itch.io/pvs">Buy</a>
-                            <a href="https://rustyworks.jp/pvs_privacy.html">Privacy</a>
-                        </div>
-                    </div>
-                </article>
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () { apply(b.dataset.lang); });
+  });
 
-                <article class="product-card">
-                    <div class="card-head">
-                        <div class="card-icon">
-                            <img src="assets/icons/recoup.png" alt="Recoup" onerror="this.remove()">
-                        </div>
-                        <span class="status st-released">Released</span>
-                    </div>
-                    <h3 class="card-name">Recoup</h3>
-                    <div class="card-path">RustyWorks/Tools/Recoup</div>
-                    <p class="card-desc">外付けHDD・SSD・SDカード・USBメモリから、消した写真・動画を復元する macOS 用ツール。</p>
-                    <div class="card-tags">
-                        <span class="tag">macos</span><span class="tag">recovery</span><span class="tag">photo</span><span class="tag">video</span>
-                    </div>
-                    <div class="card-foot">
-                        <span class="card-meta">Platform · macOS</span>
-                        <div class="card-links">
-                            <a href="https://rustyworks.jp/recoup.html">Product</a>
-                            <a href="https://rustyworks.itch.io/recoup">itch.io &nearr;</a>
-                            <a href="https://rustyworks.jp/recoup_manual.html">Manual</a>
-                            <a href="https://rustyworks.jp/recoup_privacy.html">Privacy</a>
-                        </div>
-                    </div>
-                </article>
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (!saved) saved = (navigator.language || '').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en';
+  if (saved === 'en') apply('en');
 
-                <article class="product-card">
-                    <div class="card-head">
-                        <div class="card-icon">
-                            <img src="assets/icons/shelfnavigator.png" alt="ShelfNavigator" onerror="this.remove()">
-                        </div>
-                        <span class="status st-released">Released</span>
-                    </div>
-                    <h3 class="card-name">ShelfNavigator</h3>
-                    <div class="card-path">RustyWorks/Tools/ShelfNavigator</div>
-                    <p class="card-desc">散らばったフォルダと外付けドライブを、1つの棚にまとめる macOS 用ビューア。</p>
-                    <div class="card-tags">
-                        <span class="tag">macos</span><span class="tag">viewer</span><span class="tag">catalog</span><span class="tag">search</span>
-                    </div>
-                    <div class="card-foot">
-                        <span class="card-meta">Platform · macOS</span>
-                        <div class="card-links">
-                            <a href="https://rustyworks.jp/shelfnavigator.html">Product</a>
-                            <a href="https://apps.apple.com/app/apple-store/id6794389638?pt=128819275&amp;ct=website&amp;mt=8">Mac App Store &nearr;</a>
-                            <a href="https://rustyworks.jp/shelfnavigator_manual.html">Manual</a>
-                            <a href="https://rustyworks.jp/shelfnavigator_privacy.html">Privacy</a>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="product-card">
-                    <div class="card-head">
-                        <div class="card-icon">
-                            <img src="assets/icons/kuro.png" alt="Kuro" onerror="this.remove()">
-                        </div>
-                        <span class="status st-released">Released</span>
-                    </div>
-                    <h3 class="card-name">Kuro</h3>
-                    <div class="card-path">RustyWorks/Tools/Kuro</div>
-                    <p class="card-desc">macOS 動画プレーヤー × リアルタイム・カラーグレーディング。</p>
-                    <div class="card-tags">
-                        <span class="tag">macos</span><span class="tag">video-player</span><span class="tag">color-grading</span><span class="tag">metal</span>
-                    </div>
-                    <div class="card-foot">
-                        <span class="card-meta">Platform · macOS</span>
-                        <div class="card-links">
-                            <a href="https://rustyworks.jp/kuro.html">Product</a>
-                            <a href="https://apps.apple.com/app/apple-store/id6782262572?pt=128819275&amp;ct=website&amp;mt=8">Mac App Store &nearr;</a>
-                            <a href="https://rustyworks.jp/kuro_manual.html">Manual</a>
-                            <a href="https://rustyworks.jp/kuro_privacy.html">Privacy</a>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="product-card">
-                    <div class="card-head">
-                        <div class="card-icon">
-                            <img src="assets/icons/uadb.png" alt="UADB" onerror="this.remove()">
-                        </div>
-                        <span class="status st-date">Apr 27, 2026 Release</span>
-                    </div>
-                    <h3 class="card-name">UADB</h3>
-                    <div class="card-path">RustyWorks/Tools/UADB</div>
-                    <div class="card-tags">
-                        <span class="tag">unity</span><span class="tag">editor-tool</span><span class="tag">asset-db</span>
-                    </div>
-                    <div class="card-foot">
-                        <span class="card-meta">Unity Editor</span>
-                        <div class="card-links">
-                            <a href="https://rustyworks.jp/UADB_manual.html">Manual</a>
-                            <a href="https://rustyworks.jp/uadb_privacy.html">Privacy</a>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="product-card">
-                    <div class="card-head">
-                        <div class="card-icon">
-                            <img src="assets/icons/uadb.png" alt="UADB Lite" onerror="this.remove()">
-                        </div>
-                        <span class="status st-date">Apr 27, 2026 Release</span>
-                    </div>
-                    <h3 class="card-name">UADB Lite</h3>
-                    <div class="card-path">RustyWorks/Tools/UADBLite</div>
-                    <div class="card-tags">
-                        <span class="tag">unity</span><span class="tag">editor-tool</span><span class="tag">asset-db</span><span class="tag">free</span>
-                    </div>
-                    <div class="card-foot">
-                        <span class="card-meta">Unity Editor</span>
-                        <div class="card-links">
-                            <a href="https://rustyworks.jp/UADB_manual.html">Manual</a>
-                            <a href="https://rustyworks.jp/uadb_privacy.html">Privacy</a>
-                        </div>
-                    </div>
-                </article>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- iOS APPS -->
-    <section id="apps" class="section-line">
-        <div class="container">
-            <div class="section-head">
-                <p class="section-tagline">iOS Apps · 1</p>
-                <h2 class="section-title">iOS Apps</h2>
-                <p class="section-desc">Swift / SwiftUI によるネイティブ iOS アプリ。</p>
-            </div>
-            <div class="products-grid single">
-
-                <article class="product-card">
-                    <div class="card-head">
-                        <div class="card-icon">
-                            <img src="assets/icons/fumannote.png" alt="不満ノート" onerror="this.remove()">
-                        </div>
-                        <span class="status st-soon">Coming Soon</span>
-                    </div>
-                    <h3 class="card-name">不満ノート</h3>
-                    <div class="card-path">RustyWorks/iOS/FumanNote</div>
-                    <p class="card-desc">腹が立ったことを書き出すと、相手が本当は言うべきだった言葉に書き直す iOS アプリ。</p>
-                    <div class="card-tags">
-                        <span class="tag">ios</span><span class="tag">swiftui</span><span class="tag">notes</span><span class="tag">ai</span>
-                    </div>
-                    <div class="card-foot">
-                        <span class="card-meta">Platform · iOS</span>
-                        <div class="card-links">
-                            <a href="https://rustyworks.jp/fumannote.html">Product</a>
-                            <!-- 公開後、下の span を次のリンクに差し替える:
-                                 <a href="https://apps.apple.com/jp/app/idXXXXXXXXX">App Store &nearr;</a> -->
-                            <span style="font-size:13px; font-weight:500; color:#5a5a5c;" title="App Store 公開後にリンクします">App Store 準備中</span>
-                            <a href="https://rustyworks.jp/fumannote_manual.html">Manual</a>
-                            <a href="https://rustyworks.jp/fumannote_privacy.html">Privacy</a>
-                        </div>
-                    </div>
-                </article>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- WEB APPS -->
-    <section id="webapps" class="section-alt">
-        <div class="container">
-            <div class="section-head">
-                <p class="section-tagline">Web Apps · 1</p>
-                <h2 class="section-title">Web Apps</h2>
-                <p class="section-desc">インストール不要。ブラウザだけで動く小さな道具とお遊び。</p>
-            </div>
-            <div class="products-grid single">
-
-                <article class="product-card">
-                    <div class="card-head">
-                        <div class="card-icon">
-                            <img src="assets/icons/autodub.png" alt="オートダビング構文" onerror="this.remove()">
-                        </div>
-                        <span class="status st-released">Released</span>
-                    </div>
-                    <h3 class="card-name">オートダビング構文</h3>
-                    <div class="card-path">RustyWorks/WebApps/AutoDub</div>
-                    <p class="card-desc">日本語を、YouTube の自動吹き替えっぽい日本語に変換します。7つの文体モードつき。</p>
-                    <div class="card-tags">
-                        <span class="tag">web</span><span class="tag">japanese</span><span class="tag">joke</span><span class="tag">free</span>
-                    </div>
-                    <div class="card-foot">
-                        <span class="card-meta">Platform · ブラウザ</span>
-                        <div class="card-links">
-                            <a href="https://rustyworks.jp/autodub/">開く</a>
-                            <a href="https://rustyworks.jp/autodub/notes.html">解説</a>
-                        </div>
-                    </div>
-                </article>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- CONTACT -->
-    <section id="contact" class="section-line">
-        <div class="container">
-            <div class="section-head">
-                <p class="section-tagline">Contact · 2</p>
-                <h2 class="section-title">Get in Touch</h2>
-                <p class="section-desc">お問い合わせ・最新情報はこちらから。</p>
-            </div>
-            <div class="contact-list">
-                <div class="contact-card">
-                    <span class="k">EMAIL</span>
-                    <span class="v"><a href="mailto:rustyworks.games@gmail.com">rustyworks.games@gmail.com</a></span>
-                </div>
-                <div class="contact-card">
-                    <span class="k">NOTE</span>
-                    <span class="v"><a href="https://note.com/legit_fowl8567" target="_blank" rel="noopener">note.com/legit_fowl8567</a></span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-container">
-            <p>本サイトに掲載されている製品情報や仕様は予告なく変更される場合があります。</p>
-            <div class="footer-legal">
-                <div>Copyright &copy; 2026 RustyWorks. All rights reserved.</div>
-                <div><a href="site_privacy.html">サイトのポリシー</a></div>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        (function () {
-            var toggle = document.querySelector('.nav-toggle');
-            var menu = document.querySelector('nav ul');
-            if (toggle && menu) {
-                toggle.addEventListener('click', function () {
-                    var open = menu.classList.toggle('open');
-                    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-                });
-                menu.addEventListener('click', function (e) {
-                    if (e.target.tagName === 'A') {
-                        menu.classList.remove('open');
-                        toggle.setAttribute('aria-expanded', 'false');
-                    }
-                });
-            }
-        })();
-    </script>
+  // ── モバイルのメニュー ──────────────────
+  var toggle = document.getElementById('navToggle');
+  var nav = document.getElementById('nav');
+  toggle.addEventListener('click', function () {
+    var open = nav.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(open));
+  });
+  nav.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A') {
+      nav.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+})();
+</script>
 
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "04f66ad1837a4b63af68beb6e835358f"}'></script><!-- End Cloudflare Web Analytics -->
+
 </body>
 </html>
