@@ -44,6 +44,9 @@
   --pad:64px;
   --maxw:1408px;
   --header-h:72px;
+
+  --card-gap:22px;
+  --per-view:4;   /* 横送りで一度に見えるカードの枚数 */
 }
 
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -166,33 +169,67 @@ section{padding:56px 0;}
 .sec-more:hover{color:var(--blue-ink);}
 .sec-more svg{width:14px;height:14px;}
 
-/* ── 作品カード ─────────────────────────── */
+/* ── 作品カード（横送り）───────────────────
+   素の overflow-x スクロールで作る。こうしておくと、指のスワイプも
+   トラックパッドの横なでも、こちらで何もしなくてもそのまま効く。
+   ボタンと自動送りは scrollTo を呼ぶだけ。 */
+.works-wrap{position:relative;}
 .works{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:22px;
+  display:flex;
+  gap:var(--card-gap);
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
+  /* overflow-x を指定すると縦もはみ出しが切られるので、
+     カードの影のぶんだけ上下に余白を取って相殺する */
+  padding:6px 0 10px;
+  margin:-6px 0 -10px;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
 }
+.works::-webkit-scrollbar{display:none;}
 .work{
+  flex:0 0 calc((100% - var(--card-gap) * (var(--per-view) - 1)) / var(--per-view));
+  scroll-snap-align:start;
   border:1px solid var(--line);
   border-radius:10px;
   overflow:hidden;
   background:var(--bg);
   transition:border-color .15s,box-shadow .15s,transform .15s;
 }
+
+/* 送りボタン。カードの列の両端に重ねる */
+.car-btn{
+  position:absolute;top:calc(50% - 12px);
+  width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg);color:var(--ink);
+  border:1px solid var(--line);
+  box-shadow:0 3px 14px rgba(17,18,20,.10);
+  cursor:pointer;padding:0;
+  transition:background-color .15s,border-color .15s,box-shadow .15s;
+  z-index:2;
+}
+.car-btn:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
+.car-btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
+.car-btn svg{width:16px;height:16px;}
+.car-btn.prev{left:-19px;}
+.car-btn.next{right:-19px;}
 .work:hover{
   border-color:#cfd2d8;
   box-shadow:0 6px 22px rgba(17,18,20,.07);
   transform:translateY(-2px);
 }
-/* OGP画像をそのまま流用するので、比率は 16:9 ではなく
-   OGP の 1200×630 に合わせる。切り取ると焼き込みの文字が欠ける。
-   カード専用に描いた絵は、この比率に切ってから置くこと。 */
+/* 枠は OGP の 1200×630 に固定する。絵の比率が違っても切り取らず、
+   長い辺を枠に合わせて短い辺に帯を入れる（contain）。焼き込みの
+   文字が端にある絵が多く、切ると欠けるため。
+   帯の色は絵ごとに --art-bg で指定する。既定は薄いグレー。 */
 .work-art{
   aspect-ratio:1200/630;
-  background:var(--bg-soft);
+  background:var(--art-bg,var(--bg-soft));
   border-bottom:1px solid var(--line);
 }
-.work-art img{width:100%;height:100%;object-fit:cover;}
+.work-art img{width:100%;height:100%;object-fit:contain;}
 .work-foot{
   display:flex;align-items:center;justify-content:space-between;
   gap:12px;padding:14px 16px;
@@ -282,10 +319,14 @@ footer{border-top:1px solid var(--line);padding:30px 0;}
 
 /* ── レスポンシブ ───────────────────────── */
 @media (max-width:1080px){
-  .works{grid-template-columns:repeat(2,minmax(0,1fr));}
+  :root{--per-view:2;}
 }
 @media (max-width:860px){
   :root{--pad:22px;}
+  /* 幅が狭いところではボタンが画面の外へ出るので、内側へ寄せる */
+  .car-btn{width:34px;height:34px;}
+  .car-btn.prev{left:-6px;}
+  .car-btn.next{right:-6px;}
   .header-inner{padding-left:var(--pad);}
   .nav{
     position:fixed;top:var(--header-h);left:0;right:0;
@@ -324,7 +365,17 @@ footer{border-top:1px solid var(--line);padding:30px 0;}
   .sec-head{margin-bottom:20px;}
 }
 @media (max-width:560px){
-  .works{grid-template-columns:1fr;}
+  :root{--per-view:1;}
+  /* 「FEATURED WORKS」が2行に折れて縦に伸びるので、
+     入らなければ「すべての作品を見る」を下の行へ落とす */
+  .sec-head{flex-wrap:wrap;gap:4px 16px;}
+  .sec-title{white-space:nowrap;}
+}
+
+/* 動きを抑える設定の人には自動送りを止める。JS 側でも見ている */
+@media (prefers-reduced-motion:reduce){
+  .works{scroll-behavior:auto;}
+  .work{transition:none;}
 }
 </style>
 
@@ -392,38 +443,72 @@ footer{border-top:1px solid var(--line);padding:30px 0;}
         </a>
       </div>
 
-      <div class="works">
-        <a class="work" href="kuro.html">
-          <div class="work-art"><img src="assets/cards/kuro.webp" alt="" loading="lazy" width="720" height="378"></div>
-          <div class="work-foot">
-            <span class="work-name">Kuro</span>
-            <span class="dot released" title="リリース済み" aria-label="リリース済み"></span>
-          </div>
-        </a>
+      <div class="works-wrap">
+        <button class="car-btn prev" id="worksPrev" type="button" aria-label="前の作品へ" aria-controls="worksStrip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="15 5 8 12 15 19"/></svg>
+        </button>
 
-        <a class="work" href="shelfnavigator.html">
-          <div class="work-art"><img src="assets/cards/shelfnavigator.webp" alt="" loading="lazy" width="720" height="378"></div>
-          <div class="work-foot">
-            <span class="work-name">ShelfNavigator</span>
-            <span class="dot released" title="リリース済み" aria-label="リリース済み"></span>
-          </div>
-        </a>
+        <div class="works" id="worksStrip" tabindex="0" role="group" aria-label="作品一覧（横にスクロールします）">
+          <a class="work" href="kuro.html">
+            <div class="work-art"><img src="assets/cards/kuro.webp" alt="" loading="lazy" width="720" height="378"></div>
+            <div class="work-foot">
+              <span class="work-name">Kuro</span>
+              <span class="dot released" title="リリース済み" aria-label="リリース済み"></span>
+            </div>
+          </a>
 
-        <a class="work" href="recoup.html">
-          <div class="work-art"><img src="assets/cards/recoup.webp" alt="" loading="lazy" width="720" height="378"></div>
-          <div class="work-foot">
-            <span class="work-name">Recoup</span>
-            <span class="dot released" title="リリース済み" aria-label="リリース済み"></span>
-          </div>
-        </a>
+          <a class="work" href="shelfnavigator.html">
+            <div class="work-art"><img src="assets/cards/shelfnavigator.webp" alt="" loading="lazy" width="720" height="378"></div>
+            <div class="work-foot">
+              <span class="work-name">ShelfNavigator</span>
+              <span class="dot released" title="リリース済み" aria-label="リリース済み"></span>
+            </div>
+          </a>
 
-        <a class="work" href="fumannote.html">
-          <div class="work-art"><img src="assets/cards/fumannote.webp" alt="" loading="lazy" width="760" height="400"></div>
-          <div class="work-foot">
-            <span class="work-name" data-ja="不満ノート" data-en="FumanNote">不満ノート</span>
-            <span class="dot review" title="App Store 審査中" aria-label="App Store 審査中"></span>
-          </div>
-        </a>
+          <a class="work" href="recoup.html">
+            <div class="work-art"><img src="assets/cards/recoup.webp" alt="" loading="lazy" width="720" height="378"></div>
+            <div class="work-foot">
+              <span class="work-name">Recoup</span>
+              <span class="dot released" title="リリース済み" aria-label="リリース済み"></span>
+            </div>
+          </a>
+
+          <a class="work" href="fumannote.html">
+            <div class="work-art" style="--art-bg:#f6f3f0;"><img src="assets/cards/fumannote.webp" alt="" loading="lazy" width="800" height="382"></div>
+            <div class="work-foot">
+              <span class="work-name" data-ja="不満ノート" data-en="FumanNote">不満ノート</span>
+              <span class="dot review" title="App Store 審査中" aria-label="App Store 審査中"></span>
+            </div>
+          </a>
+
+          <a class="work" href="https://note.com/legit_fowl8567/n/n3992c3e5129e" target="_blank" rel="noopener">
+            <div class="work-art"><img src="assets/cards/battle-ui.webp" alt="" loading="lazy" width="760" height="398"></div>
+            <div class="work-foot">
+              <span class="work-name" data-ja="戦闘画面UIカスタマイザー" data-en="BattleUICustomizer">戦闘画面UIカスタマイザー</span>
+              <span class="dot released" title="リリース済み" aria-label="リリース済み"></span>
+            </div>
+          </a>
+
+          <a class="work" href="pvs.html">
+            <div class="work-art"><img src="assets/cards/pvs.webp" alt="" loading="lazy" width="720" height="378"></div>
+            <div class="work-foot">
+              <span class="work-name">Plain Video Saver</span>
+              <span class="dot released" title="リリース済み" aria-label="リリース済み"></span>
+            </div>
+          </a>
+
+          <a class="work" href="autodub/">
+            <div class="work-art"><img src="assets/cards/autodub.webp" alt="" loading="lazy" width="720" height="378"></div>
+            <div class="work-foot">
+              <span class="work-name" data-ja="オートダビング構文" data-en="AutoDub">オートダビング構文</span>
+              <span class="dot released" title="公開中" aria-label="公開中"></span>
+            </div>
+          </a>
+        </div>
+
+        <button class="car-btn next" id="worksNext" type="button" aria-label="次の作品へ" aria-controls="worksStrip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 5 16 12 9 19"/></svg>
+        </button>
       </div>
     </div>
   </section>
@@ -550,6 +635,87 @@ footer{border-top:1px solid var(--line);padding:30px 0;}
   try { saved = localStorage.getItem(KEY); } catch (e) {}
   if (!saved) saved = (navigator.language || '').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en';
   if (saved === 'en') apply('en');
+
+  // ── 作品の横送り ────────────────────────
+  // スクロールそのものはブラウザに任せてあるので、ここでやるのは
+  // 「1枚ぶん動かす」ことと、放っておいたときに勝手に進めることだけ。
+  (function () {
+    var strip = document.getElementById('worksStrip');
+    if (!strip) return;
+    var prev = document.getElementById('worksPrev');
+    var next = document.getElementById('worksNext');
+    var INTERVAL = 4500;
+    var RESUME = 8000;      // 手で動かしたあと、自動送りに戻るまで
+    var timer = null, idle = null;
+
+    var calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function stepWidth() {
+      var card = strip.querySelector('.work');
+      if (!card) return strip.clientWidth;
+      var gap = parseFloat(getComputedStyle(strip).columnGap) || 0;
+      return card.getBoundingClientRect().width + gap;
+    }
+
+    // 端から端へ戻すときだけは一気に飛ばす。
+    // scroll-snap-type が mandatory なので、その距離を smooth で流すと
+    // 途中でいちばん近いカードへ引き戻され、元の位置に留まってしまう。
+    function jump(x) {
+      var keep = strip.style.scrollBehavior;
+      strip.style.scrollBehavior = 'auto';
+      strip.scrollLeft = x;
+      strip.style.scrollBehavior = keep;
+    }
+
+    function go(dir) {
+      var max = strip.scrollWidth - strip.clientWidth;
+      if (dir > 0 && strip.scrollLeft >= max - 2) return jump(0);
+      if (dir < 0 && strip.scrollLeft <= 2) return jump(max);
+      strip.scrollTo({
+        left: strip.scrollLeft + dir * stepWidth(),
+        behavior: calm.matches ? 'auto' : 'smooth'
+      });
+    }
+
+    function start() {
+      if (timer || calm.matches) return;
+      timer = setInterval(function () { go(1); }, INTERVAL);
+    }
+    function stop() {
+      if (timer) { clearInterval(timer); timer = null; }
+    }
+    // 手で触ったあとは、しばらく自動送りを黙らせる。
+    // 読んでいる最中に勝手に流れると鬱陶しいため。
+    function hold() {
+      stop();
+      clearTimeout(idle);
+      idle = setTimeout(start, RESUME);
+    }
+
+    prev.addEventListener('click', function () { go(-1); hold(); });
+    next.addEventListener('click', function () { go(1); hold(); });
+
+    strip.addEventListener('pointerdown', hold);
+    strip.addEventListener('wheel', hold, { passive: true });
+    strip.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(1); hold(); }
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); go(-1); hold(); }
+    });
+
+    // 指しているあいだ・中を辿っているあいだは止める
+    strip.addEventListener('mouseenter', stop);
+    strip.addEventListener('mouseleave', start);
+    strip.addEventListener('focusin', stop);
+    strip.addEventListener('focusout', start);
+
+    // 見えていないタブで動かし続けても意味がない
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) stop(); else start();
+    });
+    calm.addEventListener('change', function () { calm.matches ? stop() : start(); });
+
+    start();
+  })();
 
   // ── モバイルのメニュー ──────────────────
   var toggle = document.getElementById('navToggle');
