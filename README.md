@@ -86,30 +86,37 @@ SNS やチャットに貼られたときに出るカードの中身です。**�
 
 ### 2. 画像を3か所に用意する
 
-サイズは既存ページに合わせてください。**バラバラだと一覧で高さが揃いません。**
+トップと WORKS の枠は **`aspect-ratio:1200/630` の帯**で、絵は `object-fit:contain`
+で中に収めています。**だから実寸がバラついても一覧の高さは揃うし、絵が切り取られる
+こともありません。** そのかわり、**比率が 1200:630 からずれた分だけ帯の余白が出ます。**
 
-| 置き場 | 使う場所 | 寸法 | 形式 |
+| 置き場 | 使う場所 | 目安 | 形式 |
 |---|---|---|---|
-| `assets/og/<名前>-og.jpg` | 共有時のカード | **1200×630** | jpg |
-| `assets/cards/<名前>.webp` | トップの作品カード | **720×378** | webp |
-| `assets/icons/<名前>.png` | WORKS 一覧、Web アプリのファビコン | **160×160** | png |
+| `assets/og/<名前>-og.jpg` | 共有時のカード | **1200×630 ちょうど**（SNS 側が決める） | jpg |
+| `assets/cards/<名前>.webp` | トップの作品カード・WORKS 一覧 | 720×378（＝1200:630） | webp |
+| `assets/icons/<名前>.png` | 専用の絵が無いものの代用・ファビコン | 160×160 | png |
 
-`width` と `height` を属性で書きます。読み込み中に行がずれるのを防ぐためです。
-`alt` が空なのは、すぐ隣に同じ名前がテキストで出ているからです。
+- **揃えるのは画素数ではなく比率です。** 720×378 はちょうど 1200:630 なので余白が出ません
+- **比率がずれる絵を使うときは、帯の色を絵の地に合わせます。** そうすれば余白は見えません。
+  実際 `fumannote.webp` は 800×382（比率 2.09）ですが、この指定で成立しています
 
 ```html
-<!-- index.html — トップの作品カード -->
-<a class="work" href="xxx.html">
-  <div class="work-art"><img src="assets/cards/xxx.webp" alt="" loading="lazy" width="720" height="378"></div>
+<!-- index.html — トップの作品カード。比率がずれるので帯の色を指定している -->
+<a class="work" href="fumannote.html">
+  <div class="work-art" style="--art-bg:#f6f3f0;"><img src="assets/cards/fumannote.webp" alt="" loading="lazy" width="800" height="382"></div>
   <div class="work-foot">
-    <span class="work-name">Xxx</span>
+    <span class="work-name">不満ノート</span>
     <span class="dot released" title="リリース済み" aria-label="リリース済み"></span>
   </div>
 </a>
 
-<!-- works.html — 一覧の1件 -->
-<div class="item-art"><img src="assets/icons/xxx.png" alt="" loading="lazy" width="160" height="160"></div>
+<!-- works.html — 専用の絵がまだ無いものは placeholder にしてアイコンを中央に置く -->
+<div class="item-art placeholder"><img src="assets/icons/xxx.png" alt="" loading="lazy" width="160" height="160"></div>
 ```
+
+`width` と `height` は実寸をそのまま書きます（枠が比率を持っているので、
+書かなくても行はずれません）。`alt` が空なのは、すぐ隣に同じ名前が
+テキストで出ているからです。
 
 ### 3. 一覧に登録する
 
