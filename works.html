@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Works | RustyWorks</title>
+<meta name="description" content="RustyWorks がつくった macOS / iOS アプリ、開発ツール、Web アプリの一覧。製品ページ・取説・配布先・プライバシーポリシーへの入口です。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RustyWorks">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:url" content="https://rustyworks.jp/works.html">
+<meta property="og:title" content="Works | RustyWorks">
+<meta property="og:description" content="RustyWorks がつくった macOS / iOS アプリ、開発ツール、Web アプリの一覧。">
+<meta property="og:image" content="https://rustyworks.jp/assets/og/rustyworks-og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Works | RustyWorks">
+<meta name="twitter:description" content="RustyWorks がつくった macOS / iOS アプリ、開発ツール、Web アプリの一覧。">
+<meta name="twitter:image" content="https://rustyworks.jp/assets/og/rustyworks-og.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#ffffff;
+  --bg-soft:#f5f5f6;
+  --ink:#111214;
+  --ink-2:#5f6368;
+  --ink-3:#8a8d93;
+  --line:#e4e4e7;
+  --blue:#1a4fd8;
+  --blue-ink:#143fb0;
+
+  --dot-released:#2f9e5e;
+  --dot-review:#e08a1e;
+  --dot-dev:#a8abb2;
+
+  --sans:"Inter","Zen Kaku Gothic New",-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+
+  --pad:64px;
+  --maxw:1408px;
+  --header-h:72px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none;}
+img{display:block;max-width:100%;}
+.container{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad);}
+
+/* ── ヘッダー（トップと同じもの）──────────── */
+header{
+  position:sticky;top:0;z-index:50;
+  background:var(--bg);
+  border-bottom:1px solid var(--line);
+}
+.header-inner{
+  height:var(--header-h);
+  display:flex;align-items:stretch;
+  max-width:var(--maxw);margin:0 auto;
+  padding-left:var(--pad);
+}
+.logo{display:flex;align-items:center;font-weight:800;font-size:23px;letter-spacing:-.02em;}
+.nav{flex:1;display:flex;align-items:center;justify-content:center;gap:56px;}
+.nav a{
+  font-size:13px;font-weight:600;letter-spacing:.12em;
+  color:var(--ink);
+  padding:6px 0;border-bottom:2px solid transparent;
+  transition:color .15s,border-color .15s;
+}
+.nav a:hover{color:var(--blue);border-bottom-color:var(--blue);}
+.nav a[aria-current="page"]{color:var(--blue);border-bottom-color:var(--blue);}
+
+.header-end{display:flex;align-items:stretch;}
+.lang{display:flex;align-items:center;gap:2px;font-family:var(--mono);font-size:12px;padding-right:20px;}
+.lang button{
+  font:inherit;background:none;border:0;cursor:pointer;
+  color:var(--ink-3);padding:4px 6px;border-radius:4px;
+  transition:color .15s,background-color .15s;
+}
+.lang button:hover{color:var(--ink);background:var(--bg-soft);}
+.lang button[aria-pressed="true"]{color:var(--ink);font-weight:500;}
+.lang .sep{color:var(--line);}
+
+.btn-support{
+  display:flex;align-items:center;gap:9px;
+  background:var(--blue);color:#fff;padding:0 34px;
+  font-size:14px;font-weight:600;letter-spacing:.02em;
+  transition:background-color .15s;
+}
+.btn-support:hover{background:var(--blue-ink);}
+.btn-support svg{width:18px;height:18px;flex:none;}
+.nav-toggle{display:none;}
+
+/* ── ページ見出し ───────────────────────── */
+.page-head{border-bottom:1px solid var(--line);padding:58px 0 46px;}
+.page-head h1{
+  font-size:clamp(34px,4vw,50px);font-weight:800;
+  letter-spacing:-.02em;text-transform:uppercase;line-height:1.06;
+}
+.page-head p{margin-top:16px;font-size:16px;color:var(--ink-2);max-width:640px;}
+.page-rule{margin-top:26px;width:56px;height:3px;background:var(--blue);}
+
+/* ── 分類 ───────────────────────────────── */
+.group{padding:52px 0 8px;}
+.group + .group{border-top:1px solid var(--line);}
+.group-head{display:flex;align-items:baseline;gap:14px;margin-bottom:28px;}
+.group-title{font-size:19px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+.group-count{font-family:var(--mono);font-size:12px;color:var(--ink-3);}
+
+/* ── 作品の1件 ─────────────────────────── */
+.items{display:flex;flex-direction:column;gap:22px;}
+.item{
+  display:grid;
+  grid-template-columns:300px minmax(0,1fr);
+  gap:28px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:20px;
+  background:var(--bg);
+  transition:border-color .15s,box-shadow .15s;
+}
+.item:hover{border-color:#cfd2d8;box-shadow:0 6px 22px rgba(17,18,20,.06);}
+
+/* 絵は比率を固定し、違う比率のものは切らずに帯を入れる。
+   トップのカードと同じ扱い。帯の色は --art-bg で個別に指定する。 */
+.item-art{
+  aspect-ratio:1200/630;
+  border-radius:8px;
+  overflow:hidden;
+  background:var(--art-bg,var(--bg-soft));
+  border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+}
+.item-art img{width:100%;height:100%;object-fit:contain;}
+/* 専用の絵がまだ無いものは、アイコンか記号を中央に置く */
+.item-art.placeholder img{width:64px;height:64px;border-radius:14px;}
+.item-art.placeholder svg{width:46px;height:46px;color:var(--ink-3);}
+
+.item-body{display:flex;flex-direction:column;padding:2px 0;}
+.item-head{display:flex;align-items:center;flex-wrap:wrap;gap:8px 14px;}
+.item-name{font-size:19px;font-weight:700;letter-spacing:-.01em;}
+.badge{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:12px;font-weight:600;color:var(--ink-2);
+  border:1px solid var(--line);border-radius:999px;
+  padding:3px 12px 3px 10px;
+  white-space:nowrap;
+}
+.badge::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--dot-dev);}
+.badge.released::before{background:var(--dot-released);}
+.badge.review::before{background:var(--dot-review);}
+
+.item-desc{margin-top:10px;font-size:14.5px;color:var(--ink-2);max-width:660px;}
+
+.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:18px;}
+.links a{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:13px;font-weight:600;
+  border:1px solid var(--line);border-radius:8px;
+  padding:7px 13px;
+  background:var(--bg);
+  transition:border-color .15s,background-color .15s,color .15s;
+}
+.links a:hover{border-color:var(--ink);background:var(--ink);color:#fff;}
+.links a.store{border-color:rgba(26,79,216,.35);color:var(--blue);}
+.links a.store:hover{background:var(--blue);border-color:var(--blue);color:#fff;}
+.links a svg{width:11px;height:11px;flex:none;opacity:.6;}
+.links a:hover svg{opacity:1;}
+/* 行き先がまだ無いもの。押せると見せない */
+.links .pending{
+  display:inline-flex;align-items:center;
+  font-size:13px;font-weight:500;color:var(--ink-3);
+  border:1px dashed var(--line);border-radius:8px;
+  padding:7px 13px;
+}
+
+/* ── フッター ───────────────────────────── */
+footer{border-top:1px solid var(--line);padding:30px 0;margin-top:56px;}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+.copy{font-size:13px;color:var(--ink-2);}
+.footer-links{display:flex;align-items:center;gap:26px;font-size:13px;color:var(--ink-2);}
+.footer-links a:hover{color:var(--blue);}
+
+/* ── レスポンシブ ───────────────────────── */
+@media (max-width:1080px){
+  .item{grid-template-columns:240px minmax(0,1fr);gap:22px;}
+}
+@media (max-width:860px){
+  :root{--pad:22px;}
+  .header-inner{padding-left:var(--pad);}
+  .nav{
+    position:fixed;top:var(--header-h);left:0;right:0;
+    flex-direction:column;align-items:stretch;justify-content:flex-start;
+    gap:0;background:var(--bg);border-bottom:1px solid var(--line);
+    padding:6px var(--pad) 18px;display:none;
+  }
+  .nav.open{display:flex;}
+  .nav a{padding:13px 0;border-bottom:1px solid var(--line);}
+  .nav-toggle{
+    display:flex;align-items:center;background:none;border:0;
+    cursor:pointer;color:var(--ink);padding:0 14px;
+  }
+  .nav-toggle svg{width:24px;height:24px;}
+  .btn-support{padding:0 20px;font-size:13px;}
+  .btn-support span{display:none;}
+  .lang{padding-right:10px;}
+
+  .page-head{padding:44px 0 36px;}
+  .group{padding:42px 0 8px;}
+  .item{grid-template-columns:1fr;gap:18px;}
+  .item-art{max-width:420px;}
+}
+</style>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4092261578757214"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="index.html">RustyWorks</a>
+
+    <nav class="nav" id="nav">
+      <a href="works.html" aria-current="page">WORKS</a>
+      <a href="index.html#support">SUPPORT</a>
+      <a href="index.html#news">NEWS</a>
+      <a href="index.html#about">ABOUT</a>
+    </nav>
+
+    <div class="header-end">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="ja" aria-pressed="true">JA</button>
+        <span class="sep">/</span>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+
+      <button class="nav-toggle" id="navToggle" aria-label="メニュー" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+      </button>
+
+      <a class="btn-support" href="index.html#support">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.2a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.7-.9 1.3v.5"/><circle cx="12" cy="17" r=".9" fill="currentColor" stroke="none"/></svg>
+        <span data-ja="サポート" data-en="Support">サポート</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="page-head">
+    <div class="container">
+      <h1>Works</h1>
+      <p data-ja="つくったものの一覧です。製品ページ・取説・配布先・プライバシーポリシーへは、それぞれの行から辿れます。"
+         data-en="Everything I have made. Each row links out to its product page, manual, store, and privacy policy.">つくったものの一覧です。製品ページ・取説・配布先・プライバシーポリシーへは、それぞれの行から辿れます。</p>
+      <div class="page-rule"></div>
+    </div>
+  </div>
+
+  <!-- ── アプリ ───────────────────────────── -->
+  <section class="group">
+    <div class="container">
+      <div class="group-head">
+        <h2 class="group-title" data-ja="アプリ" data-en="Apps">アプリ</h2>
+        <span class="group-count">5</span>
+      </div>
+
+      <div class="items">
+
+        <article class="item">
+          <div class="item-art"><img src="assets/cards/kuro.webp" alt="" loading="lazy" width="720" height="378"></div>
+          <div class="item-body">
+            <div class="item-head">
+              <h3 class="item-name">Kuro</h3>
+              <span class="badge released" data-ja="リリース済み・macOS" data-en="Released · macOS">リリース済み・macOS</span>
+            </div>
+            <p class="item-desc" data-ja="プロ品質のカラーグレーディングを積んだ、macOS 用の動画プレーヤー。再生しながら、リファレンス基準の色へ。本体無料、Kuro PRO は買い切り。"
+               data-en="A macOS video player with pro-grade colour grading — reference-accurate colour while it plays. Free, with a one-time Kuro PRO upgrade.">プロ品質のカラーグレーディングを積んだ、macOS 用の動画プレーヤー。再生しながら、リファレンス基準の色へ。本体無料、Kuro PRO は買い切り。</p>
+            <div class="links">
+              <a href="kuro.html" data-ja="製品ページ" data-en="Product">製品ページ</a>
+              <a href="kuro_manual.html" data-ja="取説" data-en="Manual">取説</a>
+              <a class="store" href="https://apps.apple.com/app/apple-store/id6782262572?pt=128819275&amp;ct=website&amp;mt=8" target="_blank" rel="noopener">Mac App Store<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+              <a href="kuro_privacy.html" data-ja="プライバシー" data-en="Privacy">プライバシー</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="item-art"><img src="assets/cards/shelfnavigator.webp" alt="" loading="lazy" width="720" height="378"></div>
+          <div class="item-body">
+            <div class="item-head">
+              <h3 class="item-name">ShelfNavigator</h3>
+              <span class="badge released" data-ja="リリース済み・macOS" data-en="Released · macOS">リリース済み・macOS</span>
+            </div>
+            <p class="item-desc" data-ja="散らばったフォルダと外付けドライブを、1つの棚にまとめる macOS 用ビューア。"
+               data-en="A macOS viewer that gathers scattered folders and external drives into a single shelf.">散らばったフォルダと外付けドライブを、1つの棚にまとめる macOS 用ビューア。</p>
+            <div class="links">
+              <a href="shelfnavigator.html" data-ja="製品ページ" data-en="Product">製品ページ</a>
+              <a href="shelfnavigator_manual.html" data-ja="取説" data-en="Manual">取説</a>
+              <a class="store" href="https://apps.apple.com/app/apple-store/id6794389638?pt=128819275&amp;ct=website&amp;mt=8" target="_blank" rel="noopener">Mac App Store<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+              <a href="shelfnavigator_privacy.html" data-ja="プライバシー" data-en="Privacy">プライバシー</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="item-art"><img src="assets/cards/recoup.webp" alt="" loading="lazy" width="720" height="378"></div>
+          <div class="item-body">
+            <div class="item-head">
+              <h3 class="item-name">Recoup</h3>
+              <span class="badge released" data-ja="リリース済み・macOS" data-en="Released · macOS">リリース済み・macOS</span>
+            </div>
+            <p class="item-desc" data-ja="外付けHDD・SSD・SDカード・USBメモリから、削除された写真や動画を復元する macOS アプリ。ディスクの生データを直接走査します。買い切り・サブスクなし。"
+               data-en="A macOS app that recovers deleted photos and videos from external HDDs, SSDs, SD cards and USB drives by scanning the raw disk. One-time purchase, no subscription.">外付けHDD・SSD・SDカード・USBメモリから、削除された写真や動画を復元する macOS アプリ。ディスクの生データを直接走査します。買い切り・サブスクなし。</p>
+            <div class="links">
+              <a href="recoup.html" data-ja="製品ページ" data-en="Product">製品ページ</a>
+              <a href="recoup_manual.html" data-ja="取説" data-en="Manual">取説</a>
+              <a class="store" href="https://rustyworks.itch.io/recoup" target="_blank" rel="noopener">itch.io<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+              <a href="recoup_privacy.html" data-ja="プライバシー" data-en="Privacy">プライバシー</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="item-art"><img src="assets/cards/pvs.webp" alt="" loading="lazy" width="720" height="378"></div>
+          <div class="item-body">
+            <div class="item-head">
+              <h3 class="item-name">Plain Video Saver</h3>
+              <span class="badge released" data-ja="リリース済み・macOS" data-en="Released · macOS">リリース済み・macOS</span>
+            </div>
+            <p class="item-desc" data-ja="URLを入れて保存先と画質を選ぶだけの macOS 用動画保存ツール。itch.io で購入できます。"
+               data-en="A macOS video downloader where you paste a URL, pick a folder and a quality, and that is it. Sold on itch.io.">URLを入れて保存先と画質を選ぶだけの macOS 用動画保存ツール。itch.io で購入できます。</p>
+            <div class="links">
+              <a href="pvs.html" data-ja="製品ページ" data-en="Product">製品ページ</a>
+              <a class="store" href="https://rustyworks.itch.io/pvs" target="_blank" rel="noopener">itch.io<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+              <a href="pvs_privacy.html" data-ja="プライバシー" data-en="Privacy">プライバシー</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="item-art" style="--art-bg:#f6f3f0;"><img src="assets/cards/fumannote.webp" alt="" loading="lazy" width="800" height="382"></div>
+          <div class="item-body">
+            <div class="item-head">
+              <h3 class="item-name" data-ja="不満ノート" data-en="FumanNote">不満ノート</h3>
+              <span class="badge review" data-ja="App Store 審査中・iOS" data-en="In App Store review · iOS">App Store 審査中・iOS</span>
+            </div>
+            <p class="item-desc" data-ja="モヤモヤしたことを書き出すと、相手が本当は言うべきだった言葉を、相手の視点で書き直します。頼んだときだけ、その怒りについての整理も返します。"
+               data-en="Write down what is bothering you, and it rewrites the words the other person should have said, from their point of view. Ask for it, and it will also sort through the anger itself.">モヤモヤしたことを書き出すと、相手が本当は言うべきだった言葉を、相手の視点で書き直します。頼んだときだけ、その怒りについての整理も返します。</p>
+            <div class="links">
+              <a href="fumannote.html" data-ja="製品ページ" data-en="Product">製品ページ</a>
+              <a href="fumannote_manual.html" data-ja="取説" data-en="Manual">取説</a>
+              <span class="pending" data-ja="App Store 準備中" data-en="App Store — coming soon">App Store 準備中</span>
+              <a href="fumannote_privacy.html" data-ja="プライバシー" data-en="Privacy">プライバシー</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 開発ツール ────────────────────────── -->
+  <section class="group">
+    <div class="container">
+      <div class="group-head">
+        <h2 class="group-title" data-ja="開発ツール" data-en="Developer Tools">開発ツール</h2>
+        <span class="group-count">3</span>
+      </div>
+
+      <div class="items">
+
+        <article class="item">
+          <div class="item-art"><img src="assets/cards/battle-ui.webp" alt="" loading="lazy" width="760" height="398"></div>
+          <div class="item-body">
+            <div class="item-head">
+              <h3 class="item-name" data-ja="戦闘画面UIカスタマイザー" data-en="BattleUICustomizer">戦闘画面UIカスタマイザー</h3>
+              <span class="badge released" data-ja="リリース済み・RPGツクールMZ" data-en="Released · RPG Maker MZ">リリース済み・RPGツクールMZ</span>
+            </div>
+            <p class="item-desc" data-ja="RPGツクールMZ の戦闘画面のレイアウトを、プラグインパラメータから組み替えられるようにするプラグイン。note で配布しています。"
+               data-en="An RPG Maker MZ plugin that lets you rearrange the battle screen layout from plugin parameters. Distributed on note.">RPGツクールMZ の戦闘画面のレイアウトを、プラグインパラメータから組み替えられるようにするプラグイン。note で配布しています。</p>
+            <div class="links">
+              <a class="store" href="https://note.com/legit_fowl8567/n/n3992c3e5129e" target="_blank" rel="noopener">note<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="item-art placeholder"><img src="assets/icons/uadb.png" alt="" loading="lazy" width="160" height="160"></div>
+          <div class="item-body">
+            <div class="item-head">
+              <h3 class="item-name">UADB</h3>
+              <span class="badge released" data-ja="リリース済み・Unity エディタ拡張" data-en="Released · Unity Editor extension">リリース済み・Unity エディタ拡張</span>
+            </div>
+            <p class="item-desc" data-ja="プロジェクトのアセットを検索・整理・タグ管理するための Unity エディタ拡張。元ファイルを勝手に移動・改名しない、非破壊型の運用を前提にしています。"
+               data-en="A Unity Editor extension for browsing, searching and tagging project assets. Built around a non-destructive workflow that never moves or renames your files.">プロジェクトのアセットを検索・整理・タグ管理するための Unity エディタ拡張。元ファイルを勝手に移動・改名しない、非破壊型の運用を前提にしています。</p>
+            <div class="links">
+              <a href="UADB_manual.html" data-ja="取説" data-en="Manual">取説</a>
+              <a href="uadb_privacy.html" data-ja="プライバシー" data-en="Privacy">プライバシー</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="item-art placeholder"><img src="assets/icons/uadb.png" alt="" loading="lazy" width="160" height="160"></div>
+          <div class="item-body">
+            <div class="item-head">
+              <h3 class="item-name">UADB Lite</h3>
+              <span class="badge released" data-ja="リリース済み・無料" data-en="Released · Free">リリース済み・無料</span>
+            </div>
+            <p class="item-desc" data-ja="UADB の無料版。取説とプライバシーポリシーは UADB と共通です。"
+               data-en="The free edition of UADB. It shares its manual and privacy policy with UADB.">UADB の無料版。取説とプライバシーポリシーは UADB と共通です。</p>
+            <div class="links">
+              <a href="UADB_manual.html" data-ja="取説" data-en="Manual">取説</a>
+              <a href="uadb_privacy.html" data-ja="プライバシー" data-en="Privacy">プライバシー</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Web アプリ ───────────────────────── -->
+  <section class="group">
+    <div class="container">
+      <div class="group-head">
+        <h2 class="group-title" data-ja="Web アプリ" data-en="Web Apps">Web アプリ</h2>
+        <span class="group-count">1</span>
+      </div>
+
+      <div class="items">
+        <article class="item">
+          <div class="item-art"><img src="assets/cards/autodub.webp" alt="" loading="lazy" width="720" height="378"></div>
+          <div class="item-body">
+            <div class="item-head">
+              <h3 class="item-name" data-ja="オートダビング構文" data-en="AutoDub">オートダビング構文</h3>
+              <span class="badge released" data-ja="公開中・ブラウザ" data-en="Live · Browser">公開中・ブラウザ</span>
+            </div>
+            <p class="item-desc" data-ja="日本語を、YouTube の自動吹き替えっぽい日本語に変換するジョークアプリ。インストール不要で、ブラウザだけで動きます。"
+               data-en="A joke app that rewrites Japanese into the stilted Japanese of YouTube auto-dubbing. No install — it runs entirely in the browser.">日本語を、YouTube の自動吹き替えっぽい日本語に変換するジョークアプリ。インストール不要で、ブラウザだけで動きます。</p>
+            <div class="links">
+              <a class="store" href="autodub/" data-ja="開く" data-en="Open">開く</a>
+              <a href="autodub/notes.html" data-ja="どう作ったか" data-en="Write-up">どう作ったか</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ゲーム ───────────────────────────── -->
+  <section class="group">
+    <div class="container">
+      <div class="group-head">
+        <h2 class="group-title" data-ja="ゲーム" data-en="Games">ゲーム</h2>
+        <span class="group-count">1</span>
+      </div>
+
+      <div class="items">
+        <article class="item">
+          <div class="item-art placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="10" rx="5"/><line x1="7" y1="12" x2="9" y2="12"/><line x1="8" y1="11" x2="8" y2="13"/><circle cx="15.5" cy="11" r=".6" fill="currentColor" stroke="none"/><circle cx="17.5" cy="13" r=".6" fill="currentColor" stroke="none"/></svg>
+          </div>
+          <div class="item-body">
+            <div class="item-head">
+              <h3 class="item-name" data-ja="RPGゲーム（仮）" data-en="RPG (working title)">RPGゲーム（仮）</h3>
+              <span class="badge" data-ja="開発中・Godot" data-en="In development · Godot">開発中・Godot</span>
+            </div>
+            <p class="item-desc" data-ja="Godot で制作中の RPG です。公開できる形になったら、ここに載せます。"
+               data-en="An RPG in progress, built with Godot. It will show up here once there is something to show.">Godot で制作中の RPG です。公開できる形になったら、ここに載せます。</p>
+            <div class="links">
+              <span class="pending" data-ja="ページ準備中" data-en="Page coming soon">ページ準備中</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <span class="copy">© RustyWorks</span>
+    <div class="footer-links">
+      <a href="site_privacy.html" data-ja="プライバシーポリシー" data-en="Privacy Policy">プライバシーポリシー</a>
+      <a href="mailto:rustyworks.games@gmail.com" data-ja="お問い合わせ" data-en="Contact">お問い合わせ</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  // ── 言語切替 ────────────────────────────
+  // トップと同じ仕組み。日本語は HTML に直接書いてあるので、
+  // JS が動かなくても日本語表示は成立する。
+  var KEY = 'rw-lang';
+  var buttons = document.querySelectorAll('.lang button');
+  var nodes = document.querySelectorAll('[data-ja][data-en]');
+
+  function apply(lang) {
+    document.documentElement.lang = lang;
+    nodes.forEach(function (el) {
+      var text = el.getAttribute('data-' + lang);
+      if (text !== null) el.textContent = text;
+    });
+    buttons.forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
+    });
+    try { localStorage.setItem(KEY, lang); } catch (e) {}
+  }
+
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () { apply(b.dataset.lang); });
+  });
+
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (!saved) saved = (navigator.language || '').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en';
+  if (saved === 'en') apply('en');
+
+  // ── モバイルのメニュー ──────────────────
+  var toggle = document.getElementById('navToggle');
+  var nav = document.getElementById('nav');
+  toggle.addEventListener('click', function () {
+    var open = nav.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(open));
+  });
+  nav.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A') {
+      nav.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+})();
+</script>
+
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "04f66ad1837a4b63af68beb6e835358f"}'></script><!-- End Cloudflare Web Analytics -->
+
+</body>
+</html>
