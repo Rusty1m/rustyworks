@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>お問い合わせ | RustyWorks</title>
+<meta name="description" content="RustyWorks への問い合わせフォーム。名前もメールアドレスも書かずに送れます。">
+<meta name="robots" content="noindex">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RustyWorks">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:url" content="https://rustyworks.jp/contact.html">
+<meta property="og:title" content="お問い合わせ | RustyWorks">
+<meta property="og:description" content="名前もメールアドレスも書かずに送れる問い合わせフォームです。">
+<meta property="og:image" content="https://rustyworks.jp/assets/og/rustyworks-og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#ffffff;
+  --bg-soft:#f5f5f6;
+  --ink:#111214;
+  --ink-2:#5f6368;
+  --ink-3:#8a8d93;
+  --line:#e4e4e7;
+  --blue:#1a4fd8;
+  --blue-ink:#143fb0;
+  --ok:#2f9e5e;
+  --ng:#c4472a;
+
+  --sans:"Inter","Zen Kaku Gothic New",-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+
+  --pad:64px;
+  --maxw:1408px;
+  --header-h:72px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:var(--sans);font-size:15px;line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;}
+img{display:block;max-width:100%;}
+.container{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad);}
+
+/* ── ヘッダー（他ページと同じもの）────────── */
+header{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--line);}
+.header-inner{
+  height:var(--header-h);display:flex;align-items:stretch;
+  max-width:var(--maxw);margin:0 auto;padding-left:var(--pad);
+}
+.logo{display:flex;align-items:center;font-weight:800;font-size:23px;letter-spacing:-.02em;text-decoration:none;}
+.nav{flex:1;display:flex;align-items:center;justify-content:center;gap:56px;}
+.nav a{
+  font-size:13px;font-weight:600;letter-spacing:.12em;color:var(--ink);
+  text-decoration:none;padding:6px 0;border-bottom:2px solid transparent;
+  transition:color .15s,border-color .15s;
+}
+.nav a:hover{color:var(--blue);border-bottom-color:var(--blue);}
+.header-end{display:flex;align-items:stretch;}
+.lang{display:flex;align-items:center;gap:2px;font-family:var(--mono);font-size:12px;padding-right:20px;}
+.lang button{
+  font:inherit;background:none;border:0;cursor:pointer;color:var(--ink-3);
+  padding:4px 6px;border-radius:4px;transition:color .15s,background-color .15s;
+}
+.lang button:hover{color:var(--ink);background:var(--bg-soft);}
+.lang button[aria-pressed="true"]{color:var(--ink);font-weight:500;}
+.lang .sep{color:var(--line);}
+.btn-support{
+  display:flex;align-items:center;gap:9px;background:var(--blue);color:#fff;
+  padding:0 34px;font-size:14px;font-weight:600;letter-spacing:.02em;
+  text-decoration:none;transition:background-color .15s;
+}
+.btn-support:hover{background:var(--blue-ink);}
+.btn-support svg{width:18px;height:18px;flex:none;}
+.nav-toggle{display:none;}
+
+/* ── ページ見出し ───────────────────────── */
+.page-head{border-bottom:1px solid var(--line);padding:58px 0 44px;}
+.page-head h1{font-size:clamp(30px,3.4vw,42px);font-weight:800;letter-spacing:-.02em;line-height:1.1;}
+.page-head p{margin-top:16px;font-size:16px;color:var(--ink-2);max-width:640px;}
+.page-rule{margin-top:26px;width:56px;height:3px;background:var(--blue);}
+
+/* ── フォーム ───────────────────────────── */
+.form-wrap{padding:46px 0 72px;}
+.form-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:52px;align-items:start;}
+form{max-width:660px;}
+
+.field{margin-bottom:26px;}
+.field > label,.legend{
+  display:block;font-size:13.5px;font-weight:600;
+  margin-bottom:9px;letter-spacing:.01em;
+}
+.opt{font-weight:400;color:var(--ink-3);margin-left:8px;font-size:12.5px;}
+.hint{font-size:12.5px;color:var(--ink-3);margin-top:7px;line-height:1.6;}
+
+input[type=text],input[type=email],select,textarea{
+  width:100%;font:inherit;color:var(--ink);
+  background:var(--bg);
+  border:1px solid var(--line);border-radius:9px;
+  padding:11px 13px;
+  transition:border-color .15s,box-shadow .15s;
+}
+textarea{min-height:190px;resize:vertical;line-height:1.75;}
+select{
+  appearance:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235f6368' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat:no-repeat;background-position:right 12px center;background-size:16px;
+  padding-right:38px;
+}
+input:focus,select:focus,textarea:focus{
+  outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,79,216,.13);
+}
+input[aria-invalid="true"],textarea[aria-invalid="true"]{border-color:var(--ng);}
+
+/* 種別は選択肢が3つだけなので、並べて押せるようにする */
+.choices{display:flex;flex-wrap:wrap;gap:9px;}
+.choice{position:relative;}
+.choice input{position:absolute;opacity:0;pointer-events:none;}
+.choice span{
+  display:inline-block;cursor:pointer;
+  border:1px solid var(--line);border-radius:999px;
+  padding:8px 18px;font-size:13.5px;font-weight:600;
+  transition:border-color .15s,background-color .15s,color .15s;
+}
+.choice input:checked + span{background:var(--ink);border-color:var(--ink);color:#fff;}
+.choice input:focus-visible + span{outline:2px solid var(--blue);outline-offset:2px;}
+
+/* bot 用の隠し欄。人には見えず、読み上げにも出さない */
+.trap{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+
+.actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:32px;}
+.send{
+  font:inherit;font-weight:600;font-size:15px;
+  background:var(--blue);color:#fff;border:0;border-radius:9px;
+  padding:13px 34px;cursor:pointer;
+  transition:background-color .15s,opacity .15s;
+}
+.send:hover{background:var(--blue-ink);}
+.send:disabled{opacity:.5;cursor:default;}
+.count{font-family:var(--mono);font-size:12px;color:var(--ink-3);}
+.count.over{color:var(--ng);}
+
+.result{
+  margin-top:24px;padding:16px 18px;border-radius:10px;
+  font-size:14.5px;display:none;
+}
+.result.show{display:block;}
+.result.ok{background:rgba(47,158,94,.08);border:1px solid rgba(47,158,94,.3);}
+.result.ng{background:rgba(196,71,42,.07);border:1px solid rgba(196,71,42,.3);}
+.result b{display:block;margin-bottom:4px;}
+
+/* ── 横の説明 ───────────────────────────── */
+.aside{
+  border:1px solid var(--line);border-radius:12px;
+  padding:24px 24px 26px;background:var(--bg-soft);
+  position:sticky;top:calc(var(--header-h) + 24px);
+}
+.aside h2{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;}
+.aside p{font-size:13.5px;color:var(--ink-2);}
+.aside p + p{margin-top:12px;}
+.aside .mail{
+  display:inline-block;margin-top:16px;font-family:var(--mono);
+  font-size:12.5px;color:var(--blue);word-break:break-all;
+}
+
+/* ── フッター ───────────────────────────── */
+footer{border-top:1px solid var(--line);padding:30px 0;}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+.copy{font-size:13px;color:var(--ink-2);}
+.footer-links{display:flex;align-items:center;gap:26px;font-size:13px;color:var(--ink-2);}
+.footer-links a{text-decoration:none;}
+.footer-links a:hover{color:var(--blue);}
+
+@media (max-width:980px){
+  .form-grid{grid-template-columns:1fr;gap:34px;}
+  .aside{position:static;order:-1;}
+}
+@media (max-width:860px){
+  :root{--pad:22px;}
+  .header-inner{padding-left:var(--pad);}
+  .nav{
+    position:fixed;top:var(--header-h);left:0;right:0;
+    flex-direction:column;align-items:stretch;justify-content:flex-start;
+    gap:0;background:var(--bg);border-bottom:1px solid var(--line);
+    padding:6px var(--pad) 18px;display:none;
+  }
+  .nav.open{display:flex;}
+  .nav a{padding:13px 0;border-bottom:1px solid var(--line);}
+  .nav-toggle{display:flex;align-items:center;background:none;border:0;cursor:pointer;color:var(--ink);padding:0 14px;}
+  .nav-toggle svg{width:24px;height:24px;}
+  .btn-support{padding:0 20px;font-size:13px;}
+  .btn-support span{display:none;}
+  .lang{padding-right:10px;}
+  .page-head{padding:42px 0 34px;}
+  .form-wrap{padding:34px 0 56px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="index.html">RustyWorks</a>
+    <nav class="nav" id="nav">
+      <a href="works.html">WORKS</a>
+      <a href="index.html#support">SUPPORT</a>
+      <a href="index.html#news">NEWS</a>
+      <a href="index.html#about">ABOUT</a>
+    </nav>
+    <div class="header-end">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="ja" aria-pressed="true">JA</button>
+        <span class="sep">/</span>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="メニュー" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+      </button>
+      <a class="btn-support" href="contact.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.2a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.7-.9 1.3v.5"/><circle cx="12" cy="17" r=".9" fill="currentColor" stroke="none"/></svg>
+        <span data-ja="サポート" data-en="Support">サポート</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="page-head">
+    <div class="container">
+      <h1 data-ja="お問い合わせ" data-en="Contact">お問い合わせ</h1>
+      <p data-ja="名前もメールアドレスも要りません。書いて送るだけです。返信がほしいときだけ、連絡先を書いてください。"
+         data-en="No name, no email address required — just write and send. Leave an address only if you want a reply.">名前もメールアドレスも要りません。書いて送るだけです。返信がほしいときだけ、連絡先を書いてください。</p>
+      <div class="page-rule"></div>
+    </div>
+  </div>
+
+  <div class="form-wrap">
+    <div class="container form-grid">
+
+      <form id="form" novalidate>
+
+        <div class="field">
+          <span class="legend" id="kindLabel" data-ja="種別" data-en="Type">種別</span>
+          <div class="choices" role="radiogroup" aria-labelledby="kindLabel">
+            <label class="choice">
+              <input type="radio" name="kind" value="不具合" checked>
+              <span data-ja="不具合" data-en="Bug">不具合</span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="kind" value="要望">
+              <span data-ja="要望" data-en="Request">要望</span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="kind" value="その他">
+              <span data-ja="その他" data-en="Other">その他</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="product" data-ja="対象" data-en="Product">対象</label>
+          <select id="product" name="product">
+            <option value="指定なし" data-ja="指定なし" data-en="Not specified">指定なし</option>
+            <option value="Kuro">Kuro</option>
+            <option value="ShelfNavigator">ShelfNavigator</option>
+            <option value="Recoup">Recoup</option>
+            <option value="Plain Video Saver">Plain Video Saver</option>
+            <option value="不満ノート" data-ja="不満ノート" data-en="FumanNote">不満ノート</option>
+            <option value="UADB">UADB / UADB Lite</option>
+            <option value="戦闘画面UIカスタマイザー" data-ja="戦闘画面UIカスタマイザー" data-en="BattleUICustomizer">戦闘画面UIカスタマイザー</option>
+            <option value="オートダビング構文" data-ja="オートダビング構文" data-en="AutoDub">オートダビング構文</option>
+            <option value="サイト" data-ja="このサイト" data-en="This website">このサイト</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="body" data-ja="内容" data-en="Message">内容</label>
+          <textarea id="body" name="body" maxlength="4000" required
+                    aria-describedby="bodyHint"
+                    data-ph-ja="お気づきの点をそのまま書いてください。整えなくて構いません。"
+                    data-ph-en="Write it however it comes out. No need to tidy it up."
+                    placeholder="お気づきの点をそのまま書いてください。整えなくて構いません。"></textarea>
+          <p class="hint" id="bodyHint" data-ja="書いた内容だけが送られます。ここに名前や連絡先を書かなければ、こちらに誰からのものかは分かりません。"
+             data-en="Only what you write is sent. If you do not put your name or contact details here, there is no way for me to tell who sent it.">書いた内容だけが送られます。ここに名前や連絡先を書かなければ、こちらに誰からのものかは分かりません。</p>
+        </div>
+
+        <div class="field">
+          <label for="env">
+            <span data-ja="動作環境" data-en="Environment">動作環境</span>
+            <span class="opt" data-ja="任意" data-en="optional">任意</span>
+          </label>
+          <input type="text" id="env" name="env" maxlength="120"
+                 data-ph-ja="例: macOS 26.1 / Kuro 1.4.2"
+                 data-ph-en="e.g. macOS 26.1 / Kuro 1.4.2"
+                 placeholder="例: macOS 26.1 / Kuro 1.4.2">
+          <p class="hint" data-ja="不具合のときに書いてもらえると、こちらから聞き直す手間が省けます。自動では取得していません。"
+             data-en="Helpful for bug reports — it saves a round trip. Nothing is detected automatically.">不具合のときに書いてもらえると、こちらから聞き直す手間が省けます。自動では取得していません。</p>
+        </div>
+
+        <div class="field">
+          <label for="email">
+            <span data-ja="返信用メールアドレス" data-en="Email for a reply">返信用メールアドレス</span>
+            <span class="opt" data-ja="任意" data-en="optional">任意</span>
+          </label>
+          <input type="email" id="email" name="email" maxlength="200" autocomplete="off"
+                 placeholder="you@example.com">
+          <p class="hint" data-ja="空欄のままで送れます。書かれた場合だけ、返信のために使います。それ以外の用途には使いません。"
+             data-en="You can leave this empty. If you fill it in, it is used only to reply to you — nothing else.">空欄のままで送れます。書かれた場合だけ、返信のために使います。それ以外の用途には使いません。</p>
+        </div>
+
+        <!-- bot よけ。人が触ることはない -->
+        <div class="trap" aria-hidden="true">
+          <label for="website">Website</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div class="actions">
+          <button class="send" type="submit" id="send" data-ja="送信する" data-en="Send">送信する</button>
+          <span class="count" id="count">0 / 4000</span>
+        </div>
+
+        <div class="result" id="result" role="status" aria-live="polite"></div>
+      </form>
+
+      <aside class="aside">
+        <h2 data-ja="送られるもの" data-en="What gets sent">送られるもの</h2>
+        <p data-ja="上のフォームに書いた内容だけです。名前の欄はありません。Cookie も使いません。"
+           data-en="Only what you typed above. There is no name field, and no cookies are used.">上のフォームに書いた内容だけです。名前の欄はありません。Cookie も使いません。</p>
+        <p data-ja="受け取りは自前のサーバーで処理していて、接続元のIPアドレスは記録も保存もしていません。外部のフォーム業者は経由しません。"
+           data-en="Submissions are handled on my own endpoint. Your IP address is neither logged nor stored, and no third-party form service is involved.">受け取りは自前のサーバーで処理していて、接続元のIPアドレスは記録も保存もしていません。外部のフォーム業者は経由しません。</p>
+        <p data-ja="メールで直接送っても構いません。その場合はアドレスがこちらに見えます。"
+           data-en="You are welcome to email me instead — in that case your address will be visible to me.">メールで直接送っても構いません。その場合はアドレスがこちらに見えます。</p>
+        <a class="mail" href="mailto:rustyworks.games@gmail.com">rustyworks.games@gmail.com</a>
+      </aside>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <span class="copy">© RustyWorks</span>
+    <div class="footer-links">
+      <a href="site_privacy.html" data-ja="プライバシーポリシー" data-en="Privacy Policy">プライバシーポリシー</a>
+      <a href="works.html" data-ja="作品一覧" data-en="Works">作品一覧</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  // 受け口の URL。Worker をデプロイしたらここを書き換える。
+  // 差し替え忘れたまま公開されたときに黙って握りつぶさないよう、
+  // 未設定なら送信させずにその旨を出す。
+  var ENDPOINT = 'https://rustyworks-contact.abby-nyanko.workers.dev';
+
+  var form   = document.getElementById('form');
+  var body   = document.getElementById('body');
+  var email  = document.getElementById('email');
+  var send   = document.getElementById('send');
+  var count  = document.getElementById('count');
+  var result = document.getElementById('result');
+  var trap   = document.getElementById('website');
+
+  var MAX = 4000;
+  var opened = Date.now();   // 早すぎる送信を弾くため
+
+  var TEXT = {
+    ja: {
+      empty:   ['内容が空です', '送りたいことを書いてから、もう一度押してください。'],
+      long:    ['内容が長すぎます', MAX + '文字までにしてください。'],
+      mail:    ['メールアドレスの形式が違います', '空欄でも送れます。返信が要らなければ消してください。'],
+      unset:   ['まだ受け付けを開始していません', 'お手数ですが rustyworks.games@gmail.com までお願いします。'],
+      fast:    ['送信が早すぎます', '数秒おいてから、もう一度押してください。'],
+      sending: '送信中…',
+      okTitle: '送信しました',
+      okBody:  '読ませていただきます。返信用のアドレスを書かれた場合は、そちらへお返しします。',
+      ngTitle: '送信できませんでした',
+      ngBody:  '時間をおいて試すか、rustyworks.games@gmail.com までお願いします。',
+      send:    '送信する'
+    },
+    en: {
+      empty:   ['The message is empty', 'Write something first, then press send again.'],
+      long:    ['The message is too long', 'Please keep it under ' + MAX + ' characters.'],
+      mail:    ['That email address does not look right', 'You can leave it blank — clear it if you do not need a reply.'],
+      unset:   ['The form is not accepting messages yet', 'Please email rustyworks.games@gmail.com instead.'],
+      fast:    ['That was too quick', 'Wait a couple of seconds and press send again.'],
+      sending: 'Sending…',
+      okTitle: 'Sent',
+      okBody:  'Thank you — I will read it. If you left an address, I will reply there.',
+      ngTitle: 'Could not send',
+      ngBody:  'Please try again later, or email rustyworks.games@gmail.com.',
+      send:    'Send'
+    }
+  };
+  var lang = 'ja';
+  function t() { return TEXT[lang]; }
+
+  // ── 文字数 ──────────────────────────────
+  function tick() {
+    var n = body.value.length;
+    count.textContent = n + ' / ' + MAX;
+    count.classList.toggle('over', n > MAX);
+  }
+  body.addEventListener('input', tick);
+  tick();
+
+  function show(kind, title, message) {
+    result.className = 'result show ' + kind;
+    result.innerHTML = '';
+    var b = document.createElement('b');
+    b.textContent = title;
+    result.appendChild(b);
+    result.appendChild(document.createTextNode(message));
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    var text = body.value.trim();
+    if (!text)            { show('ng', t().empty[0], t().empty[1]); body.setAttribute('aria-invalid','true'); body.focus(); return; }
+    if (text.length > MAX){ show('ng', t().long[0],  t().long[1]);  body.focus(); return; }
+    body.removeAttribute('aria-invalid');
+
+    var addr = email.value.trim();
+    if (addr && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(addr)) {
+      show('ng', t().mail[0], t().mail[1]);
+      email.setAttribute('aria-invalid','true'); email.focus(); return;
+    }
+    email.removeAttribute('aria-invalid');
+
+    if (trap.value)                 { show('ng', t().ngTitle, t().ngBody); return; }
+    if (Date.now() - opened < 3000) { show('ng', t().fast[0], t().fast[1]); return; }
+
+    if (ENDPOINT === 'PASTE_WORKER_URL_HERE') {
+      show('ng', t().unset[0], t().unset[1]);
+      return;
+    }
+
+    send.disabled = true;
+    send.textContent = t().sending;
+    result.className = 'result';
+
+    fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        kind:    (form.querySelector('input[name=kind]:checked') || {}).value || '',
+        product: document.getElementById('product').value,
+        body:    text,
+        env:     document.getElementById('env').value.trim(),
+        email:   addr,
+        elapsed: Date.now() - opened
+      })
+    }).then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      form.reset(); tick(); opened = Date.now();
+      show('ok', t().okTitle, t().okBody);
+    }).catch(function () {
+      show('ng', t().ngTitle, t().ngBody);
+    }).then(function () {
+      send.disabled = false;
+      send.textContent = t().send;
+    });
+  });
+
+  // ── 言語切替 ────────────────────────────
+  var KEY = 'rw-lang';
+  var buttons = document.querySelectorAll('.lang button');
+  var nodes = document.querySelectorAll('[data-ja][data-en]');
+  var holders = document.querySelectorAll('[data-ph-ja][data-ph-en]');
+
+  function apply(next) {
+    lang = next;
+    document.documentElement.lang = next;
+    nodes.forEach(function (el) {
+      var s = el.getAttribute('data-' + next);
+      if (s !== null) el.textContent = s;
+    });
+    holders.forEach(function (el) {
+      var s = el.getAttribute('data-ph-' + next);
+      if (s !== null) el.placeholder = s;
+    });
+    buttons.forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.lang === next));
+    });
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+  }
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () { apply(b.dataset.lang); });
+  });
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (!saved) saved = (navigator.language || '').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en';
+  if (saved === 'en') apply('en');
+
+  // ── モバイルのメニュー ──────────────────
+  var toggle = document.getElementById('navToggle');
+  var nav = document.getElementById('nav');
+  toggle.addEventListener('click', function () {
+    var open = nav.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(open));
+  });
+  nav.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A') {
+      nav.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+})();
+</script>
+
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "04f66ad1837a4b63af68beb6e835358f"}'></script><!-- End Cloudflare Web Analytics -->
+
+</body>
+</html>
