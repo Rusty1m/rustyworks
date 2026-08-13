@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'unsafe-inline'; img-src 'self' data:; font-src data:; connect-src https://cloudflareinsights.com; frame-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none';">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<title>DocPane | RustyWorks</title>
+<meta name="description" content="取扱説明書のための2ペイン Markdown ビューアー。.md を開くだけで、左に項目・右に本文の閲覧画面になります。1ファイル完結・インストール不要・通信なし。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RustyWorks">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:url" content="https://rustyworks.jp/docpane/">
+<meta property="og:title" content="DocPane | RustyWorks">
+<meta property="og:description" content="取扱説明書のための2ペイン Markdown ビューアー。.md を開くだけで、左に項目・右に本文の閲覧画面になります。1ファイル完結・インストール不要・通信なし。">
+<meta property="og:image" content="https://rustyworks.jp/assets/og/docpane-og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DocPane | RustyWorks">
+<meta name="twitter:description" content="取扱説明書のための2ペイン Markdown ビューアー。.md を開くだけで、左に項目・右に本文の閲覧画面になります。">
+<meta name="twitter:image" content="https://rustyworks.jp/assets/og/docpane-og.jpg">
+<style>
+:root{
+  --bg:#ffffff; --bg-soft:#f5f5f6; --ink:#111214; --ink-2:#5f6368; --ink-3:#8a8d93;
+  --line:#e4e4e7; --blue:#1a4fd8; --blue-ink:#143fb0;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;}
+body{
+  background:var(--bg); color:var(--ink); line-height:1.8;
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--blue);}
+.container{max-width:1080px; margin:0 auto; padding:0 24px;}
+
+/* ---- 見出し周り ---- */
+header.site{border-bottom:1px solid var(--line);}
+header.site .container{display:flex; align-items:center; height:56px; gap:16px;}
+header.site .brand{font-weight:700; letter-spacing:.02em; text-decoration:none; color:var(--ink);}
+header.site .spacer{flex:1;}
+header.site a.nav{font-size:13px; color:var(--ink-2); text-decoration:none;}
+header.site a.nav:hover{color:var(--blue);}
+
+.hero{padding:64px 0 32px; text-align:center;}
+.hero h1{font-size:clamp(30px,5vw,46px); line-height:1.25; margin:0 0 14px; letter-spacing:-.01em;}
+.hero p.lead{font-size:clamp(15px,2vw,17px); color:var(--ink-2); margin:0 auto; max-width:34em;}
+.badges{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:22px;}
+.badge{
+  font-size:12px; color:var(--ink-2); background:var(--bg-soft);
+  border:1px solid var(--line); border-radius:999px; padding:5px 12px;
+}
+
+/* ---- デモ ---- */
+.demo{padding:8px 0 12px;}
+.demo-head{
+  display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:12px;
+}
+.demo-head h2{font-size:15px; margin:0;}
+.demo-head span{font-size:12.5px; color:var(--ink-3);}
+.samples{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;}
+.sample{
+  display:flex; align-items:center; gap:9px; cursor:pointer;
+  background:var(--bg); border:1px solid var(--line); border-radius:10px;
+  padding:9px 14px 9px 11px; font:inherit; font-size:13.5px; color:var(--ink);
+  transition:border-color .15s, background .15s;
+}
+.sample:hover{border-color:var(--blue); background:#f7f9ff;}
+.sample[aria-pressed="true"]{border-color:var(--blue); background:#eef3ff; color:var(--blue-ink); font-weight:600;}
+.sample .ico{font-size:17px; line-height:1;}
+.frame{
+  border:1px solid var(--line); border-radius:12px; overflow:hidden;
+  box-shadow:0 12px 34px rgba(17,18,20,.09); background:var(--bg-soft);
+}
+.frame .bar{
+  display:flex; align-items:center; gap:7px; padding:9px 13px;
+  background:#ececee; border-bottom:1px solid var(--line);
+}
+.frame .bar i{width:11px; height:11px; border-radius:50%; background:#cfcfd3; display:block;}
+.frame .bar .name{
+  margin-left:8px; font-size:11.5px; color:var(--ink-3); font-family:var(--mono);
+}
+.frame iframe{display:block; width:100%; height:620px; border:0; background:#fff;}
+.demo-note{font-size:12.5px; color:var(--ink-3); margin:10px 2px 0;}
+.demo-fallback{display:none; padding:28px 20px; text-align:center; color:var(--ink-2); font-size:14px;}
+.demo-fallback a{font-weight:600;}
+
+/* ---- 説明 ---- */
+.points{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:18px; padding:56px 0 8px;
+}
+.point h3{font-size:15px; margin:0 0 8px;}
+.point p{font-size:14px; color:var(--ink-2); margin:0;}
+
+/* ---- 導入事例 ---- */
+.cases{margin:52px 0 0; padding-top:34px; border-top:1px solid var(--line);}
+.cases[hidden]{display:none;}
+.cases h2{font-size:18px; margin:0 0 6px;}
+.cases-lead{font-size:13px; color:var(--ink-3); margin:0 0 20px;}
+.cases ul{list-style:none; padding:0; margin:0; display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px;}
+.cases li{
+  border:1px solid var(--line); border-radius:10px; padding:16px 18px; background:var(--bg);
+}
+.cases .name{font-size:14.5px; font-weight:600; display:block;}
+.cases .by{font-size:12.5px; color:var(--ink-3); display:block; margin-top:2px;}
+.cases .note{font-size:13px; color:var(--ink-2); margin:8px 0 0;}
+.cases a.name:hover{text-decoration:underline;}
+
+/* ---- ダウンロード ---- */
+.dl{
+  margin:56px 0 72px; padding:36px 28px; text-align:center;
+  background:var(--bg-soft); border:1px solid var(--line); border-radius:14px;
+}
+.dl h2{font-size:20px; margin:0 0 10px;}
+.dl p{font-size:14px; color:var(--ink-2); margin:0 auto 22px; max-width:32em;}
+.dl .btn{
+  display:inline-block; background:var(--blue); color:#fff; text-decoration:none;
+  font-size:15px; font-weight:600; padding:14px 34px; border-radius:10px;
+  box-shadow:0 6px 18px rgba(26,79,216,.24);
+}
+.dl .btn:hover{background:var(--blue-ink);}
+.dl .meta{font-size:12px; color:var(--ink-3); margin-top:14px; font-family:var(--mono);}
+.dl ul{
+  list-style:none; padding:0; margin:22px auto 0; max-width:26em;
+  text-align:left; font-size:13.5px; color:var(--ink-2);
+}
+.dl ul li{padding:5px 0 5px 22px; position:relative;}
+.dl ul li::before{content:"▸"; position:absolute; left:4px; color:var(--ink-3);}
+.license{
+  margin:30px auto 0; padding-top:24px; border-top:1px solid var(--line);
+  max-width:38em; text-align:left;
+}
+.license h3{font-size:14px; margin:0 0 10px;}
+.license p{font-size:13.5px; color:var(--ink-2); margin:0 0 10px; max-width:none;}
+.license strong{color:var(--ink); font-weight:600;}
+.license .warranty{font-size:12.5px; color:var(--ink-3);}
+
+footer{border-top:1px solid var(--line); padding:28px 0; margin-top:8px;}
+footer .container{display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;}
+footer .copy{font-size:13px; color:var(--ink-3);}
+footer a{font-size:13px; color:var(--ink-2); text-decoration:none; margin-left:18px;}
+footer a:hover{color:var(--blue);}
+
+@media (max-width:820px){
+  .frame iframe{display:none;}
+  .demo-fallback{display:block;}
+  .hero{padding:44px 0 24px;}
+}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="container">
+    <a class="brand" href="../index.html">RustyWorks</a>
+    <span class="spacer"></span>
+    <a class="nav" href="../works.html">作品一覧</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <h1>取扱説明書のための<br>2ペイン Markdown ビューアー</h1>
+      <p class="lead">
+        <code>.md</code> を開くだけで、左に項目・右に本文の閲覧画面になります。
+        設定もビルドも要りません。
+      </p>
+      <div class="badges">
+        <span class="badge">HTML 1ファイル</span>
+        <span class="badge">インストール不要</span>
+        <span class="badge">通信しません</span>
+        <span class="badge">Mac / Windows / Linux</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo">
+    <div class="container">
+      <div class="demo-head">
+        <h2>サンプルを選んでください</h2>
+        <span>下の窓の中で、実物がそのまま動いています</span>
+      </div>
+
+      <div class="samples" id="samples"></div>
+
+      <div class="frame">
+        <div class="bar">
+          <i></i><i></i><i></i>
+          <span class="name" id="frame-name">DocPane</span>
+        </div>
+        <iframe id="demo" src="app.html?demo=1" title="DocPane のデモ"></iframe>
+        <div class="demo-fallback">
+          デモは画面の広い端末でご覧ください。<br>
+          <a href="app.html?demo=1">それでも開く</a>
+        </div>
+      </div>
+
+      <p class="demo-note">
+        左の項目をクリックすると右が該当箇所へ移動します。ツールバーで見出しレベル・表示スタイル・
+        「連続 / ページ」を切り替えられます。お手元の <code>.md</code> をこの窓に
+        ドラッグしても試せます（このデモでは保存・書き出しはできません）。
+      </p>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="points">
+      <div class="point">
+        <h3>項目に何を出すか選べる</h3>
+        <p>H1〜H4 のどれを項目として拾うかを切り替えられます。階層があれば入れ子で並び、折りたたみもできます。</p>
+      </div>
+      <div class="point">
+        <h3>2通りの読み方</h3>
+        <p>全文を続けて読む「連続」と、1項目＝1ページで紙の取説のようにめくる「ページ」を切り替えられます。</p>
+      </div>
+      <div class="point">
+        <h3>書き手が指定できる</h3>
+        <p>ファイルの先頭に数行書くだけで、項目のレベル・表示スタイル・開いたときの状態を指定できます。</p>
+      </div>
+      <div class="point">
+        <h3>配布用に1ファイルへ</h3>
+        <p>文書と画像を埋め込んだ HTML を書き出せます。渡した相手は、ダブルクリックするだけで読めます。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 導入事例。掲載は許可制で、相手が指定した日以降にここへ1行足す。
+       期日前のものは書かない（隠しても、ソースを見れば読めてしまうため）。
+       中身が空のあいだは、この節ごと表示されない。 -->
+  <section class="container">
+    <div class="cases" id="cases-block" hidden>
+      <h2>使っていただいています</h2>
+      <p class="cases-lead">掲載のご許可をいただいたものだけを載せています。</p>
+      <ul id="cases"></ul>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="dl">
+      <h2>ダウンロード</h2>
+      <p>
+        無料です。展開して <code>DocPane.html</code> をダブルクリックすれば、すぐ使えます。
+      </p>
+      <a class="btn" href="download.html">DocPane をダウンロード（ZIP）</a>
+      <ul>
+        <li>DocPane.html — 本体。これ1つで動きます</li>
+        <li>DocPane_取扱説明書.html — 取説。DocPane で書き出したファイルなので、これ自体が使用例です</li>
+        <li>はじめにお読みください.txt — 使用許諾</li>
+      </ul>
+      <div class="meta" id="dl-meta">v1.0 (2026-08-14)</div>
+
+      <div class="license">
+        <h3>ライセンス</h3>
+        <p>
+          <strong>個人でお使いになる分には自由です。</strong>用途は問いません。お手元での改変も、
+          <strong>書き出したファイルの配布・公開も自由</strong>です（書き出したファイルには DocPane 本体が
+          含まれますが、その形で配ることが本来の使い方です）。
+        </p>
+        <p>
+          <strong>DocPane.html 本体を単体で再配布することはご遠慮ください。</strong>
+          人に渡したいときは、このページの場所を教えてください。
+        </p>
+        <p>
+          <strong>法人・団体としての業務利用、製品への組み込み、書き出したファイルの法人としての配布は、
+          ご相談ください。</strong>断るための条件ではありません。どこで使われているかを知りたいだけです。
+          <a href="../contact.html">お問い合わせ</a>からどうぞ。
+        </p>
+        <p>
+          ご相談の際に、<strong>社名や製品名をこのページへ掲載してよいかを伺います。</strong>
+          許可をいただいた場合のみ掲載し、<strong>時期はご指定に従います</strong>（「製品発表の後から」
+          「◯月◯日以降」など）。期日前の情報は、ページに書くこと自体をしません。
+          取り下げのご連絡は、その日のうちに反映します。
+        </p>
+        <p class="warranty">無保証です。使用によって生じた損害について責任を負いません。</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <span class="copy">© RustyWorks</span>
+    <span>
+      <a href="../site_privacy.html">プライバシーポリシー</a>
+      <a href="../contact.html">お問い合わせ</a>
+    </span>
+  </div>
+</footer>
+
+<!-- ================= サンプル文書 ================= -->
+<script type="text/plain" class="sample-doc" data-icon="📘" data-label="取扱説明書" data-name="dripmaker.md">
+---
+title: ドリップメーカー M-100 取扱説明書
+levels: [2]
+style: standard
+mode: page
+---
+
+# ドリップメーカー M-100 取扱説明書
+
+お買い上げいただきありがとうございます。
+ご使用の前に、この説明書をひととおりお読みください。
+
+## 1. 安全上のご注意
+
+> 誤った使い方をすると、やけどや故障の原因になります。
+
+- 給湯中は上ぶたを開けないでください。蒸気が出ます
+- 本体を水に浸けないでください
+- 電源コードを引っ張って抜かないでください
+- 給水タンクに、水以外のものを入れないでください
+
+## 2. 各部の名称
+
+| 部位 | 説明 |
+| --- | --- |
+| 給水タンク | 本体の背面。取り外して洗えます |
+| フィルターホルダー | 円すい形のペーパーフィルターを使います |
+| 保温プレート | 抽出後30分で自動的に切れます |
+| 操作パネル | 電源と濃さの切り替えの2つだけです |
+
+## 3. 使い方
+
+1. 給水タンクに水を入れます（2〜10杯分の目盛りがあります）
+2. フィルターホルダーにペーパーフィルターを開いて敷きます
+3. コーヒー粉を入れます。1杯あたり大さじ1杯が目安です
+4. サーバーを保温プレートに置きます
+5. 電源ボタンを押します
+
+抽出が終わると、短い音が2回鳴ります。
+
+## 4. 濃さの切り替え
+
+操作パネルの「濃さ」ボタンで2段階に切り替えられます。
+少量を淹れるときは「濃いめ」にすると、味が薄くなりにくくなります。
+
+## 5. お手入れ
+
+毎回、サーバーとフィルターホルダーを洗ってください。
+月に一度、以下の手順で内部の洗浄をおすすめします。
+
+1. 給水タンクに、水とクエン酸を入れます
+2. コーヒー粉を入れずに、そのまま抽出します
+3. 終わったら、水だけで2回抽出して流します
+
+## 6. 困ったときは
+
+**抽出が途中で止まる**
+給水タンクの水量を確認してください。目盛りより少ないと止まります。
+
+**お湯が漏れる**
+フィルターが折れ曲がっていないか確認してください。粉の入れすぎでも起こります。
+
+**電源が入らない**
+コンセントを確認してください。それでも入らない場合は、保温プレートが熱いまま
+連続使用された可能性があります。30分ほど置いてからお試しください。
+
+## 7. 仕様
+
+| 項目 | 値 |
+| --- | --- |
+| 容量 | 1.2 L（約10杯） |
+| 消費電力 | 700 W |
+| 本体寸法 | 幅185 × 奥行265 × 高さ320 mm |
+| 質量 | 約2.1 kg |
+</script>
+
+<script type="text/plain" class="sample-doc" data-icon="📋" data-label="社内手順書" data-name="keihi.md">
+---
+title: 経費精算の手順
+levels: [2, 3]
+style: standard
+mode: scroll
+---
+
+# 経費精算の手順
+
+月末の締め日までに、この手順で提出してください。
+
+## 対象になるもの
+
+- 業務で移動した際の交通費
+- 打ち合わせに伴う飲食費（人数と目的の記載が必要です）
+- 業務で使う消耗品の購入費
+- 資格試験の受験料（事前の申請が必要です）
+
+対象にならないものは、通勤定期の区間内の移動、私用を含む支出、
+領収書のない支出です。
+
+## 申請の流れ
+
+### 1. 領収書をそろえる
+
+紙の領収書は、A4の白紙に貼り付けて撮影します。
+一枚に複数貼っても構いませんが、金額が読める大きさにしてください。
+
+電子領収書は、そのままPDFで保存します。スクリーンショットは避けてください。
+
+### 2. 申請書に記入する
+
+以下の項目を埋めます。
+
+| 欄 | 書き方 |
+| --- | --- |
+| 日付 | 支出した日。領収書の日付と一致させます |
+| 区分 | 交通費 / 飲食費 / 消耗品 / その他 |
+| 金額 | 税込。1円単位で記入します |
+| 目的 | 「誰と」「何のために」を一行で |
+
+### 3. 提出する
+
+申請書と領収書を添えて、直属の上長に提出します。
+上長の承認後、経理へ回ります。
+
+## 締め切りと支払い
+
+| | |
+| --- | --- |
+| 締め切り | 毎月末日 |
+| 支払い | 翌月25日、給与と同時 |
+
+締め切りを過ぎた分は翌月扱いになります。急ぐ場合は経理へご相談ください。
+
+## よくある差し戻し
+
+- **目的が書かれていない** — 「打ち合わせ」だけでは不十分です。相手と用件を書いてください
+- **金額が領収書と違う** — 端数の切り捨てや、チップ相当分の除外が原因のことが多いです
+- **日付が未来になっている** — 前払いは対象外です
+- **宛名が個人名になっている** — 会社名でお願いします
+</script>
+
+<script type="text/plain" class="sample-doc" data-icon="❓" data-label="よくある質問" data-name="faq.md">
+---
+title: よくある質問
+levels: [2]
+style: book
+mode: page
+---
+
+# よくある質問
+
+お問い合わせの多いものをまとめました。
+
+## 対応している環境を教えてください
+
+一般的なパソコンのブラウザで動きます。特別な設定は必要ありません。
+スマートフォンでも表示できますが、画面が広いほうが読みやすい構成です。
+
+## インターネットに繋がっていなくても使えますか
+
+使えます。外部と通信しない作りなので、機内モードでも動作します。
+
+## データはどこに保存されますか
+
+お使いの端末の中だけです。外部のサーバーへ送信することはありません。
+
+## 複数人で同時に編集できますか
+
+できません。閲覧に特化しているため、編集や共同作業の機能はありません。
+共同編集が必要な場合は、他のツールと併用してください。
+
+## 印刷はできますか
+
+ブラウザの印刷機能をお使いください。表示中の内容がそのまま印刷されます。
+
+## 文字を大きくしたい
+
+ブラウザの拡大機能（⌘ + または Ctrl +）をお使いください。
+表示スタイルを変えると、行間や字面も変わります。
+
+## 画像が表示されません
+
+画像ファイルを含むフォルダごと読み込むと表示されます。
+文書1枚だけを開いた場合、画像の場所が分からないため表示できません。
+
+## 費用はかかりますか
+
+かかりません。登録も不要です。
+
+## 不具合を見つけました
+
+お問い合わせページからご連絡ください。お使いの環境と、
+どのような操作をしたときに起きたかを添えていただけると助かります。
+</script>
+
+<script type="text/plain" class="sample-doc" data-icon="⚙️" data-label="技術文書" data-name="spec.md">
+---
+title: 設定ファイル仕様
+levels: [2, 3]
+style: api
+mode: scroll
+---
+
+# 設定ファイル仕様
+
+設定は1つの JSON ファイルで管理します。
+記載のない項目は既定値が使われます。
+
+## ファイルの場所
+
+| 環境 | 位置 |
+| --- | --- |
+| macOS | `~/Library/Application Support/example/config.json` |
+| Windows | `%APPDATA%\example\config.json` |
+| Linux | `~/.config/example/config.json` |
+
+## 全体の構造
+
+```json
+{
+  "version": 1,
+  "output": {
+    "directory": "~/Documents/output",
+    "format": "png",
+    "overwrite": false
+  },
+  "limits": {
+    "maxItems": 200,
+    "timeoutSeconds": 30
+  }
+}
+```
+
+## 各項目
+
+### version
+
+設定ファイルの書式の版です。整数で指定します。
+将来の書式変更に備えたもので、現在は `1` のみ有効です。
+
+### output.directory
+
+書き出し先です。存在しない場合は起動時に作成されます。
+先頭の `~` はホームディレクトリに展開されます。
+
+### output.format
+
+| 値 | 説明 |
+| --- | --- |
+| `png` | 既定値。可逆圧縮 |
+| `jpeg` | 品質は85で固定 |
+| `webp` | 対応していない環境では png になります |
+
+### limits.maxItems
+
+一度に処理する最大件数です。`1` 以上 `1000` 以下。
+範囲外の値を書いた場合、最も近い有効な値に丸められます。
+
+## 読み込みの順序
+
+1. 実行ファイルに埋め込まれた既定値
+2. 設定ファイルの内容
+3. 環境変数（`EXAMPLE_` で始まるもの）
+4. コマンドライン引数
+
+後のものが前のものを上書きします。
+
+## エラーの扱い
+
+書式が壊れている場合、設定ファイルは読み飛ばされ、既定値で起動します。
+このとき、標準エラー出力に一行だけ警告が出ます。
+
+```
+warning: config.json line 12: unexpected token, using defaults
+```
+
+ファイル自体が存在しない場合は、警告なしで既定値が使われます。
+</script>
+
+<script>
+/* サンプルの一覧を作り、選ばれたものをデモの窓へ渡す。
+   窓の中身は app.html（DocPane 本体）で、?demo=1 のときだけ
+   保存を伴う操作を隠し、この postMessage を受け取る。 */
+const docs = [...document.querySelectorAll('.sample-doc')].map(s => ({
+  icon: s.dataset.icon,
+  label: s.dataset.label,
+  name: s.dataset.name,
+  md: s.textContent.replace(/^\r?\n/, ''),
+}));
+
+const frame = document.getElementById('demo');
+const list = document.getElementById('samples');
+const frameName = document.getElementById('frame-name');
+let current = 0, ready = false;
+
+docs.forEach((d, i) => {
+  const b = document.createElement('button');
+  b.className = 'sample';
+  b.type = 'button';
+  b.setAttribute('aria-pressed', String(i === 0));
+  b.innerHTML = `<span class="ico">${d.icon}</span><span>${d.label}</span>`;
+  b.onclick = () => select(i);
+  list.appendChild(b);
+});
+
+function select(i){
+  current = i;
+  [...list.children].forEach((b, k) => b.setAttribute('aria-pressed', String(k === i)));
+  frameName.textContent = docs[i].name;
+  send();
+}
+
+function send(){
+  if (!ready) return;
+  const d = docs[current];
+  frame.contentWindow.postMessage({ type:'docpane:load', name:d.name, md:d.md }, '*');
+}
+
+// 窓の準備ができたら最初のサンプルを送る
+window.addEventListener('message', e => {
+  if (e.source !== frame.contentWindow) return;
+  if (e.data && e.data.type === 'docpane:ready') { ready = true; send(); }
+});
+
+frameName.textContent = docs[0].name;
+
+/* ---- 導入事例 ----
+   掲載の許可と、相手が指定した時期を確認したものだけを、ここに1行足す。
+   期日が来る前に書かないこと。隠しても、ページのソースを見れば読めてしまう。
+   台帳は ~/DocPane/導入事例台帳.md（非公開）。
+
+   { name:'製品名', by:'会社名', note:'一行の説明', url:'https://…' }
+   url と note は省略できる。 */
+const CASES = [
+];
+
+if (CASES.length) {
+  const ul = document.getElementById('cases');
+  CASES.forEach(c => {
+    const li = document.createElement('li');
+    const title = c.url
+      ? `<a class="name" href="${c.url}" target="_blank" rel="noopener noreferrer">${c.name}</a>`
+      : `<span class="name">${c.name}</span>`;
+    li.innerHTML = title
+      + (c.by ? `<span class="by">${c.by}</span>` : '')
+      + (c.note ? `<p class="note">${c.note}</p>` : '');
+    ul.appendChild(li);
+  });
+  document.getElementById('cases-block').hidden = false;
+}
+</script>
+
+<!-- アクセス計測。Cloudflare Web Analytics（Cookie を使わないので同意バナー不要）。
+     計測されるのは閲覧数・流入元・時系列だけ。 -->
+<script>
+const CF_TOKEN = "04f66ad1837a4b63af68beb6e835358f";   // Cloudflare Web Analytics（公開値）
+if (CF_TOKEN) {
+  const b = document.createElement("script");
+  b.defer = true;
+  b.src = "https://static.cloudflareinsights.com/beacon.min.js";
+  b.setAttribute("data-cf-beacon", JSON.stringify({ token: CF_TOKEN }));
+  document.head.appendChild(b);
+}
+</script>
+</body>
+</html>

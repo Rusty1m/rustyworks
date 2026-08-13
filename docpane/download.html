@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'unsafe-inline'; img-src 'self' data:; connect-src https://cloudflareinsights.com; form-action 'none'; base-uri 'none'; object-src 'none';">
+<link rel="icon" href="icon.png">
+<title>ダウンロード | DocPane</title>
+<style>
+:root{
+  --bg:#ffffff; --bg-soft:#f5f5f6; --ink:#111214; --ink-2:#5f6368; --ink-3:#8a8d93;
+  --line:#e4e4e7; --blue:#1a4fd8;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;}
+html,body{height:100%; margin:0;}
+body{
+  background:var(--bg); color:var(--ink); line-height:1.9;
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
+  display:flex; align-items:center; justify-content:center; padding:24px;
+  -webkit-font-smoothing:antialiased;
+}
+.card{
+  max-width:520px; width:100%; text-align:center;
+  border:1px solid var(--line); border-radius:14px; padding:44px 32px;
+  background:var(--bg-soft);
+}
+h1{font-size:21px; margin:0 0 12px;}
+p{font-size:14.5px; color:var(--ink-2); margin:0 0 10px;}
+.small{font-size:12.5px; color:var(--ink-3);}
+.again{
+  display:inline-block; margin-top:18px; font-size:14px; font-weight:600;
+  color:var(--blue); text-decoration:none;
+}
+.again:hover{text-decoration:underline;}
+.steps{
+  text-align:left; margin:26px auto 0; max-width:24em;
+  font-size:13.5px; color:var(--ink-2); padding-left:1.2em;
+}
+.steps li{margin:6px 0;}
+.back{display:block; margin-top:26px; font-size:13px; color:var(--ink-3); text-decoration:none;}
+.back:hover{color:var(--blue);}
+code{font-family:var(--mono); font-size:.9em; background:#fff; border:1px solid var(--line); border-radius:4px; padding:1px 5px;}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>ダウンロードを開始しました</h1>
+  <p>ありがとうございます。まもなく保存が始まります。</p>
+  <p class="small">始まらない場合は、下のリンクを押してください。</p>
+  <a class="again" id="again" href="DocPane-1.0.zip" download>DocPane-1.0.zip をダウンロード</a>
+
+  <ol class="steps">
+    <li>ZIP を展開します</li>
+    <li><code>DocPane.html</code> をダブルクリックします</li>
+    <li>お手元の <code>.md</code> を窓にドロップします</li>
+  </ol>
+
+  <a class="back" href="./">← DocPane のページに戻る</a>
+</div>
+
+<script>
+// 読み込んだ直後に保存を始める。このページの表示数が、そのままダウンロード数になる。
+setTimeout(() => { document.getElementById('again').click(); }, 400);
+</script>
+
+<!-- アクセス計測。Cloudflare Web Analytics。
+     このページの閲覧数＝ダウンロード数として数える。 -->
+<script>
+const CF_TOKEN = "04f66ad1837a4b63af68beb6e835358f";   // Cloudflare Web Analytics（公開値）
+if (CF_TOKEN) {
+  const b = document.createElement("script");
+  b.defer = true;
+  b.src = "https://static.cloudflareinsights.com/beacon.min.js";
+  b.setAttribute("data-cf-beacon", JSON.stringify({ token: CF_TOKEN }));
+  document.head.appendChild(b);
+}
+</script>
+</body>
+</html>
