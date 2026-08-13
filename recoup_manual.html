@@ -11,29 +11,29 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body {
-    background: #0a0a0b; color: #f2f2f0;
+    background: #ffffff; color: #111214;
     font-family: 'Zen Kaku Gothic New', system-ui, sans-serif;
     line-height: 1.9; -webkit-font-smoothing: antialiased;
   }
-  a { color: #4c8dff; text-decoration: none; }
-  a:hover { color: #8fb6ff; }
-  ::selection { background: rgba(76,141,255,.28); color: #fff; }
-  code { font-family: 'IBM Plex Mono', monospace; font-size: .92em; background: rgba(255,255,255,.06); padding: 2px 6px; border-radius: 4px; color: #8fb6ff; }
+  a { color: #1a4fd8; text-decoration: none; }
+  a:hover { color: #143fb0; }
+  ::selection { background: rgba(26,79,216,0.16); color: #fff; }
+  code { font-family: 'IBM Plex Mono', monospace; font-size: .92em; background: rgba(17,18,20,0.06); padding: 2px 6px; border-radius: 4px; color: #143fb0; }
   .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 100px; }
-  .card { background: #111113; border: 1px solid rgba(255,255,255,.07); border-radius: 12px; padding: 30px; margin-bottom: 20px; }
+  .card { background: #f7f7f8; border: 1px solid rgba(17,18,20,0.07); border-radius: 12px; padding: 30px; margin-bottom: 20px; }
   .sec-title { font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-size: 27px; font-weight: 500; margin-bottom: 26px; }
   .two { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .lang { background:#0e0e10; border:1px solid rgba(255,255,255,.06); border-radius:10px; padding:22px; }
-  .lang .tag { font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:.1em; color:#4c8dff; margin-bottom:12px; }
-  .lang p, .lang li { color: #c9c9c4; }
+  .lang { background:#ffffff; border:1px solid rgba(17,18,20,0.06); border-radius:10px; padding:22px; }
+  .lang .tag { font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:.1em; color:#1a4fd8; margin-bottom:12px; }
+  .lang p, .lang li { color: #45484d; }
   .lang ul { padding-left: 20px; margin-top: 6px; }
-  .note { border-left: 3px solid #4c8dff; background: rgba(76,141,255,.07); padding: 16px 20px; border-radius: 0 8px 8px 0; margin-top: 18px; }
-  .warn { border-left: 3px solid #e8a33d; background: rgba(232,163,61,.07); padding: 16px 20px; border-radius: 0 8px 8px 0; margin-top: 18px; }
-  .toc a { color: #4c8dff; }
+  .note { border-left: 3px solid #1a4fd8; background: rgba(26,79,216,0.06); padding: 16px 20px; border-radius: 0 8px 8px 0; margin-top: 18px; }
+  .warn { border-left: 3px solid #8a5e0e; background: rgba(138,94,14,0.07); padding: 16px 20px; border-radius: 0 8px 8px 0; margin-top: 18px; }
+  .toc a { color: #1a4fd8; }
   .toc li { margin-bottom: 5px; }
   h3 { font-size: 17px; font-weight: 700; margin: 22px 0 8px; }
-  .pill { display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:12.5px; border:1px solid rgba(255,255,255,.16); padding:8px 16px; border-radius:8px; color:#f2f2f0; margin:0 8px 8px 0; }
-  .pill.on { background:rgba(76,141,255,.14); border-color:rgba(76,141,255,.45); color:#8fb6ff; }
+  .pill { display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:12.5px; border:1px solid rgba(17,18,20,0.14); padding:8px 16px; border-radius:8px; color:#111214; margin:0 8px 8px 0; }
+  .pill.on { background:rgba(26,79,216,0.10); border-color:rgba(26,79,216,0.38); color:#143fb0; }
   @media (max-width: 860px) {
     .two { grid-template-columns: 1fr; }
     .layout { grid-template-columns: 1fr !important; }
@@ -52,9 +52,9 @@
     <div style="display:flex; gap:22px; align-items:flex-start; flex-wrap:wrap;">
       <img src="assets/icons/recoup.png" alt="Recoup" style="width:88px; height:88px; border-radius:18px;">
       <div style="flex:1; min-width:260px;">
-        <div style="display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:.12em; color:#8fb6ff; background:rgba(76,141,255,.14); padding:5px 12px; border-radius:20px; margin-bottom:14px;">RECOUP MANUAL</div>
+        <div style="display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:.12em; color:#143fb0; background:rgba(26,79,216,0.10); padding:5px 12px; border-radius:20px; margin-bottom:14px;">RECOUP MANUAL</div>
         <h1 style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-size:min(7vw,42px); font-weight:700; line-height:1.2; margin-bottom:18px;">Recoup 取説 / Manual</h1>
-        <p style="color:#c9c9c4;">Recoup は、外付けHDD・SSD・SDカード・USBメモリから、削除された写真や動画を復元する macOS 用アプリです。壊れかけのドライブからは、読める分だけを救い出します。</p>
+        <p style="color:#45484d;">Recoup は、外付けHDD・SSD・SDカード・USBメモリから、削除された写真や動画を復元する macOS 用アプリです。壊れかけのドライブからは、読める分だけを救い出します。</p>
         <p style="color:#8a8a86; margin-top:10px;">Recoup is a macOS app that recovers deleted photos and videos from external HDDs, SSDs, SD cards, and USB drives, and salvages what is still readable from failing ones.</p>
       </div>
     </div>
@@ -103,7 +103,7 @@
           </div>
         </div>
         <div class="note">
-          <p style="color:#c9c9c4;">復元元のディスクには<strong style="color:#f2f2f0;">一切書き込みません</strong>。読み取り専用で開き、復元したファイルは指定した保存先にのみ書き出します。</p>
+          <p style="color:#45484d;">復元元のディスクには<strong style="color:#111214;">一切書き込みません</strong>。読み取り専用で開き、復元したファイルは指定した保存先にのみ書き出します。</p>
           <p style="color:#8a8a86; margin-top:8px;">The source disk is opened read-only and never written to.</p>
         </div>
       </div>
@@ -140,12 +140,12 @@
         <h2 class="sec-title">鉄則 / Ground Rules</h2>
         <div class="warn">
           <h3 style="margin-top:0;">1. 気づいたら、書き込みを止める</h3>
-          <p style="color:#c9c9c4;">写真を撮り足したり、ファイルをコピーしたりすると、消えたデータが上書きされて戻せなくなります。復元作業を始めるまで、そのカード・ドライブは使わないでください。</p>
+          <p style="color:#45484d;">写真を撮り足したり、ファイルをコピーしたりすると、消えたデータが上書きされて戻せなくなります。復元作業を始めるまで、そのカード・ドライブは使わないでください。</p>
           <p style="color:#8a8a86; margin-top:6px;">Stop writing to the affected media as soon as you notice. Overwritten data cannot be recovered.</p>
         </div>
         <div class="warn">
           <h3 style="margin-top:0;">2. 復元先は必ず「別のディスク」</h3>
-          <p style="color:#c9c9c4;">復元元と同じカードに書き込むと、まだ残っているデータを自分で壊してしまいます。Mac の内蔵ドライブや、別の外付けドライブを保存先にしてください。</p>
+          <p style="color:#45484d;">復元元と同じカードに書き込むと、まだ残っているデータを自分で壊してしまいます。Mac の内蔵ドライブや、別の外付けドライブを保存先にしてください。</p>
           <p style="color:#8a8a86; margin-top:6px;">Always recover to a different disk than the one you are recovering from.</p>
         </div>
       </div>
@@ -154,13 +154,13 @@
       <div class="card" id="quick">
         <h2 class="sec-title">クイックスタート / Quick Start</h2>
         <h3>1. 読み取り元を選ぶ</h3>
-        <p style="color:#c9c9c4;">画面上部で用途を選び、接続中のディスク一覧から対象を選びます。ディスクイメージ（<code>.img</code> / <code>.dmg</code>）を開くこともできます。</p>
+        <p style="color:#45484d;">画面上部で用途を選び、接続中のディスク一覧から対象を選びます。ディスクイメージ（<code>.img</code> / <code>.dmg</code>）を開くこともできます。</p>
         <h3>2. 保存先を選ぶ</h3>
-        <p style="color:#c9c9c4;">「復元ファイルの保存先」で、<strong>復元元とは別のディスク</strong>のフォルダを指定します。空き容量が表示されるので確認してください。</p>
+        <p style="color:#45484d;">「復元ファイルの保存先」で、<strong>復元元とは別のディスク</strong>のフォルダを指定します。空き容量が表示されるので確認してください。</p>
         <h3>3. スキャン開始</h3>
-        <p style="color:#c9c9c4;">生のディスクを読むため、macOS 標準の認証ダイアログで<strong>管理者パスワード</strong>を求められます。走査が始まると、見つかったファイルがサムネイルで次々と表示されます。</p>
+        <p style="color:#45484d;">生のディスクを読むため、macOS 標準の認証ダイアログで<strong>管理者パスワード</strong>を求められます。走査が始まると、見つかったファイルがサムネイルで次々と表示されます。</p>
         <h3>4. 選んで復元</h3>
-        <p style="color:#c9c9c4;">左のフィルタで絞り込み、サムネイルで中身を確認してから、救いたいものを選んで「選択した◯件を復元」を押します。</p>
+        <p style="color:#45484d;">左のフィルタで絞り込み、サムネイルで中身を確認してから、救いたいものを選んで「選択した◯件を復元」を押します。</p>
         <div class="note">
           <p style="color:#8a8a86;">1. Choose a source disk (or a disk image). 2. Choose a destination folder on a different disk. 3. Start the scan and enter your administrator password. 4. Review the thumbnails, select what you want, and recover.</p>
         </div>
@@ -170,14 +170,14 @@
       <div class="card" id="tools">
         <h2 class="sec-title">3つの機能 / Three Tools</h2>
         <h3>削除ファイル復元 / Recover Deleted Files</h3>
-        <p style="color:#c9c9c4;">ディスク全体を走査し、ファイル構造から写真・動画を組み立て直します。いちばんよく使う機能です。数TBのドライブでも中断・再開できます。</p>
+        <p style="color:#45484d;">ディスク全体を走査し、ファイル構造から写真・動画を組み立て直します。いちばんよく使う機能です。数TBのドライブでも中断・再開できます。</p>
         <h3>救出コピー / Salvage Copy</h3>
-        <p style="color:#c9c9c4;">マウントはできるが調子の悪いドライブから、読めるファイルをコピーします。読めないブロックはその部分だけ飛ばして続行するので、1ファイル丸ごと諦めません。「写真・動画・音声のみ」フィルタを外せば、<strong>ファイル種別を問わず</strong>退避できます。</p>
+        <p style="color:#45484d;">マウントはできるが調子の悪いドライブから、読めるファイルをコピーします。読めないブロックはその部分だけ飛ばして続行するので、1ファイル丸ごと諦めません。「写真・動画・音声のみ」フィルタを外せば、<strong>ファイル種別を問わず</strong>退避できます。</p>
         <h3>ディスクをイメージ化 / Disk Image</h3>
-        <p style="color:#c9c9c4;">異音がする、頻繁に切断されるドライブ向け。一度だけ全体を読んで <code>.img</code> に保存します。作成したイメージは「削除ファイル復元」の読み取り元として使えるので、以降は弱ったドライブに触らずに作業できます。</p>
+        <p style="color:#45484d;">異音がする、頻繁に切断されるドライブ向け。一度だけ全体を読んで <code>.img</code> に保存します。作成したイメージは「削除ファイル復元」の読み取り元として使えるので、以降は弱ったドライブに触らずに作業できます。</p>
         <div class="note">
-          <p style="color:#c9c9c4;"><strong style="color:#f2f2f0;">使い分けの目安</strong></p>
-          <p style="color:#c9c9c4; margin-top:6px;">軽症（消しただけ・ディスクは健康）→ 削除ファイル復元<br>
+          <p style="color:#45484d;"><strong style="color:#111214;">使い分けの目安</strong></p>
+          <p style="color:#45484d; margin-top:6px;">軽症（消しただけ・ディスクは健康）→ 削除ファイル復元<br>
           中症（読めるがエラーが出る）→ 救出コピー<br>
           重症（異音・切断・大量エラー）→ イメージ化 → イメージに対して復元</p>
         </div>
@@ -186,32 +186,32 @@
       <!-- BROWSE -->
       <div class="card" id="browse">
         <h2 class="sec-title">結果を見る / Reviewing</h2>
-        <p style="color:#c9c9c4;">見つかったファイルはサムネイルで一覧表示されます。復元する前に、実際に救えているかを目で確認できます。</p>
-        <ul style="color:#c9c9c4; padding-left:22px; margin-top:12px;">
+        <p style="color:#45484d;">見つかったファイルはサムネイルで一覧表示されます。復元する前に、実際に救えているかを目で確認できます。</p>
+        <ul style="color:#45484d; padding-left:22px; margin-top:12px;">
           <li><strong>種類で絞る</strong>：写真 / RAW / 動画 / 音声</li>
           <li><strong>状態で絞る</strong>：良好 / 一部破損</li>
           <li><strong>表示切替</strong>：サムネイル / リスト（サイズ・オフセット・状態を一覧）</li>
           <li><strong>ダブルクリック</strong>：Finder で表示</li>
         </ul>
-        <p style="color:#c9c9c4; margin-top:14px;">右側のインスペクタには、種類・サイズ・ディスク上のオフセット・状態、そして<strong>復元できる可能性</strong>が表示されます。「一部破損」のファイルは、読める範囲だけがプレビューされます（写真なら上半分だけ、など）。</p>
+        <p style="color:#45484d; margin-top:14px;">右側のインスペクタには、種類・サイズ・ディスク上のオフセット・状態、そして<strong>復元できる可能性</strong>が表示されます。「一部破損」のファイルは、読める範囲だけがプレビューされます（写真なら上半分だけ、など）。</p>
         <p style="color:#8a8a86; margin-top:10px;">Filter by kind and status, switch between thumbnail and list view, and check the inspector for size, offset, status, and recovery likelihood before restoring.</p>
       </div>
 
       <!-- RESUME -->
       <div class="card" id="resume">
         <h2 class="sec-title">中断と再開 / Resume</h2>
-        <p style="color:#c9c9c4;">大容量ドライブの全走査には時間がかかります。Recoup は途中で止めても、続きから再開できます。</p>
+        <p style="color:#45484d;">大容量ドライブの全走査には時間がかかります。Recoup は途中で止めても、続きから再開できます。</p>
         <div class="note">
-          <p style="color:#c9c9c4;">進行状況は保存先フォルダの中に<code>scan.progress</code> というファイルとして記録されます。メモリ上ではないので、<strong style="color:#f2f2f0;">アプリを終了しても、Mac を再起動・シャットダウンしても、停電で落ちても、続きから再開できます。</strong></p>
-          <p style="color:#c9c9c4; margin-top:8px;">再開するときは、前回と同じ<strong style="color:#f2f2f0;">保存先フォルダ</strong>を指定してください。同じ読み取り元を選ぶと「前回の続きから再開」ボタンが表示されます。</p>
+          <p style="color:#45484d;">進行状況は保存先フォルダの中に<code>scan.progress</code> というファイルとして記録されます。メモリ上ではないので、<strong style="color:#111214;">アプリを終了しても、Mac を再起動・シャットダウンしても、停電で落ちても、続きから再開できます。</strong></p>
+          <p style="color:#45484d; margin-top:8px;">再開するときは、前回と同じ<strong style="color:#111214;">保存先フォルダ</strong>を指定してください。同じ読み取り元を選ぶと「前回の続きから再開」ボタンが表示されます。</p>
         </div>
         <div class="warn">
           <h3 style="margin-top:0;">⚠️ 再起動をはさむと「再開」ボタンが出ないことがあります</h3>
-          <p style="color:#c9c9c4;">macOS はディスクに <code>disk4</code> <code>disk6</code> のような番号を接続順で割り当てるため、再起動や USB 機器の抜き差しで<strong style="color:#f2f2f0;">番号が変わることがあります</strong>。番号が変わると、アプリが「前回と同じディスク」だと判断できず、再開ボタンが出ません。</p>
-          <p style="color:#c9c9c4; margin-top:8px;">このとき、<strong style="color:#f2f2f0;">記録した進行状況そのものは失われていません。</strong>他の USB 機器をいったん外して対象のディスクだけを接続し直し、元の番号に戻れば再開ボタンが表示されます。</p>
+          <p style="color:#45484d;">macOS はディスクに <code>disk4</code> <code>disk6</code> のような番号を接続順で割り当てるため、再起動や USB 機器の抜き差しで<strong style="color:#111214;">番号が変わることがあります</strong>。番号が変わると、アプリが「前回と同じディスク」だと判断できず、再開ボタンが出ません。</p>
+          <p style="color:#45484d; margin-top:8px;">このとき、<strong style="color:#111214;">記録した進行状況そのものは失われていません。</strong>他の USB 機器をいったん外して対象のディスクだけを接続し直し、元の番号に戻れば再開ボタンが表示されます。</p>
           <p style="color:#8a8a86; margin-top:8px;">macOS assigns disk numbers in connection order, so a reboot or replugging can change them. If the number changes, the resume button will not appear — your progress file is still intact. Reconnect only the target disk to get the original number back.</p>
         </div>
-        <p style="color:#c9c9c4; margin-top:16px;">「救出コピー」と「イメージ化」も同様に再開に対応しています。救出コピーは同名・同サイズのファイルをスキップし、イメージ化は中断位置を記憶します。</p>
+        <p style="color:#45484d; margin-top:16px;">「救出コピー」と「イメージ化」も同様に再開に対応しています。救出コピーは同名・同サイズのファイルをスキップし、イメージ化は中断位置を記憶します。</p>
       </div>
 
       <!-- FORMATS -->
@@ -219,14 +219,14 @@
         <h2 class="sec-title">対応形式 / Formats</h2>
         <div class="two">
           <div class="lang"><div class="tag">写真 / PHOTOS</div>
-            <p style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#f2f2f0;">JPEG · PNG · HEIC · GIF<br>TIFF · WebP · BMP</p>
+            <p style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#111214;">JPEG · PNG · HEIC · GIF<br>TIFF · WebP · BMP</p>
             <div class="tag" style="margin-top:18px;">RAW</div>
-            <p style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#f2f2f0;">CR2 · CR3 · NEF · ARW · DNG</p>
+            <p style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#111214;">CR2 · CR3 · NEF · ARW · DNG</p>
           </div>
           <div class="lang"><div class="tag">動画 / VIDEO</div>
-            <p style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#f2f2f0;">MP4 · MOV · HEVC<br>3GP · AVI</p>
+            <p style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#111214;">MP4 · MOV · HEVC<br>3GP · AVI</p>
             <div class="tag" style="margin-top:18px;">音声 / AUDIO</div>
-            <p style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#f2f2f0;">WAV</p>
+            <p style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#111214;">WAV</p>
           </div>
         </div>
         <p style="color:#8a8a86; margin-top:16px; font-size:14px;">※「救出コピー」は、まだ認識できるドライブからならファイル種別を問わず退避できます。上記は「削除ファイル復元」で掘り出せる形式です。</p>
@@ -235,8 +235,8 @@
       <!-- LIMITS -->
       <div class="card" id="limits">
         <h2 class="sec-title">限界 / Limitations</h2>
-        <p style="color:#c9c9c4;">正直にお伝えします。以下は Recoup にできないことです。</p>
-        <ul style="color:#c9c9c4; padding-left:22px; margin-top:12px;">
+        <p style="color:#45484d;">正直にお伝えします。以下は Recoup にできないことです。</p>
+        <ul style="color:#45484d; padding-left:22px; margin-top:12px;">
           <li><strong>上書きされたデータは復元できません。</strong>削除後にそのカードを使い続けた場合、失われている可能性が高いです。</li>
           <li><strong>物理的に完全故障した媒体</strong>（認識すらしない、通電しない）からの復元はできません。</li>
           <li><strong>ファイル名・撮影日時・フォルダ構造は復元されません。</strong>ファイルシステムのメタデータを読まないため、連番の新しい名前が付きます。</li>
@@ -251,19 +251,19 @@
         <h2 class="sec-title">困ったとき / Troubleshooting</h2>
 
         <h3>SDカードが一覧に出ない</h3>
-        <p style="color:#c9c9c4;">「更新」を押してください。内蔵 SD カードスロットのカードも表示されます。それでも出ない場合は「内蔵ディスクも表示」を有効にするか、カードを挿し直してください。Finder にも表示されない場合は、カードリーダーやカード自体の問題の可能性があります。</p>
+        <p style="color:#45484d;">「更新」を押してください。内蔵 SD カードスロットのカードも表示されます。それでも出ない場合は「内蔵ディスクも表示」を有効にするか、カードを挿し直してください。Finder にも表示されない場合は、カードリーダーやカード自体の問題の可能性があります。</p>
 
         <h3>「空き容量が足りません」と出る</h3>
-        <p style="color:#c9c9c4;">保存先ディスクの空きが足りません。別の空きの多いディスクを保存先に選んでください。スキャンは途中から再開できるので、空きを作ってから続きを実行できます。</p>
+        <p style="color:#45484d;">保存先ディスクの空きが足りません。別の空きの多いディスクを保存先に選んでください。スキャンは途中から再開できるので、空きを作ってから続きを実行できます。</p>
 
         <h3>スキャンが遅い / 時間がかかる</h3>
-        <p style="color:#c9c9c4;">数TBの全走査には時間がかかります。中断しても続きから再開できます。重症のドライブは、先に「イメージ化」してからイメージに対してスキャンする方が、ドライブへの負担が少なく安全です。</p>
+        <p style="color:#45484d;">数TBの全走査には時間がかかります。中断しても続きから再開できます。重症のドライブは、先に「イメージ化」してからイメージに対してスキャンする方が、ドライブへの負担が少なく安全です。</p>
 
         <h3>復元したファイルが壊れている / 一部しか表示されない</h3>
-        <p style="color:#c9c9c4;">上書きや断片化により、完全には戻らないことがあります。「一部破損」マークの付いたファイルは、読める範囲だけが復元されています。</p>
+        <p style="color:#45484d;">上書きや断片化により、完全には戻らないことがあります。「一部破損」マークの付いたファイルは、読める範囲だけが復元されています。</p>
 
         <h3>初回起動時に確認画面が出る</h3>
-        <p style="color:#c9c9c4;">このアプリは Apple の署名と公証を受けているため、通常はそのまま起動できます。「開いてもよろしいですか？」と出たら「開く」を押してください（初回のみ）。</p>
+        <p style="color:#45484d;">このアプリは Apple の署名と公証を受けているため、通常はそのまま起動できます。「開いてもよろしいですか？」と出たら「開く」を押してください（初回のみ）。</p>
       </div>
 
       <!-- LINKS -->

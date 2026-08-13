@@ -18,64 +18,64 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: #0a0a0b; color: #f2f2f0;
+    background: #ffffff; color: #111214;
     font-family: 'Zen Kaku Gothic New', system-ui, sans-serif;
     line-height: 1.95; -webkit-font-smoothing: antialiased;
   }
-  a { color: #4c8dff; text-decoration: none; }
-  a:hover { color: #8fb6ff; }
-  ::selection { background: rgba(76,141,255,.28); color: #fff; }
+  a { color: #1a4fd8; text-decoration: none; }
+  a:hover { color: #143fb0; }
+  ::selection { background: rgba(26,79,216,.16); color: inherit; }
   .wrap { max-width: 780px; margin: 0 auto; padding: 40px 24px 110px; }
 
   h1 { font-size: 29px; font-weight: 700; line-height: 1.45; margin-bottom: 14px; }
-  .lead { color: #c9c9c4; margin-bottom: 10px; }
-  .meta { font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: #8a8a86; }
+  .lead { color: #45484d; margin-bottom: 10px; }
+  .meta { font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: #5f6368; }
 
   h2 {
     font-size: 19px; font-weight: 700; margin: 46px 0 16px;
-    padding-top: 26px; border-top: 1px solid rgba(255,255,255,.08);
+    padding-top: 26px; border-top: 1px solid rgba(17,18,20,.08);
   }
-  h3 { font-size: 16px; font-weight: 700; margin: 30px 0 10px; color: #f2f2f0; }
-  p { color: #c9c9c4; margin-bottom: 16px; }
-  strong { color: #f2f2f0; font-weight: 700; }
-  ul { color: #c9c9c4; padding-left: 22px; margin: 0 0 16px; }
+  h3 { font-size: 16px; font-weight: 700; margin: 30px 0 10px; color: #111214; }
+  p { color: #45484d; margin-bottom: 16px; }
+  strong { color: #111214; font-weight: 700; }
+  ul { color: #45484d; padding-left: 22px; margin: 0 0 16px; }
   li { margin-bottom: 8px; }
 
   /* 表は幅の狭い画面で自分だけ横に流す。本文は横スクロールさせない */
   .scroll { overflow-x: auto; margin: 0 0 20px; -webkit-overflow-scrolling: touch; }
   table { border-collapse: collapse; width: 100%; min-width: 300px; font-size: 14.5px; }
-  th, td { padding: 9px 13px; border-bottom: 1px solid rgba(255,255,255,.08); text-align: left; }
-  th { color: #8a8a86; font-weight: 500; font-size: 13px; white-space: nowrap; }
+  th, td { padding: 9px 13px; border-bottom: 1px solid rgba(17,18,20,.08); text-align: left; }
+  th { color: #5f6368; font-weight: 500; font-size: 13px; white-space: nowrap; }
   td.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  tr.sum td { color: #f2f2f0; font-weight: 700; }
+  tr.sum td { color: #111214; font-weight: 700; }
 
   blockquote {
     margin: 0 0 20px; padding: 14px 18px;
-    background: #131316; border-left: 3px solid #4c8dff; border-radius: 0 8px 8px 0;
+    background: #f7f7f8; border-left: 3px solid #1a4fd8; border-radius: 0 8px 8px 0;
   }
   blockquote p { margin: 0; }
   pre {
-    background: #131316; border: 1px solid rgba(255,255,255,.07); border-radius: 8px;
+    background: #f7f7f8; border: 1px solid rgba(17,18,20,.075); border-radius: 8px;
     padding: 16px 18px; overflow-x: auto; margin-bottom: 20px;
-    font-family: 'IBM Plex Mono', monospace; font-size: 13px; line-height: 1.85; color: #d8d8d3;
+    font-family: 'IBM Plex Mono', monospace; font-size: 13px; line-height: 1.85; color: #2a2d31;
   }
   .cta {
     display: inline-block; margin-top: 8px; padding: 13px 26px;
-    background: #4c8dff; color: #fff; border-radius: 8px; font-weight: 700;
+    background: #1a4fd8; color: #fff; border-radius: 8px; font-weight: 700;
   }
-  .cta:hover { background: #6ba0ff; color: #fff; }
+  .cta:hover { background: #143fb0; color: #fff; }
   .nav {
     display: flex; justify-content: space-between; align-items: center; gap: 16px;
     flex-wrap: wrap; padding-bottom: 22px;
-    border-bottom: 1px solid rgba(255,255,255,.08); margin-bottom: 34px;
+    border-bottom: 1px solid rgba(17,18,20,.08); margin-bottom: 34px;
   }
   .nav a.back {
     font-family: 'IBM Plex Mono', monospace; font-size: 12.5px;
-    border: 1px solid rgba(255,255,255,.16); padding: 8px 16px; border-radius: 6px; color: #f2f2f0;
+    border: 1px solid rgba(17,18,20,.14); padding: 8px 16px; border-radius: 6px; color: #111214;
   }
   footer {
     margin-top: 60px; padding-top: 22px;
-    border-top: 1px solid rgba(255,255,255,.08); color: #8a8a86; font-size: 13.5px;
+    border-top: 1px solid rgba(17,18,20,.08); color: #5f6368; font-size: 13.5px;
   }
   @media (max-width: 640px) {
     .wrap { padding: 24px 16px 80px; }
@@ -89,7 +89,7 @@
 <div class="wrap">
 
   <div class="nav">
-    <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.12em; color:#8a8a86;">RUSTYWORKS / NOTES</div>
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.12em; color:#5f6368;">RUSTYWORKS / NOTES</div>
     <a class="back" href="../index.html">Back to Top</a>
   </div>
 
