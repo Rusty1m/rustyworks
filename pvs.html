@@ -62,6 +62,15 @@
             z-index: 9999;
             border-bottom: 1px solid var(--hairline);
         }
+        .lang { display:flex; align-items:center; gap:6px; margin-left:18px; }
+        .lang button {
+            background:none; border:0; padding:2px 4px; cursor:pointer;
+            font: inherit; font-size:12.5px; letter-spacing:.06em;
+            color: var(--text-muted); transition: color .15s;
+        }
+        .lang button:hover { color: var(--text-primary); }
+        .lang button[aria-pressed="true"] { color: var(--accent); font-weight:700; }
+        .lang .sep { color: var(--hairline-strong, #c9ccd1); font-size:12px; }
         .nav-container {
             max-width: 1120px;
             margin: 0 auto;
@@ -427,29 +436,34 @@
             <a class="logo" href="index.html">RustyWorks</a>
             <nav>
                 <ul>
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#howto">How to Use</a></li>
-                    <li><a href="#buy">Buy</a></li>
-                    <li><a href="pvs_privacy.html">Privacy</a></li>
+                    <li><a href="#features" data-ja="機能" data-en="Features">機能</a></li>
+                    <li><a href="#howto" data-ja="使い方" data-en="How to Use">使い方</a></li>
+                    <li><a href="#buy" data-ja="購入" data-en="Buy">購入</a></li>
+                    <li><a href="pvs_privacy.html" data-ja="プライバシー" data-en="Privacy">プライバシー</a></li>
                 </ul>
             </nav>
+            <div class="lang" role="group" aria-label="Language">
+                <button type="button" data-lang="ja" aria-pressed="true">JA</button>
+                <span class="sep">/</span>
+                <button type="button" data-lang="en" aria-pressed="false">EN</button>
+            </div>
         </div>
     </header>
 
     <main class="page">
         <section class="hero" aria-labelledby="title">
             <div>
-                <div class="eyebrow">macOS app</div>
+                <div class="eyebrow" data-ja="macOS app" data-en="macOS app">macOS app</div>
                 <h1 id="title">Plain Video Saver</h1>
-                <p class="lead">URLを入れて、保存先と画質を選ぶだけ。YouTube、m3u8、対応サイトの動画保存をシンプルに扱うmacOS用ツールです。</p>
+                <p class="lead" data-ja="URLを入れて、保存先と画質を選ぶだけ。YouTube、m3u8、対応サイトの動画保存をシンプルに扱うmacOS用ツールです。" data-en="Paste a URL, choose a folder and a quality. A macOS tool that keeps saving video from YouTube, m3u8 streams, and supported sites simple.">URLを入れて、保存先と画質を選ぶだけ。YouTube、m3u8、対応サイトの動画保存をシンプルに扱うmacOS用ツールです。</p>
                 <div class="actions">
                     <a class="button button-primary" href="https://rustyworks.itch.io/pvs" target="_blank" rel="noopener">Buy</a>
-                    <a class="button button-secondary" href="#howto">使い方を見る</a>
+                    <a class="button button-secondary" href="#howto" data-ja="使い方を見る" data-en="See how it works">使い方を見る</a>
                 </div>
-                <p class="note">Buyからitch.ioの購入ページへ移動します。購入後、itch.ioから公証済みのmacOS用DMGをダウンロードできます。</p>
+                <p class="note" data-ja="Buyからitch.ioの購入ページへ移動します。購入後、itch.ioから公証済みのmacOS用DMGをダウンロードできます。" data-en="Buy takes you to the itch.io purchase page. After buying, you can download a notarized macOS DMG from itch.io.">Buyからitch.ioの購入ページへ移動します。購入後、itch.ioから公証済みのmacOS用DMGをダウンロードできます。</p>
             </div>
             <div class="visual">
-                <img class="app-shot" src="pvs-main.png" alt="Plain Video Saverのメイン画面">
+                <img class="app-shot" src="pvs-main.png" alt="Plain Video Saver" >
                 <div class="badges" aria-label="Product highlights">
                     <div class="badge"><span class="k">VERSION</span><span class="v">1.0</span></div>
                     <div class="badge"><span class="k">REQUIRES</span><span class="v">macOS 13+ / Apple Silicon</span></div>
@@ -461,50 +475,50 @@
 
         <section id="features">
             <div class="section-head">
-                <p class="section-tagline">Features</p>
-                <h2>必要な操作だけを前面に。</h2>
-                <p class="section-desc">動画保存に必要な入力、保存先、画質、進捗確認を1画面にまとめました。細かい設定は折りたたみ、普段は迷わず使える構成です。</p>
+                <p class="section-tagline" data-ja="Features" data-en="Features">Features</p>
+                <h2 data-ja="必要な操作だけを前面に。" data-en="Only what you need, up front.">必要な操作だけを前面に。</h2>
+                <p class="section-desc" data-ja="動画保存に必要な入力、保存先、画質、進捗確認を1画面にまとめました。細かい設定は折りたたみ、普段は迷わず使える構成です。" data-en="Input, destination, quality, and progress all live on one screen. The finer settings stay folded away, so day to day there is nothing to hunt for.">動画保存に必要な入力、保存先、画質、進捗確認を1画面にまとめました。細かい設定は折りたたみ、普段は迷わず使える構成です。</p>
             </div>
             <div class="grid">
                 <article class="card">
                     <div class="card-num">1</div>
-                    <h3>URLをまとめて追加</h3>
-                    <p>1行に1つずつURLを貼り付けてキューへ追加できます。ブラウザの現在タブURL取得にも対応しています。</p>
+                    <h3 data-ja="URLをまとめて追加" data-en="Add URLs in bulk">URLをまとめて追加</h3>
+                    <p data-ja="1行に1つずつURLを貼り付けてキューへ追加できます。ブラウザの現在タブURL取得にも対応しています。" data-en="Paste one URL per line to queue them together. You can also pull the URL from your browser's front tab.">1行に1つずつURLを貼り付けてキューへ追加できます。ブラウザの現在タブURL取得にも対応しています。</p>
                 </article>
                 <article class="card">
                     <div class="card-num">2</div>
-                    <h3>画質と保存先を選択</h3>
-                    <p>Best、4K、1440p、1080p、720p、480p、360pから上限を選べます。通常は保存先と画質だけ見れば十分です。</p>
+                    <h3 data-ja="画質と保存先を選択" data-en="Pick a quality and a folder">画質と保存先を選択</h3>
+                    <p data-ja="Best、4K、1440p、1080p、720p、480p、360pから上限を選べます。通常は保存先と画質だけ見れば十分です。" data-en="Set an upper limit of Best, 4K, 1440p, 1080p, 720p, 480p, or 360p. Most of the time the folder and the quality are all you need to touch.">Best、4K、1440p、1080p、720p、480p、360pから上限を選べます。通常は保存先と画質だけ見れば十分です。</p>
                 </article>
                 <article class="card">
                     <div class="card-num">3</div>
-                    <h3>進捗を見ながら管理</h3>
-                    <p>複数ダウンロード、待機キュー、個別停止、ログ表示に対応。進行状況をアプリ内で確認できます。</p>
+                    <h3 data-ja="進捗を見ながら管理" data-en="Watch it as it runs">進捗を見ながら管理</h3>
+                    <p data-ja="複数ダウンロード、待機キュー、個別停止、ログ表示に対応。進行状況をアプリ内で確認できます。" data-en="Several downloads at once, a waiting queue, per-item stop, and a log. You can follow everything inside the app.">複数ダウンロード、待機キュー、個別停止、ログ表示に対応。進行状況をアプリ内で確認できます。</p>
                 </article>
             </div>
         </section>
 
         <section id="howto">
             <div class="section-head">
-                <p class="section-tagline">How to Use</p>
-                <h2>基本は3ステップ。</h2>
-                <p class="section-desc">専門的なコマンド操作は不要です。アプリを開いてURLを入れ、保存条件を選んで開始します。</p>
+                <p class="section-tagline" data-ja="How to Use" data-en="How to Use">How to Use</p>
+                <h2 data-ja="基本は3ステップ。" data-en="Three steps, that is all.">基本は3ステップ。</h2>
+                <p class="section-desc" data-ja="専門的なコマンド操作は不要です。アプリを開いてURLを入れ、保存条件を選んで開始します。" data-en="No command line involved. Open the app, enter a URL, choose where and how to save, and start.">専門的なコマンド操作は不要です。アプリを開いてURLを入れ、保存条件を選んで開始します。</p>
             </div>
             <div class="grid">
                 <article class="card">
                     <div class="card-num">1</div>
-                    <h3>URLを入れる</h3>
-                    <p>YouTube、m3u8、対応サイトのURLを貼り付けます。ブラウザから取得する場合は、Safari / Chrome / Braveなどの対象ブラウザを前面にします。</p>
+                    <h3 data-ja="URLを入れる" data-en="Enter a URL">URLを入れる</h3>
+                    <p data-ja="YouTube、m3u8、対応サイトのURLを貼り付けます。ブラウザから取得する場合は、Safari / Chrome / Braveなどの対象ブラウザを前面にします。" data-en="Paste a URL from YouTube, an m3u8 stream, or a supported site. To read one from your browser, bring Safari, Chrome, Brave, or another supported browser to the front first.">YouTube、m3u8、対応サイトのURLを貼り付けます。ブラウザから取得する場合は、Safari / Chrome / Braveなどの対象ブラウザを前面にします。</p>
                 </article>
                 <article class="card">
                     <div class="card-num">2</div>
-                    <h3>保存先と画質を選ぶ</h3>
-                    <p>保存先フォルダと解像度を選択します。最大解像度を狙う場合はBestを選びます。</p>
+                    <h3 data-ja="保存先と画質を選ぶ" data-en="Choose folder and quality">保存先と画質を選ぶ</h3>
+                    <p data-ja="保存先フォルダと解像度を選択します。最大解像度を狙う場合はBestを選びます。" data-en="Select the destination folder and the resolution. Choose Best to take the highest quality available.">保存先フォルダと解像度を選択します。最大解像度を狙う場合はBestを選びます。</p>
                 </article>
                 <article class="card">
                     <div class="card-num">3</div>
-                    <h3>開始して待つ</h3>
-                    <p>開始するとキューに追加され、進捗バーと状態が表示されます。ログは必要な時だけ開けます。</p>
+                    <h3 data-ja="開始して待つ" data-en="Start and wait">開始して待つ</h3>
+                    <p data-ja="開始するとキューに追加され、進捗バーと状態が表示されます。ログは必要な時だけ開けます。" data-en="Starting adds the item to the queue and shows its status. The log is there when you need it.">開始するとキューに追加され、進捗バーと状態が表示されます。ログは必要な時だけ開けます。</p>
                 </article>
             </div>
         </section>
@@ -512,35 +526,35 @@
         <section id="buy">
             <div class="split">
                 <div class="price-card">
-                    <p class="section-tagline">Buy</p>
-                    <h2>購入する</h2>
+                    <p class="section-tagline" data-ja="Buy" data-en="Buy">Buy</p>
+                    <h2 data-ja="購入する" data-en="Buy">購入する</h2>
                     <div class="price">$9.99 <small>USD</small></div>
-                    <p class="section-desc">itch.ioの購入ページへ移動します。購入後、itch.ioから公証済みのmacOS用DMGをダウンロードできます。バージョン1.x内のアップデートは無料です。</p>
+                    <p class="section-desc" data-ja="itch.ioの購入ページへ移動します。購入後、itch.ioから公証済みのmacOS用DMGをダウンロードできます。バージョン1.x内のアップデートは無料です。" data-en="You will be taken to the itch.io purchase page. After buying, you can download a notarized macOS DMG from itch.io. Updates within version 1.x are free.">itch.ioの購入ページへ移動します。購入後、itch.ioから公証済みのmacOS用DMGをダウンロードできます。バージョン1.x内のアップデートは無料です。</p>
                     <div class="actions" style="margin-top: 24px;">
                         <a class="button button-primary" href="https://rustyworks.itch.io/pvs" target="_blank" rel="noopener">Buy</a>
-                        <a class="button button-secondary" href="pvs_privacy.html">Privacy Policy</a>
+                        <a class="button button-secondary" href="pvs_privacy.html" data-ja="プライバシーポリシー" data-en="Privacy Policy">Privacy Policy</a>
                     </div>
                 </div>
                 <div class="flow">
                     <div class="flow-item">
                         <span>1</span>
                         <div>
-                            <strong>Buyを押す</strong>
-                            <p>itch.ioの購入ページへ移動します。</p>
+                            <strong data-ja="Buyを押す" data-en="Press Buy">Buyを押す</strong>
+                            <p data-ja="itch.ioの購入ページへ移動します。" data-en="You will be taken to the itch.io purchase page.">itch.ioの購入ページへ移動します。</p>
                         </div>
                     </div>
                     <div class="flow-item">
                         <span>2</span>
                         <div>
-                            <strong>itch.ioで購入</strong>
-                            <p>決済とファイル配布はitch.io上で処理されます。</p>
+                            <strong data-ja="itch.ioで購入" data-en="Buy on itch.io">itch.ioで購入</strong>
+                            <p data-ja="決済とファイル配布はitch.io上で処理されます。" data-en="Payment and file delivery are handled by itch.io.">決済とファイル配布はitch.io上で処理されます。</p>
                         </div>
                     </div>
                     <div class="flow-item">
                         <span>3</span>
                         <div>
-                            <strong>DMGをダウンロード</strong>
-                            <p>DMGを開き、アプリをアプリケーションフォルダへドラッグしてください。</p>
+                            <strong data-ja="DMGをダウンロード" data-en="Download the DMG">DMGをダウンロード</strong>
+                            <p data-ja="DMGを開き、アプリをアプリケーションフォルダへドラッグしてください。" data-en="Open the DMG and drag the app to your Applications folder.">DMGを開き、アプリをアプリケーションフォルダへドラッグしてください。</p>
                         </div>
                     </div>
                 </div>
@@ -549,34 +563,34 @@
 
         <section>
             <div class="warning">
-                <h3>ご利用にあたって</h3>
-                <p>動作環境はmacOS 13 Ventura以降、Apple Silicon（M1以降）です。Intel Macには対応していません。</p>
-                <p style="margin-top: 10px;">動画配信サイト側の仕様変更により、一時的にダウンロードできないURLが発生する場合があります。YouTubeなどは仕様変更が多いため、必要に応じてアプリ更新で対応します。</p>
-                <p style="margin-top: 10px;">Plain Video SaverはDRMで保護されたコンテンツの解除を目的としたものではありません。保存するコンテンツについて必要な権利または許可を持っている場合にのみ利用してください。</p>
+                <h3 data-ja="ご利用にあたって" data-en="Before you buy">ご利用にあたって</h3>
+                <p data-ja="動作環境はmacOS 13 Ventura以降、Apple Silicon（M1以降）です。Intel Macには対応していません。" data-en="Requires macOS 13 Ventura or later on an Apple Silicon Mac (M1 or newer). Intel Macs are not supported.">動作環境はmacOS 13 Ventura以降、Apple Silicon（M1以降）です。Intel Macには対応していません。</p>
+                <p style="margin-top: 10px;" data-ja="動画配信サイト側の仕様変更により、一時的にダウンロードできないURLが発生する場合があります。YouTubeなどは仕様変更が多いため、必要に応じてアプリ更新で対応します。" data-en="When a video site changes how it works, some URLs can stop downloading for a while. YouTube changes often, so fixes are shipped as app updates when needed.">動画配信サイト側の仕様変更により、一時的にダウンロードできないURLが発生する場合があります。YouTubeなどは仕様変更が多いため、必要に応じてアプリ更新で対応します。</p>
+                <p style="margin-top: 10px;" data-ja="Plain Video SaverはDRMで保護されたコンテンツの解除を目的としたものではありません。保存するコンテンツについて必要な権利または許可を持っている場合にのみ利用してください。" data-en="Plain Video Saver is not intended to remove DRM. Use it only for content you have the rights or permission to save.">Plain Video SaverはDRMで保護されたコンテンツの解除を目的としたものではありません。保存するコンテンツについて必要な権利または許可を持っている場合にのみ利用してください。</p>
             </div>
         </section>
 
         <section>
             <div class="section-head">
-                <p class="section-tagline">FAQ</p>
-                <h2>購入前の確認</h2>
+                <p class="section-tagline" data-ja="FAQ" data-en="FAQ">FAQ</p>
+                <h2 data-ja="購入前の確認" data-en="Before you buy">購入前の確認</h2>
             </div>
             <div class="faq">
                 <details>
-                    <summary>購入後すぐにダウンロードできますか？</summary>
-                    <p>はい。購入後、itch.ioのダウンロードページから公証済みのmacOS用DMGをダウンロードできます。</p>
+                    <summary data-ja="購入後すぐにダウンロードできますか？" data-en="Can I download it right after buying?">購入後すぐにダウンロードできますか？</summary>
+                    <p data-ja="はい。購入後、itch.ioのダウンロードページから公証済みのmacOS用DMGをダウンロードできます。" data-en="Yes. After buying, the notarized macOS DMG is available from your itch.io download page.">はい。購入後、itch.ioのダウンロードページから公証済みのmacOS用DMGをダウンロードできます。</p>
                 </details>
                 <details>
-                    <summary>yt-dlpやffmpegの準備は必要ですか？</summary>
-                    <p>不要です。アプリに必要な実行ファイルを同梱しています。</p>
+                    <summary data-ja="yt-dlpやffmpegの準備は必要ですか？" data-en="Do I need to install yt-dlp or ffmpeg?">yt-dlpやffmpegの準備は必要ですか？</summary>
+                    <p data-ja="不要です。アプリに必要な実行ファイルを同梱しています。" data-en="No. The executables the app needs are bundled with it.">不要です。アプリに必要な実行ファイルを同梱しています。</p>
                 </details>
                 <details>
-                    <summary>ブラウザCookieは必須ですか？</summary>
-                    <p>通常は不要です。ログインが必要なページや一部サイトでは、ユーザーの選択によりブラウザCookieをローカルで利用する場合があります。</p>
+                    <summary data-ja="ブラウザCookieは必須ですか？" data-en="Are browser cookies required?">ブラウザCookieは必須ですか？</summary>
+                    <p data-ja="通常は不要です。ログインが必要なページや一部サイトでは、ユーザーの選択によりブラウザCookieをローカルで利用する場合があります。" data-en="Usually not. For pages that require signing in, the app can use your browser cookies locally, and only when you allow it.">通常は不要です。ログインが必要なページや一部サイトでは、ユーザーの選択によりブラウザCookieをローカルで利用する場合があります。</p>
                 </details>
                 <details>
-                    <summary>対応していないURLがありますか？</summary>
-                    <p>あります。対応状況はサイト側仕様、URL形式、公開範囲、DRMの有無に依存します。動作確認範囲を広げながら継続的に改善します。</p>
+                    <summary data-ja="対応していないURLがありますか？" data-en="Are there URLs it cannot handle?">対応していないURLがありますか？</summary>
+                    <p data-ja="あります。対応状況はサイト側仕様、URL形式、公開範囲、DRMの有無に依存します。動作確認範囲を広げながら継続的に改善します。" data-en="Yes. What works depends on the site, the URL form, who the video is visible to, and whether DRM is involved. Coverage keeps improving as more cases are tested.">あります。対応状況はサイト側仕様、URL形式、公開範囲、DRMの有無に依存します。動作確認範囲を広げながら継続的に改善します。</p>
                 </details>
             </div>
         </section>
@@ -584,33 +598,27 @@
         <section>
             <div style="max-width:1200px; margin:0 auto; padding:0 40px 96px;">
                 <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:#e8a33d; margin-bottom:22px;">SUPPORT</div>
-                <h2 style="margin:0 0 20px;">うまく動かないときは</h2>
-                <p style="font-size:17px; line-height:1.95; color:#c9c9c4; max-width:56ch; margin:0 0 24px;">
-                    動画配信サイトの仕様変更で、これまで保存できていたURLが急に失敗することがあります。
-                    そのときは対応しますので、下記までご連絡ください。返信は日本語と英語どちらでも構いません。
-                </p>
+                <h2 style="margin:0 0 20px;" data-ja="うまく動かないときは" data-en="If something does not work">うまく動かないときは</h2>
+                <p style="font-size:17px; line-height:1.95; color:#c9c9c4; max-width:56ch; margin:0 0 24px;" data-ja="動画配信サイトの仕様変更で、これまで保存できていたURLが急に失敗することがあります。そのときは対応しますので、下記までご連絡ください。返信は日本語と英語どちらでも構いません。" data-en="Video sites change without warning, and a URL that worked before can start failing. Please get in touch and it will be looked into. Japanese and English are both fine.">動画配信サイトの仕様変更で、これまで保存できていたURLが急に失敗することがあります。そのときは対応しますので、下記までご連絡ください。返信は日本語と英語どちらでも構いません。</p>
                 <p style="font-size:17px; line-height:1.9; margin:0 0 24px;">
                     <a href="mailto:rustyworks.games@gmail.com?subject=Plain%20Video%20Saver" style="color:#e8a33d;">rustyworks.games@gmail.com</a>
                 </p>
-                <p style="font-size:15px; line-height:1.9; color:#8a8a86; max-width:56ch; margin:0;">
-                    ご連絡の際、失敗したURLと、アプリの「詳細」に表示されるログを添えていただけると原因を特定しやすくなります。
-                    ログに含まれるURLの認証情報は自動的に伏せ字になります。
-                </p>
+                <p style="font-size:15px; line-height:1.9; color:#8a8a86; max-width:56ch; margin:0;" data-ja="ご連絡の際、失敗したURLと、アプリの「詳細」に表示されるログを添えていただけると原因を特定しやすくなります。ログに含まれるURLの認証情報は自動的に伏せ字になります。" data-en="Including the URL that failed and the log from the app&#39;s Details pane makes the cause much easier to find. Credentials inside logged URLs are masked automatically.">ご連絡の際、失敗したURLと、アプリの「詳細」に表示されるログを添えていただけると原因を特定しやすくなります。ログに含まれるURLの認証情報は自動的に伏せ字になります。</p>
             </div>
         </section>
 
         <section>
             <div class="final-cta">
-                <p class="section-tagline">Plain Video Saver</p>
-                <h2>URL保存を、1つの画面で。</h2>
-                <p>コマンド操作ではなく、アプリとして使える動画保存ツールが必要な人向けです。</p>
+                <p class="section-tagline" data-ja="Plain Video Saver" data-en="Plain Video Saver">Plain Video Saver</p>
+                <h2 data-ja="URL保存を、1つの画面で。" data-en="Saving from a URL, on one screen.">URL保存を、1つの画面で。</h2>
+                <p data-ja="コマンド操作ではなく、アプリとして使える動画保存ツールが必要な人向けです。" data-en="For anyone who wants a video saver that behaves like an app, not a command.">コマンド操作ではなく、アプリとして使える動画保存ツールが必要な人向けです。</p>
                 <a class="button button-primary" href="https://rustyworks.itch.io/pvs" target="_blank" rel="noopener">Buy</a>
             </div>
         </section>
 
         <footer>
             <div>Copyright &copy; 2026 RustyWorks. All rights reserved.</div>
-            <div><a href="index.html">Home</a> / <a href="pvs_privacy.html">Privacy Policy</a> / <a href="site_privacy.html">サイトのポリシー</a></div>
+            <div><a href="index.html" data-ja="ホーム" data-en="Home">ホーム</a> / <a href="pvs_privacy.html" data-ja="プライバシーポリシー" data-en="Privacy Policy">プライバシーポリシー</a> / <a href="site_privacy.html" data-ja="サイトのポリシー" data-en="Site Policy">サイトのポリシー</a></div>
         </footer>
     </main>
 <!-- 製品まわりの共通フッター（README「LP の決まりごと」4番）。ページごとに CSS が違うので、クラスに頼らず自己完結にしてある -->
@@ -627,6 +635,35 @@
       <span aria-hidden="true" style="color:#c9ccd1;">·</span>
       <a href="site_privacy.html" style="color:#5f6368;text-decoration:none;" data-ja="サイトのポリシー" data-en="Site Policy">サイトのポリシー</a>
 </nav>
+
+<script>
+// 日英切替。保存先の rw-lang はサイト全体で共有なので、トップで EN にした人は
+// このページも EN で開く。README「LP の決まりごと」1番の雛形をそのまま使用。
+(function () {
+  var KEY = 'rw-lang';
+  var buttons = document.querySelectorAll('.lang button');
+  var nodes = document.querySelectorAll('[data-ja][data-en]');
+
+  function apply(lang) {
+    document.documentElement.lang = lang;
+    nodes.forEach(function (el) {
+      var text = el.getAttribute('data-' + lang);
+      if (text !== null) el.textContent = text;
+    });
+    buttons.forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
+    });
+    try { localStorage.setItem(KEY, lang); } catch (e) {}
+  }
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () { apply(b.dataset.lang); });
+  });
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (!saved) saved = (navigator.language || '').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en';
+  if (saved === 'en') apply('en');
+})();
+</script>
 
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "04f66ad1837a4b63af68beb6e835358f"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
