@@ -58,7 +58,7 @@
   .panel { margin-top:22px; display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px 28px;
            border:1px solid rgba(255,255,255,.08); border-radius:12px; background:#0d0d10; padding:24px; }
   .row { display:flex; align-items:center; gap:12px; }
-  .row label { font-family:'Zen Kaku Gothic New',sans-serif; font-size:13px; color:#c4c4c0; width:78px; flex:none; }
+  .row label { font-family:'Zen Kaku Gothic New',sans-serif; font-size:13px; color:#c4c4c0; width:92px; flex:none; }
   .row input[type=range] { flex:1; accent-color:#e5484d; min-width:0; }
   .row .val { font-family:'IBM Plex Mono',monospace; font-size:12px; color:#7a7a76; width:46px; text-align:right; flex:none; }
 
@@ -84,6 +84,18 @@
   button.primary.applied { background:transparent; color:#e5484d; }
   .note { font-family:'Zen Kaku Gothic New',sans-serif; font-size:13px; line-height:1.8; color:#7a7a76; margin-top:22px; }
   .fallback { padding:40px; text-align:center; font-family:'Zen Kaku Gothic New',sans-serif; color:#a4a4a0; }
+
+  /* --- Language switch ------------------------------------------------------
+     The choice is shared across the whole site (localStorage `rw-lang`), so a
+     reader who picked EN on the top page arrives here already in English.
+     These rules have to undo the page's global `button`, which is styled for
+     the demo's controls — a bordered pill either side of the slash. */
+  .lang { display:flex; align-items:center; gap:2px; font-family:'IBM Plex Mono',monospace; font-size:12px; }
+  .lang button { font:inherit; background:none; border:0; padding:4px 6px; border-radius:4px;
+                 color:#6a6a66; cursor:pointer; transition:color .15s, background-color .15s; }
+  .lang button:hover { color:#f2f2f0; background:rgba(255,255,255,.06); }
+  .lang button[aria-pressed="true"] { color:#f2f2f0; font-weight:500; }
+  .lang .sep { color:#3a3a38; }
 
   /* --- Narrow screens -------------------------------------------------------
      The page is laid out with a fixed 72px gutter, which on a 390px phone left
@@ -115,6 +127,29 @@
 </head>
 <body>
 
+<!-- Language, resolved before anything else runs.
+     It has to be this early because the two demos below write their own button
+     and readout text from JS: by the time the switcher at the foot of the page
+     walks the DOM, those strings do not exist yet. So the demos read `RW.lang`
+     as they build, and re-paint through `RW.onChange`. -->
+<script>
+window.RW = (function () {
+  var KEY = 'rw-lang', saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (!saved) saved = (navigator.language || '').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en';
+  var subs = [];
+  return {
+    key: KEY,
+    lang: saved,
+    /** Pick one side of a { ja:…, en:… } pair. */
+    t: function (pair) { return pair[this.lang]; },
+    /** Register a repaint for text this page writes from JS. */
+    onChange: function (fn) { subs.push(fn); },
+    notify: function () { for (var i = 0; i < subs.length; i++) subs[i](); }
+  };
+})();
+</script>
+
 <div style="background:#0a0a0b;font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif;overflow:hidden;">
 
   <!-- nav -->
@@ -122,15 +157,21 @@
     <div style="display:flex;align-items:center;gap:11px;color:#f2f2f0;font-size:21px;font-weight:700;letter-spacing:.12em;">
       <span style="width:20px;height:20px;border-radius:5px;background:#0a0a0b;border:1.5px solid #e5484d;display:inline-block;"></span>KURO
     </div>
-    <div class="navlinks" style="display:flex;align-items:center;gap:30px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#8a8a86;">
-      <a href="#try" style="color:#8a8a86;">試す</a>
-      <a href="#play" style="color:#8a8a86;">再生</a>
-      <a href="#color" style="color:#8a8a86;">色</a>
-      <a href="#quality" style="color:#8a8a86;">画質</a>
-      <a href="#scopes" style="color:#8a8a86;">スコープ</a>
-      <a href="#features" style="color:#8a8a86;">全機能</a>
+    <div class="navlinks" style="display:flex;align-items:center;gap:24px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#8a8a86;">
+      <a href="index.html" style="color:#8a8a86;">RustyWorks</a>
+      <a href="#try" style="color:#8a8a86;" data-ja="試す" data-en="Try">試す</a>
+      <a href="#play" style="color:#8a8a86;" data-ja="再生" data-en="Play">再生</a>
+      <a href="#color" style="color:#8a8a86;" data-ja="色" data-en="Color">色</a>
+      <a href="#quality" style="color:#8a8a86;" data-ja="画質" data-en="Quality">画質</a>
+      <a href="#scopes" style="color:#8a8a86;" data-ja="スコープ" data-en="Scopes">スコープ</a>
+      <a href="#features" style="color:#8a8a86;" data-ja="全機能" data-en="Features">全機能</a>
       <a href="#pro" style="color:#8a8a86;">PRO</a>
-      <a href="#dl" style="background:#e5484d;color:#0a0a0b;font-weight:600;padding:9px 18px;border-radius:6px;">無料DL</a>
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="ja" aria-pressed="true">JA</button>
+        <span class="sep">/</span>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <a href="#dl" style="background:#e5484d;color:#0a0a0b;font-weight:600;padding:9px 18px;border-radius:6px;" data-ja="無料DL" data-en="Get it free">無料DL</a>
     </div>
   </div>
 
@@ -141,11 +182,12 @@
       <div style="position:absolute;top:0;bottom:0;left:0;width:140px;background:linear-gradient(90deg,#e5484d,transparent);opacity:.06;"></div>
       <div style="position:absolute;top:0;left:0;height:2px;width:60px;background:#e5484d;animation:kuroScan 4s linear infinite;"></div>
       <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.3em;color:#e5484d;margin-bottom:22px;">A VIDEO PLAYER, GRADED · macOS</div>
-      <h1 class="hero-h" style="font-size:96px;line-height:.98;font-weight:700;color:#f2f2f0;letter-spacing:-.03em;max-width:920px;">その映像の、<br>本当の色を。</h1>
-      <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:19px;line-height:1.7;color:#c4c4c0;max-width:580px;margin-top:28px;">プロ品質のカラーグレーディングを積んだ、macOS 用の動画プレーヤー。再生しながら、リファレンス基準の色へ。</p>
+      <h1 class="hero-h" style="font-size:96px;line-height:.98;font-weight:700;color:#f2f2f0;letter-spacing:-.03em;max-width:920px;white-space:pre-line;" data-ja="その映像の、&#10;本当の色を。" data-en="See the color&#10;that is really there.">その映像の、
+本当の色を。</h1>
+      <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:19px;line-height:1.7;color:#c4c4c0;max-width:580px;margin-top:28px;" data-ja="プロ品質のカラーグレーディングを積んだ、macOS 用の動画プレーヤー。再生しながら、リファレンス基準の色へ。" data-en="A macOS video player with pro-grade color built in. Grade to the reference while it plays.">プロ品質のカラーグレーディングを積んだ、macOS 用の動画プレーヤー。再生しながら、リファレンス基準の色へ。</p>
       <div style="display:flex;gap:16px;align-items:center;margin-top:36px;">
-        <a href="#dl" style="background:#e5484d;color:#0a0a0b;font-weight:600;font-size:16px;padding:17px 34px;border-radius:8px;">無料ダウンロード</a>
-        <a href="https://apps.apple.com/app/apple-store/id6782262572?pt=128819275&amp;ct=website&amp;mt=8" style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#a4a4a0;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(255,255,255,.25);">Mac App Store で配信中</a>
+        <a href="#dl" style="background:#e5484d;color:#0a0a0b;font-weight:600;font-size:16px;padding:17px 34px;border-radius:8px;" data-ja="無料ダウンロード" data-en="Download free">無料ダウンロード</a>
+        <a href="https://apps.apple.com/app/apple-store/id6782262572?pt=128819275&amp;ct=website&amp;mt=8" style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#a4a4a0;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(255,255,255,.25);" data-ja="Mac App Store で配信中" data-en="On the Mac App Store">Mac App Store で配信中</a>
       </div>
     </div>
     <div style="height:52px;background:#050506;"></div>
@@ -153,10 +195,10 @@
 
   <!-- stat strip -->
   <div class="stats" style="display:flex;border-bottom:1px solid rgba(255,255,255,.06);">
-    <div style="flex:1;padding:32px;text-align:center;border-right:1px solid rgba(255,255,255,.06);"><div style="font-size:26px;color:#f2f2f0;font-weight:700;">Rec.709</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;margin-top:6px;">Gamma 2.4 準拠</div></div>
-    <div style="flex:1;padding:32px;text-align:center;border-right:1px solid rgba(255,255,255,.06);"><div style="font-size:26px;color:#f2f2f0;font-weight:700;">HDR→EDR</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;margin-top:6px;">正確なトーンマップ</div></div>
-    <div style="flex:1;padding:32px;text-align:center;border-right:1px solid rgba(255,255,255,.06);"><div style="font-size:26px;color:#f2f2f0;font-weight:700;">Metal</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;margin-top:6px;">自前レンダリング</div></div>
-    <div style="flex:1;padding:32px;text-align:center;"><div style="font-size:26px;color:#f2f2f0;font-weight:700;">libmpv</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;margin-top:6px;">幅広い形式に対応</div></div>
+    <div style="flex:1;padding:32px;text-align:center;border-right:1px solid rgba(255,255,255,.06);"><div style="font-size:26px;color:#f2f2f0;font-weight:700;">Rec.709</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;margin-top:6px;" data-ja="Gamma 2.4 準拠" data-en="Gamma 2.4 compliant">Gamma 2.4 準拠</div></div>
+    <div style="flex:1;padding:32px;text-align:center;border-right:1px solid rgba(255,255,255,.06);"><div style="font-size:26px;color:#f2f2f0;font-weight:700;">HDR→EDR</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;margin-top:6px;" data-ja="正確なトーンマップ" data-en="Accurate tone mapping">正確なトーンマップ</div></div>
+    <div style="flex:1;padding:32px;text-align:center;border-right:1px solid rgba(255,255,255,.06);"><div style="font-size:26px;color:#f2f2f0;font-weight:700;">Metal</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;margin-top:6px;" data-ja="自前レンダリング" data-en="Custom render pipeline">自前レンダリング</div></div>
+    <div style="flex:1;padding:32px;text-align:center;"><div style="font-size:26px;color:#f2f2f0;font-weight:700;">libmpv</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;margin-top:6px;" data-ja="幅広い形式に対応" data-en="Broad format support">幅広い形式に対応</div></div>
   </div>
 
 
@@ -164,16 +206,16 @@
   <div class="pad" id="try" style="padding:88px 72px 72px;border-bottom:1px solid rgba(255,255,255,.06);">
     <div style="max-width:1080px;margin:0 auto;">
       <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;color:#e5484d;">TRY IT IN YOUR BROWSER</div>
-      <h2 class="h-l" style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;margin:14px 0 12px;">触ってみてください。</h2>
-      <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.75;color:#a4a4a0;max-width:640px;">右半分は Kuro が自動調整した結果、左半分は元のままの映像です。仕切りを左右にドラッグして見比べてみてください。動いているのは、Kuro が実際に使っているのと同じ計算です。スライダーで自分で追い込むことも、「リセット」で元に戻すこともできます。</p>
+      <h2 class="h-l" style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;margin:14px 0 12px;" data-ja="触ってみてください。" data-en="Try it right here.">触ってみてください。</h2>
+      <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.75;color:#a4a4a0;max-width:640px;" data-ja="右半分は Kuro が自動調整した結果、左半分は元のままの映像です。仕切りを左右にドラッグして見比べてみてください。動いているのは、Kuro が実際に使っているのと同じ計算です。スライダーで自分で追い込むことも、「リセット」で元に戻すこともできます。" data-en="The right half is what Kuro's auto-adjust produced; the left half is the footage as it came. Drag the divider across to compare. What is running here is the same math the app itself uses. Push it further with the sliders, or put it back with Reset.">右半分は Kuro が自動調整した結果、左半分は元のままの映像です。仕切りを左右にドラッグして見比べてみてください。動いているのは、Kuro が実際に使っているのと同じ計算です。スライダーで自分で追い込むことも、「リセット」で元に戻すこともできます。</p>
 
   <div class="stage" id="stage">
     <canvas id="gl"></canvas>
-    <span class="tag l">元映像</span>
+    <span class="tag l" data-ja="元映像" data-en="Original">元映像</span>
     <span class="tag r">Kuro 1.1</span>
     <div class="divider" id="divider"></div>
     <div class="knob" id="knob">⇔</div>
-    <div class="hint" id="hint">ドラッグして比較</div>
+    <div class="hint" id="hint" data-ja="ドラッグして比較" data-en="Drag to compare">ドラッグして比較</div>
     <div class="loading" id="loading">読み込み中…</div>
   </div>
 
@@ -181,36 +223,37 @@
 
   <div class="actions">
     <button class="primary" id="auto">自動調整</button>
-    <button id="reset">リセット</button>
+    <button id="reset" data-ja="リセット" data-en="Reset">リセット</button>
   </div>
 
   <div class="panel" id="panel">
-    <div class="row"><label>露出</label><input type="range" id="gain"     min="0.5"  max="1.8"  step="0.01" value="1"><span class="val" id="gain_v">1.00</span></div>
-    <div class="row"><label>黒レベル</label><input type="range" id="lift"  min="-0.06" max="0.06" step="0.002" value="0"><span class="val" id="lift_v">0.000</span></div>
-    <div class="row"><label>コントラスト</label><input type="range" id="con" min="0.5"  max="1.6"  step="0.01" value="1"><span class="val" id="con_v">1.00</span></div>
-    <div class="row"><label>色温度</label><input type="range" id="temp"    min="-0.5" max="0.5"  step="0.01" value="0"><span class="val" id="temp_v">0.00</span></div>
-    <div class="row"><label>彩度</label><input type="range" id="sat"       min="0"    max="2"    step="0.01" value="1"><span class="val" id="sat_v">1.00</span></div>
-    <div class="row"><label>ティント</label><input type="range" id="tint"  min="-0.5" max="0.5"  step="0.01" value="0"><span class="val" id="tint_v">0.00</span></div>
+    <div class="row"><label data-ja="露出" data-en="Exposure">露出</label><input type="range" id="gain"     min="0.5"  max="1.8"  step="0.01" value="1"><span class="val" id="gain_v">1.00</span></div>
+    <div class="row"><label data-ja="黒レベル" data-en="Black level">黒レベル</label><input type="range" id="lift"  min="-0.06" max="0.06" step="0.002" value="0"><span class="val" id="lift_v">0.000</span></div>
+    <div class="row"><label data-ja="コントラスト" data-en="Contrast">コントラスト</label><input type="range" id="con" min="0.5"  max="1.6"  step="0.01" value="1"><span class="val" id="con_v">1.00</span></div>
+    <div class="row"><label data-ja="色温度" data-en="Temperature">色温度</label><input type="range" id="temp"    min="-0.5" max="0.5"  step="0.01" value="0"><span class="val" id="temp_v">0.00</span></div>
+    <div class="row"><label data-ja="彩度" data-en="Saturation">彩度</label><input type="range" id="sat"       min="0"    max="2"    step="0.01" value="1"><span class="val" id="sat_v">1.00</span></div>
+    <div class="row"><label data-ja="ティント" data-en="Tint">ティント</label><input type="range" id="tint"  min="-0.5" max="0.5"  step="0.01" value="0"><span class="val" id="tint_v">0.00</span></div>
   </div>
 
 
   <p class="note">
-    ※ 移植しているのは <span style="color:#a4a4a0;font-weight:600;">Kuro 1.1</span> の色処理そのものです（Rec.709 Gamma 2.4 で符号化した空間での
+    <span data-ja="※ 移植しているのは " data-en="Note: this is ">※ 移植しているのは </span><span style="color:#a4a4a0;font-weight:600;">Kuro 1.1</span><span data-ja=" の色処理そのものです（Rec.709 Gamma 2.4 で符号化した空間でのリフト／ゲイン、実測に基づく色温度の RGB ゲイン、輝度を保つ彩度、ピボット付きコントラスト）。アップスケールやノイズ除去、HDR 表示といった機能はブラウザでは再現できないため含まれていません。" data-en="'s own color math, ported as it is (lift and gain in the Rec.709 Gamma 2.4 encoded space, measured RGB gains for temperature, luma-preserving saturation, contrast with a pivot). Upscaling, noise reduction and HDR display cannot be reproduced in a browser, so they are not here."> の色処理そのものです（Rec.709 Gamma 2.4 で符号化した空間での
     リフト／ゲイン、実測に基づく色温度の RGB ゲイン、輝度を保つ彩度、ピボット付きコントラスト）。
-    アップスケールやノイズ除去、HDR 表示といった機能はブラウザでは再現できないため含まれていません。
+    アップスケールやノイズ除去、HDR 表示といった機能はブラウザでは再現できないため含まれていません。</span>
   </p>
 
       <div style="margin-top:26px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
-        <a href="https://apps.apple.com/app/apple-store/id6782262572?pt=128819275&amp;ct=website&amp;mt=8" style="background:#e5484d;color:#0a0a0b;font-weight:600;font-size:16px;padding:15px 30px;border-radius:8px;">Mac App Store で無料ダウンロード</a>
-        <span style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#7a7a76;">アプリなら、これを自分の動画で。</span>
+        <a href="https://apps.apple.com/app/apple-store/id6782262572?pt=128819275&amp;ct=website&amp;mt=8" style="background:#e5484d;color:#0a0a0b;font-weight:600;font-size:16px;padding:15px 30px;border-radius:8px;" data-ja="Mac App Store で無料ダウンロード" data-en="Download free on the Mac App Store">Mac App Store で無料ダウンロード</a>
+        <span style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#7a7a76;" data-ja="アプリなら、これを自分の動画で。" data-en="In the app, this runs on your own footage.">アプリなら、これを自分の動画で。</span>
       </div>
     </div>
   </div>
 
+
   <!-- player showcase -->
   <div class="pad" style="padding:96px 72px 40px;display:flex;flex-direction:column;align-items:center;gap:14px;">
     <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;color:#e5484d;">THE PLAYER</div>
-    <h2 class="h-l" style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;text-align:center;">再生と、グレーディングを、ひとつの窓で。</h2>
+    <h2 class="h-l" style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;text-align:center;" data-ja="再生と、グレーディングを、ひとつの窓で。" data-en="Playback and grading, in one window.">再生と、グレーディングを、ひとつの窓で。</h2>
     <div style="width:100%;max-width:1040px;margin-top:36px;border:1px solid rgba(255,255,255,.1);border-radius:12px;overflow:hidden;background:#0d0d10;">
       <div style="display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.06);">
         <span style="width:11px;height:11px;border-radius:50%;background:#ff5f57;"></span>
@@ -219,13 +262,13 @@
         <span style="margin-left:12px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6a6a66;">Kuro — reference.mkv · HDR→EDR · Rec.709</span>
       </div>
       <div style="position:relative;aspect-ratio:16/10;background:#0d0d10;">
-        <img src="assets/lp/05_player.webp" alt="Kuro のプレーヤー画面" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <img src="assets/lp/05_player.webp" alt="Kuro のプレーヤー画面" data-alt-ja="Kuro のプレーヤー画面" data-alt-en="Kuro's player window" style="width:100%;height:100%;object-fit:cover;display:block;">
       </div>
       <div style="display:flex;border-top:1px solid rgba(255,255,255,.06);">
-        <div style="flex:1;padding:14px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;border-right:1px solid rgba(255,255,255,.06);">波形</div>
-        <div style="flex:1;padding:14px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;border-right:1px solid rgba(255,255,255,.06);">ベクトル</div>
-        <div style="flex:1;padding:14px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;border-right:1px solid rgba(255,255,255,.06);">パレード</div>
-        <div style="flex:1;padding:14px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;">ヒストグラム</div>
+        <div style="flex:1;padding:14px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;border-right:1px solid rgba(255,255,255,.06);" data-ja="波形" data-en="Waveform">波形</div>
+        <div style="flex:1;padding:14px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;border-right:1px solid rgba(255,255,255,.06);" data-ja="ベクトル" data-en="Vectorscope">ベクトル</div>
+        <div style="flex:1;padding:14px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;border-right:1px solid rgba(255,255,255,.06);" data-ja="パレード" data-en="Parade">パレード</div>
+        <div style="flex:1;padding:14px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#7a7a76;" data-ja="ヒストグラム" data-en="Histogram">ヒストグラム</div>
       </div>
     </div>
   </div>
@@ -234,18 +277,18 @@
   <div class="pad" style="padding:64px 72px 80px;display:flex;flex-direction:column;gap:72px;">
     <div id="play" class="two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;">
       <div style="display:flex;flex-direction:column;gap:16px;">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#e5484d;">01 — 再生</div>
-        <h3 class="h-m" style="font-size:36px;color:#f2f2f0;font-weight:600;line-height:1.15;">何でも開く、忠実に。</h3>
-        <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.85;color:#a4a4a0;">libmpv ベースで幅広いコンテナ・コーデックに対応。HDR コンテンツは EDR 表示へマッピングし、Mac の画面でハイライトを飛ばさず再現します。</p>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#e5484d;" data-ja="01 — 再生" data-en="01 — Play">01 — 再生</div>
+        <h3 class="h-m" style="font-size:36px;color:#f2f2f0;font-weight:600;line-height:1.15;" data-ja="何でも開く、忠実に。" data-en="Opens anything. Faithfully.">何でも開く、忠実に。</h3>
+        <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.85;color:#a4a4a0;" data-ja="libmpv ベースで幅広いコンテナ・コーデックに対応。HDR コンテンツは EDR 表示へマッピングし、Mac の画面でハイライトを飛ばさず再現します。" data-en="Built on libmpv, so it opens a wide range of containers and codecs. HDR content is mapped to EDR display, so highlights survive on your Mac's screen.">libmpv ベースで幅広いコンテナ・コーデックに対応。HDR コンテンツは EDR 表示へマッピングし、Mac の画面でハイライトを飛ばさず再現します。</p>
       </div>
-      <div style="aspect-ratio:16/10;border-radius:10px;overflow:hidden;background:#0d0d10;border:1px solid rgba(255,255,255,.08);"><img src="assets/lp/02_hero_coastal.webp" alt="暗い海岸の映像を補正で再現した比較" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+      <div style="aspect-ratio:16/10;border-radius:10px;overflow:hidden;background:#0d0d10;border:1px solid rgba(255,255,255,.08);"><img src="assets/lp/02_hero_coastal.webp" alt="暗い海岸の映像を補正で再現した比較" data-alt-ja="暗い海岸の映像を補正で再現した比較" data-alt-en="A dark coastal shot, before and after correction" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
     </div>
     <div id="color" class="two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;">
-      <div style="aspect-ratio:16/10;border-radius:10px;overflow:hidden;background:#0d0d10;border:1px solid rgba(255,255,255,.08);"><img src="assets/lp/anime_jp.webp" alt="カラーホイール・カーブを備えた補正パネル" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+      <div style="aspect-ratio:16/10;border-radius:10px;overflow:hidden;background:#0d0d10;border:1px solid rgba(255,255,255,.08);"><img src="assets/lp/anime_jp.webp" loading="lazy" alt="カラーホイール・カーブを備えた補正パネル" data-src-ja="assets/lp/anime_jp.webp" data-src-en="assets/lp/anime_en.webp" data-alt-ja="カラーホイール・カーブを備えた補正パネル" data-alt-en="The correction panel, with color wheels and curves" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
       <div style="display:flex;flex-direction:column;gap:16px;">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#e5484d;">02 — 色</div>
-        <h3 class="h-m" style="font-size:36px;color:#f2f2f0;font-weight:600;line-height:1.15;">正確な色を、再生しながら。</h3>
-        <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.85;color:#a4a4a0;">Metal 製の自前レンダリングパイプラインで Rec.709 / Gamma 2.4 に準拠。本格的な補正をリアルタイムに適用できます。</p>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#e5484d;" data-ja="02 — 色" data-en="02 — Color">02 — 色</div>
+        <h3 class="h-m" style="font-size:36px;color:#f2f2f0;font-weight:600;line-height:1.15;" data-ja="正確な色を、再生しながら。" data-en="Accurate color, while it plays.">正確な色を、再生しながら。</h3>
+        <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.85;color:#a4a4a0;" data-ja="Metal 製の自前レンダリングパイプラインで Rec.709 / Gamma 2.4 に準拠。本格的な補正をリアルタイムに適用できます。" data-en="A render pipeline of our own, written in Metal and held to Rec.709 / Gamma 2.4. Serious correction, applied in real time.">Metal 製の自前レンダリングパイプラインで Rec.709 / Gamma 2.4 に準拠。本格的な補正をリアルタイムに適用できます。</p>
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;">
           <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#c4c4c0;border:1px solid rgba(255,255,255,.14);padding:7px 13px;border-radius:20px;">Color Wheels</span>
           <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#c4c4c0;border:1px solid rgba(255,255,255,.14);padding:7px 13px;border-radius:20px;">Curves</span>
@@ -257,18 +300,18 @@
     </div>
     <div id="quality" class="two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;">
       <div style="display:flex;flex-direction:column;gap:16px;">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#e5484d;">03 — 画質</div>
-        <h3 class="h-m" style="font-size:36px;color:#f2f2f0;font-weight:600;line-height:1.15;">眠い映像を、見られる映像に。</h3>
-        <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.85;color:#a4a4a0;">MetalFX / Anime4K によるアップスケール、ノイズ除去、シャープ、Wiener デコンボリューションによるデブラー、そしてデバンド。mpv / madVR 系が踏み込まない領域まで実装しています。</p>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#e5484d;" data-ja="03 — 画質" data-en="03 — Quality">03 — 画質</div>
+        <h3 class="h-m" style="font-size:36px;color:#f2f2f0;font-weight:600;line-height:1.15;" data-ja="眠い映像を、見られる映像に。" data-en="Soft footage, made watchable.">眠い映像を、見られる映像に。</h3>
+        <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.85;color:#a4a4a0;" data-ja="MetalFX / Anime4K によるアップスケール、ノイズ除去、シャープ、Wiener デコンボリューションによるデブラー、そしてデバンド。mpv / madVR 系が踏み込まない領域まで実装しています。" data-en="Upscaling with MetalFX / Anime4K, noise reduction, sharpening, deblurring by Wiener deconvolution, and debanding — further in than the mpv / madVR family goes.">MetalFX / Anime4K によるアップスケール、ノイズ除去、シャープ、Wiener デコンボリューションによるデブラー、そしてデバンド。mpv / madVR 系が踏み込まない領域まで実装しています。</p>
       </div>
-      <div style="aspect-ratio:16/10;border-radius:10px;overflow:hidden;background:#0d0d10;border:1px solid rgba(255,255,255,.08);"><img src="assets/lp/04_skin.webp" alt="ディテールと肌トーンの比較" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+      <div style="aspect-ratio:16/10;border-radius:10px;overflow:hidden;background:#0d0d10;border:1px solid rgba(255,255,255,.08);"><img src="assets/lp/04_skin.webp" alt="ディテールと肌トーンの比較" data-alt-ja="ディテールと肌トーンの比較" data-alt-en="Detail and skin tone, compared" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
     </div>
     <div id="scopes" class="two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;">
-      <div style="aspect-ratio:16/10;border-radius:10px;overflow:hidden;background:#0d0d10;border:1px solid rgba(255,255,255,.08);"><img src="assets/lp/sunflower_jp.webp" alt="波形・ベクトルスコープ・RGB パレード・ヒストグラムを表示したスコープ窓" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+      <div style="aspect-ratio:16/10;border-radius:10px;overflow:hidden;background:#0d0d10;border:1px solid rgba(255,255,255,.08);"><img src="assets/lp/sunflower_jp.webp" loading="lazy" alt="波形・ベクトルスコープ・RGB パレード・ヒストグラムを表示したスコープ窓" data-src-ja="assets/lp/sunflower_jp.webp" data-src-en="assets/lp/sunflower_en.webp" data-alt-ja="波形・ベクトルスコープ・RGB パレード・ヒストグラムを表示したスコープ窓" data-alt-en="The scopes window: waveform, vectorscope, RGB parade and histogram" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
       <div style="display:flex;flex-direction:column;gap:16px;">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#e5484d;">04 — スコープ</div>
-        <h3 class="h-m" style="font-size:36px;color:#f2f2f0;font-weight:600;line-height:1.15;">感覚ではなく、基準で。</h3>
-        <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.85;color:#a4a4a0;">波形・ベクトルスコープ・RGB パレード・ヒストグラムを、再生しながらリアルタイムに表示。目視だけに頼らず、基準に沿って色を追い込めます。</p>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#e5484d;" data-ja="04 — スコープ" data-en="04 — Scopes">04 — スコープ</div>
+        <h3 class="h-m" style="font-size:36px;color:#f2f2f0;font-weight:600;line-height:1.15;" data-ja="感覚ではなく、基準で。" data-en="By the standard, not by feel.">感覚ではなく、基準で。</h3>
+        <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.85;color:#a4a4a0;" data-ja="波形・ベクトルスコープ・RGB パレード・ヒストグラムを、再生しながらリアルタイムに表示。目視だけに頼らず、基準に沿って色を追い込めます。" data-en="Waveform, vectorscope, RGB parade and histogram, live as it plays. Grade against the standard instead of trusting your eyes alone.">波形・ベクトルスコープ・RGB パレード・ヒストグラムを、再生しながらリアルタイムに表示。目視だけに頼らず、基準に沿って色を追い込めます。</p>
       </div>
     </div>
   </div>
@@ -277,65 +320,65 @@
   <div class="pad" id="features" style="padding:88px 72px;border-top:1px solid rgba(255,255,255,.06);">
     <div style="max-width:1000px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:14px;">
       <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;color:#e5484d;">ALL FEATURES</div>
-      <h2 class="h-l" style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;text-align:center;">できることの、全部。</h2>
-      <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;color:#a4a4a0;text-align:center;max-width:640px;">プレーヤーとしての基本、音声、そして計測はすべて無料で使えます。PRO で解放されるのは、色を自分で追い込むための道具です。</p>
+      <h2 class="h-l" style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;text-align:center;" data-ja="できることの、全部。" data-en="Everything it does.">できることの、全部。</h2>
+      <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;color:#a4a4a0;text-align:center;max-width:640px;" data-ja="プレーヤーとしての基本、音声、そして計測はすべて無料で使えます。PRO で解放されるのは、色を自分で追い込むための道具です。" data-en="The player basics, the audio side and the measurement tools are all free. What PRO unlocks is the toolbox for pushing the color yourself.">プレーヤーとしての基本、音声、そして計測はすべて無料で使えます。PRO で解放されるのは、色を自分で追い込むための道具です。</p>
 
       <div style="width:100%;margin-top:36px;overflow-x:auto;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:#0d0d10;">
         <table style="width:100%;border-collapse:collapse;min-width:470px;">
           <thead>
             <tr>
               <th style="text-align:left;padding:16px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:12px;font-weight:500;color:#7a7a76;border-bottom:1px solid rgba(255,255,255,.12);"></th>
-              <th style="width:92px;padding:16px 6px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:#c4c4c0;border-bottom:1px solid rgba(255,255,255,.12);">無料</th>
+              <th style="width:92px;padding:16px 6px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:#c4c4c0;border-bottom:1px solid rgba(255,255,255,.12);" data-ja="無料" data-en="Free">無料</th>
               <th style="width:108px;padding:16px 6px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:#e5484d;border-bottom:1px solid rgba(255,255,255,.12);background:rgba(229,72,77,.05);">Kuro PRO</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td colspan="3" style="padding:26px 16px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;color:#e5484d;border-bottom:1px solid rgba(255,255,255,.08);">カラーグレーディング</td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">自動調整 — ワンクリックで色を整える</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span><span style="font-size:11px;color:#7a7a76;margin-left:6px;">バランス</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span><span style="font-size:11px;color:#7a7a76;margin-left:6px;">全モード</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">シーン毎に自動調整 — カットが変わるたび追従</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span><span style="font-size:11px;color:#7a7a76;margin-left:6px;">バランス</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span><span style="font-size:11px;color:#7a7a76;margin-left:6px;">暗部強調も</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">プライマリ（リフト / ガンマ / ゲイン）</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">オフセット（ASC CDL）</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">コントラスト / ピボット</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">3-Way カラー補正（シャドウ / ミッド / ハイライト）</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">色温度 / ティント</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">色相 / 彩度（HSL）</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">カーブ（Y / R / G / B）</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">トーンマップ（シャドウ / ハイライト / ピボット）</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">AWB / AE アイドロッパー — 白や露出を画面から拾う</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">A/B バイパス — 補正前後を一瞬で比較</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">LUT 読み込み（.cube）</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">LUT 書き出し — 作った色を他のソフトへ</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr><td colspan="3" style="padding:26px 16px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;color:#e5484d;border-bottom:1px solid rgba(255,255,255,.08);">画質</td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">アップスケール — MetalFX / Anime4K / Apple ML</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">ノイズリダクション（空間）</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">ノイズリダクション（時間）— 動きに追従</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">シャープネス（アンシャープマスク）</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">Wiener デブラー — 逆フィルタでぼけを復元<span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#e5484d;border:1px solid rgba(229,72,77,.5);border-radius:4px;padding:1px 5px;margin-left:8px;vertical-align:middle;">NEW</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">デバンド — 空やグラデーションの縞を除去<span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#e5484d;border:1px solid rgba(229,72,77,.5);border-radius:4px;padding:1px 5px;margin-left:8px;vertical-align:middle;">NEW</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">デインターレース</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr><td colspan="3" style="padding:26px 16px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;color:#e5484d;border-bottom:1px solid rgba(255,255,255,.08);">プレーヤー</td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">libmpv ベース — 幅広いコンテナ / コーデック</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">HDR → EDR 表示（BT.2390 トーンマップ）</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">フレーム単位の前後移動</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">シークバーのサムネイルプレビュー<span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#e5484d;border:1px solid rgba(229,72,77,.5);border-radius:4px;padding:1px 5px;margin-left:8px;vertical-align:middle;">NEW</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">プレイリスト / フォルダを開く</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">URL を開く — http / https / rtsp / rtmp</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">再生速度の変更</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">表示モード（フィット / フィル / 実際のサイズ）</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">フレームキャッシュ — コマ戻しを高速化</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">既定のプレーヤーに設定</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr><td colspan="3" style="padding:26px 16px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;color:#e5484d;border-bottom:1px solid rgba(255,255,255,.08);">音声・字幕</td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">音声トラックの切り替え</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">A/V 同期調整（±50ms 単位）</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">ナイトモード — 音量を均一化</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">字幕トラックの切り替え・表示 / 非表示</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr><td colspan="3" style="padding:26px 16px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;color:#e5484d;border-bottom:1px solid rgba(255,255,255,.08);">計測・検証</td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">スコープ — 波形 / ベクトル / RGB パレード / ヒストグラム</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">スポットプローブ — 画面上の 1 点の RGB 値を読む</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">インスペクタ — コーデック / ビットレート / 実行 fps ほか</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">テスト信号 — グレースケール / カラーバー / PLUGE ほか</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">表示ガンマの切り替え（sRGB / Gamma 2.4）</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">色域のカラーマネジメント切り替え</td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr><td colspan="3" style="padding:26px 16px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;color:#e5484d;border-bottom:1px solid rgba(255,255,255,.08);" data-ja="カラーグレーディング" data-en="Color grading">カラーグレーディング</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="自動調整 — ワンクリックで色を整える" data-en="Auto adjust — one press sets the color">自動調整 — ワンクリックで色を整える</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span><span style="font-size:11px;color:#7a7a76;margin-left:6px;" data-ja="バランス" data-en="Balanced">バランス</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span><span style="font-size:11px;color:#7a7a76;margin-left:6px;" data-ja="全モード" data-en="All modes">全モード</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="シーン毎に自動調整 — カットが変わるたび追従" data-en="Auto-adjust per scene — follows every cut">シーン毎に自動調整 — カットが変わるたび追従</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span><span style="font-size:11px;color:#7a7a76;margin-left:6px;" data-ja="バランス" data-en="Balanced">バランス</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span><span style="font-size:11px;color:#7a7a76;margin-left:6px;" data-ja="暗部強調も" data-en="Shadow boost too">暗部強調も</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="プライマリ（リフト / ガンマ / ゲイン）" data-en="Primary (lift / gamma / gain)">プライマリ（リフト / ガンマ / ゲイン）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="オフセット（ASC CDL）" data-en="Offset (ASC CDL)">オフセット（ASC CDL）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="コントラスト / ピボット" data-en="Contrast / pivot">コントラスト / ピボット</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="3-Way カラー補正（シャドウ / ミッド / ハイライト）" data-en="3-Way color correction (shadows / mids / highlights)">3-Way カラー補正（シャドウ / ミッド / ハイライト）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="色温度 / ティント" data-en="Temperature / tint">色温度 / ティント</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="色相 / 彩度（HSL）" data-en="Hue / saturation (HSL)">色相 / 彩度（HSL）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="カーブ（Y / R / G / B）" data-en="Curves (Y / R / G / B)">カーブ（Y / R / G / B）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="トーンマップ（シャドウ / ハイライト / ピボット）" data-en="Tone map (shadows / highlights / pivot)">トーンマップ（シャドウ / ハイライト / ピボット）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="AWB / AE アイドロッパー — 白や露出を画面から拾う" data-en="AWB / AE eyedroppers — pick white or exposure off the picture">AWB / AE アイドロッパー — 白や露出を画面から拾う</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="A/B バイパス — 補正前後を一瞬で比較" data-en="A/B bypass — before and after, instantly">A/B バイパス — 補正前後を一瞬で比較</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="LUT 読み込み（.cube）" data-en="Load a LUT (.cube)">LUT 読み込み（.cube）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="LUT 書き出し — 作った色を他のソフトへ" data-en="Export a LUT — take your color to other software">LUT 書き出し — 作った色を他のソフトへ</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr><td colspan="3" style="padding:26px 16px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;color:#e5484d;border-bottom:1px solid rgba(255,255,255,.08);" data-ja="画質" data-en="Quality">画質</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="アップスケール — MetalFX / Anime4K / Apple ML" data-en="Upscaling — MetalFX / Anime4K / Apple ML">アップスケール — MetalFX / Anime4K / Apple ML</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="ノイズリダクション（空間）" data-en="Noise reduction (spatial)">ノイズリダクション（空間）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="ノイズリダクション（時間）— 動きに追従" data-en="Noise reduction (temporal) — follows motion">ノイズリダクション（時間）— 動きに追従</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="シャープネス（アンシャープマスク）" data-en="Sharpening (unsharp mask)">シャープネス（アンシャープマスク）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="Wiener デブラー — 逆フィルタでぼけを復元" data-en="Wiener deblur — an inverse filter recovers the blur">Wiener デブラー — 逆フィルタでぼけを復元</span><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#e5484d;border:1px solid rgba(229,72,77,.5);border-radius:4px;padding:1px 5px;margin-left:8px;vertical-align:middle;">NEW</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="デバンド — 空やグラデーションの縞を除去" data-en="Debanding — clears the stepping in skies and gradients">デバンド — 空やグラデーションの縞を除去</span><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#e5484d;border:1px solid rgba(229,72,77,.5);border-radius:4px;padding:1px 5px;margin-left:8px;vertical-align:middle;">NEW</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="デインターレース" data-en="Deinterlacing">デインターレース</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr><td colspan="3" style="padding:26px 16px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;color:#e5484d;border-bottom:1px solid rgba(255,255,255,.08);" data-ja="プレーヤー" data-en="Player">プレーヤー</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="libmpv ベース — 幅広いコンテナ / コーデック" data-en="Built on libmpv — a wide range of containers / codecs">libmpv ベース — 幅広いコンテナ / コーデック</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="HDR → EDR 表示（BT.2390 トーンマップ）" data-en="HDR → EDR display (BT.2390 tone mapping)">HDR → EDR 表示（BT.2390 トーンマップ）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="フレーム単位の前後移動" data-en="Step a frame at a time, forward and back">フレーム単位の前後移動</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="シークバーのサムネイルプレビュー" data-en="Thumbnail preview on the seek bar">シークバーのサムネイルプレビュー</span><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#e5484d;border:1px solid rgba(229,72,77,.5);border-radius:4px;padding:1px 5px;margin-left:8px;vertical-align:middle;">NEW</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="プレイリスト / フォルダを開く" data-en="Playlist / open a folder">プレイリスト / フォルダを開く</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="URL を開く — http / https / rtsp / rtmp" data-en="Open a URL — http / https / rtsp / rtmp">URL を開く — http / https / rtsp / rtmp</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="再生速度の変更" data-en="Playback speed">再生速度の変更</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="表示モード（フィット / フィル / 実際のサイズ）" data-en="Fit modes (fit / fill / actual size)">表示モード（フィット / フィル / 実際のサイズ）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="フレームキャッシュ — コマ戻しを高速化" data-en="Frame cache — makes stepping back fast">フレームキャッシュ — コマ戻しを高速化</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="既定のプレーヤーに設定" data-en="Set as the default player">既定のプレーヤーに設定</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr><td colspan="3" style="padding:26px 16px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;color:#e5484d;border-bottom:1px solid rgba(255,255,255,.08);" data-ja="音声・字幕" data-en="Audio & subtitles">音声・字幕</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="音声トラックの切り替え" data-en="Switch audio track">音声トラックの切り替え</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="A/V 同期調整（±50ms 単位）" data-en="A/V sync adjustment (±50 ms steps)">A/V 同期調整（±50ms 単位）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="ナイトモード — 音量を均一化" data-en="Night mode — evens out the volume">ナイトモード — 音量を均一化</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="字幕トラックの切り替え・表示 / 非表示" data-en="Switch subtitle track, show / hide">字幕トラックの切り替え・表示 / 非表示</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr><td colspan="3" style="padding:26px 16px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;color:#e5484d;border-bottom:1px solid rgba(255,255,255,.08);" data-ja="計測・検証" data-en="Measurement">計測・検証</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="スコープ — 波形 / ベクトル / RGB パレード / ヒストグラム" data-en="Scopes — waveform / vectorscope / RGB parade / histogram">スコープ — 波形 / ベクトル / RGB パレード / ヒストグラム</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="スポットプローブ — 画面上の 1 点の RGB 値を読む" data-en="Spot probe — read the RGB value of one point on screen">スポットプローブ — 画面上の 1 点の RGB 値を読む</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="インスペクタ — コーデック / ビットレート / 実行 fps ほか" data-en="Inspector — codec / bitrate / actual fps and more">インスペクタ — コーデック / ビットレート / 実行 fps ほか</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="テスト信号 — グレースケール / カラーバー / PLUGE ほか" data-en="Test patterns — grayscale / color bars / PLUGE and more">テスト信号 — グレースケール / カラーバー / PLUGE ほか</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="表示ガンマの切り替え（sRGB / Gamma 2.4）" data-en="Switch display gamma (sRGB / Gamma 2.4)">表示ガンマの切り替え（sRGB / Gamma 2.4）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="色域のカラーマネジメント切り替え" data-en="Switch gamut color management">色域のカラーマネジメント切り替え</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -345,23 +388,23 @@
   <!-- pricing -->
   <div class="pad" id="pro" style="padding:88px 72px;background:#0d0d10;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;align-items:center;gap:14px;">
     <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;color:#e5484d;">PRICING</div>
-    <h2 class="h-l" style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;text-align:center;">まず無料で、必要なら PRO を解放。</h2>
-    <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;color:#a4a4a0;text-align:center;max-width:600px;">無料版でも自動調整（バランス）でワンタッチで色を整えられます。さらに追い込みたいときは、PRO 機能をアプリ内課金（買い切り）でいつでも解放。</p>
-    <div style="display:inline-flex;align-items:center;gap:10px;margin-top:8px;border:1px solid rgba(255,255,255,.14);border-radius:24px;padding:9px 18px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#c4c4c0;"><span style="width:7px;height:7px;border-radius:50%;background:#e5484d;"></span>無料版：自動調整（バランス）搭載</div>
+    <h2 class="h-l" style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;text-align:center;" data-ja="まず無料で、必要なら PRO を解放。" data-en="Free first. Unlock PRO if you need it.">まず無料で、必要なら PRO を解放。</h2>
+    <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;color:#a4a4a0;text-align:center;max-width:600px;" data-ja="無料版でも自動調整（バランス）でワンタッチで色を整えられます。さらに追い込みたいときは、PRO 機能をアプリ内課金（買い切り）でいつでも解放。" data-en="Even the free version sets your color in one press with auto-adjust (Balanced). When you want to push it further, unlock the PRO tools any time with a one-time in-app purchase.">無料版でも自動調整（バランス）でワンタッチで色を整えられます。さらに追い込みたいときは、PRO 機能をアプリ内課金（買い切り）でいつでも解放。</p>
+    <div style="display:inline-flex;align-items:center;gap:10px;margin-top:8px;border:1px solid rgba(255,255,255,.14);border-radius:24px;padding:9px 18px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#c4c4c0;"><span style="width:7px;height:7px;border-radius:50%;background:#e5484d;"></span><span data-ja="無料版：自動調整（バランス）搭載" data-en="Free version: auto-adjust (Balanced) included">無料版：自動調整（バランス）搭載</span></div>
     <div class="pricecard" style="border:1px solid #e5484d;border-radius:14px;padding:44px;display:flex;flex-direction:column;gap:26px;background:#0a0a0b;width:100%;max-width:720px;margin-top:36px;position:relative;">
-      <span style="position:absolute;top:-12px;left:44px;background:#e5484d;color:#0a0a0b;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;">アプリ内課金 · 買い切り</span>
+      <span style="position:absolute;top:-12px;left:44px;background:#e5484d;color:#0a0a0b;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;" data-ja="アプリ内課金 · 買い切り" data-en="In-app purchase · one time">アプリ内課金 · 買い切り</span>
       <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:12px;">
         <div style="font-size:24px;color:#f2f2f0;font-weight:600;">Kuro PRO</div>
         <div style="font-size:44px;color:#f2f2f0;font-weight:700;">¥2,000 <span style="font-size:16px;color:#7a7a76;font-weight:500;">/ $14.99</span></div>
       </div>
       <div style="height:1px;background:rgba(255,255,255,.08);"></div>
       <ul style="list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:14px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;">
-        <li style="color:#e5484d;">✓ ホイール / カーブ / HSL / LUT フル</li>
-        <li style="color:#e5484d;">✓ アップスケール & Wiener デブラー</li>
-        <li style="color:#e5484d;">✓ ノイズ除去・シャープ・デバンド</li>
-        <li style="color:#e5484d;">✓ 全スコープ表示</li>
+        <li style="color:#e5484d;" data-ja="✓ ホイール / カーブ / HSL / LUT フル" data-en="✓ Wheels / curves / HSL / LUT in full">✓ ホイール / カーブ / HSL / LUT フル</li>
+        <li style="color:#e5484d;" data-ja="✓ アップスケール & Wiener デブラー" data-en="✓ Upscaling & Wiener deblur">✓ アップスケール & Wiener デブラー</li>
+        <li style="color:#e5484d;" data-ja="✓ ノイズ除去・シャープ・デバンド" data-en="✓ Noise reduction, sharpening, debanding">✓ ノイズ除去・シャープ・デバンド</li>
+        <li style="color:#e5484d;" data-ja="✓ 全スコープ表示" data-en="✓ All scopes">✓ 全スコープ表示</li>
       </ul>
-      <a href="#dl" style="text-align:center;background:#e5484d;color:#0a0a0b;font-weight:600;padding:15px;border-radius:8px;">まず無料でダウンロード</a>
+      <a href="#dl" style="text-align:center;background:#e5484d;color:#0a0a0b;font-weight:600;padding:15px;border-radius:8px;" data-ja="まず無料でダウンロード" data-en="Start with the free download">まず無料でダウンロード</a>
     </div>
   </div>
 
@@ -369,16 +412,17 @@
   <div class="pad" id="dl" style="position:relative;padding:104px 72px;text-align:center;background:#050506;overflow:hidden;">
     <div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(229,72,77,.1),transparent 70%);"></div>
     <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:22px;">
-      <h2 class="h-xl" style="font-size:56px;color:#f2f2f0;font-weight:700;letter-spacing:-.02em;">本当の色を、無料で。</h2>
-      <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;color:#a4a4a0;">本体無料。Kuro PRO は $14.99 / ¥2,000 の買い切り。</p>
-      <a href="https://apps.apple.com/app/apple-store/id6782262572?pt=128819275&amp;ct=website&amp;mt=8" style="background:#e5484d;color:#0a0a0b;font-weight:600;font-size:17px;padding:18px 40px;border-radius:8px;margin-top:8px;">Mac App Store で無料ダウンロード</a>
+      <h2 class="h-xl" style="font-size:56px;color:#f2f2f0;font-weight:700;letter-spacing:-.02em;" data-ja="本当の色を、無料で。" data-en="The real color. Free.">本当の色を、無料で。</h2>
+      <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;color:#a4a4a0;" data-ja="本体無料。Kuro PRO は $14.99 / ¥2,000 の買い切り。" data-en="The app is free. Kuro PRO is a one-time $14.99 / ¥2,000.">本体無料。Kuro PRO は $14.99 / ¥2,000 の買い切り。</p>
+      <a href="https://apps.apple.com/app/apple-store/id6782262572?pt=128819275&amp;ct=website&amp;mt=8" style="background:#e5484d;color:#0a0a0b;font-weight:600;font-size:17px;padding:18px 40px;border-radius:8px;margin-top:8px;" data-ja="Mac App Store で無料ダウンロード" data-en="Download free on the Mac App Store">Mac App Store で無料ダウンロード</a>
     </div>
   </div>
 
   <!-- footer -->
   <div class="pad" style="padding:40px 72px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;border-top:1px solid rgba(255,255,255,.06);">
     <div style="display:flex;align-items:center;gap:10px;color:#f2f2f0;font-size:16px;font-weight:700;letter-spacing:.12em;"><span style="width:16px;height:16px;border-radius:4px;background:#0a0a0b;border:1.5px solid #e5484d;display:inline-block;"></span>KURO</div>
-    <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6a6a66;">© 2026 RustyWorks · <a href="https://apps.apple.com/app/apple-store/id6782262572?pt=128819275&amp;ct=website&amp;mt=8" style="color:#6a6a66;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(255,255,255,.2);">Mac App Store で配信中</a></div>
+    <a href="index.html" style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#8a8a86;" data-ja="← RustyWorks トップへ" data-en="← Back to RustyWorks">← RustyWorks トップへ</a>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6a6a66;">© 2026 RustyWorks · <a href="https://apps.apple.com/app/apple-store/id6782262572?pt=128819275&amp;ct=website&amp;mt=8" style="color:#6a6a66;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(255,255,255,.2);" data-ja="Mac App Store で配信中" data-en="On the Mac App Store">Mac App Store で配信中</a></div>
   </div>
 
 </div>
@@ -392,9 +436,23 @@
   const canvas = document.getElementById('gl');
   const gl = canvas.getContext('webgl2', { antialias:false, alpha:false });
 
+  // ---- text this demo writes itself --------------------------------------
+  // Same reason as the 1.5 demo below: the data-ja/data-en pass runs once over
+  // the DOM, and JS writes all of this after it.
+  const T = p => RW.t(p);
+  const STR = {
+    auto:      { ja:'自動調整',                 en:'Auto adjust' },
+    autoOn:    { ja:'✓ 自動調整',               en:'✓ Auto adjust' },
+    loading:   { ja:'読み込み中…',              en:'Loading…' },
+    tapToPlay: { ja:'タップして再生',           en:'Tap to play' },
+    loadFailed:{ ja:'映像を読み込めませんでした', en:'The video could not be loaded' },
+    noWebGL:   { ja:'お使いのブラウザは WebGL2 に対応していないため、このデモを表示できません。',
+                 en:'This browser does not support WebGL2, so this demo cannot run.' },
+  };
+
   if (!gl) {
     document.getElementById('stage').innerHTML =
-      '<div class="fallback">お使いのブラウザは WebGL2 に対応していないため、このデモを表示できません。</div>';
+      '<div class="fallback">' + T(STR.noWebGL) + '</div>';
     return;
   }
 
@@ -532,13 +590,13 @@
   // does — auto-adjust reads the picture, so one fixed set of numbers would be
   // wrong for footage this different (a hazy forest vs a backlit sunset).
   const CLIPS = [
-    { label:'森の川',   file:'assets/lp/demo-river.mp4',  poster:'assets/lp/demo-river.jpg',
+    { label:{ ja:'森の川', en:'Forest river' },   file:'assets/lp/demo-river.mp4',  poster:'assets/lp/demo-river.jpg',
       auto:{ gain:1.10, lift:-0.018, con:1.20, temp:0.06, sat:1.28, tint:0 } },
-    { label:'花畑',     file:'assets/lp/demo-flower.mp4', poster:'assets/lp/demo-flower.jpg',
+    { label:{ ja:'花畑', en:'Flower field' },     file:'assets/lp/demo-flower.mp4', poster:'assets/lp/demo-flower.jpg',
       auto:{ gain:1.04, lift:-0.014, con:1.16, temp:0.03, sat:1.20, tint:0 } },
-    { label:'夕景',     file:'assets/lp/demo-sunset.mp4', poster:'assets/lp/demo-sunset.jpg',
+    { label:{ ja:'夕景', en:'Sunset' },     file:'assets/lp/demo-sunset.mp4', poster:'assets/lp/demo-sunset.jpg',
       auto:{ gain:1.14, lift:-0.010, con:1.14, temp:0.10, sat:1.18, tint:0 } },
-    { label:'オーロラ', file:'assets/lp/demo-aurora.mp4', poster:'assets/lp/demo-aurora.jpg',
+    { label:{ ja:'オーロラ', en:'Aurora' }, file:'assets/lp/demo-aurora.mp4', poster:'assets/lp/demo-aurora.jpg',
       auto:{ gain:1.32, lift:-0.006, con:1.18, temp:-0.05, sat:1.26, tint:0 } },
   ];
   let clipIndex = 0, loadedSrc = null;
@@ -571,7 +629,7 @@
   function syncButtons(v) {
     const isAuto = matches(v, CLIPS[clipIndex].auto);
     autoBtn.classList.toggle('applied', isAuto);
-    autoBtn.textContent = isAuto ? '✓ 自動調整' : '自動調整';
+    autoBtn.textContent = T(isAuto ? STR.autoOn : STR.auto);
     resetBtn.disabled = matches(v, DEFAULTS);
   }
   ids.forEach(i => el[i].addEventListener('input', push));
@@ -596,7 +654,7 @@
   const clipBar = document.getElementById('clips');
   CLIPS.forEach((c, i) => {
     const b = document.createElement('button');
-    b.textContent = c.label;
+    b.textContent = T(c.label);
     b.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
     b.addEventListener('click', () => selectClip(i));
     clipBar.appendChild(b);
@@ -639,7 +697,7 @@
   stage.addEventListener('pointerdown', e => {
     // A tap doubles as the user gesture that unblocks playback when autoplay
     // was refused (Low Power Mode), so the demo isn't a dead poster.
-    if (needsGesture) { needsGesture = false; loadingEl.textContent = '読み込み中…'; resume(); }
+    if (needsGesture) { needsGesture = false; setLoading('loading'); resume(); }
     dragging = true; stage.setPointerCapture(e.pointerId); setSplit(e.clientX);
   });
   stage.addEventListener('pointermove', e => { if (dragging) setSplit(e.clientX); });
@@ -695,17 +753,19 @@
   // out, so surface the state and let a tap recover it.
   const loadingEl = document.getElementById('loading');
   let needsGesture = false;
+  let loadingKey = 'loading';
+  function setLoading(key) { loadingKey = key; loadingEl.textContent = T(STR[key]); }
 
   function resume() {
     if (!onScreen) return;
     ensureLoaded();
     video.play()
       .then(() => { needsGesture = false; })
-      .catch(() => { needsGesture = true; loadingEl.textContent = 'タップして再生'; });
+      .catch(() => { needsGesture = true; setLoading('tapToPlay'); });
     if (!running) { running = true; requestAnimationFrame(draw); }
   }
   video.addEventListener('error', () => {
-    loadingEl.textContent = '映像を読み込めませんでした';
+    setLoading('loadFailed');
     stage.classList.remove('ready');
   });
   function suspend() { video.pause(); }
@@ -721,7 +781,63 @@
       onScreen ? resume() : suspend();
     }, { threshold: 0.1 }).observe(stage);
   }
+
+  // Re-paint on a language switch, and once at load. push() is what re-derives
+  // the auto button's label, so it stands in for the button here.
+  function repaint() {
+    [...clipBar.children].forEach((b, i) => b.textContent = T(CLIPS[i].label));
+    setLoading(loadingKey);
+    push();
+  }
+  RW.onChange(repaint);
+  repaint();
+
   resume();
+})();
+</script>
+<script>
+// The language switch. Same shape as the top page — the choice is shared in
+// localStorage, so EN carries across the site — with two additions this page
+// needs and the top page does not:
+//
+//   · screenshots whose UI is inside the picture, swapped through data-src-*
+//   · RW.notify(), for the strings the two WebGL demos write from JS
+(function () {
+  var buttons = document.querySelectorAll('.lang button');
+  var nodes   = document.querySelectorAll('[data-ja][data-en]');
+  var media   = document.querySelectorAll('[data-alt-ja][data-alt-en], [data-src-ja][data-src-en]');
+  // The OGP meta stays Japanese, the way the top page leaves it: crawlers read
+  // the document before any of this runs, so switching it would fool nobody.
+  // The tab title is different — a reader sees that one.
+  var TITLE = { ja: document.title, en: 'Kuro — see the color that is really there. | RustyWorks' };
+
+  function apply(lang) {
+    RW.lang = lang;
+    document.documentElement.lang = lang;
+    document.title = TITLE[lang];
+    nodes.forEach(function (el) {
+      var text = el.getAttribute('data-' + lang);
+      if (text !== null) el.textContent = text;
+    });
+    media.forEach(function (el) {
+      var src = el.getAttribute('data-src-' + lang);
+      if (src) el.src = src;
+      var alt = el.getAttribute('data-alt-' + lang);
+      if (alt !== null) el.alt = alt;
+    });
+    buttons.forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
+    });
+    try { localStorage.setItem(RW.key, lang); } catch (e) {}
+    RW.notify();
+  }
+
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () { apply(b.dataset.lang); });
+  });
+
+  // Japanese is what the markup already says, so only EN needs a pass here.
+  if (RW.lang === 'en') apply('en');
 })();
 </script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "04f66ad1837a4b63af68beb6e835358f"}'></script><!-- End Cloudflare Web Analytics -->
