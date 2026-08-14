@@ -42,6 +42,8 @@
   }
   @media (max-width: 760px) {
     #fs-nav-links { display: none !important; }
+    /* 狭いと収まらないので、製品名を落としてトップへの導線を残す */
+    .site-mark { display: none !important; }
     .fs-two-col { grid-template-columns: 1fr !important; }
     .fs-pad { padding-left: 24px !important; padding-right: 24px !important; }
     #fs-hero-title { white-space: normal !important; font-size: 34px !important; }
@@ -55,7 +57,7 @@
 
   <nav style="position:sticky; top:0; z-index:50; background:rgba(255,255,255,.86); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:1px solid rgba(17,18,20,.06);">
     <div class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px; height:64px; display:flex; align-items:center; justify-content:space-between; gap:24px;">
-      <a href="#top" style="font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:.14em; font-size:15px; color:#111214;">RECOUP</a>
+      <span style="display:flex; align-items:center;"><a class="site-home" href="index.html" style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.04em; color:#5f6368; margin-right:18px;" data-ja="&larr; RustyWorks" data-en="&larr; RustyWorks">&larr; RustyWorks</a><a class="site-mark" href="#top" style="font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:.14em; font-size:15px; color:#111214;">RECOUP</a></span>
       <div id="fs-nav-links" style="display:flex; align-items:center; gap:32px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.04em;">
         <a href="#how" style="color:#5f6368;" data-ja="仕組み" data-en="How it works">仕組み</a>
         <a href="#tools" style="color:#5f6368;" data-ja="3つの機能" data-en="Three tools">3つの機能</a>
