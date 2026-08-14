@@ -3,9 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- このファイルは外部と一切通信しません。上の CSP が通信手段そのものを禁じており、
-     アクセス計測の類も含まれていません。文書はこのファイルの中に入っています。 -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data: blob: file:; font-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'; frame-src 'none'; object-src 'none'; media-src 'self' data: blob: file:;">
+<!-- 万一この画面でスクリプトが動いても、外部へ送信させない・外部から読み込ませない。
+     許可しているのは rustyworks.jp での閲覧数集計に使う Cloudflare の2ホストだけで、
+     それも下の計測タグが rustyworks.jp 以外では発火しない。
+     書き出した取説では、このメタごと connect-src 'none' の厳格版に差し替わる。 -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'unsafe-inline'; img-src 'self' data: blob: file: https: http:; font-src data:; connect-src https://cloudflareinsights.com; form-action 'none'; base-uri 'none'; frame-src 'none'; object-src 'none'; media-src 'self' data: blob: file:;">
 <title>DocPane 取扱説明書</title>
 <style>
 /* ===== テーマ変数 =========================================== */
@@ -1659,6 +1661,21 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 else loadEmbedded();
 </script>
 
+<!-- アクセス計測。Cloudflare Web Analytics（Cookie を使わないので同意バナー不要）。
+     計測されるのは閲覧数・流入元・時系列だけで、開いた .md の中身は送信されない。
+     rustyworks.jp で開かれたときだけ発火する。保存したファイルや書き出した取説は
+     ホスト名が違うため動かず、外部リクエストは0のまま。
+     書き出し時にはこのタグごと取り除かれる。 -->
+<script id="cf-analytics">
+const CF_TOKEN = "04f66ad1837a4b63af68beb6e835358f";   // Cloudflare Web Analytics のトークン（公開値）を入れる
+if (CF_TOKEN && location.hostname === "rustyworks.jp") {
+  const b = document.createElement("script");
+  b.defer = true;
+  b.src = "https://static.cloudflareinsights.com/beacon.min.js";
+  b.setAttribute("data-cf-beacon", JSON.stringify({ token: CF_TOKEN }));
+  document.head.appendChild(b);
+}
+</script>
 <script type="text/plain" class="docpane-doc" data-name="DocPane_manual.md">
 ---
 title: DocPane 取扱説明書
