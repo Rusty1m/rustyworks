@@ -968,8 +968,18 @@ if (CASES.length) {
 
 /* 起動時の言語：記憶 → 無ければブラウザの言語 */
 var saved = null;
-try { saved = localStorage.getItem(LANG_KEY); } catch (e) {}
-if (!saved) saved = (navigator.language || '').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en';
+// 言語は強い順に決める。1. URL の ?lang  2. 前回の選択  3. 既定は日本語。
+// ブラウザの言語では切り替えない。クローラーは en を名乗ることが多く、
+// 日本語で書いたページが英語で索引されてしまうため。
+try {
+  var q = new URLSearchParams(location.search).get('lang');
+  if (q === 'en' || q === 'ja') {
+    saved = q;
+    localStorage.setItem(LANG_KEY, q);
+  }
+} catch (e) {}
+if (!saved) { try { saved = localStorage.getItem(LANG_KEY); } catch (e) {} }
+if (!saved) saved = 'ja';
 applyLang(saved);
 </script>
 

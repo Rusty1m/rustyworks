@@ -65,8 +65,18 @@ code{font-family:var(--mono); font-size:.9em; background:#fff; border:1px solid 
 // 言語はサイト全体の記憶（rw-lang）に従う。中継ページなので切替ボタンは置かない。
 (function(){
   var lang = null;
-  try { lang = localStorage.getItem('rw-lang'); } catch (e) {}
-  if (!lang) lang = (navigator.language || '').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en';
+  // 言語は強い順に決める。1. URL の ?lang  2. 前回の選択  3. 既定は日本語。
+  // ブラウザの言語では切り替えない。クローラーは en を名乗ることが多く、
+  // 日本語で書いたページが英語で索引されてしまうため。
+  try {
+    var q = new URLSearchParams(location.search).get('lang');
+    if (q === 'en' || q === 'ja') {
+      lang = q;
+      localStorage.setItem('rw-lang', q);
+    }
+  } catch (e) {}
+  if (!lang) { try { lang = localStorage.getItem('rw-lang'); } catch (e) {} }
+  if (!lang) lang = 'ja';
   document.documentElement.lang = lang;
   document.querySelectorAll('[data-ja][data-en]').forEach(function (el) {
     var t = el.getAttribute('data-' + lang);
