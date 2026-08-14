@@ -217,6 +217,83 @@ curl -s -o /dev/null -w '%{http_code}\n' https://rustyworks.jp/assets/og/xxx-og.
 どちらも `200` であること。**`og:image` が 404 だと、カードは画像なしで出ます。**
 一覧からリンクが繋がっているかも合わせて確認します。
 
+## LP（製品ページ）の決まりごと
+
+製品ごとのページは、見た目を作り込むぶん各自バラバラになりがちです。
+**次の3つはページをまたいで揃えます。**
+
+### 1. 日英を切り替えられるようにする
+
+トップと同じ仕組みを載せます。ヘッダーに JA / EN のボタンを置き、
+切り替えたい要素に `data-ja` / `data-en` を書きます。
+
+```html
+<div class="lang" role="group" aria-label="Language">
+  <button type="button" data-lang="ja" aria-pressed="true">JA</button>
+  <span class="sep">/</span>
+  <button type="button" data-lang="en" aria-pressed="false">EN</button>
+</div>
+```
+
+```js
+var KEY = 'rw-lang';
+var buttons = document.querySelectorAll('.lang button');
+var nodes = document.querySelectorAll('[data-ja][data-en]');
+
+function apply(lang) {
+  document.documentElement.lang = lang;
+  nodes.forEach(function (el) {
+    var text = el.getAttribute('data-' + lang);
+    if (text !== null) el.textContent = text;
+  });
+  buttons.forEach(function (b) {
+    b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
+  });
+  try { localStorage.setItem(KEY, lang); } catch (e) {}
+}
+buttons.forEach(function (b) {
+  b.addEventListener('click', function () { apply(b.dataset.lang); });
+});
+var saved = null;
+try { saved = localStorage.getItem(KEY); } catch (e) {}
+if (!saved) saved = (navigator.language || '').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en';
+if (saved === 'en') apply('en');
+```
+
+- **保存先の `rw-lang` はサイト全体で共有です。** だからトップで EN にした人は、
+  LP も EN で開きます。**LP に仕組みが無いと、そのページだけ日本語に戻ります**
+- 入れ替えるのは `textContent` です。`placeholder` を訳すときは
+  `data-ph-ja` / `data-ph-en` を使い、`el.placeholder` に入れます（`contact.html` が例）
+- `data-ja` と `data-en` は**両方**書きます。片方だけの要素は切り替わりません
+
+### 2. トップへ戻る導線を、上と下の両方に置く
+
+**一番上（ヘッダー）と一番下（フッター）の2か所です。**
+
+LP は検索やリンクの共有から**直接入ってくる**ページです。上にしか無いと
+読み終えた人が戻れず、下にしか無いと読む前に離れた人が戻れません。
+
+`href` は `index.html`。サブフォルダに置く Web アプリからは `../index.html` です。
+
+### 3. できるだけライトテーマにする
+
+地は白、文字は濃いグレー。値は他のページと同じものを使います。
+
+| 用途 | 値 |
+|---|---|
+| 地 | `#ffffff` |
+| パネル | `#f7f7f8` / 一段沈める場合 `#f0f0f2` |
+| 罫線 | `#e4e4e7` |
+| 本文・見出し | `#111214` |
+| 補助文字 | `#5f6368` / さらに薄く `#8a8d93` |
+| リンク・ボタンの青 | `#1a4fd8` / hover `#143fb0` |
+
+- **製品ごとの accent は個性として残して構いません**（不満ノート＝橙、
+  ShelfNavigator＝琥珀など）。地を白にすることが揃っていれば十分です
+- **暗い地の前提で選んだ明るい色を、そのまま白地に置かないこと。**
+  `#ff8f6b` のような色は白地でコントラストが足りません。濃い側へ振り直します
+- 色地のバッジに黒文字を載せていた箇所は、accent を濃くしたぶん白抜きにします
+
 ## Web アプリについて
 
 **Web アプリは1つにつき1フォルダ**にして、`index.html` を置きます。
