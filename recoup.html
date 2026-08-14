@@ -57,12 +57,17 @@
     <div class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px; height:64px; display:flex; align-items:center; justify-content:space-between; gap:24px;">
       <a href="#top" style="font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:.14em; font-size:15px; color:#111214;">RECOUP</a>
       <div id="fs-nav-links" style="display:flex; align-items:center; gap:32px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.04em;">
-        <a href="#how" style="color:#5f6368;">仕組み</a>
-        <a href="#tools" style="color:#5f6368;">3つの機能</a>
-        <a href="#formats" style="color:#5f6368;">対応形式</a>
-        <a href="#limits" style="color:#5f6368;">できること</a>
+        <a href="#how" style="color:#5f6368;" data-ja="仕組み" data-en="How it works">仕組み</a>
+        <a href="#tools" style="color:#5f6368;" data-ja="3つの機能" data-en="Three tools">3つの機能</a>
+        <a href="#formats" style="color:#5f6368;" data-ja="対応形式" data-en="Formats">対応形式</a>
+        <a href="#limits" style="color:#5f6368;" data-ja="できること" data-en="Limits">できること</a>
       </div>
-      <a href="https://rustyworks.itch.io/recoup" style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.03em; color:#ffffff; background:#1a4fd8; padding:9px 18px; border-radius:6px; font-weight:500;">itch.io で購入</a>
+      <div class="lang" role="group" aria-label="Language" style="display:flex; align-items:center; gap:2px; font-family:'IBM Plex Mono',monospace; font-size:12px; margin-left:auto; padding-right:18px;">
+        <button type="button" data-lang="ja" aria-pressed="true" style="font:inherit; background:none; border:0; cursor:pointer; color:#111214; padding:4px 6px; border-radius:4px;">JA</button>
+        <span style="color:#c9ccd1;">/</span>
+        <button type="button" data-lang="en" aria-pressed="false" style="font:inherit; background:none; border:0; cursor:pointer; color:#8a8d93; padding:4px 6px; border-radius:4px;">EN</button>
+      </div>
+      <a href="https://rustyworks.itch.io/recoup" style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.03em; color:#ffffff; background:#1a4fd8; padding:9px 18px; border-radius:6px; font-weight:500;" data-ja="itch.io で購入" data-en="Buy on itch.io">itch.io で購入</a>
     </div>
   </nav>
 
@@ -71,35 +76,43 @@
     <!-- HERO -->
     <section class="fs-pad" style="max-width:1200px; margin:0 auto; padding:140px 40px 120px; animation:fs-rise .7s ease both;">
       <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.16em; color:#1a4fd8; margin-bottom:34px;">macOS APP</div>
-      <h1 id="fs-hero-title" style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(7.4vw, 88px); line-height:1.1; letter-spacing:-.01em; white-space:nowrap;">消えた写真は、<br>まだそこにある。</h1>
-      <p style="margin-top:38px; font-size:20px; line-height:1.9; color:#5f6368; max-width:52ch;">外付けHDD・SSD・SDカード・USBメモリから、削除された写真や動画を探し出す macOS 用ツール。壊れかけのドライブからは、読める分だけを救い出します。</p>
+      <h1 id="fs-hero-title" style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(7.4vw, 88px); line-height:1.1; letter-spacing:-.01em; white-space:nowrap;"><span data-ja="消えた写真は、" data-en="Your deleted photos">消えた写真は、</span><br><span data-ja="まだそこにある。" data-en="are still there.">まだそこにある。</span></h1>
+      <p style="margin-top:38px; font-size:20px; line-height:1.9; color:#5f6368; max-width:52ch;" data-ja="外付けHDD・SSD・SDカード・USBメモリから、削除された写真や動画を探し出す macOS 用ツール。壊れかけのドライブからは、読める分だけを救い出します。" data-en="A macOS tool that finds deleted photos and videos on external HDDs, SSDs, SD cards, and USB drives. From failing drives, it salvages whatever still reads.">外付けHDD・SSD・SDカード・USBメモリから、削除された写真や動画を探し出す macOS 用ツール。壊れかけのドライブからは、読める分だけを救い出します。</p>
 
       <div style="margin-top:44px; display:flex; flex-wrap:wrap; gap:12px;">
-        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#111214; border:1px solid rgba(17,18,20,.13); padding:8px 15px; border-radius:6px;">生ディスク走査</span>
-        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#111214; border:1px solid rgba(17,18,20,.13); padding:8px 15px; border-radius:6px;">サムネイル確認</span>
-        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#111214; border:1px solid rgba(17,18,20,.13); padding:8px 15px; border-radius:6px;">中断・再開</span>
-        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#111214; border:1px solid rgba(17,18,20,.13); padding:8px 15px; border-radius:6px;">通信しない</span>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#111214; border:1px solid rgba(17,18,20,.13); padding:8px 15px; border-radius:6px;" data-ja="生ディスク走査" data-en="Raw disk scan">生ディスク走査</span>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#111214; border:1px solid rgba(17,18,20,.13); padding:8px 15px; border-radius:6px;" data-ja="サムネイル確認" data-en="Preview first">サムネイル確認</span>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#111214; border:1px solid rgba(17,18,20,.13); padding:8px 15px; border-radius:6px;" data-ja="中断・再開" data-en="Pause &amp; resume">中断・再開</span>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#111214; border:1px solid rgba(17,18,20,.13); padding:8px 15px; border-radius:6px;" data-ja="通信しない" data-en="No network">通信しない</span>
       </div>
 
       <div style="margin-top:48px; display:flex; flex-wrap:wrap; gap:14px; align-items:center;">
-        <a href="https://rustyworks.itch.io/recoup" style="display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:14px; color:#ffffff; background:#1a4fd8; padding:15px 30px; border-radius:8px; font-weight:500;">itch.io で購入 &nearr;</a>
-        <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#5f6368;">$9.99 · 買い切り · サブスクなし</span>
+        <a href="https://rustyworks.itch.io/recoup" style="display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:14px; color:#ffffff; background:#1a4fd8; padding:15px 30px; border-radius:8px; font-weight:500;" data-ja="itch.io で購入 ↗" data-en="Buy on itch.io ↗">itch.io で購入 &nearr;</a>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#5f6368;" data-ja="$9.99 · 買い切り · サブスクなし" data-en="$9.99 · one-time · no subscription">$9.99 · 買い切り · サブスクなし</span>
       </div>
     </section>
 
+
+    <!-- 画面写真。見出しは画像に焼き込んである -->
+    <section class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px 120px;">
+      <img src="assets/shots/recoup-01.webp" width="2000" height="1318"
+           loading="lazy" decoding="async"
+           alt="Recoup の画面。復元元のディスクを選ぶところ"
+           style="display:block; width:100%; height:auto; border-radius:12px; border:1px solid rgba(17,18,20,.08);">
+    </section>
     <!-- HOW -->
     <section id="how" class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px 120px;">
       <div style="border-top:1px solid rgba(17,18,20,.08); padding-top:80px;">
         <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.16em; color:#1a4fd8; margin-bottom:28px;">HOW IT WORKS</div>
-        <h2 style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(5vw,44px); line-height:1.3; margin-bottom:32px;">写真ライブラリを眺めるだけの<br>復元アプリとは違います。</h2>
+        <h2 style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(5vw,44px); line-height:1.3; margin-bottom:32px;"><span data-ja="写真ライブラリを眺めるだけの" data-en="Not just another app that">写真ライブラリを眺めるだけの</span><br><span data-ja="復元アプリとは違います。" data-en="browses your photo library.">復元アプリとは違います。</span></h2>
         <div class="fs-two-col" style="display:grid; grid-template-columns:1fr 1fr; gap:56px; margin-top:48px;">
           <div>
             <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#1a4fd8; margin-bottom:14px;">RAW DISK SCAN</div>
-            <p style="color:#45484d; line-height:1.9;">Recoup はカードやドライブの<strong style="color:#111214;">実際のセクタ</strong>を読み、ファイルシステムが手放したデータを掘り出します。FAT / exFAT / NTFS / APFS を問わず動作し、フォルダにはもう表示されないファイルも見つけられます。</p>
+            <p style="color:#45484d; line-height:1.9;"><span data-ja="Recoup はカードやドライブの" data-en="Recoup reads the ">Recoup はカードやドライブの</span><strong style="color:#111214;" data-ja="実際のセクタ" data-en="actual sectors">実際のセクタ</strong><span data-ja="を読み、ファイルシステムが手放したデータを掘り出します。FAT / exFAT / NTFS / APFS を問わず動作し、フォルダにはもう表示されないファイルも見つけられます。" data-en=" of a card or drive, digging out data the file system has let go. It works across FAT, exFAT, NTFS, and APFS, and finds files that no longer appear in any folder.">を読み、ファイルシステムが手放したデータを掘り出します。FAT / exFAT / NTFS / APFS を問わず動作し、フォルダにはもう表示されないファイルも見つけられます。</span></p>
           </div>
           <div>
             <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#1a4fd8; margin-bottom:14px;">SEE BEFORE YOU RESTORE</div>
-            <p style="color:#45484d; line-height:1.9;">見つかったファイルは<strong style="color:#111214;">サムネイルで一覧表示</strong>されます。実際に救えているかを目で確かめてから復元できるので、「復元したけど開けない」を避けられます。破損したファイルは読める範囲だけがプレビューされます。</p>
+            <p style="color:#45484d; line-height:1.9;"><span data-ja="見つかったファイルは" data-en="Everything found is shown ">見つかったファイルは</span><strong style="color:#111214;" data-ja="サムネイルで一覧表示" data-en="as thumbnails">サムネイルで一覧表示</strong><span data-ja="されます。実際に救えているかを目で確かめてから復元できるので、「復元したけど開けない」を避けられます。破損したファイルは読める範囲だけがプレビューされます。" data-en=". You can see for yourself what actually survived before restoring anything, so you never end up with files that will not open. Damaged files preview as far as they still read.">されます。実際に救えているかを目で確かめてから復元できるので、「復元したけど開けない」を避けられます。破損したファイルは読める範囲だけがプレビューされます。</span></p>
           </div>
         </div>
       </div>
@@ -109,23 +122,23 @@
     <section id="tools" class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px 120px;">
       <div style="border-top:1px solid rgba(17,18,20,.08); padding-top:80px;">
         <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.16em; color:#1a4fd8; margin-bottom:28px;">THREE TOOLS</div>
-        <h2 style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(5vw,44px); line-height:1.3; margin-bottom:56px;">症状に合わせて、3つ。</h2>
+        <h2 style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(5vw,44px); line-height:1.3; margin-bottom:56px;" data-ja="症状に合わせて、3つ。" data-en="Three tools, by severity.">症状に合わせて、3つ。</h2>
 
         <div style="display:flex; flex-direction:column; gap:2px;">
           <div style="background:#f7f7f8; border:1px solid rgba(17,18,20,.075); border-radius:10px; padding:32px;">
-            <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#1a4fd8; margin-bottom:10px;">01 — 軽症</div>
-            <h3 style="font-size:22px; font-weight:700; margin-bottom:12px;">削除ファイル復元</h3>
-            <p style="color:#5f6368; line-height:1.9;">ディスク全体を走査し、ファイル構造から写真・動画を組み立て直します。種類・状態で絞り込み、選んだものだけを復元。数TBの長時間スキャンも中断・再開できます。</p>
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#1a4fd8; margin-bottom:10px;" data-ja="01 — 軽症" data-en="01 — MILD">01 — 軽症</div>
+            <h3 style="font-size:22px; font-weight:700; margin-bottom:12px;" data-ja="削除ファイル復元" data-en="Recover deleted files">削除ファイル復元</h3>
+            <p style="color:#5f6368; line-height:1.9;" data-ja="ディスク全体を走査し、ファイル構造から写真・動画を組み立て直します。種類・状態で絞り込み、選んだものだけを復元。数TBの長時間スキャンも中断・再開できます。" data-en="Scans the whole disk and rebuilds photos and videos from their file structure. Filter by type and condition, then restore only what you pick. Even multi-terabyte scans can be paused and resumed.">ディスク全体を走査し、ファイル構造から写真・動画を組み立て直します。種類・状態で絞り込み、選んだものだけを復元。数TBの長時間スキャンも中断・再開できます。</p>
           </div>
           <div style="background:#f7f7f8; border:1px solid rgba(17,18,20,.075); border-radius:10px; padding:32px;">
-            <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#1a4fd8; margin-bottom:10px;">02 — 中症</div>
-            <h3 style="font-size:22px; font-weight:700; margin-bottom:12px;">救出コピー</h3>
-            <p style="color:#5f6368; line-height:1.9;">マウントはできるが調子の悪いドライブから、読めるファイルをコピーします。読めないブロックがあってもその部分だけ飛ばして続行し、1ファイル丸ごと諦めません。</p>
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#1a4fd8; margin-bottom:10px;" data-ja="02 — 中症" data-en="02 — MODERATE">02 — 中症</div>
+            <h3 style="font-size:22px; font-weight:700; margin-bottom:12px;" data-ja="救出コピー" data-en="Rescue copy">救出コピー</h3>
+            <p style="color:#5f6368; line-height:1.9;" data-ja="マウントはできるが調子の悪いドライブから、読めるファイルをコピーします。読めないブロックがあってもその部分だけ飛ばして続行し、1ファイル丸ごと諦めません。" data-en="Copies what still reads from a drive that mounts but misbehaves. When a block cannot be read, it skips just that part and keeps going instead of giving up on the whole file.">マウントはできるが調子の悪いドライブから、読めるファイルをコピーします。読めないブロックがあってもその部分だけ飛ばして続行し、1ファイル丸ごと諦めません。</p>
           </div>
           <div style="background:#f7f7f8; border:1px solid rgba(17,18,20,.075); border-radius:10px; padding:32px;">
-            <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#1a4fd8; margin-bottom:10px;">03 — 重症</div>
-            <h3 style="font-size:22px; font-weight:700; margin-bottom:12px;">ディスクをイメージ化</h3>
-            <p style="color:#5f6368; line-height:1.9;">異音がする、頻繁に切断されるドライブ向け。一度だけ全体を読んでイメージ化し、以降の作業は弱ったドライブではなくイメージに対して行えます。ドライブへの負担を最小化できます。</p>
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#1a4fd8; margin-bottom:10px;" data-ja="03 — 重症" data-en="03 — SEVERE">03 — 重症</div>
+            <h3 style="font-size:22px; font-weight:700; margin-bottom:12px;" data-ja="ディスクをイメージ化" data-en="Image the disk">ディスクをイメージ化</h3>
+            <p style="color:#5f6368; line-height:1.9;" data-ja="異音がする、頻繁に切断されるドライブ向け。一度だけ全体を読んでイメージ化し、以降の作業は弱ったドライブではなくイメージに対して行えます。ドライブへの負担を最小化できます。" data-en="For drives that click or keep disconnecting. Read the whole thing once into an image, then work against the image instead of the failing drive. That keeps the strain on it to a minimum.">異音がする、頻繁に切断されるドライブ向け。一度だけ全体を読んでイメージ化し、以降の作業は弱ったドライブではなくイメージに対して行えます。ドライブへの負担を最小化できます。</p>
           </div>
         </div>
       </div>
@@ -135,18 +148,18 @@
     <section id="formats" class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px 120px;">
       <div style="border-top:1px solid rgba(17,18,20,.08); padding-top:80px;">
         <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.16em; color:#1a4fd8; margin-bottom:28px;">FORMATS</div>
-        <h2 style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(5vw,44px); line-height:1.3; margin-bottom:48px;">対応形式</h2>
+        <h2 style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(5vw,44px); line-height:1.3; margin-bottom:48px;" data-ja="対応形式" data-en="Formats">対応形式</h2>
         <div class="fs-two-col" style="display:grid; grid-template-columns:1fr 1fr; gap:40px;">
           <div>
-            <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#5f6368; margin-bottom:14px;">写真</div>
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#5f6368; margin-bottom:14px;" data-ja="写真" data-en="Photos">写真</div>
             <p style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#111214; line-height:2;">JPEG · PNG · HEIC · GIF<br>TIFF · WebP · BMP</p>
             <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#5f6368; margin:28px 0 14px;">RAW</div>
             <p style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#111214; line-height:2;">CR2 · CR3 · NEF · ARW · DNG</p>
           </div>
           <div>
-            <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#5f6368; margin-bottom:14px;">動画</div>
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#5f6368; margin-bottom:14px;" data-ja="動画" data-en="Video">動画</div>
             <p style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#111214; line-height:2;">MP4 · MOV · HEVC<br>3GP · AVI</p>
-            <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#5f6368; margin:28px 0 14px;">音声</div>
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#5f6368; margin:28px 0 14px;" data-ja="音声" data-en="Audio">音声</div>
             <p style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#111214; line-height:2;">WAV</p>
           </div>
         </div>
@@ -157,19 +170,19 @@
     <section id="safe" class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px 120px;">
       <div style="border-top:1px solid rgba(17,18,20,.08); padding-top:80px;">
         <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.16em; color:#1a4fd8; margin-bottom:28px;">SAFETY</div>
-        <h2 style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(5vw,44px); line-height:1.3; margin-bottom:48px;">壊さない設計</h2>
+        <h2 style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(5vw,44px); line-height:1.3; margin-bottom:48px;" data-ja="壊さない設計" data-en="Built not to break things">壊さない設計</h2>
         <div class="fs-two-col" style="display:grid; grid-template-columns:1fr 1fr; gap:40px;">
           <div>
-            <h3 style="font-size:17px; font-weight:700; margin-bottom:10px;">復元元には書き込みません</h3>
-            <p style="color:#5f6368; line-height:1.9; margin-bottom:32px;">読み取り専用で開きます。復元したファイルは、指定した保存先にのみ書き出します。</p>
-            <h3 style="font-size:17px; font-weight:700; margin-bottom:10px;">完全オフライン</h3>
-            <p style="color:#5f6368; line-height:1.9;">通信・アナリティクス・テレメトリは一切ありません。スキャンした内容が外部へ出ることはありません。</p>
+            <h3 style="font-size:17px; font-weight:700; margin-bottom:10px;" data-ja="復元元には書き込みません" data-en="Never writes to the source">復元元には書き込みません</h3>
+            <p style="color:#5f6368; line-height:1.9; margin-bottom:32px;" data-ja="読み取り専用で開きます。復元したファイルは、指定した保存先にのみ書き出します。" data-en="The source is opened read-only. Recovered files are written only to the destination you choose.">読み取り専用で開きます。復元したファイルは、指定した保存先にのみ書き出します。</p>
+            <h3 style="font-size:17px; font-weight:700; margin-bottom:10px;" data-ja="完全オフライン" data-en="Fully offline">完全オフライン</h3>
+            <p style="color:#5f6368; line-height:1.9;" data-ja="通信・アナリティクス・テレメトリは一切ありません。スキャンした内容が外部へ出ることはありません。" data-en="No network access, no analytics, no telemetry of any kind. Nothing you scan ever leaves your Mac.">通信・アナリティクス・テレメトリは一切ありません。スキャンした内容が外部へ出ることはありません。</p>
           </div>
           <div>
-            <h3 style="font-size:17px; font-weight:700; margin-bottom:10px;">中断しても続きから</h3>
-            <p style="color:#5f6368; line-height:1.9; margin-bottom:32px;">進行状況は保存先にファイルとして記録されます。アプリ終了・再起動・停電のあとでも再開できます。</p>
-            <h3 style="font-size:17px; font-weight:700; margin-bottom:10px;">日本語・英語対応</h3>
-            <p style="color:#5f6368; line-height:1.9;">システムの言語設定に自動で追従します。</p>
+            <h3 style="font-size:17px; font-weight:700; margin-bottom:10px;" data-ja="中断しても続きから" data-en="Pick up where you left off">中断しても続きから</h3>
+            <p style="color:#5f6368; line-height:1.9; margin-bottom:32px;" data-ja="進行状況は保存先にファイルとして記録されます。アプリ終了・再起動・停電のあとでも再開できます。" data-en="Progress is written to the destination as a file, so you can resume after quitting, restarting, or a power cut.">進行状況は保存先にファイルとして記録されます。アプリ終了・再起動・停電のあとでも再開できます。</p>
+            <h3 style="font-size:17px; font-weight:700; margin-bottom:10px;" data-ja="日本語・英語対応" data-en="Japanese and English">日本語・英語対応</h3>
+            <p style="color:#5f6368; line-height:1.9;" data-ja="システムの言語設定に自動で追従します。" data-en="Follows your system language automatically.">システムの言語設定に自動で追従します。</p>
           </div>
         </div>
       </div>
@@ -179,27 +192,27 @@
     <section id="limits" class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px 120px;">
       <div style="border-top:1px solid rgba(17,18,20,.08); padding-top:80px;">
         <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.16em; color:#1a4fd8; margin-bottom:28px;">HONEST LIMITS</div>
-        <h2 style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(5vw,44px); line-height:1.3; margin-bottom:48px;">できること・できないこと</h2>
+        <h2 style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(5vw,44px); line-height:1.3; margin-bottom:48px;" data-ja="できること・できないこと" data-en="What it can and cannot do">できること・できないこと</h2>
         <div class="fs-two-col" style="display:grid; grid-template-columns:1fr 1fr; gap:40px;">
           <div style="background:#f7f7f8; border:1px solid rgba(26,79,216,.14); border-radius:10px; padding:28px;">
-            <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#1a4fd8; margin-bottom:16px;">得意なこと</div>
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#1a4fd8; margin-bottom:16px;" data-ja="得意なこと" data-en="Good at">得意なこと</div>
             <ul style="color:#45484d; line-height:2; padding-left:20px;">
-              <li>誤って削除した写真・動画の復元</li>
-              <li>フォーマット直後のカードからの復元</li>
-              <li>調子の悪いドライブからのサルベージ</li>
+              <li data-ja="誤って削除した写真・動画の復元" data-en="Recovering photos and videos you deleted by mistake">誤って削除した写真・動画の復元</li>
+              <li data-ja="フォーマット直後のカードからの復元" data-en="Recovering from a card you just formatted">フォーマット直後のカードからの復元</li>
+              <li data-ja="調子の悪いドライブからのサルベージ" data-en="Salvaging from a drive that is going bad">調子の悪いドライブからのサルベージ</li>
             </ul>
           </div>
           <div style="background:#f7f7f8; border:1px solid rgba(17,18,20,.10); border-radius:10px; padding:28px;">
-            <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#5f6368; margin-bottom:16px;">できないこと</div>
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#5f6368; margin-bottom:16px;" data-ja="できないこと" data-en="Cannot do">できないこと</div>
             <ul style="color:#5f6368; line-height:2; padding-left:20px;">
-              <li>上書きされたデータの復元</li>
-              <li>物理的に完全故障した媒体からの復元</li>
-              <li>ファイル名・撮影日時・フォルダ構造の復元</li>
-              <li>MTS(AVCHD) / RAF / ORF のカービング</li>
+              <li data-ja="上書きされたデータの復元" data-en="Recovering data that has been overwritten">上書きされたデータの復元</li>
+              <li data-ja="物理的に完全故障した媒体からの復元" data-en="Recovering from media that has physically failed outright">物理的に完全故障した媒体からの復元</li>
+              <li data-ja="ファイル名・撮影日時・フォルダ構造の復元" data-en="Restoring file names, capture dates, or folder structure">ファイル名・撮影日時・フォルダ構造の復元</li>
+              <li data-ja="MTS(AVCHD) / RAF / ORF のカービング" data-en="Carving MTS (AVCHD), RAF, or ORF">MTS(AVCHD) / RAF / ORF のカービング</li>
             </ul>
           </div>
         </div>
-        <p style="margin-top:32px; color:#5f6368; font-size:14px; line-height:1.9;">※ 削除に気づいたら、そのディスクへの書き込みをすぐ止めてください。上書きされた部分は戻せません。</p>
+        <p style="margin-top:32px; color:#5f6368; font-size:14px; line-height:1.9;" data-ja="※ 削除に気づいたら、そのディスクへの書き込みをすぐ止めてください。上書きされた部分は戻せません。" data-en="Note: the moment you notice something is missing, stop writing to that disk. Whatever has been overwritten cannot come back.">※ 削除に気づいたら、そのディスクへの書き込みをすぐ止めてください。上書きされた部分は戻せません。</p>
       </div>
     </section>
 
@@ -207,8 +220,8 @@
     <section class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px 140px;">
       <div style="border-top:1px solid rgba(17,18,20,.08); padding-top:80px; text-align:center;">
         <h2 style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(5.5vw,48px); line-height:1.3; margin-bottom:24px;">Recoup</h2>
-        <p style="color:#5f6368; margin-bottom:36px;">macOS 26 以降 · Apple Silicon / Intel · $9.99 買い切り</p>
-        <a href="https://rustyworks.itch.io/recoup" style="display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:14px; color:#ffffff; background:#1a4fd8; padding:15px 34px; border-radius:8px; font-weight:500;">itch.io で購入 &nearr;</a>
+        <p style="color:#5f6368; margin-bottom:36px;" data-ja="macOS 26 以降 · Apple Silicon / Intel · $9.99 買い切り" data-en="macOS 26 or later · Apple Silicon / Intel · $9.99 one-time">macOS 26 以降 · Apple Silicon / Intel · $9.99 買い切り</p>
+        <a href="https://rustyworks.itch.io/recoup" style="display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:14px; color:#ffffff; background:#1a4fd8; padding:15px 34px; border-radius:8px; font-weight:500;" data-ja="itch.io で購入 ↗" data-en="Buy on itch.io ↗">itch.io で購入 &nearr;</a>
         <div style="margin-top:28px; font-family:'IBM Plex Mono',monospace; font-size:13px;">
           <a href="recoup_manual.html" style="color:#5f6368;">Manual</a>
           <span style="color:#e4e4e7; margin:0 12px;">·</span>
@@ -222,7 +235,7 @@
   <footer style="border-top:1px solid rgba(17,18,20,.06); padding:40px;">
     <div style="max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#5f6368;">
       <a href="index.html" style="color:#5f6368;">&larr; RustyWorks</a>
-      <a href="site_privacy.html" style="color:#5f6368;">サイトのポリシー</a>
+      <a href="site_privacy.html" style="color:#5f6368;" data-ja="サイトのポリシー" data-en="Site policy">サイトのポリシー</a>
       <span>&copy; RustyWorks</span>
     </div>
   </footer>
@@ -244,5 +257,37 @@
 </nav>
 
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "04f66ad1837a4b63af68beb6e835358f"}'></script><!-- End Cloudflare Web Analytics -->
+<script>
+(function () {
+  'use strict';
+  // サイト共通の日英切り替え。選択は rw-lang に置くので、トップで EN に
+  // した人はこのページも EN で開く。入れ替えるのは textContent なので、
+  // 訳を付ける要素の中に別のタグを入れないこと。
+  var KEY = 'rw-lang';
+  var buttons = document.querySelectorAll('.lang button');
+  var nodes = document.querySelectorAll('[data-ja][data-en]');
+
+  function apply(lang) {
+    document.documentElement.lang = lang;
+    nodes.forEach(function (el) {
+      var text = el.getAttribute('data-' + lang);
+      if (text !== null) el.textContent = text;
+    });
+    buttons.forEach(function (b) {
+      var on = b.dataset.lang === lang;
+      b.setAttribute('aria-pressed', String(on));
+      b.style.color = on ? '#111214' : '#8a8d93';
+    });
+    try { localStorage.setItem(KEY, lang); } catch (e) {}
+  }
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () { apply(b.dataset.lang); });
+  });
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (!saved) saved = (navigator.language || '').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en';
+  if (saved === 'en') apply('en');
+})();
+</script>
 </body>
 </html>
