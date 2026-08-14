@@ -1679,40 +1679,27 @@ if (CF_TOKEN && location.hostname === "rustyworks.jp") {
 <script type="text/plain" class="docpane-doc" data-name="DocPane_manual.md">
 ---
 title: ShelfNavigator 取説 / Manual
-levels: [2, 3]
+levels: [1, 2]
 style: standard
 mode: page
+collapse: true
 ---
 
-# ShelfNavigator 取説 / Manual
+# 日本語
 
 ![ShelfNavigator](assets/icons/shelfnavigator.png)
 
 ShelfNavigator は、登録したフォルダを索引して、まとめて閲覧・検索する macOS 用アプリです。ドライブをまたいだ写真・動画・テキストが、フォルダの区切りなく1つの一覧になります。
 
-ShelfNavigator is a macOS app that indexes the folders you register and browses them as one. Photos, videos and text spread across several drives appear in a single grid, with the folder boundaries out of the way.
-
-## 概要 / Overview
-
-#### Japanese
+## 概要
 
 ShelfNavigator は、登録したフォルダを索引して、まとめて閲覧・検索するアプリです。
 
 ファイルを移動したりコピーしたりはしません。読み取って一覧にするだけで、元のフォルダ構成はそのまま残ります。
 
-#### English
-
-ShelfNavigator indexes the folders you register so you can browse and search them together.
-
-It never moves or copies your files. It reads them and lists them; your folder structure is left exactly as it was.
-
 > フォルダは入れ子で登録できます。ドライブ全体と、その中のプロジェクトフォルダを両方登録すれば、どちらもそれぞれの中身を表示します。
->
-> Registered folders may nest. Add a whole drive and a project folder inside it, and each lists its own contents.
 
-## 動作環境 / Environment
-
-#### 日本語
+## 動作環境
 
 - `macOS 14` 以降
 - **Apple Silicon**（M1 以降）専用
@@ -1720,77 +1707,41 @@ It never moves or copies your files. It reads them and lists them; your folder s
 - 対象：画像・動画・テキストファイル
 - 内蔵・外付け・ネットワークのフォルダに対応
 
-#### English
-
-- `macOS 14` or later
-- **Apple Silicon** only (M1+)
-- Distributed on the Mac App Store
-- Handles images, video and text files
-- Works with internal, external and network folders
-
 > ネットワークに接続しません。索引はこの Mac の中だけに保存され、外部へ送信されることはありません。
->
-> The app has no network access. The index stays on this Mac and is never sent anywhere.
 
-## クイックスタート / Quick Start
-
-#### 日本語
+## クイックスタート
 
 1. サイドバー下部の **フォルダを追加…**（`⌘O`）でフォルダを選ぶ
 2. 索引（スキャン）が自動で始まる
 3. 完了するとサイドバーに件数が表示される
 4. フォルダをもう1つ追加すると、**すべてのファイル** で全部が1つの一覧になる
 
-#### English
-
-1. Choose a folder with **Add Folder…** (`⌘O`) at the bottom of the sidebar
-2. Indexing starts on its own
-3. The sidebar shows a count when it finishes
-4. Add a second folder and **All Files** lists everything together
-
 > 大きなドライブの初回スキャンには時間がかかります。進行中も一覧は使えて、見つかった順に増えていきます。
->
-> The first scan of a large drive takes a while. You can keep using the grid while it runs; results fill in as they are found.
 
-## 画面概要 / Window Overview
+## 画面概要
 
-### サイドバー / Sidebar
+### サイドバー
 
 登録したフォルダと Finder タグの一覧。件数付き。
 
-Registered folders and Finder tags, with counts.
-
-### グリッド / Grid
+### グリッド
 
 サムネイルの一覧。下部のスライダーで大きさを変更。
 
-The thumbnail grid. The slider at the bottom changes tile size.
-
-### 情報パネル / Info Pane
+### 情報パネル
 
 選択中のファイルの寸法・再生時間・場所・タグ。`I` で表示切替。
 
-Dimensions, duration, location and tags for the selected file. `I` toggles it.
-
-### 検索とフィルタ / Search & Filters
+### 検索とフィルタ
 
 上部の検索欄、種類フィルタ、並び替え。
 
-The search field, kind filter and sort control along the top.
-
-#### 表示モード / View Modes
+#### 表示モード
 
 - **タイル表示**（`T` / `⌘1`）— サムネイルを並べる
 - **プレビュー表示**（`P` / `⌘2`）— 1つを大きく表示し、下部のフィルムストリップで移動
 
-#### View Modes
-
-- **Tile** (`T` / `⌘1`) — a grid of thumbnails
-- **Preview** (`P` / `⌘2`) — one file large, with a filmstrip below to move through them
-
-## 探す / Search
-
-#### 日本語
+## 探す
 
 検索欄には、普通の言葉のほか、次の指定が使えます。
 
@@ -1801,7 +1752,149 @@ The search field, kind filter and sort control along the top.
 - `-語` で除外、`"引用符"` で語順を固定
 - 範囲は `size:1mb..2mb` のように指定
 
-#### English
+フィルタボタンからは、サイズ・解像度・再生時間・日付を画面上で指定できます。Finder タグはサイドバーから選べます。
+
+## 選択と表示
+
+#### 選択
+
+- クリック — 単一選択
+- `⇧` クリック — 範囲選択
+- `⌘` クリック — 追加・解除
+- `⌘A` — すべて選択
+- 矢印キーで移動、`⇧`＋矢印で拡張
+
+#### 開く
+
+- `Return` / ダブルクリック — 既定のアプリで開く
+- `Space` — 動画の再生・一時停止
+- `F` または `⌘⇧R` — Finder で表示
+- `I` または `⌘⌥I` — 情報パネル
+
+> 設定の「開くアプリ」で、種類ごとに使うアプリを指定できます。macOS の既定は変更されません。
+
+## 重複を探す
+
+ツールバーの **重複**（`⌘⇧D`）で、登録した全フォルダを横断して重複を検出します。名前ではなく**内容**で比較します。
+
+結果画面では、残すファイルを選んでから他をゴミ箱へ移動できます。移動の直前にもう一度バイト単位で照合するので、内容が変わっていたものは自動的に除外されます。
+
+「Duplicate」タグを付けるだけにして、後で Finder で確認することもできます。
+
+## 削除と取り消し
+
+`⌘⌫` でゴミ箱へ移動します。**ShelfNavigator がファイルを完全に消去することはありません。**
+
+直後であれば `⌘Z` で元の場所に戻せます（同じ起動中のみ）。それ以降は Finder のゴミ箱から手動で戻してください。
+
+> 別のボリュームのファイルをゴミ箱へ移すと、そのボリューム上のゴミ箱に入ります。容量が足りない場合は、移動するファイルを選び直すよう確認が出ます。
+
+## 設定
+
+### タイル
+
+ホバーで動画を再生するかどうか。
+
+### パフォーマンス
+
+サムネイルのメモリを 256MB〜4GB から選択。多いほどスクロールが滑らかで、メモリを使います。
+
+### サムネイルキャッシュ
+
+ディスク使用量の表示と消去。フォルダの登録を解除すると、そのサムネイルは自動で削除されます。
+
+### 開くアプリ
+
+画像・動画・テキストごとに使うアプリを指定。
+
+「このアプリについて」からは、同梱しているオープンソースライブラリのライセンスを確認できます。
+
+## ショートカット
+
+- `⌘O` — **フォルダを追加**
+- `⌘R` — **すべてのフォルダを再スキャン**
+- `T` — **タイル表示**（`⌘1`）
+- `P` — **プレビュー表示**（`⌘2`）
+- `I` — **情報パネル**（`⌘⌥I`）
+- `F` — **Finder で表示**（`⌘⇧R`）
+- `Return` — **開く**（`⌘↓`）
+- `Space` — **動画の再生・一時停止**
+- `⌘A` — **すべて選択**
+- `⌘⇧D` — **重複を探す**
+- `⌘⌫` — **ゴミ箱に入れる**
+- `⌘Z` — **ゴミ箱への移動を取り消す**
+
+## 困ったとき
+
+- **一覧に何も出ない** — 種類フィルタや検索条件が残っていないか確認してください。絞り込み中はその旨がバーに表示されます
+- **「アクセス許可が必要」と出る** — 外付けを繋ぎ直したか、macOS の許可が切れています。その項目から再度許可してください
+- **サムネイルが出ない** — 破損したファイルや、拡張子と中身が食い違うファイルでは出ないことがあります
+- **件数が想定と違う** — フォルダを入れ子で登録している場合、内側のファイルは外側にも含まれるため、合計は一致しません
+- **古い WMV のサムネイルが乱れる** — 一部の `.wmv`（Windows Media Video 9）で、サムネイルにノイズが出ることがあります。ファイルが壊れているわけではなく、**再生とプレビューは正常**です。この形式は内部の索引が不完全なことが多く、途中の位置から画を取り出す際に生じます
+
+## リンク
+
+[製品ページ](shelfnavigator.html) ・ [プライバシーポリシー](shelfnavigator_privacy.html) ・ [RustyWorks Tools](index.html#tools)
+
+お問い合わせ: [rustyworks.games@gmail.com](mailto:rustyworks.games@gmail.com)
+
+# English
+
+![ShelfNavigator](assets/icons/shelfnavigator.png)
+
+ShelfNavigator is a macOS app that indexes the folders you register and browses them as one. Photos, videos and text spread across several drives appear in a single grid, with the folder boundaries out of the way.
+
+## Overview
+
+ShelfNavigator indexes the folders you register so you can browse and search them together.
+
+It never moves or copies your files. It reads them and lists them; your folder structure is left exactly as it was.
+
+> Registered folders may nest. Add a whole drive and a project folder inside it, and each lists its own contents.
+
+## Environment
+
+- `macOS 14` or later
+- **Apple Silicon** only (M1+)
+- Distributed on the Mac App Store
+- Handles images, video and text files
+- Works with internal, external and network folders
+
+> The app has no network access. The index stays on this Mac and is never sent anywhere.
+
+## Quick Start
+
+1. Choose a folder with **Add Folder…** (`⌘O`) at the bottom of the sidebar
+2. Indexing starts on its own
+3. The sidebar shows a count when it finishes
+4. Add a second folder and **All Files** lists everything together
+
+> The first scan of a large drive takes a while. You can keep using the grid while it runs; results fill in as they are found.
+
+## Window Overview
+
+### Sidebar
+
+Registered folders and Finder tags, with counts.
+
+### Grid
+
+The thumbnail grid. The slider at the bottom changes tile size.
+
+### Info Pane
+
+Dimensions, duration, location and tags for the selected file. `I` toggles it.
+
+### Search & Filters
+
+The search field, kind filter and sort control along the top.
+
+#### View Modes
+
+- **Tile** (`T` / `⌘1`) — a grid of thumbnails
+- **Preview** (`P` / `⌘2`) — one file large, with a filmstrip below to move through them
+
+## Search
 
 The search field takes plain words, and also:
 
@@ -1812,42 +1905,28 @@ The search field takes plain words, and also:
 - `-word` excludes; `"quotes"` keep words in order
 - Ranges are written `size:1mb..2mb`
 
-フィルタボタンからは、サイズ・解像度・再生時間・日付を画面上で指定できます。Finder タグはサイドバーから選べます。
-
 The filter button sets size, resolution, duration and dates without typing. Finder tags are picked from the sidebar.
 
-## 選択と表示 / Selecting & Opening
+## Selecting & Opening
 
-#### 選択 / Selecting
+#### Selecting
 
-- クリック — 単一選択 / click to select one
-- `⇧` クリック — 範囲選択 / extend the range
-- `⌘` クリック — 追加・解除 / add or remove one
-- `⌘A` — すべて選択 / select all
-- 矢印キーで移動、`⇧`＋矢印で拡張 / arrows move, shift-arrows extend
+- Click to select one
+- `⇧` click to extend the range
+- `⌘` click to add or remove one
+- `⌘A` to select all
+- Arrows move, shift-arrows extend
 
-#### 開く / Opening
+#### Opening
 
-- `Return` / ダブルクリック — 既定のアプリで開く / open in the default app
-- `Space` — 動画の再生・一時停止 / play or pause video
-- `F` または `⌘⇧R` — Finder で表示 / show in Finder
-- `I` または `⌘⌥I` — 情報パネル / toggle the info pane
+- `Return` / double-click — open in the default app
+- `Space` — play or pause video
+- `F` or `⌘⇧R` — show in Finder
+- `I` or `⌘⌥I` — toggle the info pane
 
-> 設定の「開くアプリ」で、種類ごとに使うアプリを指定できます。macOS の既定は変更されません。
->
 > Settings → Open With picks an app per file kind. Your macOS defaults are left unchanged.
 
-## 重複を探す / Finding Duplicates
-
-#### 日本語
-
-ツールバーの **重複**（`⌘⇧D`）で、登録した全フォルダを横断して重複を検出します。名前ではなく**内容**で比較します。
-
-結果画面では、残すファイルを選んでから他をゴミ箱へ移動できます。移動の直前にもう一度バイト単位で照合するので、内容が変わっていたものは自動的に除外されます。
-
-「Duplicate」タグを付けるだけにして、後で Finder で確認することもできます。
-
-#### English
+## Finding Duplicates
 
 **Duplicates** in the toolbar (`⌘⇧D`) looks across every registered folder. It compares file **contents**, not names.
 
@@ -1855,80 +1934,50 @@ In the results you choose which copy to keep and send the rest to the Trash. Eac
 
 You can also just apply the “Duplicate” tag and review them in Finder later.
 
-## 削除と取り消し / Trash & Undo
-
-#### 日本語
-
-`⌘⌫` でゴミ箱へ移動します。**ShelfNavigator がファイルを完全に消去することはありません。**
-
-直後であれば `⌘Z` で元の場所に戻せます（同じ起動中のみ）。それ以降は Finder のゴミ箱から手動で戻してください。
-
-#### English
+## Trash & Undo
 
 `⌘⌫` moves files to the Trash. **ShelfNavigator never deletes anything permanently.**
 
 `⌘Z` puts them back where they were, for as long as the app stays open. After that, restore them from the Finder Trash.
 
-> 別のボリュームのファイルをゴミ箱へ移すと、そのボリューム上のゴミ箱に入ります。容量が足りない場合は、移動するファイルを選び直すよう確認が出ます。
->
 > Files on another volume go to that volume’s Trash. If there is not enough room, the app asks you to choose which files to move.
 
-## 設定 / Settings
+## Settings
 
-### タイル / Tiles
-
-ホバーで動画を再生するかどうか。
+### Tiles
 
 Whether video previews start when you hover a tile.
 
-### パフォーマンス / Performance
-
-サムネイルのメモリを 256MB〜4GB から選択。多いほどスクロールが滑らかで、メモリを使います。
+### Performance
 
 Thumbnail memory, from 256 MB to 4 GB. More means smoother scrolling and a larger footprint.
 
-### サムネイルキャッシュ / Thumbnail Cache
-
-ディスク使用量の表示と消去。フォルダの登録を解除すると、そのサムネイルは自動で削除されます。
+### Thumbnail Cache
 
 Shows what is on disk and clears it. Unregistering a folder discards its thumbnails automatically.
 
-### 開くアプリ / Open With
-
-画像・動画・テキストごとに使うアプリを指定。
+### Open With
 
 Pick an app per file kind.
 
-「このアプリについて」からは、同梱しているオープンソースライブラリのライセンスを確認できます。
-
 About lists the licences of the open-source libraries the app bundles.
 
-## ショートカット / Keyboard Shortcuts
+## Keyboard Shortcuts
 
-- `⌘O` — **フォルダを追加** / Add Folder
-- `⌘R` — **すべてのフォルダを再スキャン** / Rescan All Libraries
-- `T` — **タイル表示** / Tile Mode（`⌘1`）
-- `P` — **プレビュー表示** / Preview Mode（`⌘2`）
-- `I` — **情報パネル** / Toggle Info Pane（`⌘⌥I`）
-- `F` — **Finder で表示** / Show in Finder（`⌘⇧R`）
-- `Return` — **開く** / Open（`⌘↓`）
-- `Space` — **動画の再生・一時停止** / Play or Pause
-- `⌘A` — **すべて選択** / Select All
-- `⌘⇧D` — **重複を探す** / Find Duplicates
-- `⌘⌫` — **ゴミ箱に入れる** / Move to Trash
-- `⌘Z` — **ゴミ箱への移動を取り消す** / Undo Move to Trash
+- `⌘O` — **Add Folder**
+- `⌘R` — **Rescan All Libraries**
+- `T` — **Tile Mode** (`⌘1`)
+- `P` — **Preview Mode** (`⌘2`)
+- `I` — **Toggle Info Pane** (`⌘⌥I`)
+- `F` — **Show in Finder** (`⌘⇧R`)
+- `Return` — **Open** (`⌘↓`)
+- `Space` — **Play or Pause**
+- `⌘A` — **Select All**
+- `⌘⇧D` — **Find Duplicates**
+- `⌘⌫` — **Move to Trash**
+- `⌘Z` — **Undo Move to Trash**
 
-## 困ったとき / Troubleshooting
-
-#### 日本語
-
-- **一覧に何も出ない** — 種類フィルタや検索条件が残っていないか確認してください。絞り込み中はその旨がバーに表示されます
-- **「アクセス許可が必要」と出る** — 外付けを繋ぎ直したか、macOS の許可が切れています。その項目から再度許可してください
-- **サムネイルが出ない** — 破損したファイルや、拡張子と中身が食い違うファイルでは出ないことがあります
-- **件数が想定と違う** — フォルダを入れ子で登録している場合、内側のファイルは外側にも含まれるため、合計は一致しません
-- **古い WMV のサムネイルが乱れる** — 一部の `.wmv`（Windows Media Video 9）で、サムネイルにノイズが出ることがあります。ファイルが壊れているわけではなく、**再生とプレビューは正常**です。この形式は内部の索引が不完全なことが多く、途中の位置から画を取り出す際に生じます
-
-#### English
+## Troubleshooting
 
 - **The grid is empty** — check whether a kind filter or search is still applied; the bar says so while one is active
 - **“Access needed” on a folder** — the drive was reconnected, or the macOS permission lapsed. Grant access again from that row
@@ -1936,11 +1985,11 @@ About lists the licences of the open-source libraries the app bundles.
 - **The counts do not add up** — with nested folders a file belongs to every folder above it, so the totals deliberately overlap
 - **A garbled thumbnail on an old WMV** — some `.wmv` files (Windows Media Video 9) produce a noisy thumbnail. The file is not damaged and **playback and preview are unaffected**: the format often carries an incomplete index, which can garble a frame taken from partway in
 
-## リンク / Links
+## Links
 
-[製品ページ / Product Page](shelfnavigator.html) ・ [プライバシーポリシー / Privacy Policy](shelfnavigator_privacy.html) ・ [RustyWorks Tools](index.html#tools)
+[Product Page](shelfnavigator.html) ・ [Privacy Policy](shelfnavigator_privacy.html) ・ [RustyWorks Tools](index.html#tools)
 
-お問い合わせ / Contact: [rustyworks.games@gmail.com](mailto:rustyworks.games@gmail.com)
+Contact: [rustyworks.games@gmail.com](mailto:rustyworks.games@gmail.com)
 
 </script>
 </body>
