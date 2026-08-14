@@ -121,7 +121,7 @@
     letter-spacing: 0.05em;
   }
   p, li { color: var(--fg-dim); }
-  ul { padding-left: 1.2em; }
+  ul, ol { padding-left: 1.4em; }
   li + li { margin-top: 6px; }
   strong { color: var(--fg); font-weight: 600; }
   code {
@@ -156,7 +156,7 @@
       <div>
         <h1>Kuro Privacy Policy</h1>
         <p class="subtitle">Kuro は、リアルタイム・カラーグレーディングを備えた macOS 用の動画プレーヤーです。</p>
-        <div class="meta">Last updated: 2026-07-25</div>
+        <div class="meta">Last updated: 2026-08-15</div>
       </div>
     </div>
   </section>
@@ -182,8 +182,13 @@
   </section>
   <section class="panel">
       <h2>4. ネットワーク通信</h2>
-      <p>Kuro は、ユーザーが直接指定したメディアURL（http/https、HLS など）を再生する目的でのみネットワークに接続します。再生処理は libmpv によりアプリ内で行われます。</p>
-      <p>これ以外の通信は行いません。利用状況の送信、更新確認、テレメトリの送信はありません。</p>
+      <p>Kuro には、自分で HTTP 通信を行うコードがありません。ネットワークにつながるのは次の3つの場合だけです。</p>
+      <ol>
+        <li><strong>再生</strong> — ユーザーが直接指定したメディア URL（http/https、HLS など）。再生処理は libmpv によりアプリ内で行われます。</li>
+        <li><strong>アプリ内課金</strong> — 商品情報の取得、購入、購入の復元のために、Apple の StoreKit が Apple のサーバーと通信します（第5項）。</li>
+        <li><strong>このページを開いたとき</strong> — アプリの「設定 → 情報 → プライバシーポリシー」を押すと、お使いの既定のブラウザで rustyworks.jp が開きます。接続するのはブラウザで、Kuro は URL を渡すだけです。</li>
+      </ol>
+      <p>この3つ以外の通信は行いません。利用状況の送信、更新確認、テレメトリ、広告・解析 SDK は、いずれもありません。</p>
       <p>通信先サービスのデータ処理は、それぞれのサービスの規約・プライバシーポリシーに従います。</p>
   </section>
   <section class="panel">
@@ -220,8 +225,13 @@
   </section>
   <section class="panel">
       <h2>4. Network Communication</h2>
-      <p>Kuro connects to the network only to play media URLs you supply directly (http/https, HLS and similar). Playback is handled in-process by libmpv.</p>
-      <p>No other communication takes place. There is no usage reporting, no update check, and no telemetry.</p>
+      <p>Kuro contains no code of its own that makes HTTP requests. It reaches the network in three cases only.</p>
+      <ol>
+        <li><strong>Playback</strong> — media URLs you supply directly (http/https, HLS and similar). Playback is handled in-process by libmpv.</li>
+        <li><strong>In-app purchase</strong> — Apple's StoreKit contacts Apple's servers to fetch product information, complete a purchase, and restore one (see section 5).</li>
+        <li><strong>Opening this page</strong> — pressing Settings → About → Privacy Policy in the app opens rustyworks.jp in your default browser. The browser makes the connection; Kuro only hands it the URL.</li>
+      </ol>
+      <p>Nothing else. There is no usage reporting, no update check, no telemetry, and no advertising or analytics SDK.</p>
       <p>Data processing by third-party services is governed by each service's own terms and privacy policy.</p>
   </section>
   <section class="panel">
