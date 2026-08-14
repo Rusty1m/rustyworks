@@ -1,538 +1,1947 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ShelfNavigator Manual</title>
-  <meta name="description" content="ShelfNavigator の使い方。フォルダの登録、検索指定、重複の検出、ショートカット一覧。日本語・英語併記。">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="RustyWorks">
-  <meta property="og:locale" content="ja_JP">
-  <meta property="og:url" content="https://rustyworks.jp/shelfnavigator_manual.html">
-  <meta property="og:title" content="ShelfNavigator 取説 / Manual | RustyWorks">
-  <meta property="og:description" content="ShelfNavigator の使い方。フォルダの登録、検索指定、重複の検出、ショートカット一覧。日本語・英語併記。">
-  <meta property="og:image" content="https://rustyworks.jp/assets/og/shelfnavigator-og.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="ShelfNavigator 取説 / Manual | RustyWorks">
-  <meta name="twitter:description" content="ShelfNavigator の使い方。フォルダの登録、検索指定、重複の検出、ショートカット一覧。日本語・英語併記。">
-  <meta name="twitter:image" content="https://rustyworks.jp/assets/og/shelfnavigator-og.jpg">
-  <style>
-    :root {
-      --bg: #ffffff;
-      --panel: #f7f7f8;
-      --panel-2: #f0f0f2;
-      --line: #e4e4e7;
-      --text: #111214;
-      --muted: #5f6368;
-      --accent: #c4472a;
-      --accent-2: #8a5e0e;
-      --ok: #2f9e5e;
-      --max: 1120px;
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 万一この画面でスクリプトが動いても、外部へ送信させない・外部から読み込ませない。
+     許可しているのは rustyworks.jp での閲覧数集計に使う Cloudflare の2ホストだけで、
+     それも下の計測タグが rustyworks.jp 以外では発火しない。
+     書き出した取説では、このメタごと connect-src 'none' の厳格版に差し替わる。 -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'unsafe-inline'; img-src 'self' data: blob: file: https: http:; font-src data:; connect-src https://cloudflareinsights.com; form-action 'none'; base-uri 'none'; frame-src 'none'; object-src 'none'; media-src 'self' data: blob: file:;">
+<title>ShelfNavigator 取説 / Manual</title>
+<style>
+/* ===== テーマ変数 =========================================== */
+:root{
+  --bg:#ffffff; --fg:#1c2128; --muted:#6a737d; --line:#e2e6ea;
+  --side-bg:#f6f8fa; --side-fg:#3a4450; --accent:#1f6feb; --accent-fg:#ffffff;
+  --sel-bg:#e7f0ff; --code-bg:#f2f4f7; --code-fg:#24292f; --pre-bg:#1c2333; --pre-fg:#e6edf3;
+  --quote-bar:#d0d7de; --mark:#ffe58f; --shadow:0 1px 3px rgba(16,24,40,.08);
+  --font: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
+  --font-body: var(--font);
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --body-size:16px; --body-lh:1.85; --measure:44em;
+}
+[data-style="dark"]{
+  --bg:#15181d; --fg:#dfe4ea; --muted:#8b949e; --line:#2b313a;
+  --side-bg:#101317; --side-fg:#b6bfca; --accent:#4f9cff; --accent-fg:#0b0e12;
+  --sel-bg:#1d2b40; --code-bg:#232a33; --code-fg:#e6edf3; --pre-bg:#0e1116; --pre-fg:#e6edf3;
+  --quote-bar:#3a424d; --mark:#8a6d1f; --shadow:0 1px 3px rgba(0,0,0,.4);
+}
+[data-style="book"]{
+  --bg:#fbf6ec; --fg:#33302b; --muted:#8a8175; --line:#e4dccc;
+  --side-bg:#f3ebdc; --side-fg:#4a453d; --accent:#9a6b3f; --accent-fg:#fffaf2;
+  --sel-bg:#eadfc9; --code-bg:#efe7d6; --code-fg:#4a453d; --pre-bg:#332f2a; --pre-fg:#efe7d6;
+  --quote-bar:#d9cdb4; --mark:#e8d48a;
+  --font-body: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", Georgia, serif;
+  --body-size:17px; --body-lh:2.0; --measure:38em;
+}
+[data-style="api"]{
+  --bg:#ffffff; --fg:#22272e; --muted:#71767e; --line:#dfe3e8;
+  --side-bg:#f4f5f7; --side-fg:#3b4149; --accent:#0f766e; --accent-fg:#ffffff;
+  --sel-bg:#e2f2ef; --code-bg:#eef1f4; --code-fg:#0f4c47; --pre-bg:#11161c; --pre-fg:#d7e2ea;
+  --quote-bar:#cfd6dd; --mark:#ffe58f;
+  --body-size:15px; --body-lh:1.62; --measure:52em;
+}
+[data-style="api"] .doc h1,[data-style="api"] .doc h2,[data-style="api"] .doc h3{ font-family:var(--mono); letter-spacing:-.01em; }
 
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+*{box-sizing:border-box;}
+html,body{height:100%;margin:0;}
+body{
+  background:var(--bg); color:var(--fg); font-family:var(--font);
+  display:flex; flex-direction:column; overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
 
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
-        Arial, "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", sans-serif;
-      background:
-        radial-gradient(circle at top right, rgba(196,71,42,0.07), transparent 28%),
-        radial-gradient(circle at bottom left, rgba(138,94,14,0.07), transparent 22%),
-        var(--bg);
-      color: var(--text);
-      line-height: 1.65;
-    }
+/* ===== ツールバー =========================================== */
+header{
+  flex:0 0 auto; display:flex; align-items:center; gap:14px;
+  padding:0 14px; height:46px; border-bottom:1px solid var(--line);
+  background:var(--side-bg); user-select:none; font-size:13px;
+}
+header .brand{font-weight:700; letter-spacing:.02em; margin-right:2px;}
+header .brand small{font-weight:400; color:var(--muted); margin-left:6px;}
+header .spacer{flex:1;}
+.group{display:flex; align-items:center; gap:6px;}
+.group > .label{color:var(--muted); font-size:11px;}
+.seg{display:flex; border:1px solid var(--line); border-radius:7px; overflow:hidden; background:var(--bg);}
+.seg button{
+  border:0; background:transparent; color:var(--side-fg); font:inherit; font-size:12px;
+  padding:5px 10px; cursor:pointer; border-right:1px solid var(--line);
+}
+.seg button:last-child{border-right:0;}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--accent-fg);}
+select, .btn{
+  font:inherit; font-size:12px; padding:5px 9px; border-radius:7px;
+  border:1px solid var(--line); background:var(--bg); color:var(--fg); cursor:pointer;
+}
+.btn:hover, select:hover{border-color:var(--accent);}
+/* 書き出し済みファイルでは、作る側の操作は隠す */
+body[data-embedded] #export-btn,
+body[data-embedded] #open-file,
+body[data-embedded] #open-dir{display:none;}
+/* 紹介ページに埋め込んだデモでは、保存を伴う操作を出さない */
+body[data-demo] #export-btn,
+body[data-demo] #open-file,
+body[data-demo] #open-dir,
+body[data-demo] #save-app{display:none;}
+header > *{flex:0 0 auto;}
+header .spacer{flex:1 1 auto;}
+@media (max-width:920px){
+  header{gap:8px; padding:0 8px; overflow-x:auto;}
+  .group > .label, header .brand small{display:none;}
+  .doc{padding:24px 20px 60vh;}
+}
 
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
+/* ===== 本体レイアウト ======================================= */
+main{flex:1; display:flex; min-height:0;}
+#side{
+  width:290px; flex:0 0 auto; background:var(--side-bg); border-right:1px solid var(--line);
+  overflow:auto; padding:10px 0 40px; user-select:none;
+}
+#splitter{flex:0 0 5px; cursor:col-resize; background:transparent; margin-left:-2px; z-index:5;}
+#splitter:hover{background:var(--accent); opacity:.35;}
+#view{flex:1; overflow:auto; position:relative;}
 
-    .wrap { max-width: var(--max); margin: 0 auto; padding: 24px; }
+/* ===== 目次 ================================================= */
+.file-title{
+  display:flex; align-items:center; gap:7px; padding:9px 14px 5px;
+  font-size:11px; font-weight:700; color:var(--muted); letter-spacing:.06em;
+  text-transform:uppercase; cursor:pointer;
+}
+.file-title:hover{color:var(--accent);}
+.file-title.solo{cursor:default;}
+.file-title.active{color:var(--accent);}
+.toc-item{
+  position:relative;
+  display:flex; align-items:baseline; gap:7px; padding:6px 14px 6px 6px;
+  color:var(--side-fg); cursor:pointer; font-size:13.5px; line-height:1.45;
+  border-left:3px solid transparent;
+}
+.toc-item:hover{background:var(--sel-bg);}
+.toc-item.current{background:var(--sel-bg); border-left-color:var(--accent); color:var(--accent); font-weight:600;}
+/* たたんだ親の行に、いま読んでいる下位の見出しを添える */
+.toc-item .label{flex:0 1 auto; min-width:0;}
+.toc-item .sub{
+  flex:1 1 auto; min-width:0; text-align:right; padding-left:8px;
+  font-size:10.5px; font-weight:400; color:var(--muted);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.toc-item .sub:not(:empty)::before{content:"› ";}
 
-    .hero {
-      margin-top: 12px;
-      padding: 32px;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      background: linear-gradient(180deg, rgba(17,18,20,0.025), rgba(17,18,20,0.015));
-      box-shadow: 0 20px 60px rgba(17,18,20,0.10);
-    }
-    .hero-top { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
-    .app-icon {
-      width: 72px; height: 72px; border-radius: 16px; flex-shrink: 0;
-      border: 1px solid var(--line); object-fit: cover;
-    }
+/* いま右ペインに映っている範囲 */
+.toc-item.in-view:not(.current){
+  background:color-mix(in srgb, var(--accent) 6%, transparent);
+  border-left-color:color-mix(in srgb, var(--accent) 32%, transparent);
+}
+.toc-item.hidden-row{display:none;}
+.toc-item .num{
+  flex:0 0 auto; font-family:var(--mono); font-size:10.5px; color:var(--muted);
+  min-width:1.4em; text-align:right; padding-top:.15em;
+}
+.toc-item.current .num{color:var(--accent);}
+.toc-item.lv3{padding-left:24px; font-size:12.5px; opacity:.88;}
+.toc-item.lv4{padding-left:42px; font-size:12px; opacity:.8;}
+.toc-empty{padding:16px; color:var(--muted); font-size:12.5px; line-height:1.7;}
 
-    .eyebrow {
-      display: inline-block;
-      margin-bottom: 10px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(196,71,42,0.10);
-      color: var(--accent);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-weight: 700;
-    }
+/* 開閉つまみ：子を持つ項目にだけ出す。持たない項目は同じ幅の余白で桁を揃える */
+.twist{
+  flex:0 0 12px; width:12px; text-align:center; color:var(--muted);
+  font-size:9px; line-height:1.6; user-select:none;
+  transform:rotate(90deg); transition:transform .15s ease;
+}
+.toc-item.folded > .twist{transform:rotate(0deg);}
+.toc-item.has-children > .twist:hover{color:var(--accent);}
+.toc-item:not(.has-children) > .twist{visibility:hidden;}
 
-    h1, h2, h3 { margin: 0 0 12px 0; line-height: 1.2; }
-    h1 { font-size: clamp(34px, 6vw, 56px); letter-spacing: -0.03em; }
-    h2 { font-size: 28px; margin-top: 6px; }
-    h3 { font-size: 20px; margin-top: 6px; }
+/* 階層のガイド線：2階層以上を表示しているときだけ引く */
+#side[data-guides="on"] .toc-item.lv3::before,
+#side[data-guides="on"] .toc-item.lv4::before,
+#side[data-guides="on"] .toc-item.lv4::after{
+  content:""; position:absolute; top:0; bottom:0; width:1px;
+  background:color-mix(in srgb, var(--muted) 32%, transparent);
+}
+#side[data-guides="on"] .toc-item.lv3::before,
+#side[data-guides="on"] .toc-item.lv4::before{left:14px;}
+#side[data-guides="on"] .toc-item.lv4::after{left:32px;}
 
-    .hero p { margin: 10px 0 0 0; color: var(--muted); max-width: 880px; font-size: 16px; }
+/* ===== 文書 ================================================= */
+.doc{
+  max-width:var(--measure); margin:0 auto; padding:36px 44px 60vh;
+  font-family:var(--font-body); font-size:var(--body-size); line-height:var(--body-lh);
+}
+[data-mode="page"] .doc{padding-bottom:24vh;}
+.doc-section{display:block;}
+[data-mode="page"] .doc-section{display:none;}
+[data-mode="page"] .doc-section.shown{display:block; animation:fade .18s ease;}
+@keyframes fade{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;}}
 
-    .hero-actions { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 12px; }
+.doc h1,.doc h2,.doc h3,.doc h4{line-height:1.4; font-weight:700; scroll-margin-top:18px;}
+.doc h1{font-size:1.85em; margin:.2em 0 .7em; padding-bottom:.35em; border-bottom:1px solid var(--line);}
+.doc h2{font-size:1.4em; margin:2.2em 0 .8em; padding-left:.5em; border-left:4px solid var(--accent);}
+[data-mode="page"] .doc-section.shown > h2:first-child{margin-top:.2em;}
+.doc h3{font-size:1.13em; margin:1.9em 0 .6em; color:var(--fg);}
+.doc h4{font-size:1em; margin:1.6em 0 .5em; color:var(--muted);}
+.doc p{margin:0 0 1.05em;}
+.doc ul,.doc ol{margin:0 0 1.05em; padding-left:1.6em;}
+.doc li{margin:.3em 0;}
+.doc li > ul, .doc li > ol{margin:.3em 0 .1em;}
+.doc a{color:var(--accent); text-decoration:none; border-bottom:1px solid color-mix(in srgb, var(--accent) 35%, transparent);}
+.doc a:hover{border-bottom-color:var(--accent);}
+.doc img{max-width:100%; border-radius:6px; box-shadow:var(--shadow);}
+.doc hr{border:0; border-top:1px solid var(--line); margin:2.2em 0;}
+.doc blockquote{
+  margin:0 0 1.05em; padding:.1em 0 .1em 1.1em;
+  border-left:4px solid var(--quote-bar); color:var(--muted);
+}
+.doc code{
+  font-family:var(--mono); font-size:.87em; background:var(--code-bg); color:var(--code-fg);
+  padding:.14em .4em; border-radius:4px;
+}
+.doc pre{
+  background:var(--pre-bg); color:var(--pre-fg); padding:14px 16px; border-radius:8px;
+  overflow-x:auto; margin:0 0 1.2em; font-size:13px; line-height:1.65;
+}
+.doc pre code{background:none; color:inherit; padding:0; font-size:inherit;}
+.doc pre .c{color:#7d8896; font-style:italic;}
+.doc pre .s{color:#9fd28b;}
+.doc pre .k{color:#79a6ff; font-weight:600;}
+.doc pre .n{color:#e0a878;}
+.doc table{border-collapse:collapse; width:100%; margin:0 0 1.3em; font-size:.92em; display:block; overflow-x:auto;}
+.doc th,.doc td{border:1px solid var(--line); padding:8px 11px; text-align:left; vertical-align:top;}
+.doc thead th{background:var(--side-bg); font-weight:700;}
+.doc tbody tr:nth-child(even){background:color-mix(in srgb, var(--side-bg) 55%, transparent);}
+.doc input[type=checkbox]{margin-right:.4em;}
+mark.hit{background:var(--mark); color:inherit; border-radius:3px; padding:0 .1em;}
+/* 安全でない URL のため無効化した箇所 */
+.doc .blocked{
+  color:var(--muted); text-decoration:underline dotted; cursor:help;
+}
+mark.hit.cur{outline:2px solid var(--accent);}
 
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      padding: 10px 14px; border-radius: 12px;
-      border: 1px solid var(--line); background: var(--panel);
-      color: var(--text); font-weight: 600;
-    }
-    .btn.primary {
-      border-color: rgba(196,71,42,0.35);
-      background: rgba(196,71,42,0.09);
-      color: #8c3418;
-    }
-
-    .layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 24px; margin-top: 24px; }
-
-    .toc {
-      position: sticky; top: 24px; align-self: start;
-      padding: 18px; border: 1px solid var(--line); border-radius: 16px;
-      background: rgba(255,255,255,0.86); backdrop-filter: blur(8px);
-    }
-    .toc h2 { font-size: 16px; margin-bottom: 10px; }
-    .toc ol { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
-    .toc li + li { margin-top: 8px; }
-
-    .content { min-width: 0; }
-
-    section {
-      margin-bottom: 22px; padding: 26px;
-      border: 1px solid var(--line); border-radius: 18px;
-      background: rgba(255,255,255,0.90);
-    }
-    section > p:first-of-type { margin-top: 0; }
-
-    .bilingual { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 14px; }
-    .lang { padding: 16px; border-radius: 14px; background: var(--panel-2); border: 1px solid var(--line); }
-    .lang h4 { margin: 0 0 10px 0; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
-    .lang p, .lang li { color: var(--text); font-size: 15px; }
-    .lang .subtle { color: var(--muted); }
-
-    ul, ol { margin: 10px 0 0 0; padding-left: 20px; }
-    li + li { margin-top: 7px; }
-
-    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
-    .card { padding: 16px; border-radius: 14px; background: var(--panel-2); border: 1px solid var(--line); }
-    .card h3 { font-size: 18px; }
-
-    .keys { list-style: none; padding-left: 0; margin-top: 12px; }
-    .keys li { display: flex; gap: 14px; align-items: baseline; padding: 7px 0; border-bottom: 1px solid rgba(228,228,231,0.75); }
-    .keys li:last-child { border-bottom: 0; }
-    .keys kbd {
-      flex: 0 0 116px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 13px; color: var(--accent-2);
-      background: rgba(138,94,14,0.10);
-      border: 1px solid var(--line); border-radius: 8px;
-      padding: 3px 8px; text-align: center;
-    }
-    .keys span { color: var(--muted); font-size: 15px; }
-    .keys span b { color: var(--text); font-weight: 600; }
-
-    .note {
-      margin-top: 14px; padding: 14px 16px;
-      border-left: 3px solid var(--accent-2);
-      background: rgba(138,94,14,0.08); color: #6f4b0b;
-      border-radius: 0 12px 12px 0;
-    }
-    .note.ok { border-left-color: var(--ok); background: rgba(47,158,94,0.09); color: #22693f; }
-
-    code { padding: 2px 6px; border-radius: 8px; background: rgba(17,18,20,0.07); font-size: 0.95em; }
-
-    .footer { margin: 18px 0 40px 0; text-align: center; color: var(--muted); font-size: 14px; }
-
-    @media (max-width: 980px) {
-      .layout { grid-template-columns: 1fr; }
-      .toc { position: static; }
-    }
-    @media (max-width: 720px) {
-      .wrap { padding: 16px; }
-      .hero { padding: 24px; }
-      section { padding: 20px; }
-      .bilingual, .cards { grid-template-columns: 1fr; }
-      .keys li { flex-direction: column; gap: 4px; }
-      .keys kbd { flex: none; align-self: flex-start; }
-    }
-  </style>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4092261578757214"
-     crossorigin="anonymous"></script>
+/* ===== ドロップゾーン / オーバーレイ ======================== */
+#drop{
+  position:absolute; inset:0; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:16px; color:var(--muted); text-align:center; padding:30px;
+}
+#drop[hidden]{display:none;}
+#drop .save{
+  text-decoration:none; padding:9px 18px; font-size:13px;
+  border-color:var(--accent); color:var(--accent); font-weight:600;
+}
+#drop .save[hidden]{display:none;}
+#drop .ver{font-family:var(--mono); font-size:11px; color:var(--muted); opacity:.75;}
+.help .ver{margin:0 18px 14px; font-family:var(--mono); font-size:11px; color:var(--muted);}
+#drop h2{color:var(--fg); font-size:19px; margin:0; font-weight:700;}
+#drop p{margin:0; font-size:13.5px; line-height:1.9;}
+#drop .row{display:flex; gap:10px;}
+#drop .btn{font-size:13px; padding:8px 16px;}
+body.dragging #view::after{
+  content:"ここにドロップ"; position:absolute; inset:12px; z-index:20;
+  border:2px dashed var(--accent); border-radius:12px;
+  background:color-mix(in srgb, var(--accent) 8%, transparent);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--accent); font-weight:700; font-size:15px;
+}
+.modal{
+  position:fixed; inset:0; background:rgba(10,14,20,.42); display:none;
+  align-items:flex-start; justify-content:center; padding-top:12vh; z-index:50;
+}
+.modal.open{display:flex;}
+.panel{
+  background:var(--bg); color:var(--fg); width:min(680px,92vw); border-radius:12px;
+  box-shadow:0 20px 60px rgba(0,0,0,.3); overflow:hidden; border:1px solid var(--line);
+}
+.panel input[type=search]{
+  width:100%; border:0; border-bottom:1px solid var(--line); background:transparent;
+  color:var(--fg); font:inherit; font-size:16px; padding:15px 18px; outline:none;
+}
+#results{max-height:52vh; overflow:auto;}
+.res{padding:10px 18px; cursor:pointer; border-bottom:1px solid var(--line); font-size:13px;}
+.res:hover,.res.sel{background:var(--sel-bg);}
+.res .where{color:var(--muted); font-size:11px; margin-bottom:3px;}
+.res .snip{line-height:1.6;}
+.res .snip b{background:var(--mark); color:var(--fg); border-radius:2px;}
+.res-none{padding:18px; color:var(--muted); font-size:13px;}
+.help{padding:6px 0;}
+.help h3{margin:14px 18px 8px; font-size:12px; letter-spacing:.06em; color:var(--muted); text-transform:uppercase;}
+.help dl{display:grid; grid-template-columns:auto 1fr; gap:7px 16px; margin:0 18px 16px; font-size:13px; align-items:center;}
+.help dt{text-align:right;}
+.help dd{margin:0; color:var(--muted);}
+kbd{
+  font-family:var(--mono); font-size:11px; background:var(--code-bg); color:var(--code-fg);
+  border:1px solid var(--line); border-bottom-width:2px; border-radius:5px; padding:2px 6px;
+}
+#toast{
+  position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(20px);
+  background:var(--fg); color:var(--bg); padding:9px 16px; border-radius:8px; font-size:13px;
+  opacity:0; pointer-events:none; transition:.22s; z-index:60;
+}
+#toast.show{opacity:.94; transform:translateX(-50%);}
+</style>
 </head>
-<body>
-  <div class="wrap">
-    <header class="hero">
-      <div class="hero-top">
-        <img class="app-icon" src="assets/icons/shelfnavigator.png" alt="ShelfNavigator" onerror="this.style.display='none'">
-        <div>
-          <div class="eyebrow">ShelfNavigator Manual</div>
-          <h1>ShelfNavigator 取説 / Manual</h1>
-        </div>
-      </div>
-      <p>
-        ShelfNavigator は、登録したフォルダを索引して、まとめて閲覧・検索する macOS 用アプリです。ドライブをまたいだ写真・動画・テキストが、フォルダの区切りなく1つの一覧になります。
-        <br>
-        ShelfNavigator is a macOS app that indexes the folders you register and browses them as one. Photos, videos and text spread across several drives appear in a single grid, with the folder boundaries out of the way.
-      </p>
-      <div class="hero-actions">
-        <a class="btn primary" href="shelfnavigator.html">製品ページ / Product Page</a>
-        <a class="btn" href="#quick-start">クイックスタート / Quick Start</a>
-        <a class="btn" href="#window-overview">画面概要 / Window Overview</a>
-        <a class="btn" href="#search">探す / Search</a>
-        <a class="btn" href="#duplicates">重複を探す / Duplicates</a>
-        <a class="btn" href="#shortcuts">ショートカット / Shortcuts</a>
-      </div>
-    </header>
+<body data-style="standard" data-mode="scroll" data-embedded="1">
 
-    <div class="layout">
-      <aside class="toc">
-        <h2>目次 / Contents</h2>
-        <ol>
-          <li><a href="#overview">概要 / Overview</a></li>
-          <li><a href="#environment">動作環境 / Environment</a></li>
-          <li><a href="#quick-start">クイックスタート / Quick Start</a></li>
-          <li><a href="#window-overview">画面概要 / Window Overview</a></li>
-          <li><a href="#search">探す / Search</a></li>
-          <li><a href="#selection">選択と表示 / Selecting &amp; Opening</a></li>
-          <li><a href="#duplicates">重複を探す / Duplicates</a></li>
-          <li><a href="#trash">削除と取り消し / Trash &amp; Undo</a></li>
-          <li><a href="#settings">設定 / Settings</a></li>
-          <li><a href="#shortcuts">ショートカット / Shortcuts</a></li>
-          <li><a href="#troubleshooting">困ったとき / Troubleshooting</a></li>
-          <li><a href="#links">リンク / Links</a></li>
-        </ol>
-      </aside>
+<header>
+  <span class="brand">DocPane</span>
 
-      <main class="content">
-
-        <section id="overview">
-          <h2>概要 / Overview</h2>
-          <div class="bilingual">
-            <div class="lang">
-              <h4>Japanese</h4>
-              <p>ShelfNavigator は、登録したフォルダを索引して、まとめて閲覧・検索するアプリです。</p>
-              <p class="subtle">ファイルを移動したりコピーしたりはしません。読み取って一覧にするだけで、元のフォルダ構成はそのまま残ります。</p>
-            </div>
-            <div class="lang">
-              <h4>English</h4>
-              <p>ShelfNavigator indexes the folders you register so you can browse and search them together.</p>
-              <p class="subtle">It never moves or copies your files. It reads them and lists them; your folder structure is left exactly as it was.</p>
-            </div>
-          </div>
-          <div class="note ok">
-            フォルダは入れ子で登録できます。ドライブ全体と、その中のプロジェクトフォルダを両方登録すれば、どちらもそれぞれの中身を表示します。<br>
-            Registered folders may nest. Add a whole drive and a project folder inside it, and each lists its own contents.
-          </div>
-        </section>
-
-        <section id="environment">
-          <h2>動作環境 / Environment</h2>
-          <div class="bilingual">
-            <div class="lang">
-              <h4>日本語</h4>
-              <ul>
-                <li><code>macOS 26</code> 以降</li>
-                <li><strong>Apple Silicon</strong>（M1 以降）専用</li>
-                <li>Mac App Store で配布</li>
-                <li>対象：画像・動画・テキストファイル</li>
-                <li>内蔵・外付け・ネットワークのフォルダに対応</li>
-              </ul>
-            </div>
-            <div class="lang">
-              <h4>English</h4>
-              <ul>
-                <li><code>macOS 26</code> or later</li>
-                <li><strong>Apple Silicon</strong> only (M1+)</li>
-                <li>Distributed on the Mac App Store</li>
-                <li>Handles images, video and text files</li>
-                <li>Works with internal, external and network folders</li>
-              </ul>
-            </div>
-          </div>
-          <div class="note">
-            ネットワークに接続しません。索引はこの Mac の中だけに保存され、外部へ送信されることはありません。<br>
-            The app has no network access. The index stays on this Mac and is never sent anywhere.
-          </div>
-        </section>
-
-        <section id="quick-start">
-          <h2>クイックスタート / Quick Start</h2>
-          <div class="bilingual">
-            <div class="lang">
-              <h4>日本語</h4>
-              <ol>
-                <li>サイドバー下部の <strong>Add Folder…</strong>（<code>⌘O</code>）でフォルダを選ぶ</li>
-                <li>索引（スキャン）が自動で始まる</li>
-                <li>完了するとサイドバーに件数が表示される</li>
-                <li>フォルダをもう1つ追加すると、<strong>All Files</strong> で全部が1つの一覧になる</li>
-              </ol>
-            </div>
-            <div class="lang">
-              <h4>English</h4>
-              <ol>
-                <li>Choose a folder with <strong>Add Folder…</strong> (<code>⌘O</code>) at the bottom of the sidebar</li>
-                <li>Indexing starts on its own</li>
-                <li>The sidebar shows a count when it finishes</li>
-                <li>Add a second folder and <strong>All Files</strong> lists everything together</li>
-              </ol>
-            </div>
-          </div>
-          <div class="note">
-            大きなドライブの初回スキャンには時間がかかります。進行中も一覧は使えて、見つかった順に増えていきます。<br>
-            The first scan of a large drive takes a while. You can keep using the grid while it runs; results fill in as they are found.
-          </div>
-        </section>
-
-        <section id="window-overview">
-          <h2>画面概要 / Window Overview</h2>
-          <div class="cards">
-            <div class="card">
-              <h3>サイドバー / Sidebar</h3>
-              <p class="subtle">登録したフォルダと Finder タグの一覧。件数付き。<br>
-                Registered folders and Finder tags, with counts.</p>
-            </div>
-            <div class="card">
-              <h3>グリッド / Grid</h3>
-              <p class="subtle">サムネイルの一覧。下部のスライダーで大きさを変更。<br>
-                The thumbnail grid. The slider at the bottom changes tile size.</p>
-            </div>
-            <div class="card">
-              <h3>情報パネル / Info Pane</h3>
-              <p class="subtle">選択中のファイルの寸法・再生時間・場所・タグ。<code>I</code> で表示切替。<br>
-                Dimensions, duration, location and tags for the selected file. <code>I</code> toggles it.</p>
-            </div>
-            <div class="card">
-              <h3>検索とフィルタ / Search &amp; Filters</h3>
-              <p class="subtle">上部の検索欄、種類フィルタ、並び替え。<br>
-                The search field, kind filter and sort control along the top.</p>
-            </div>
-          </div>
-          <div class="bilingual">
-            <div class="lang">
-              <h4>表示モード / View Modes</h4>
-              <ul>
-                <li><strong>タイル表示</strong>（<code>T</code> / <code>⌘1</code>）— サムネイルを並べる</li>
-                <li><strong>プレビュー表示</strong>（<code>P</code> / <code>⌘2</code>）— 1つを大きく表示し、下部のフィルムストリップで移動</li>
-              </ul>
-            </div>
-            <div class="lang">
-              <h4>View Modes</h4>
-              <ul>
-                <li><strong>Tile</strong> (<code>T</code> / <code>⌘1</code>) — a grid of thumbnails</li>
-                <li><strong>Preview</strong> (<code>P</code> / <code>⌘2</code>) — one file large, with a filmstrip below to move through them</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <section id="search">
-          <h2>探す / Search</h2>
-          <div class="bilingual">
-            <div class="lang">
-              <h4>日本語</h4>
-              <p>検索欄には、普通の言葉のほか、次の指定が使えます。</p>
-              <ul>
-                <li><code>name:</code> <code>folder:</code> <code>ext:</code> <code>kind:</code> <code>tag:</code></li>
-                <li><code>size&gt;10mb</code> <code>w&gt;=1920</code> <code>h&lt;=1080</code> <code>duration&gt;60</code></li>
-                <li><code>modified:2024</code> <code>created:2024-03</code></li>
-                <li><code>AND</code> <code>OR</code> <code>NOT</code>（大文字）</li>
-                <li><code>-語</code> で除外、<code>"引用符"</code> で語順を固定</li>
-                <li>範囲は <code>size:1mb..2mb</code> のように指定</li>
-              </ul>
-            </div>
-            <div class="lang">
-              <h4>English</h4>
-              <p>The search field takes plain words, and also:</p>
-              <ul>
-                <li><code>name:</code> <code>folder:</code> <code>ext:</code> <code>kind:</code> <code>tag:</code></li>
-                <li><code>size&gt;10mb</code> <code>w&gt;=1920</code> <code>h&lt;=1080</code> <code>duration&gt;60</code></li>
-                <li><code>modified:2024</code> <code>created:2024-03</code></li>
-                <li><code>AND</code> <code>OR</code> <code>NOT</code> (uppercase)</li>
-                <li><code>-word</code> excludes; <code>"quotes"</code> keep words in order</li>
-                <li>Ranges are written <code>size:1mb..2mb</code></li>
-              </ul>
-            </div>
-          </div>
-          <p style="margin-top:16px">
-            フィルタボタンからは、サイズ・解像度・再生時間・日付を画面上で指定できます。Finder タグはサイドバーから選べます。<br>
-            <span style="color:var(--muted)">The filter button sets size, resolution, duration and dates without typing. Finder tags are picked from the sidebar.</span>
-          </p>
-        </section>
-
-        <section id="selection">
-          <h2>選択と表示 / Selecting &amp; Opening</h2>
-          <div class="bilingual">
-            <div class="lang">
-              <h4>選択 / Selecting</h4>
-              <ul>
-                <li>クリック — 単一選択 / click to select one</li>
-                <li><code>⇧</code> クリック — 範囲選択 / extend the range</li>
-                <li><code>⌘</code> クリック — 追加・解除 / add or remove one</li>
-                <li><code>⌘A</code> — すべて選択 / select all</li>
-                <li>矢印キーで移動、<code>⇧</code>＋矢印で拡張 / arrows move, shift-arrows extend</li>
-              </ul>
-            </div>
-            <div class="lang">
-              <h4>開く / Opening</h4>
-              <ul>
-                <li><code>Return</code> / ダブルクリック — 既定のアプリで開く / open in the default app</li>
-                <li><code>Space</code> — 動画の再生・一時停止 / play or pause video</li>
-                <li><code>F</code> または <code>⌘⇧R</code> — Finder で表示 / show in Finder</li>
-                <li><code>I</code> または <code>⌘⌥I</code> — 情報パネル / toggle the info pane</li>
-              </ul>
-            </div>
-          </div>
-          <div class="note">
-            設定の「開くアプリ」で、種類ごとに使うアプリを指定できます。macOS の既定は変更されません。<br>
-            Settings → Open With picks an app per file kind. Your macOS defaults are left unchanged.
-          </div>
-        </section>
-
-        <section id="duplicates">
-          <h2>重複を探す / Finding Duplicates</h2>
-          <div class="bilingual">
-            <div class="lang">
-              <h4>日本語</h4>
-              <p>ツールバーの <strong>Duplicates</strong>（<code>⌘⇧D</code>）で、登録した全フォルダを横断して重複を検出します。名前ではなく<strong>内容</strong>で比較します。</p>
-              <p>結果画面では、残すファイルを選んでから他をゴミ箱へ移動できます。移動の直前にもう一度バイト単位で照合するので、内容が変わっていたものは自動的に除外されます。</p>
-              <p class="subtle">「Duplicate」タグを付けるだけにして、後で Finder で確認することもできます。</p>
-            </div>
-            <div class="lang">
-              <h4>English</h4>
-              <p><strong>Duplicates</strong> in the toolbar (<code>⌘⇧D</code>) looks across every registered folder. It compares file <strong>contents</strong>, not names.</p>
-              <p>In the results you choose which copy to keep and send the rest to the Trash. Each file is compared byte for byte once more immediately before it is moved, so anything that changed in the meantime is dropped from the operation.</p>
-              <p class="subtle">You can also just apply the “Duplicate” tag and review them in Finder later.</p>
-            </div>
-          </div>
-        </section>
-
-        <section id="trash">
-          <h2>削除と取り消し / Trash &amp; Undo</h2>
-          <div class="bilingual">
-            <div class="lang">
-              <h4>日本語</h4>
-              <p><code>⌘⌫</code> でゴミ箱へ移動します。<strong>ShelfNavigator がファイルを完全に消去することはありません。</strong></p>
-              <p>直後であれば <code>⌘Z</code> で元の場所に戻せます（同じ起動中のみ）。それ以降は Finder のゴミ箱から手動で戻してください。</p>
-            </div>
-            <div class="lang">
-              <h4>English</h4>
-              <p><code>⌘⌫</code> moves files to the Trash. <strong>ShelfNavigator never deletes anything permanently.</strong></p>
-              <p><code>⌘Z</code> puts them back where they were, for as long as the app stays open. After that, restore them from the Finder Trash.</p>
-            </div>
-          </div>
-          <div class="note">
-            別のボリュームのファイルをゴミ箱へ移すと、そのボリューム上のゴミ箱に入ります。容量が足りない場合は、移動するファイルを選び直すよう確認が出ます。<br>
-            Files on another volume go to that volume’s Trash. If there is not enough room, the app asks you to choose which files to move.
-          </div>
-        </section>
-
-        <section id="settings">
-          <h2>設定 / Settings</h2>
-          <div class="cards">
-            <div class="card">
-              <h3>タイル / Tiles</h3>
-              <p class="subtle">ホバーで動画を再生するかどうか。<br>
-                Whether video previews start when you hover a tile.</p>
-            </div>
-            <div class="card">
-              <h3>パフォーマンス / Performance</h3>
-              <p class="subtle">サムネイルのメモリを 256MB〜4GB から選択。多いほどスクロールが滑らかで、メモリを使います。<br>
-                Thumbnail memory, from 256 MB to 4 GB. More means smoother scrolling and a larger footprint.</p>
-            </div>
-            <div class="card">
-              <h3>サムネイルのキャッシュ / Thumbnail Cache</h3>
-              <p class="subtle">ディスク使用量の表示と消去。フォルダの登録を解除すると、そのサムネイルは自動で削除されます。<br>
-                Shows what is on disk and clears it. Unregistering a folder discards its thumbnails automatically.</p>
-            </div>
-            <div class="card">
-              <h3>開くアプリ / Open With</h3>
-              <p class="subtle">画像・動画・テキストごとに使うアプリを指定。<br>
-                Pick an app per file kind.</p>
-            </div>
-          </div>
-          <p style="margin-top:16px">
-            「About」からは、同梱しているオープンソースライブラリのライセンスを確認できます。<br>
-            <span style="color:var(--muted)">About lists the licences of the open-source libraries the app bundles.</span>
-          </p>
-        </section>
-
-        <section id="shortcuts">
-          <h2>ショートカット / Keyboard Shortcuts</h2>
-          <ul class="keys">
-            <li><kbd>⌘O</kbd><span><b>フォルダを追加</b> / Add Folder</span></li>
-            <li><kbd>⌘R</kbd><span><b>全フォルダを再スキャン</b> / Rescan All Folders</span></li>
-            <li><kbd>T</kbd> <span><b>タイル表示</b> / Tile Mode（<code>⌘1</code>）</span></li>
-            <li><kbd>P</kbd> <span><b>プレビュー表示</b> / Preview Mode（<code>⌘2</code>）</span></li>
-            <li><kbd>I</kbd> <span><b>情報パネル</b> / Toggle Info Pane（<code>⌘⌥I</code>）</span></li>
-            <li><kbd>F</kbd> <span><b>Finder で表示</b> / Show in Finder（<code>⌘⇧R</code>）</span></li>
-            <li><kbd>Return</kbd><span><b>開く</b> / Open（<code>⌘↓</code>）</span></li>
-            <li><kbd>Space</kbd><span><b>動画の再生・一時停止</b> / Play or Pause</span></li>
-            <li><kbd>⌘A</kbd><span><b>すべて選択</b> / Select All</span></li>
-            <li><kbd>⌘⇧D</kbd><span><b>重複を探す</b> / Find Duplicates</span></li>
-            <li><kbd>⌘⌫</kbd><span><b>ゴミ箱へ移動</b> / Move to Trash</span></li>
-            <li><kbd>⌘Z</kbd><span><b>ゴミ箱への移動を取り消す</b> / Undo Move to Trash</span></li>
-          </ul>
-        </section>
-
-        <section id="troubleshooting">
-          <h2>困ったとき / Troubleshooting</h2>
-          <div class="bilingual">
-            <div class="lang">
-              <h4>日本語</h4>
-              <ul>
-                <li><strong>一覧に何も出ない</strong> — 種類フィルタや検索条件が残っていないか確認してください。絞り込み中はその旨がバーに表示されます</li>
-                <li><strong>「アクセス許可が必要」と出る</strong> — 外付けを繋ぎ直したか、macOS の許可が切れています。その項目から再度許可してください</li>
-                <li><strong>サムネイルが出ない</strong> — 破損したファイルや、拡張子と中身が食い違うファイルでは出ないことがあります</li>
-                <li><strong>件数が想定と違う</strong> — フォルダを入れ子で登録している場合、内側のファイルは外側にも含まれるため、合計は一致しません</li>
-                <li><strong>古い WMV のサムネイルが乱れる</strong> — 一部の <code>.wmv</code>（Windows Media Video 9）で、サムネイルにノイズが出ることがあります。ファイルが壊れているわけではなく、<strong>再生とプレビューは正常</strong>です。この形式は内部の索引が不完全なことが多く、途中の位置から画を取り出す際に生じます</li>
-              </ul>
-            </div>
-            <div class="lang">
-              <h4>English</h4>
-              <ul>
-                <li><strong>The grid is empty</strong> — check whether a kind filter or search is still applied; the bar says so while one is active</li>
-                <li><strong>“Access needed” on a folder</strong> — the drive was reconnected, or the macOS permission lapsed. Grant access again from that row</li>
-                <li><strong>No thumbnail</strong> — damaged files, and files whose extension disagrees with their contents, may not produce one</li>
-                <li><strong>The counts do not add up</strong> — with nested folders a file belongs to every folder above it, so the totals deliberately overlap</li>
-                <li><strong>A garbled thumbnail on an old WMV</strong> — some <code>.wmv</code> files (Windows Media Video 9) produce a noisy thumbnail. The file is not damaged and <strong>playback and preview are unaffected</strong>: the format often carries an incomplete index, which can garble a frame taken from partway in</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <section id="links">
-          <h2>リンク / Links</h2>
-          <p>
-            <a href="shelfnavigator.html">製品ページ / Product Page</a> ・
-            <a href="shelfnavigator_privacy.html">プライバシーポリシー / Privacy Policy</a> ・
-            <a href="index.html#tools">RustyWorks Tools</a>
-          </p>
-          <p style="color:var(--muted);margin-top:10px">
-            お問い合わせ / Contact: <a href="mailto:rustyworks.games@gmail.com">rustyworks.games@gmail.com</a>
-          </p>
-        </section>
-
-      </main>
+  <div class="group">
+    <span class="label">項目</span>
+    <div class="seg" id="levels">
+      <button data-lv="1" aria-pressed="false">H1</button>
+      <button data-lv="2" aria-pressed="true">H2</button>
+      <button data-lv="3" aria-pressed="false">H3</button>
+      <button data-lv="4" aria-pressed="false">H4</button>
     </div>
-
-    <div class="footer">© RustyWorks — ShelfNavigator</div>
   </div>
-<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "04f66ad1837a4b63af68beb6e835358f"}'></script><!-- End Cloudflare Web Analytics -->
+
+  <div class="group">
+    <span class="label">右ペイン</span>
+    <div class="seg" id="modes">
+      <button data-mode="scroll" aria-pressed="true">連続</button>
+      <button data-mode="page" aria-pressed="false">ページ</button>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <select id="style-sel" title="表示スタイル">
+    <option value="standard">Standard Manual</option>
+    <option value="dark">Dark Minimal</option>
+    <option value="book">Classic Book</option>
+    <option value="api">Technical API</option>
+  </select>
+  <button class="btn" id="open-file">ファイル…</button>
+  <button class="btn" id="open-dir">フォルダ…</button>
+  <button class="btn" id="export-btn" title="いまの文書と画像を1枚の HTML にまとめて保存">書き出し</button>
+  <button class="btn" id="help-btn" title="ショートカット">?</button>
+</header>
+
+<main>
+  <aside id="side"><div class="toc-empty">まだ文書が読み込まれていません。</div></aside>
+  <div id="splitter"></div>
+  <section id="view">
+    <div id="drop">
+      <h2>.md ファイル / フォルダをドロップ</h2>
+      <p>
+        単一ファイルなら見出しが項目に、複数ファイルならファイルが項目になります。<br>
+        左の項目をクリックすると、右ペインが該当箇所へジャンプします。
+      </p>
+      <div class="row">
+        <button class="btn" id="drop-file">ファイルを選ぶ</button>
+        <button class="btn" id="drop-dir">フォルダを選ぶ</button>
+        <button class="btn" id="drop-sample">サンプルを開く</button>
+      </div>
+      <!-- 保存リンクは、サイト上で開かれているときだけ出す -->
+      <div class="ver" id="ver"></div>
+    </div>
+    <article class="doc" id="doc" hidden></article>
+  </section>
+</main>
+
+<div class="modal" id="search-modal">
+  <div class="panel">
+    <input type="search" id="search-input" placeholder="全文横断検索…（Enter で移動、Esc で閉じる）" autocomplete="off">
+    <div id="results"></div>
+  </div>
+</div>
+
+<div class="modal" id="help-modal">
+  <div class="panel help">
+    <h3>キーボード操作</h3>
+    <dl>
+      <dt><kbd>J</kbd> / <kbd>↓</kbd> / <kbd>→</kbd></dt><dd>次の項目へ</dd>
+      <dt><kbd>K</kbd> / <kbd>↑</kbd> / <kbd>←</kbd></dt><dd>前の項目へ</dd>
+      <dt><kbd>1</kbd>…<kbd>9</kbd></dt><dd>その番号の項目へ直接ジャンプ</dd>
+      <dt><kbd>⌘F</kbd> / <kbd>Ctrl F</kbd></dt><dd>全文横断検索</dd>
+      <dt><kbd>⌘E</kbd> / <kbd>Ctrl E</kbd></dt><dd>右ペインを 連続 ⇔ ページ で切替</dd>
+      <dt><kbd>[</kbd> / <kbd>]</kbd></dt><dd>前後のファイルへ（複数読込時）</dd>
+      <dt><kbd>?</kbd></dt><dd>このヘルプ</dd>
+      <dt><kbd>Esc</kbd></dt><dd>閉じる / ハイライト解除</dd>
+    </dl>
+    <h3>連続モードでは ↑↓ は通常のスクロールに使えます（J / K は常に項目移動）</h3>
+    <h3>文書側での指定</h3>
+    <dl>
+      <dt><kbd>title</kbd></dt><dd>文書名</dd>
+      <dt><kbd>levels</kbd></dt><dd>項目に拾う見出しレベル（例 <kbd>[1, 2]</kbd>）</dd>
+      <dt><kbd>style</kbd></dt><dd>standard / dark / book / api</dd>
+      <dt><kbd>mode</kbd></dt><dd>scroll / page</dd>
+      <dt><kbd>collapse</kbd></dt><dd>下位項目をたたんで開く</dd>
+    </dl>
+    <h3>.md の先頭を <kbd>---</kbd> で挟んだブロックに書きます（サンプル文書の6章参照）</h3>
+    <div class="ver" id="help-ver"></div>
+  </div>
+</div>
+
+<input type="file" id="picker" accept=".md,.markdown,.mdown,.mkd,.txt" multiple hidden>
+<input type="file" id="dirpicker" webkitdirectory directory multiple hidden>
+<div id="toast"></div>
+
+<script type="text/plain" id="sample-md">
+---
+title: DocPane 取扱説明書
+levels: [2]
+---
+
+# DocPane — 2ペイン取説専用 Markdown ビューアー
+
+環境構築も設定もなしに、`.md` を開くだけで「左：項目一覧 ／ 右：本文」の
+取扱説明書レイアウトが立ち上がる、閲覧特化のビューアーです。
+このページ自体がサンプル文書になっています。
+
+## 1. 背景とプロダクト目標
+
+従来のドキュメントツール（Notion、Obsidian、VitePress 等）は、独自のデータベース構造への依存、
+初期レイアウト構成の手間、あるいは Node.js 等のビルド環境要求といった課題を抱えています。
+
+DocPane は **純粋なプレーンテキスト（.md）のポータビリティ** と
+**取扱説明書に最適化された閲覧体験** を両立させることを目指します。
+
+> 文書はただのテキストファイルのまま。ビューアーを捨てても、中身は失われません。
+
+## 2. 2ペインのマッピング
+
+ユーザーの管理スタイルに合わせて、2つの読み込みモードを自動で切り替えます。
+
+| 方式 | ファイル構造 | 左ペインに並ぶもの |
+| --- | --- | --- |
+| 1ファイル完結型 | `manual.md` 1枚 | その文書の見出し（既定は H2） |
+| フォルダ集約型 | `docs/01_概要.md` `docs/02_手順.md` | ファイル名（または H1）＋その中の見出し |
+
+左ペインに出す見出しレベルは、ツールバーの `H1 H2 H3 H4` で切り替えられます。
+取扱説明書なら H2 だけ、仕様書なら H2+H3、といった具合に。
+
+## 3. 右ペインの2つの読み方
+
+同じ文書を、2通りの読み心地で扱えます。
+
+- **連続（Continuous）** — 文書全体をひと続きに表示し、項目クリックでその位置へスクロール。
+  スクロールに追従して左ペインの現在位置もハイライトされます。長い文書の通読向き。
+- **ページ（Paged）** — 選択した見出しのセクションだけを表示。
+  1項目＝1ページの、紙の取説をめくるような読み心地。手順書向き。
+
+切り替えはツールバー、または `Ctrl/Cmd + E` で一瞬です。
+
+### 3.1 スクロール追従について
+
+連続モードでは、いま画面の上端にある見出しが左ペインで自動的に選択状態になります。
+どこを読んでいるのか見失いません。
+
+## 4. 表示スタイルプリセット
+
+1. **Standard Manual** — 白背景・青アクセント。一般的な企業マニュアル向け。
+2. **Dark Minimal** — 暗背景・高コントラスト。長時間の閲覧や夜間作業向け。
+3. **Classic Book** — 生成り色の背景に明朝体。紙の本のような上品な読み心地。
+4. **Technical API** — モノスペース見出しとコンパクトな行間。仕様書向け。
+
+## 5. コードと図版
+
+コードブロックは言語を問わず簡易ハイライトが付きます。
+
+```swift
+struct Outline: Identifiable {
+    let id = UUID()
+    let level: Int      // 2 なら H2
+    let title: String
+    let anchor: String  // ジャンプ先
+}
+```
+
+- [ ] 画像の遅延読み込み
+- [x] 表のはみ出しを横スクロールで吸収
+- [x] チェックリストの表示
+
+## 6. 文書側で表示を指定する
+
+閲覧側のトグルに頼らず、**書き手が `.md` の先頭で指定**できます。
+ファイルの一番上に `---` で挟んだブロックを置いてください。
+
+```
+---
+title: Kuro 取扱説明書
+levels: [1, 2]
+style: book
+mode: page
+---
+
+# Kuro 取扱説明書
+```
+
+| キー | 効果 | 書き方の例 |
+| --- | --- | --- |
+| `title` | 左ペインとタブに出す文書名（省略時は H1 かファイル名） | `title: Kuro 取扱説明書` |
+| `levels` | 項目として拾う見出しレベル | `levels: [1, 2]` / `levels: H2, H3` / `levels: 2` |
+| `style` | 表示スタイル | `style: book`（`standard` `dark` `book` `api`） |
+| `mode` | 右ペインの読み方 | `mode: page`（`scroll` / `page`） |
+| `collapse` | 下位の項目をたたんだ状態で開くか | `collapse: true`（`折りたたむ` も可） |
+
+`style: 書籍` `mode: ページ` のような日本語表記でも通ります。
+このサンプル自身も `title` と `levels` を指定しています。
+
+指定は**その文書を開いたときの初期状態**になります。読み手がツールバーで変えれば
+そちらが優先され、文書側の指定が読み手の既定設定を上書きすることもありません。
+フォルダ集約型では、ファイルを切り替えるたびにそのファイルの指定が効きます。
+
+## 7. 配布用に1ファイルへ書き出す
+
+ツールバーの **「書き出し」** を押すと、いま読み込んでいる文書と画像を
+**この HTML 自身のコピーに埋め込んだ1ファイル**が保存されます。
+
+受け取った人は、**そのファイルをダブルクリックするだけ**です。
+DocPane 本体も `.md` も画像フォルダも要りません。オフラインでも開けます。
+開いた瞬間、もう2ペインの取説が表示されています。
+
+- 画像は Base64 で埋め込まれるので、**元のサイズより3割ほど大きく**なります
+- 書き出されるのは**いま見えている状態**です。スタイル・表示モード・見出しレベルが
+  そのまま相手の初期表示になります（相手が変えることもできます）
+- 画像を埋め込むには、**フォルダごと読み込む**必要があります。
+  `.md` を1枚だけ開いた場合、画像の実体を渡していないので埋め込めません
+- 埋め込めなかった画像があれば、書き出し後のメッセージで件数をお知らせします
+
+## 8. これから
+
+このプロトタイプは閲覧に特化しています。編集モード、ファイル監視による自動リロード、
+複数文書をまたぐ検索結果のスコアリングなどは、方向性が固まってからの実装になります。
+</script>
+
+<script>
+"use strict";
+
+/* ===================== Markdown → HTML ===================== */
+
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* URL の安全確認。
+   .md は他人から受け取ることもあるので、実行を伴うスキームは通さない。
+   （javascript: や data:text/html はクリックだけでコードが動いてしまう） */
+function safeUrl(u, forImage){
+  const raw = String(u);
+  // 制御文字や空白を挟んで偽装されたスキームも見抜く
+  const probe = raw.replace(/[\u0000-\u0020]/g, '').toLowerCase();
+  if (/^[a-z][a-z0-9+.-]*:/.test(probe)) {
+    if (/^(https?|mailto|tel):/.test(probe)) return raw;          // 通常のリンク
+    if (forImage && /^data:image\/(png|jpe?g|gif|webp|svg\+xml|avif|bmp|x-icon)[;,]/.test(probe)) return raw;
+    return '';                       // それ以外のスキームは無効化する
+  }
+  return raw;                        // 相対パスと #アンカー はそのまま
+}
+
+function inline(src){
+  const codes = [];
+  let s = src.replace(/`([^`]+)`/g, (m,p) => { codes.push(p); return '\uE000'+(codes.length-1)+'\uE000'; });
+  s = escapeHtml(s);
+  // src は後で差し替える（同時に読み込んだ画像ファイルに解決するため）
+  s = s.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g, (m,a,u) => {
+    const safe = safeUrl(u, true);
+    return safe ? `<img data-src="${safe}" alt="${a}">`
+                : `<span class="blocked" title="安全でない画像URLのため表示しません">${a || '画像'}</span>`;
+  });
+  s = s.replace(/\[([^\]]+)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g, (m,t,u) => {
+    const safe = safeUrl(u, false);
+    return safe ? `<a href="${safe}" target="_blank" rel="noopener noreferrer">${t}</a>`
+                : `<span class="blocked" title="安全でないリンクのため無効化しました">${t}</span>`;
+  });
+  s = s.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+  s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  s = s.replace(/(^|[^*\w])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+  s = s.replace(/~~(.+?)~~/g, '<del>$1</del>');
+  s = s.replace(/\uE000(\d+)\uE000/g, (m,i) => '<code>'+escapeHtml(codes[+i])+'</code>');
+  return s;
+}
+
+/* 言語非依存のごく軽いハイライト */
+function highlight(code){
+  const re = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/|#[^\n]*)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`)|\b(const|let|var|function|return|if|else|for|while|switch|case|class|struct|enum|protocol|extension|import|export|from|new|await|async|def|func|guard|self|this|public|private|static|true|false|null|nil|None|True|False)\b|\b(\d+(?:\.\d+)?)\b/g;
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    out += escapeHtml(code.slice(last, m.index));
+    const cls = m[1] ? 'c' : m[2] ? 's' : m[3] ? 'k' : 'n';
+    out += `<span class="${cls}">${escapeHtml(m[0])}</span>`;
+    last = re.lastIndex;
+  }
+  return out + escapeHtml(code.slice(last));
+}
+
+function renderListTree(items){
+  if (!items.length) return '';
+  const tag = items[0].ordered ? 'ol' : 'ul';
+  let out = `<${tag}>`;
+  for (const it of items) {
+    let body = it.text, prefix = '';
+    const task = body.match(/^\[([ xX])\]\s+(.*)$/s);
+    if (task) {
+      prefix = `<input type="checkbox" disabled${task[1] === ' ' ? '' : ' checked'}>`;
+      body = task[2];
+    }
+    out += '<li>' + prefix + inline(body) + renderListTree(it.children) + '</li>';
+  }
+  return out + `</${tag}>`;
+}
+
+function parseListBlock(lines){
+  const roots = [];
+  const stack = [{ indent:-1, children:roots }];
+  for (const line of lines) {
+    const m = line.match(/^(\s*)(?:[-*+]|\d+[.)])\s+(.*)$/);
+    if (m) {
+      const indent = m[1].replace(/\t/g, '    ').length;
+      const ordered = /^\s*\d/.test(line);
+      while (stack.length > 1 && indent <= stack[stack.length-1].indent) stack.pop();
+      const item = { indent, ordered, text:m[2], children:[] };
+      stack[stack.length-1].children.push(item);
+      stack.push(item);
+    } else if (line.trim()) {
+      const cur = stack[stack.length-1];
+      if (cur.text !== undefined) cur.text += '\n' + line.trim();
+    }
+  }
+  return renderListTree(roots);
+}
+
+function parseTable(lines){
+  const cells = row => row.replace(/^\||\|$/g, '').split('|').map(c => c.trim());
+  const head = cells(lines[0]);
+  const aligns = cells(lines[1]).map(s =>
+    /^:.*:$/.test(s) ? 'center' : /:$/.test(s) ? 'right' : 'left');
+  let out = '<table><thead><tr>';
+  head.forEach((h,i) => out += `<th style="text-align:${aligns[i]||'left'}">${inline(h)}</th>`);
+  out += '</tr></thead><tbody>';
+  for (const row of lines.slice(2)) {
+    out += '<tr>';
+    cells(row).forEach((c,i) => out += `<td style="text-align:${aligns[i]||'left'}">${inline(c)}</td>`);
+    out += '</tr>';
+  }
+  return out + '</tbody></table>';
+}
+
+const isListLine  = l => /^\s*(?:[-*+]|\d+[.)])\s+/.test(l);
+const isTableLine = l => /^\s*\|.*\|\s*$/.test(l);
+
+/* Markdown 全体を HTML と見出し配列に変換 */
+function renderMarkdown(src){
+  const lines = src.replace(/\r\n?/g, '\n').split('\n');
+  const headings = [];
+  let html = '', i = 0, hid = 0;
+  const para = [];
+  // 段落内の改行の扱い：行末2スペースだけを明示的な改行とし、
+  // ほかは結合する（和文どうしはスペースを挟まない）
+  const cjk = /[^\x00-\x7F]/;
+  const flushPara = () => {
+    if (!para.length) return;
+    const segs = [[]];
+    para.forEach(raw => {
+      segs[segs.length - 1].push(raw.replace(/\s+$/, ''));
+      if (/\s{2,}$/.test(raw)) segs.push([]);
+    });
+    const text = segs.map(ls => ls.reduce((acc, l, i) =>
+      i === 0 ? l : acc + (cjk.test(acc.slice(-1)) && cjk.test(l.slice(0,1)) ? '' : ' ') + l, ''));
+    html += '<p>' + text.filter(t => t.length).map(inline).join('<br>') + '</p>';
+    para.length = 0;
+  };
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    // フェンス付きコード
+    const fence = line.match(/^\s*(```+|~~~+)(.*)$/);
+    if (fence) {
+      flushPara();
+      const mark = fence[1][0].repeat(3);
+      const buf = [];
+      i++;
+      while (i < lines.length && !lines[i].trim().startsWith(mark)) buf.push(lines[i++]);
+      i++;
+      html += '<pre><code>' + highlight(buf.join('\n')) + '</code></pre>';
+      continue;
+    }
+
+    // 見出し
+    const h = line.match(/^(#{1,6})\s+(.*?)\s*#*$/);
+    if (h) {
+      flushPara();
+      const level = h[1].length;
+      const id = 'h' + (hid++);
+      const text = h[2].replace(/[*_`]/g, '');
+      headings.push({ level, text, id });
+      html += `<h${Math.min(level,4)} id="${id}" data-level="${level}">${inline(h[2])}</h${Math.min(level,4)}>`;
+      i++;
+      continue;
+    }
+
+    // 水平線
+    if (/^\s*([-*_])(\s*\1){2,}\s*$/.test(line)) { flushPara(); html += '<hr>'; i++; continue; }
+
+    // 引用
+    if (/^\s*>/.test(line)) {
+      flushPara();
+      const buf = [];
+      while (i < lines.length && (/^\s*>/.test(lines[i]) || (buf.length && lines[i].trim()))) {
+        buf.push(lines[i].replace(/^\s*>\s?/, ''));
+        i++;
+      }
+      html += '<blockquote>' + renderMarkdown(buf.join('\n')).html + '</blockquote>';
+      continue;
+    }
+
+    // 表
+    if (isTableLine(line) && isTableLine(lines[i+1] || '') && /^[\s|:-]+$/.test(lines[i+1])) {
+      flushPara();
+      const buf = [];
+      while (i < lines.length && isTableLine(lines[i])) buf.push(lines[i++]);
+      html += parseTable(buf);
+      continue;
+    }
+
+    // リスト
+    if (isListLine(line)) {
+      flushPara();
+      const buf = [];
+      while (i < lines.length && (isListLine(lines[i]) || (/^\s+\S/.test(lines[i]) && buf.length))) buf.push(lines[i++]);
+      html += parseListBlock(buf);
+      continue;
+    }
+
+    // 空行 / 段落
+    if (!line.trim()) { flushPara(); i++; continue; }
+    para.push(line);
+    i++;
+  }
+  flushPara();
+  return { html, headings };
+}
+
+/* ===================== アプリ状態 ===================== */
+
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+
+const state = {
+  docs: [],          // {name, title, md, html, headings}
+  docIndex: 0,
+  levels: new Set([2]),
+  mode: 'scroll',
+  style: 'standard',
+  items: [],         // 左ペインの項目（現在の文書）: {id, text, level, sectionIndex}
+  assets: new Map(), // 一緒に読み込んだ画像: 正規化パス -> {file, url}
+  current: -1,
+  suppressSpy: false,
+  // 読み手自身が選んだ設定。文書側の指定（front matter）はここに触らないので、
+  // 取説を1冊開いただけで読み手の既定が書き換わることはない。
+  pref: { levels:[2], mode:'scroll', style:'standard' },
+};
+
+const view = $('#view'), docEl = $('#doc'), sideEl = $('#side'), dropEl = $('#drop');
+
+/* --- 設定の保存 / 復元 --- */
+function savePrefs(){
+  try {
+    localStorage.setItem('docpane', JSON.stringify(
+      Object.assign({}, state.pref, { side: sideEl.offsetWidth })));
+  } catch(e){}
+}
+function loadPrefs(){
+  try {
+    const p = JSON.parse(localStorage.getItem('docpane') || '{}');
+    if (Array.isArray(p.levels) && p.levels.length) state.pref.levels = p.levels;
+    if (p.mode) state.pref.mode = p.mode;
+    if (p.style) state.pref.style = p.style;
+    if (p.side) sideEl.style.width = p.side + 'px';
+  } catch(e){}
+  state.levels = new Set(state.pref.levels);
+  state.mode = state.pref.mode;
+  state.style = state.pref.style;
+}
+
+function toast(msg){
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => t.classList.remove('show'), 1600);
+}
+
+/* ===================== 文書の読み込み ===================== */
+
+/* 文書先頭の --- ブロック（front matter）で、書き手が表示を指定できる */
+const STYLE_ALIAS = {
+  standard:'standard', 'standard manual':'standard', 標準:'standard', 取説:'standard',
+  dark:'dark', 'dark minimal':'dark', ダーク:'dark',
+  book:'book', 'classic book':'book', 書籍:'book', 本:'book',
+  api:'api', 'technical api':'api', 技術文書:'api', 仕様書:'api',
+};
+const MODE_ALIAS = {
+  scroll:'scroll', continuous:'scroll', 連続:'scroll', スクロール:'scroll',
+  page:'page', paged:'page', ページ:'page',
+};
+
+function parseFrontMatter(src){
+  const m = src.replace(/^﻿/, '').match(/^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/);
+  if (!m) return { meta:{}, body:src };
+  const raw = {};
+  m[1].split('\n').forEach(line => {
+    const kv = line.match(/^\s*([A-Za-z_][\w-]*)\s*:\s*(.*)$/);
+    if (kv) raw[kv[1].toLowerCase()] = kv[2].trim().replace(/^["']|["']$/g, '').trim();
+  });
+
+  const meta = {};
+  if (raw.title) meta.title = raw.title;
+
+  // levels: [1, 2] / H2, H3 / 2 のいずれでも受ける
+  const lv = raw.levels || raw.level || raw.toc;
+  if (lv) {
+    const nums = (lv.match(/[hH]?\s*([1-6])/g) || [])
+      .map(s => Number(s.replace(/\D/g, '')))
+      .filter(n => n >= 1 && n <= 4);
+    if (nums.length) meta.levels = [...new Set(nums)].sort();
+  }
+  const style = STYLE_ALIAS[(raw.style || '').toLowerCase()];
+  if (style) meta.style = style;
+  const mode = MODE_ALIAS[(raw.mode || raw.view || '').toLowerCase()];
+  if (mode) meta.mode = mode;
+
+  const col = (raw.collapse || raw.fold || '').toLowerCase();
+  if (col) meta.collapse = /^(true|yes|on|1|折りたたむ|たたむ|閉じる)$/.test(col);
+
+  return { meta, body: src.slice(src.indexOf(m[0]) + m[0].length) };
+}
+
+function addDoc(name, md, path){
+  const { meta, body } = parseFrontMatter(md);
+  const { html, headings } = renderMarkdown(body);
+  const h1 = headings.find(h => h.level === 1);
+  const title = meta.title || (h1 ? h1.text : name.replace(/\.[^.]+$/, ''));
+  state.docs.push({ name, path: path || name, title, md:body, meta, html, headings });
+}
+
+/* ===== 一緒に読み込んだ画像の解決 =====================================
+   .md の中の相対パスは、ブラウザから見ると「HTML の置き場所」基準になってしまう。
+   そこで同時に読み込んだ画像ファイルを控えておき、表示直前に src を差し替える。 */
+
+const MD_RE  = /\.(md|markdown|mdown|mkd|txt)$/i;
+const IMG_RE = /\.(png|jpe?g|gif|webp|svg|avif|bmp|ico)$/i;
+
+function normPath(p){
+  const parts = [];
+  String(p || '').replace(/^[./]+/, '').split('/').forEach(seg => {
+    if (!seg || seg === '.') return;
+    if (seg === '..') parts.pop(); else parts.push(seg);
+  });
+  return parts.join('/').toLowerCase();
+}
+const baseName = p => normPath(p).split('/').pop();
+const dirName  = p => { const n = normPath(p).split('/'); n.pop(); return n.join('/'); };
+
+function findAsset(src, docPath){
+  if (!src || /^(https?:|data:|blob:|#)/i.test(src)) return null;
+  const clean = src.replace(/[?#].*$/, '');
+  const dir = dirName(docPath || '');
+  const tries = [ normPath(dir ? dir + '/' + clean : clean), normPath(clean), baseName(clean) ];
+  for (const t of tries) if (state.assets.has(t)) return state.assets.get(t);
+  return null;
+}
+
+function resolveImages(){
+  const doc = state.docs[state.docIndex];
+  docEl.querySelectorAll('img[data-src]').forEach(img => {
+    const hit = findAsset(img.dataset.src, doc && doc.path);
+    img.src = hit ? hit.url : img.dataset.src;
+  });
+}
+
+/* front matter の指定は、その文書を最初に開いたときに1度だけ効かせる。
+   そのあと読み手がツールバーで変えれば、そちらが優先される。 */
+function applyDocMeta(doc){
+  if (doc.metaApplied) return;
+  doc.metaApplied = true;
+  const m = doc.meta || {};
+  if (m.levels && m.levels.length) { state.levels = new Set(m.levels); syncLevelButtons(); }
+  if (m.style) { state.style = m.style; document.body.dataset.style = m.style; $('#style-sel').value = m.style; }
+  if (m.mode)  { state.mode  = m.mode;  document.body.dataset.mode  = m.mode;  syncModeButtons(); }
+  // 文書側の指定は読み手の既定設定として保存しない
+}
+
+/* entries: [{file, path}] — .md と画像をまとめて受け取る */
+function openFiles(entries){
+  const mds = entries.filter(e => MD_RE.test(e.file.name));
+  if (!mds.length) { toast('.md ファイルが見つかりませんでした'); return; }
+
+  state.assets.forEach(a => URL.revokeObjectURL(a.url));
+  state.assets = new Map();
+  entries.filter(e => IMG_RE.test(e.file.name)).forEach(e => {
+    const rec = { file: e.file, url: URL.createObjectURL(e.file) };
+    state.assets.set(normPath(e.path), rec);
+    const b = baseName(e.path);
+    if (!state.assets.has(b)) state.assets.set(b, rec);   // ファイル名だけでも拾えるように
+  });
+
+  state.docs = [];
+  mds.sort((a,b) => a.file.name.localeCompare(b.file.name, 'ja', { numeric:true }));
+  let pending = mds.length;
+  mds.forEach(e => {
+    const r = new FileReader();
+    r.onload = () => {
+      addDoc(e.file.name, r.result, e.path);
+      if (--pending === 0) finishOpen();
+    };
+    r.onerror = () => { if (--pending === 0) finishOpen(); };
+    r.readAsText(e.file, 'utf-8');
+  });
+}
+
+function finishOpen(){
+  state.docs.sort((a,b) => a.name.localeCompare(b.name, 'ja', { numeric:true }));
+  state.docIndex = 0;
+  dropEl.hidden = true;
+  docEl.hidden = false;
+  showDoc(0);
+  toast(state.docs.length > 1 ? `${state.docs.length} ファイルを読み込みました` : state.docs[0].name);
+}
+
+function showDoc(index){
+  state.docIndex = index;
+  const doc = state.docs[index];
+  applyDocMeta(doc);
+  docEl.innerHTML = doc.html;
+  resolveImages();
+  buildSections();
+  buildToc();
+  view.scrollTop = 0;
+  if (state.mode === 'page') selectItem(0, true);
+  else { state.current = -1; highlightToc(state.items.length ? 0 : -1); }
+  observeHeadings();
+}
+
+/* 主レベル（選択中の最小レベル）でセクションに分割 */
+function primaryLevel(){ return Math.min(...state.levels); }
+
+function buildSections(){
+  const lv = primaryLevel();
+  const nodes = Array.from(docEl.childNodes);
+  const frag = document.createDocumentFragment();
+  let sec = null, n = 0;
+  const newSection = () => {
+    sec = document.createElement('div');
+    sec.className = 'doc-section';
+    sec.dataset.index = n++;
+    frag.appendChild(sec);
+  };
+  newSection(); // 先頭（最初の見出しより前）
+  let seenPrimary = false;
+  for (const node of nodes) {
+    const isPrimary = node.nodeType === 1 && /^H[1-4]$/.test(node.tagName)
+                      && Number(node.dataset.level) === lv;
+    if (isPrimary) {
+      // 最初の項目より前の前書き（タイトルなど）は1ページ目に含める
+      if (sec.childNodes.length && seenPrimary) newSection();
+      seenPrimary = true;
+    }
+    sec.appendChild(node);
+  }
+  if (!frag.firstChild.childNodes.length) frag.removeChild(frag.firstChild);
+  docEl.innerHTML = '';
+  docEl.appendChild(frag);
+  // 採番し直し
+  $$('#doc .doc-section').forEach((s,idx) => s.dataset.index = idx);
+}
+
+/* ===================== 左ペイン ===================== */
+
+function buildToc(){
+  const doc = state.docs[state.docIndex];
+  sideEl.innerHTML = '';
+  state.items = [];
+
+  state.docs.forEach((d, di) => {
+    if (state.docs.length > 1 || d.headings.some(h => h.level === 1)) {
+      const t = document.createElement('div');
+      t.className = 'file-title' + (di === state.docIndex ? ' active' : '')
+                  + (state.docs.length > 1 ? '' : ' solo');
+      t.textContent = d.title;
+      if (state.docs.length > 1) t.onclick = () => showDoc(di);
+      sideEl.appendChild(t);
+    }
+    if (di !== state.docIndex) return;
+
+    const shown = d.headings.filter(h => state.levels.has(h.level));
+    const lv = primaryLevel();
+    let num = 0;
+    const stack = [];   // 親子関係の組み立て用
+    shown.forEach(h => {
+      const el = document.createElement('div');
+      el.className = 'toc-item' + (h.level > lv ? ' lv' + Math.min(h.level - lv + 2, 4) : '');
+      const idx = state.items.length;
+      if (h.level === lv) num++;
+      el.innerHTML = `<span class="twist">▶</span>`
+                   + `<span class="num">${h.level === lv ? num : ''}</span>`
+                   + `<span class="label">${escapeHtml(h.text)}</span>`
+                   + `<span class="sub"></span>`;
+      el.onclick = e => {
+        if (e.target.closest('.twist')) { toggleFold(idx); return; }
+        selectItem(idx);
+      };
+      sideEl.appendChild(el);
+
+      while (stack.length && stack[stack.length-1].level >= h.level) stack.pop();
+      const parent = stack.length ? stack[stack.length-1].index : -1;
+      stack.push({ level:h.level, index:idx });
+
+      const target = document.getElementById(h.id);
+      state.items.push({
+        id: h.id, text: h.text, level: h.level, el, parent, hasChildren: false,
+        section: target ? Number(target.closest('.doc-section').dataset.index) : 0,
+      });
+      if (parent >= 0) state.items[parent].hasChildren = true;
+    });
+  });
+
+  // ガイド線は2階層以上を表示しているときだけ
+  sideEl.dataset.guides = state.levels.size > 1 ? 'on' : 'off';
+
+  // front matter で collapse を指定された文書は、最初だけたたんだ状態で開く
+  if (doc && doc.meta && doc.meta.collapse && !doc.foldInit) {
+    doc.foldInit = true;
+    doc.folded = new Set(state.items.filter(it => it.hasChildren).map(it => it.id));
+  }
+  refreshFold();
+
+  if (!state.items.length) {
+    const e = document.createElement('div');
+    e.className = 'toc-empty';
+    e.textContent = '選択中のレベルの見出しが見つかりません。ツールバーで H1〜H4 を切り替えてください。';
+    sideEl.appendChild(e);
+  }
+}
+
+/* --- 折りたたみ --- */
+function foldedSet(){
+  const doc = state.docs[state.docIndex];
+  if (doc && !doc.folded) doc.folded = new Set();
+  return doc ? doc.folded : new Set();
+}
+
+function isHidden(i){
+  const folded = foldedSet();
+  let p = state.items[i].parent;
+  while (p >= 0) {
+    if (folded.has(state.items[p].id)) return true;
+    p = state.items[p].parent;
+  }
+  return false;
+}
+
+function refreshFold(){
+  const folded = foldedSet();
+  state.items.forEach((it, i) => {
+    it.el.classList.toggle('has-children', it.hasChildren);
+    it.el.classList.toggle('folded', it.hasChildren && folded.has(it.id));
+    it.el.classList.toggle('hidden-row', isHidden(i));
+  });
+}
+
+function toggleFold(i){
+  const it = state.items[i];
+  if (!it || !it.hasChildren) return;
+  const folded = foldedSet();
+  if (folded.has(it.id)) folded.delete(it.id); else folded.add(it.id);
+  refreshFold();
+}
+
+/* たたまれた中の項目へ移動するときは、祖先を開いてから */
+function revealItem(i){
+  const folded = foldedSet();
+  let p = state.items[i] ? state.items[i].parent : -1, changed = false;
+  while (p >= 0) {
+    if (folded.delete(state.items[p].id)) changed = true;
+    p = state.items[p].parent;
+  }
+  if (changed) refreshFold();
+}
+
+function highlightToc(i){
+  state.items.forEach((it, k) => it.el.classList.toggle('current', k === i));
+  const it = state.items[i];
+  if (!it) return;
+  const r = it.el.getBoundingClientRect(), s = sideEl.getBoundingClientRect();
+  if (r.top < s.top + 8 || r.bottom > s.bottom - 8) {
+    it.el.scrollIntoView({ block:'nearest' });
+  }
+}
+
+/* ===================== ジャンプ ===================== */
+
+/* CSS の scroll-behavior は環境によって効かないため、自前で補間する */
+let scrollRaf = 0;
+function scrollViewTo(target, instant){
+  cancelAnimationFrame(scrollRaf);
+  const start = view.scrollTop;
+  const dist = Math.max(0, Math.min(target, view.scrollHeight - view.clientHeight)) - start;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finish = () => { view.scrollTop = start + dist; state.suppressSpy = false; updateInView(); };
+  // 非表示タブでは requestAnimationFrame が止まるので、その場合は即座に移動する
+  if (instant || reduce || document.hidden || Math.abs(dist) < 2) { finish(); return; }
+  const dur = Math.min(520, 200 + Math.abs(dist) * 0.28);
+  let t0 = null, done = false;
+  clearTimeout(scrollViewTo.guard);
+  scrollViewTo.guard = setTimeout(() => { if (!done) { done = true; cancelAnimationFrame(scrollRaf); finish(); } }, dur + 260);
+  const step = ts => {
+    if (done) return;
+    if (t0 === null) t0 = ts;
+    const p = Math.min(1, (ts - t0) / dur);
+    const e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+    view.scrollTop = start + dist * e;
+    if (p < 1) scrollRaf = requestAnimationFrame(step);
+    else { done = true; state.suppressSpy = false; updateInView(); }
+  };
+  scrollRaf = requestAnimationFrame(step);
+}
+
+function selectItem(i, instant){
+  const it = state.items[i];
+  if (!it) return;
+  state.current = i;
+  revealItem(i);
+  highlightToc(i);
+
+  if (state.mode === 'page') {
+    // ページモードでは「画面に入っている範囲」は現在の項目と同義なので印を消す
+    state.items.forEach(x => x.el.classList.remove('in-view'));
+    $$('#doc .doc-section').forEach(s =>
+      s.classList.toggle('shown', Number(s.dataset.index) === it.section));
+    view.scrollTop = 0;
+    if (it.level > primaryLevel()) {
+      const t = document.getElementById(it.id);
+      if (t) requestAnimationFrame(() => t.scrollIntoView({ block:'start' }));
+    }
+  } else {
+    const t = document.getElementById(it.id);
+    if (!t) return;
+    state.suppressSpy = true;
+    const y = t.getBoundingClientRect().top - view.getBoundingClientRect().top + view.scrollTop - 14;
+    scrollViewTo(Math.max(0, y), instant);
+  }
+}
+
+function step(delta){
+  if (!state.items.length) return;
+  // たたんで隠れている項目は飛ばす
+  let next = state.current;
+  do { next += delta; } while (next > 0 && next < state.items.length - 1 && isHidden(next));
+  next = Math.min(state.items.length - 1, Math.max(0, next));
+  if (isHidden(next)) return;
+  if (next !== state.current || state.current < 0) selectItem(Math.max(0, next));
+}
+
+/* --- 連続モードのスクロール追従 --- */
+let spyTimer = null;
+function observeHeadings(){
+  view.onscroll = () => {
+    if (state.mode !== 'scroll' || state.suppressSpy) return;
+    clearTimeout(spyTimer);
+    spyTimer = setTimeout(spy, 60);
+  };
+}
+function headingTops(){
+  return state.items.map(it => {
+    const el = document.getElementById(it.id);
+    return el ? el.getBoundingClientRect().top : Infinity;
+  });
+}
+
+/* いま画面に入っている項目に印を付ける（範囲＝その見出しから次の見出しまで） */
+function updateInView(tops){
+  if (state.mode !== 'scroll' || !state.items.length) return;
+  tops = tops || headingTops();
+  const vr = view.getBoundingClientRect();
+  const sections = $$('#doc .doc-section');
+  const contentEnd = sections.length
+    ? sections[sections.length-1].getBoundingClientRect().bottom : vr.bottom;
+  state.items.forEach((it, i) => {
+    const start = tops[i];
+    const end = i + 1 < tops.length ? tops[i+1] : contentEnd;
+    it.inView = end > vr.top + 8 && start < vr.bottom - 8;
+  });
+  // たたまれて隠れている項目の分は、見えている親にまとめる
+  state.items.forEach((it, i) => {
+    if (!it.inView || !isHidden(i)) return;
+    let p = it.parent;
+    while (p >= 0 && isHidden(p)) p = state.items[p].parent;
+    if (p >= 0) state.items[p].inView = true;
+  });
+  state.items.forEach(it => it.el.classList.toggle('in-view', !!it.inView));
+}
+
+function spy(){
+  const vr = view.getBoundingClientRect();
+  const top = vr.top + 60;
+  const tops = headingTops();
+  let best = -1;
+  tops.forEach((t, i) => { if (t <= top) best = i; });
+  updateInView(tops);
+  // たたまれて隠れている見出しなら、見えている親を光らせたうえで、
+  // いま読んでいる下位の見出し名をその行に小さく添える
+  const raw = best;
+  while (best >= 0 && isHidden(best)) best = state.items[best].parent;
+  if (best === -1 && state.items.length) best = 0;
+  state.items.forEach((it, i) => {
+    const sub = it.el.querySelector('.sub');
+    if (sub) sub.textContent = (i === best && raw !== best && raw >= 0) ? state.items[raw].text : '';
+  });
+  if (best !== state.current) { state.current = best; highlightToc(best); }
+}
+
+/* ===================== 検索 ===================== */
+
+function runSearch(q){
+  const box = $('#results');
+  box.innerHTML = '';
+  if (q.trim().length < 1) return;
+  const needle = q.toLowerCase();
+  let count = 0;
+
+  state.docs.forEach((d, di) => {
+    const lines = d.md.split('\n');
+    let heading = '';
+    lines.forEach(rawLine => {
+      const h = rawLine.match(/^(#{1,6})\s+(.*)$/);
+      if (h) heading = h[2].replace(/[*_`#]/g, '').trim();
+      const line = h ? heading : rawLine;
+      const where = heading;   // クリック時に使う見出しをここで確定させる
+      const at = line.toLowerCase().indexOf(needle);
+      if (at < 0 || count >= 60) return;
+      count++;
+      const from = Math.max(0, at - 30);
+      const snip = (from ? '…' : '') + escapeHtml(line.slice(from, at))
+                 + '<b>' + escapeHtml(line.substr(at, q.length)) + '</b>'
+                 + escapeHtml(line.slice(at + q.length, at + q.length + 60));
+      const el = document.createElement('div');
+      el.className = 'res';
+      el.innerHTML = `<div class="where">${escapeHtml(d.title)}${where ? ' › ' + escapeHtml(where) : ''}</div>`
+                   + `<div class="snip">${snip}</div>`;
+      el.onclick = () => { closeModals(); jumpToHit(di, where, q); };
+      box.appendChild(el);
+    });
+  });
+
+  if (!count) box.innerHTML = '<div class="res-none">一致する箇所はありません。</div>';
+}
+
+function jumpToHit(docIndex, headingText, q){
+  const go = () => {
+    let idx = state.items.findIndex(it => it.text.trim() === headingText);
+    if (idx < 0 && headingText) {
+      // 目次に出していないレベルの見出しなら、それを含むセクションの先頭項目へ
+      const h = Array.from(docEl.querySelectorAll('h1,h2,h3,h4'))
+        .find(el => el.textContent.trim() === headingText);
+      const sec = h && h.closest('.doc-section');
+      if (sec) idx = state.items.findIndex(it => it.section === Number(sec.dataset.index));
+    }
+    if (idx < 0) idx = 0;
+    selectItem(idx, true);
+    setTimeout(() => markHits(q, state.items[idx]), 60);
+  };
+  if (docIndex !== state.docIndex) { showDoc(docIndex); setTimeout(go, 30); }
+  else go();
+}
+
+function clearMarks(){
+  $$('#doc mark.hit').forEach(m => {
+    const p = m.parentNode;
+    p.replaceChild(document.createTextNode(m.textContent), m);
+    p.normalize();
+  });
+}
+
+function markHits(q, item){
+  clearMarks();
+  if (!q) return;
+  const needle = q.toLowerCase();
+  // 該当項目のセクションだけを対象にする（見つからなければ文書全体）
+  const scope = (item && $(`#doc .doc-section[data-index="${item.section}"]`))
+             || (state.mode === 'page' ? $('#doc .doc-section.shown') : null)
+             || docEl;
+  const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT);
+  const targets = [];
+  let node;
+  while ((node = walker.nextNode())) {
+    if (node.nodeValue.toLowerCase().includes(needle)) targets.push(node);
+  }
+  let first = null;
+  targets.forEach(t => {
+    const frag = document.createDocumentFragment();
+    let text = t.nodeValue, at;
+    while ((at = text.toLowerCase().indexOf(needle)) >= 0) {
+      frag.appendChild(document.createTextNode(text.slice(0, at)));
+      const m = document.createElement('mark');
+      m.className = 'hit';
+      m.textContent = text.substr(at, q.length);
+      frag.appendChild(m);
+      if (!first) { first = m; m.classList.add('cur'); }
+      text = text.slice(at + q.length);
+    }
+    frag.appendChild(document.createTextNode(text));
+    t.parentNode.replaceChild(frag, t);
+  });
+  if (first) {
+    state.suppressSpy = true;
+    first.scrollIntoView({ block:'center' });
+    setTimeout(() => state.suppressSpy = false, 400);
+  }
+}
+
+/* ===================== 配布用の書き出し =====================
+   いま読み込んでいる文書と画像を、この HTML 自身のコピーに埋め込んで
+   1ファイルとして書き出す。受け取った人はダブルクリックするだけでよい。 */
+
+const fileToDataURL = file => new Promise((res, rej) => {
+  const r = new FileReader();
+  r.onload = () => res(r.result);
+  r.onerror = rej;
+  r.readAsDataURL(file);
+});
+
+/* いま画面で見えている状態を front matter として書き出す。
+   文書側の指定があればそちらを優先する。 */
+function exportFrontMatter(doc){
+  const m = doc.meta || {};
+  const lines = [
+    'title: ' + (m.title || doc.title).replace(/\n/g, ' '),
+    'levels: [' + [...state.levels].sort().join(', ') + ']',
+    'style: ' + state.style,
+    'mode: ' + state.mode,
+  ];
+  if (m.collapse) lines.push('collapse: true');
+  return '---\n' + lines.join('\n') + '\n---\n\n';
+}
+
+async function buildExport(){
+  const missing = new Set();
+  const embedded = [];
+  for (const doc of state.docs) {
+    let md = exportFrontMatter(doc) + doc.md;
+    const srcs = [...new Set(
+      [...doc.md.matchAll(/!\[[^\]]*\]\(\s*([^)\s]+)/g)].map(m => m[1]))];
+    for (const src of srcs) {
+      if (/^(https?:|data:)/i.test(src)) continue;
+      const hit = findAsset(src, doc.path);
+      if (!hit) { missing.add(src); continue; }
+      try {
+        const durl = await fileToDataURL(hit.file);
+        md = md.split('(' + src).join('(' + durl);
+      } catch(e){ missing.add(src); }
+    }
+    embedded.push({ name: doc.name, md });
+  }
+
+  // この HTML 自身を複製し、読み込み前の状態に戻してから文書を埋め込む
+  const clone = document.documentElement.cloneNode(true);
+  const q = s => clone.querySelector(s);
+  q('#doc').innerHTML = '';
+  q('#doc').setAttribute('hidden', '');
+  q('#drop').removeAttribute('hidden');
+  q('#side').innerHTML = '<div class="toc-empty">まだ文書が読み込まれていません。</div>';
+  q('#side').removeAttribute('style');
+  q('#toast').textContent = '';
+  q('#toast').className = '';
+  clone.querySelectorAll('.modal').forEach(m => m.classList.remove('open'));
+  clone.querySelectorAll('script.docpane-doc').forEach(s => s.remove());
+  clone.querySelector('body').dataset.embedded = '1';
+  clone.querySelector('title').textContent = state.docs[0].title;
+
+  // 配る取説は完全に無通信にする。計測タグを丸ごと外し、
+  // CSP も connect-src 'none' の厳格版へ戻す。保存リンクも消す。
+  const cf = clone.querySelector('#cf-analytics');
+  if (cf) cf.remove();
+  const csp = clone.querySelector('meta[http-equiv="Content-Security-Policy"]');
+  if (csp) csp.setAttribute('content',
+    "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; " +
+    "img-src 'self' data: blob: file:; font-src data:; connect-src 'none'; " +
+    "form-action 'none'; base-uri 'none'; frame-src 'none'; object-src 'none'; " +
+    "media-src 'self' data: blob: file:;");
+  const save = clone.querySelector('#save-app');
+  if (save) save.remove();
+
+  // 計測に触れたコメントは、配布物では事実と合わなくなるので消して書き直す
+  const tw = document.createTreeWalker(clone, NodeFilter.SHOW_COMMENT);
+  const comments = [];
+  for (let c = tw.nextNode(); c; c = tw.nextNode()) comments.push(c);
+  comments.forEach(c => { if (/Cloudflare|計測/.test(c.nodeValue)) c.remove(); });
+  if (csp) csp.parentNode.insertBefore(document.createComment(
+    ' このファイルは外部と一切通信しません。上の CSP が通信手段そのものを禁じており、\n' +
+    '     アクセス計測の類も含まれていません。文書と画像はこのファイルの中に入っています。 '
+  ), csp);
+
+  embedded.forEach(d => {
+    const s = document.createElement('script');
+    s.type = 'text/plain';
+    s.className = 'docpane-doc';
+    s.dataset.name = d.name;
+    // 本文中の script 終了タグが HTML を壊さないように逃がす（読み込み時に戻す）
+    s.textContent = '\n' + d.md.replace(/<\/script/gi, '<\\/script') + '\n';
+    clone.querySelector('body').appendChild(s);
+  });
+
+  return { html: '<!DOCTYPE html>\n' + clone.outerHTML, missing };
+}
+
+async function exportHtml(){
+  if (!state.docs.length) { toast('先に .md を読み込んでください'); return; }
+  toast('書き出しています…');
+  const { html, missing } = await buildExport();
+
+  const blob = new Blob([html], { type:'text/html;charset=utf-8' });
+  const name = (state.docs[0].title || 'manual').replace(/[\\/:*?"<>|]/g, '_').slice(0, 80);
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name + '.html';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+
+  const mb = blob.size / 1024 / 1024;
+  const size = mb >= 1 ? mb.toFixed(1) + ' MB' : Math.round(blob.size / 1024) + ' KB';
+  toast(missing.size
+    ? `${size} で書き出しました（画像 ${missing.size} 点は見つからず未埋め込み）`
+    : `${size} で書き出しました`);
+}
+
+/* ===================== モード / スタイル / レベル ===================== */
+
+function syncModeButtons(){
+  $$('#modes button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === state.mode)));
+}
+function syncLevelButtons(){
+  $$('#levels button').forEach(b =>
+    b.setAttribute('aria-pressed', String(state.levels.has(Number(b.dataset.lv)))));
+}
+
+function setMode(mode){
+  state.mode = state.pref.mode = mode;
+  document.body.dataset.mode = mode;
+  syncModeButtons();
+  if (state.docs.length) {
+    if (mode === 'page') selectItem(Math.max(0, state.current), true);
+    else {
+      $$('#doc .doc-section').forEach(s => s.classList.remove('shown'));
+      selectItem(Math.max(0, state.current), true);
+    }
+  }
+  savePrefs();
+}
+
+function setStyle(style){
+  state.style = state.pref.style = style;
+  document.body.dataset.style = style;
+  $('#style-sel').value = style;
+  savePrefs();
+}
+
+function setLevels(){
+  state.pref.levels = [...state.levels];
+  syncLevelButtons();
+  if (state.docs.length) showDoc(state.docIndex);
+  savePrefs();
+}
+
+/* ===================== 入力ハンドラ ===================== */
+
+$('#export-btn').onclick = () => exportHtml();
+$('#modes').onclick = e => { const b = e.target.closest('button'); if (b) setMode(b.dataset.mode); };
+$('#style-sel').onchange = e => setStyle(e.target.value);
+$('#levels').onclick = e => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  const lv = Number(b.dataset.lv);
+  if (state.levels.has(lv)) { if (state.levels.size > 1) state.levels.delete(lv); }
+  else state.levels.add(lv);
+  setLevels();
+};
+
+const picker = $('#picker'), dirpicker = $('#dirpicker');
+$('#open-file').onclick = $('#drop-file').onclick = () => picker.click();
+$('#open-dir').onclick  = $('#drop-dir').onclick  = () => dirpicker.click();
+const wrap = f => ({ file:f, path: f.webkitRelativePath || f.name });
+picker.onchange = () => openFiles(Array.from(picker.files).map(wrap));
+dirpicker.onchange = () => openFiles(Array.from(dirpicker.files).map(wrap));
+
+$('#drop-sample').onclick = () => {
+  state.assets = new Map();
+  state.docs = [];
+  addDoc('DocPane.md', $('#sample-md').textContent.trim());
+  finishOpen();
+};
+
+/* ドラッグ&ドロップ（フォルダ対応） */
+let dragDepth = 0;
+document.addEventListener('dragenter', e => { e.preventDefault(); if (++dragDepth === 1) document.body.classList.add('dragging'); });
+document.addEventListener('dragover',  e => e.preventDefault());
+document.addEventListener('dragleave', e => { if (--dragDepth <= 0) { dragDepth = 0; document.body.classList.remove('dragging'); } });
+document.addEventListener('drop', async e => {
+  e.preventDefault();
+  dragDepth = 0;
+  document.body.classList.remove('dragging');
+  const found = [];
+  const wanted = f => MD_RE.test(f.name) || IMG_RE.test(f.name);
+
+  // DataTransfer は drop ハンドラを抜けた時点で無効になる。
+  // await を挟むと2つ目以降が取れなくなるので、先に全部同期で取り出しておく。
+  const entries = [];
+  for (const it of Array.from(e.dataTransfer.items || [])) {
+    if (it.kind && it.kind !== 'file') continue;
+    const en = it.webkitGetAsEntry ? it.webkitGetAsEntry() : null;
+    if (en) entries.push(en);
+  }
+  const plainFiles = Array.from(e.dataTransfer.files || []);
+
+  const walk = entry => new Promise(res => {
+    if (entry.isFile) {
+      entry.file(f => {
+        if (wanted(f)) found.push({ file:f, path: entry.fullPath || f.name });
+        res();
+      }, res);
+    } else if (entry.isDirectory) {
+      const rd = entry.createReader();
+      // readEntries は一度に最大100件しか返さないので、空になるまで読む
+      const readMore = () => rd.readEntries(async entries => {
+        if (!entries.length) return res();
+        for (const en of entries) await walk(en);
+        readMore();
+      }, res);
+      readMore();
+    } else res();
+  });
+
+  for (const en of entries) await walk(en);
+
+  // フォルダとして辿れなかったとき（Chrome では entry が取れないことがある）は、
+  // ふつうのファイル一覧から拾い直す。フォルダはこちらには出てこない。
+  if (!found.some(x => MD_RE.test(x.file.name))) {
+    plainFiles.forEach(f => {
+      if (wanted(f) && !found.some(x => x.file === f)) found.push({ file:f, path:f.name });
+    });
+  }
+
+  if (found.length) openFiles(found);
+  else if (plainFiles.length) toast('.md ファイルが見つかりませんでした');
+  else toast('読み取れませんでした。「フォルダ…」から開いてみてください');
+});
+
+/* 分割線ドラッグ */
+(function(){
+  let dragging = false;
+  $('#splitter').addEventListener('mousedown', () => {
+    dragging = true;
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  });
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    sideEl.style.width = Math.max(160, Math.min(560, e.clientX)) + 'px';
+  });
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+    savePrefs();
+  });
+})();
+
+/* モーダル */
+const searchModal = $('#search-modal'), helpModal = $('#help-modal'), searchInput = $('#search-input');
+function closeModals(){
+  searchModal.classList.remove('open');
+  helpModal.classList.remove('open');
+  searchInput.blur();   // 閉じた直後に J / K などが効くように
+}
+[searchModal, helpModal].forEach(m => m.onclick = e => { if (e.target === m) closeModals(); });
+$('#help-btn').onclick = () => helpModal.classList.add('open');
+searchInput.oninput = () => runSearch(searchInput.value);
+searchInput.onkeydown = e => {
+  if (e.key === 'Enter') {
+    const first = $('#results .res');
+    if (first) first.click();
+  }
+};
+
+/* キーボード */
+document.addEventListener('keydown', e => {
+  const mod = e.metaKey || e.ctrlKey;
+  const typing = /^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName);
+
+  if (mod && e.key.toLowerCase() === 'f') {
+    e.preventDefault();
+    searchModal.classList.add('open');
+    searchInput.select();
+    searchInput.focus();
+    return;
+  }
+  if (mod && e.key.toLowerCase() === 'e') {
+    e.preventDefault();
+    setMode(state.mode === 'scroll' ? 'page' : 'scroll');
+    toast(state.mode === 'page' ? 'ページモード' : '連続モード');
+    return;
+  }
+  if (e.key === 'Escape') { closeModals(); clearMarks(); return; }
+  if (typing || mod) return;
+
+  if (e.key === 'j' || e.key === 'J') { e.preventDefault(); step(1); }
+  else if (e.key === 'k' || e.key === 'K') { e.preventDefault(); step(-1); }
+  else if (e.key === 'ArrowRight' || (e.key === 'ArrowDown' && state.mode === 'page')) { e.preventDefault(); step(1); }
+  else if (e.key === 'ArrowLeft'  || (e.key === 'ArrowUp'   && state.mode === 'page')) { e.preventDefault(); step(-1); }
+  else if (/^[1-9]$/.test(e.key)) {
+    const lv = primaryLevel();
+    const primaries = state.items.filter(it => it.level === lv);
+    const t = primaries[Number(e.key) - 1];
+    if (t) selectItem(state.items.indexOf(t));
+  }
+  else if (e.key === '[' && state.docs.length > 1) showDoc(Math.max(0, state.docIndex - 1));
+  else if (e.key === ']' && state.docs.length > 1) showDoc(Math.min(state.docs.length - 1, state.docIndex + 1));
+  else if (e.key === '?') helpModal.classList.add('open');
+});
+
+/* ===================== 紹介ページ埋め込み用のデモモード =====================
+   ?demo=1 で開かれたときだけ、保存を伴う操作を隠し、
+   親ページから postMessage で渡された文書を表示する。
+   受け取るのは同一オリジンの親フレームからのものだけ。 */
+(function setupDemo(){
+  if (!/(^|[?&])demo=1(&|$)/.test(location.search)) return;
+  document.body.dataset.demo = '1';
+  window.addEventListener('message', e => {
+    if (e.source !== window.parent) return;
+    if (e.origin !== location.origin && e.origin !== 'null') return;
+    const d = e.data;
+    if (!d || d.type !== 'docpane:load' || typeof d.md !== 'string') return;
+    state.assets = new Map();
+    state.docs = [];
+    addDoc(d.name || 'sample.md', d.md);
+    finishOpen();
+  });
+  // 親に「受け取れる状態になった」と伝える
+  try { parent.postMessage({ type:'docpane:ready' }, '*'); } catch(err){}
+})();
+
+/* ===================== 版数と保存リンク ===================== */
+
+const VERSION = 'v1.0 (2026-08-14)';
+$('#ver').textContent = 'DocPane ' + VERSION;
+$('#help-ver').textContent = 'DocPane ' + VERSION;
+
+/* サイト上で開かれているときだけ「保存」を出す。
+   すでに手元のファイルとして開いている人には不要なので隠す。 */
+(function setupSave(){
+  const a = $('#save-app');
+  if (!a || !/^https?:$/.test(location.protocol) || document.body.dataset.embedded) return;
+  a.href = location.pathname;                       // 自分自身
+  a.download = 'DocPane-' + VERSION.split(' ')[0].replace(/^v/, '') + '.html';
+  a.hidden = false;
+})();
+
+/* 起動 */
+loadPrefs();
+setStyle(state.style);
+setMode(state.mode);
+syncLevelButtons();
+
+/* 書き出し済みファイルとして開かれたときは、埋め込まれた文書をそのまま表示する */
+function loadEmbedded(){
+  const scripts = $$('script.docpane-doc');
+  if (!scripts.length) return;
+  document.body.dataset.embedded = '1';
+  state.docs = [];
+  scripts.forEach(s => addDoc(
+    s.dataset.name || 'document.md',
+    s.textContent.replace(/^\r?\n/, '').replace(/<\\\/script/gi, '<\/script')
+  ));
+  finishOpen();
+}
+// 埋め込みは本体スクリプトより後ろに置かれるので、読み込み完了を待つ
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadEmbedded);
+else loadEmbedded();
+</script>
+
+<!-- アクセス計測。Cloudflare Web Analytics（Cookie を使わないので同意バナー不要）。
+     計測されるのは閲覧数・流入元・時系列だけで、開いた .md の中身は送信されない。
+     rustyworks.jp で開かれたときだけ発火する。保存したファイルや書き出した取説は
+     ホスト名が違うため動かず、外部リクエストは0のまま。
+     書き出し時にはこのタグごと取り除かれる。 -->
+<script id="cf-analytics">
+const CF_TOKEN = "04f66ad1837a4b63af68beb6e835358f";   // Cloudflare Web Analytics のトークン（公開値）を入れる
+if (CF_TOKEN && location.hostname === "rustyworks.jp") {
+  const b = document.createElement("script");
+  b.defer = true;
+  b.src = "https://static.cloudflareinsights.com/beacon.min.js";
+  b.setAttribute("data-cf-beacon", JSON.stringify({ token: CF_TOKEN }));
+  document.head.appendChild(b);
+}
+</script>
+<script type="text/plain" class="docpane-doc" data-name="DocPane_manual.md">
+---
+title: ShelfNavigator 取説 / Manual
+levels: [2, 3]
+style: standard
+mode: page
+---
+
+# ShelfNavigator 取説 / Manual
+
+![ShelfNavigator](assets/icons/shelfnavigator.png)
+
+ShelfNavigator は、登録したフォルダを索引して、まとめて閲覧・検索する macOS 用アプリです。ドライブをまたいだ写真・動画・テキストが、フォルダの区切りなく1つの一覧になります。
+
+ShelfNavigator is a macOS app that indexes the folders you register and browses them as one. Photos, videos and text spread across several drives appear in a single grid, with the folder boundaries out of the way.
+
+## 概要 / Overview
+
+#### Japanese
+
+ShelfNavigator は、登録したフォルダを索引して、まとめて閲覧・検索するアプリです。
+
+ファイルを移動したりコピーしたりはしません。読み取って一覧にするだけで、元のフォルダ構成はそのまま残ります。
+
+#### English
+
+ShelfNavigator indexes the folders you register so you can browse and search them together.
+
+It never moves or copies your files. It reads them and lists them; your folder structure is left exactly as it was.
+
+> フォルダは入れ子で登録できます。ドライブ全体と、その中のプロジェクトフォルダを両方登録すれば、どちらもそれぞれの中身を表示します。
+>
+> Registered folders may nest. Add a whole drive and a project folder inside it, and each lists its own contents.
+
+## 動作環境 / Environment
+
+#### 日本語
+
+- `macOS 14` 以降
+- **Apple Silicon**（M1 以降）専用
+- Mac App Store で配布
+- 対象：画像・動画・テキストファイル
+- 内蔵・外付け・ネットワークのフォルダに対応
+
+#### English
+
+- `macOS 14` or later
+- **Apple Silicon** only (M1+)
+- Distributed on the Mac App Store
+- Handles images, video and text files
+- Works with internal, external and network folders
+
+> ネットワークに接続しません。索引はこの Mac の中だけに保存され、外部へ送信されることはありません。
+>
+> The app has no network access. The index stays on this Mac and is never sent anywhere.
+
+## クイックスタート / Quick Start
+
+#### 日本語
+
+1. サイドバー下部の **フォルダを追加…**（`⌘O`）でフォルダを選ぶ
+2. 索引（スキャン）が自動で始まる
+3. 完了するとサイドバーに件数が表示される
+4. フォルダをもう1つ追加すると、**すべてのファイル** で全部が1つの一覧になる
+
+#### English
+
+1. Choose a folder with **Add Folder…** (`⌘O`) at the bottom of the sidebar
+2. Indexing starts on its own
+3. The sidebar shows a count when it finishes
+4. Add a second folder and **All Files** lists everything together
+
+> 大きなドライブの初回スキャンには時間がかかります。進行中も一覧は使えて、見つかった順に増えていきます。
+>
+> The first scan of a large drive takes a while. You can keep using the grid while it runs; results fill in as they are found.
+
+## 画面概要 / Window Overview
+
+### サイドバー / Sidebar
+
+登録したフォルダと Finder タグの一覧。件数付き。
+
+Registered folders and Finder tags, with counts.
+
+### グリッド / Grid
+
+サムネイルの一覧。下部のスライダーで大きさを変更。
+
+The thumbnail grid. The slider at the bottom changes tile size.
+
+### 情報パネル / Info Pane
+
+選択中のファイルの寸法・再生時間・場所・タグ。`I` で表示切替。
+
+Dimensions, duration, location and tags for the selected file. `I` toggles it.
+
+### 検索とフィルタ / Search & Filters
+
+上部の検索欄、種類フィルタ、並び替え。
+
+The search field, kind filter and sort control along the top.
+
+#### 表示モード / View Modes
+
+- **タイル表示**（`T` / `⌘1`）— サムネイルを並べる
+- **プレビュー表示**（`P` / `⌘2`）— 1つを大きく表示し、下部のフィルムストリップで移動
+
+#### View Modes
+
+- **Tile** (`T` / `⌘1`) — a grid of thumbnails
+- **Preview** (`P` / `⌘2`) — one file large, with a filmstrip below to move through them
+
+## 探す / Search
+
+#### 日本語
+
+検索欄には、普通の言葉のほか、次の指定が使えます。
+
+- `name:` `folder:` `ext:` `kind:` `tag:`
+- `size>10mb` `w>=1920` `h<=1080` `duration>60`
+- `modified:2024` `created:2024-03`
+- `AND` `OR` `NOT`（大文字）
+- `-語` で除外、`"引用符"` で語順を固定
+- 範囲は `size:1mb..2mb` のように指定
+
+#### English
+
+The search field takes plain words, and also:
+
+- `name:` `folder:` `ext:` `kind:` `tag:`
+- `size>10mb` `w>=1920` `h<=1080` `duration>60`
+- `modified:2024` `created:2024-03`
+- `AND` `OR` `NOT` (uppercase)
+- `-word` excludes; `"quotes"` keep words in order
+- Ranges are written `size:1mb..2mb`
+
+フィルタボタンからは、サイズ・解像度・再生時間・日付を画面上で指定できます。Finder タグはサイドバーから選べます。
+
+The filter button sets size, resolution, duration and dates without typing. Finder tags are picked from the sidebar.
+
+## 選択と表示 / Selecting & Opening
+
+#### 選択 / Selecting
+
+- クリック — 単一選択 / click to select one
+- `⇧` クリック — 範囲選択 / extend the range
+- `⌘` クリック — 追加・解除 / add or remove one
+- `⌘A` — すべて選択 / select all
+- 矢印キーで移動、`⇧`＋矢印で拡張 / arrows move, shift-arrows extend
+
+#### 開く / Opening
+
+- `Return` / ダブルクリック — 既定のアプリで開く / open in the default app
+- `Space` — 動画の再生・一時停止 / play or pause video
+- `F` または `⌘⇧R` — Finder で表示 / show in Finder
+- `I` または `⌘⌥I` — 情報パネル / toggle the info pane
+
+> 設定の「開くアプリ」で、種類ごとに使うアプリを指定できます。macOS の既定は変更されません。
+>
+> Settings → Open With picks an app per file kind. Your macOS defaults are left unchanged.
+
+## 重複を探す / Finding Duplicates
+
+#### 日本語
+
+ツールバーの **重複**（`⌘⇧D`）で、登録した全フォルダを横断して重複を検出します。名前ではなく**内容**で比較します。
+
+結果画面では、残すファイルを選んでから他をゴミ箱へ移動できます。移動の直前にもう一度バイト単位で照合するので、内容が変わっていたものは自動的に除外されます。
+
+「Duplicate」タグを付けるだけにして、後で Finder で確認することもできます。
+
+#### English
+
+**Duplicates** in the toolbar (`⌘⇧D`) looks across every registered folder. It compares file **contents**, not names.
+
+In the results you choose which copy to keep and send the rest to the Trash. Each file is compared byte for byte once more immediately before it is moved, so anything that changed in the meantime is dropped from the operation.
+
+You can also just apply the “Duplicate” tag and review them in Finder later.
+
+## 削除と取り消し / Trash & Undo
+
+#### 日本語
+
+`⌘⌫` でゴミ箱へ移動します。**ShelfNavigator がファイルを完全に消去することはありません。**
+
+直後であれば `⌘Z` で元の場所に戻せます（同じ起動中のみ）。それ以降は Finder のゴミ箱から手動で戻してください。
+
+#### English
+
+`⌘⌫` moves files to the Trash. **ShelfNavigator never deletes anything permanently.**
+
+`⌘Z` puts them back where they were, for as long as the app stays open. After that, restore them from the Finder Trash.
+
+> 別のボリュームのファイルをゴミ箱へ移すと、そのボリューム上のゴミ箱に入ります。容量が足りない場合は、移動するファイルを選び直すよう確認が出ます。
+>
+> Files on another volume go to that volume’s Trash. If there is not enough room, the app asks you to choose which files to move.
+
+## 設定 / Settings
+
+### タイル / Tiles
+
+ホバーで動画を再生するかどうか。
+
+Whether video previews start when you hover a tile.
+
+### パフォーマンス / Performance
+
+サムネイルのメモリを 256MB〜4GB から選択。多いほどスクロールが滑らかで、メモリを使います。
+
+Thumbnail memory, from 256 MB to 4 GB. More means smoother scrolling and a larger footprint.
+
+### サムネイルキャッシュ / Thumbnail Cache
+
+ディスク使用量の表示と消去。フォルダの登録を解除すると、そのサムネイルは自動で削除されます。
+
+Shows what is on disk and clears it. Unregistering a folder discards its thumbnails automatically.
+
+### 開くアプリ / Open With
+
+画像・動画・テキストごとに使うアプリを指定。
+
+Pick an app per file kind.
+
+「このアプリについて」からは、同梱しているオープンソースライブラリのライセンスを確認できます。
+
+About lists the licences of the open-source libraries the app bundles.
+
+## ショートカット / Keyboard Shortcuts
+
+- `⌘O` — **フォルダを追加** / Add Folder
+- `⌘R` — **すべてのフォルダを再スキャン** / Rescan All Libraries
+- `T` — **タイル表示** / Tile Mode（`⌘1`）
+- `P` — **プレビュー表示** / Preview Mode（`⌘2`）
+- `I` — **情報パネル** / Toggle Info Pane（`⌘⌥I`）
+- `F` — **Finder で表示** / Show in Finder（`⌘⇧R`）
+- `Return` — **開く** / Open（`⌘↓`）
+- `Space` — **動画の再生・一時停止** / Play or Pause
+- `⌘A` — **すべて選択** / Select All
+- `⌘⇧D` — **重複を探す** / Find Duplicates
+- `⌘⌫` — **ゴミ箱に入れる** / Move to Trash
+- `⌘Z` — **ゴミ箱への移動を取り消す** / Undo Move to Trash
+
+## 困ったとき / Troubleshooting
+
+#### 日本語
+
+- **一覧に何も出ない** — 種類フィルタや検索条件が残っていないか確認してください。絞り込み中はその旨がバーに表示されます
+- **「アクセス許可が必要」と出る** — 外付けを繋ぎ直したか、macOS の許可が切れています。その項目から再度許可してください
+- **サムネイルが出ない** — 破損したファイルや、拡張子と中身が食い違うファイルでは出ないことがあります
+- **件数が想定と違う** — フォルダを入れ子で登録している場合、内側のファイルは外側にも含まれるため、合計は一致しません
+- **古い WMV のサムネイルが乱れる** — 一部の `.wmv`（Windows Media Video 9）で、サムネイルにノイズが出ることがあります。ファイルが壊れているわけではなく、**再生とプレビューは正常**です。この形式は内部の索引が不完全なことが多く、途中の位置から画を取り出す際に生じます
+
+#### English
+
+- **The grid is empty** — check whether a kind filter or search is still applied; the bar says so while one is active
+- **“Access needed” on a folder** — the drive was reconnected, or the macOS permission lapsed. Grant access again from that row
+- **No thumbnail** — damaged files, and files whose extension disagrees with their contents, may not produce one
+- **The counts do not add up** — with nested folders a file belongs to every folder above it, so the totals deliberately overlap
+- **A garbled thumbnail on an old WMV** — some `.wmv` files (Windows Media Video 9) produce a noisy thumbnail. The file is not damaged and **playback and preview are unaffected**: the format often carries an incomplete index, which can garble a frame taken from partway in
+
+## リンク / Links
+
+[製品ページ / Product Page](shelfnavigator.html) ・ [プライバシーポリシー / Privacy Policy](shelfnavigator_privacy.html) ・ [RustyWorks Tools](index.html#tools)
+
+お問い合わせ / Contact: [rustyworks.games@gmail.com](mailto:rustyworks.games@gmail.com)
+
+</script>
 </body>
 </html>
