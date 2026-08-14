@@ -8,8 +8,7 @@
      それも下の計測タグが rustyworks.jp 以外では発火しない。
      書き出した取説では、このメタごと connect-src 'none' の厳格版に差し替わる。 -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'unsafe-inline'; img-src 'self' data: blob: file: https: http:; font-src data:; connect-src https://cloudflareinsights.com; form-action 'none'; base-uri 'none'; frame-src 'none'; object-src 'none'; media-src 'self' data: blob: file:;">
-<title>DocPane 取扱説明書</title>
-<link rel="canonical" href="https://rustyworks.jp/docpane/manual.html">
+<title>DocPane 取扱説明書 / Manual</title>
 <style>
 /* ===== テーマ変数 =========================================== */
 :root{
@@ -86,6 +85,14 @@ body[data-demo] #open-file,
 body[data-demo] #open-dir,
 body[data-demo] #save-app{display:none;}
 header > *{flex:0 0 auto;}
+.lang{display:flex; align-items:center; gap:4px; font-size:12px; color:var(--muted);}
+.lang button{
+  border:0; background:none; font:inherit; font-size:12px; padding:3px 5px;
+  color:var(--muted); cursor:pointer; border-radius:5px;
+}
+.lang button[aria-pressed="true"]{color:var(--accent); font-weight:700;}
+.lang button:hover{color:var(--accent);}
+.lang .sep{opacity:.5;}
 header .spacer{flex:1 1 auto;}
 @media (max-width:920px){
   header{gap:8px; padding:0 8px; overflow-x:auto;}
@@ -286,7 +293,7 @@ kbd{
   <span class="brand">DocPane</span>
 
   <div class="group">
-    <span class="label">項目</span>
+    <span class="label" data-ja="項目" data-en="Items">項目</span>
     <div class="seg" id="levels">
       <button data-lv="1" aria-pressed="false">H1</button>
       <button data-lv="2" aria-pressed="true">H2</button>
@@ -296,41 +303,46 @@ kbd{
   </div>
 
   <div class="group">
-    <span class="label">右ペイン</span>
+    <span class="label" data-ja="右ペイン" data-en="Right pane">右ペイン</span>
     <div class="seg" id="modes">
-      <button data-mode="scroll" aria-pressed="true">連続</button>
-      <button data-mode="page" aria-pressed="false">ページ</button>
+      <button data-mode="scroll" aria-pressed="true" data-ja="連続" data-en="Continuous">連続</button>
+      <button data-mode="page" aria-pressed="false" data-ja="ページ" data-en="Paged">ページ</button>
     </div>
   </div>
 
   <div class="spacer"></div>
 
-  <select id="style-sel" title="表示スタイル">
+  <select id="style-sel" title="表示スタイル" data-title-ja="表示スタイル" data-title-en="Display style">
     <option value="standard">Standard Manual</option>
     <option value="dark">Dark Minimal</option>
     <option value="book">Classic Book</option>
     <option value="api">Technical API</option>
   </select>
-  <button class="btn" id="open-file">ファイル…</button>
-  <button class="btn" id="open-dir">フォルダ…</button>
-  <button class="btn" id="export-btn" title="いまの文書と画像を1枚の HTML にまとめて保存">書き出し</button>
-  <button class="btn" id="help-btn" title="ショートカット">?</button>
+  <button class="btn" id="open-file" data-ja="ファイル…" data-en="Open File…">ファイル…</button>
+  <button class="btn" id="open-dir" data-ja="フォルダ…" data-en="Open Folder…">フォルダ…</button>
+  <button class="btn" id="export-btn" title="いまの文書と画像を1枚の HTML にまとめて保存" data-title-ja="いまの文書と画像を1枚の HTML にまとめて保存" data-title-en="Save the current document and images as one HTML file" data-ja="書き出し" data-en="Export">書き出し</button>
+  <div class="lang" id="lang" role="group" aria-label="Language">
+    <button type="button" data-lang="ja" aria-pressed="true">JA</button>
+    <span class="sep">/</span>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+  <button class="btn" id="help-btn" title="ショートカット" data-title-ja="ショートカット" data-title-en="Shortcuts">?</button>
 </header>
 
 <main>
-  <aside id="side"><div class="toc-empty">まだ文書が読み込まれていません。</div></aside>
+  <aside id="side"><div class="toc-empty" data-ja="まだ文書が読み込まれていません。" data-en="No document loaded yet.">まだ文書が読み込まれていません。</div></aside>
   <div id="splitter"></div>
   <section id="view">
     <div id="drop">
-      <h2>.md ファイル / フォルダをドロップ</h2>
+      <h2 data-ja=".md ファイル / フォルダをドロップ" data-en="Drop a .md file or a folder">.md ファイル / フォルダをドロップ</h2>
       <p>
-        単一ファイルなら見出しが項目に、複数ファイルならファイルが項目になります。<br>
-        左の項目をクリックすると、右ペインが該当箇所へジャンプします。
+        <span data-ja="単一ファイルなら見出しが項目に、複数ファイルならファイルが項目になります。" data-en="One file: its headings become the items. Several files: each file becomes an item.">単一ファイルなら見出しが項目に、複数ファイルならファイルが項目になります。</span><br>
+        <span data-ja="左の項目をクリックすると、右ペインが該当箇所へジャンプします。" data-en="Click an item on the left and the right pane jumps to it.">左の項目をクリックすると、右ペインが該当箇所へジャンプします。</span>
       </p>
       <div class="row">
-        <button class="btn" id="drop-file">ファイルを選ぶ</button>
-        <button class="btn" id="drop-dir">フォルダを選ぶ</button>
-        <button class="btn" id="drop-sample">サンプルを開く</button>
+        <button class="btn" id="drop-file" data-ja="ファイルを選ぶ" data-en="Choose a file">ファイルを選ぶ</button>
+        <button class="btn" id="drop-dir" data-ja="フォルダを選ぶ" data-en="Choose a folder">フォルダを選ぶ</button>
+        <button class="btn" id="drop-sample" data-ja="サンプルを開く" data-en="Open the sample">サンプルを開く</button>
       </div>
       <!-- 保存リンクは、サイト上で開かれているときだけ出す -->
       <div class="ver" id="ver"></div>
@@ -341,34 +353,34 @@ kbd{
 
 <div class="modal" id="search-modal">
   <div class="panel">
-    <input type="search" id="search-input" placeholder="全文横断検索…（Enter で移動、Esc で閉じる）" autocomplete="off">
+    <input type="search" id="search-input" placeholder="全文横断検索…（Enter で移動、Esc で閉じる）" data-ph-ja="全文横断検索…（Enter で移動、Esc で閉じる）" data-ph-en="Search all documents…  (Enter to go, Esc to close)" autocomplete="off">
     <div id="results"></div>
   </div>
 </div>
 
 <div class="modal" id="help-modal">
   <div class="panel help">
-    <h3>キーボード操作</h3>
+    <h3 data-ja="キーボード操作" data-en="Keyboard">キーボード操作</h3>
     <dl>
-      <dt><kbd>J</kbd> / <kbd>↓</kbd> / <kbd>→</kbd></dt><dd>次の項目へ</dd>
-      <dt><kbd>K</kbd> / <kbd>↑</kbd> / <kbd>←</kbd></dt><dd>前の項目へ</dd>
-      <dt><kbd>1</kbd>…<kbd>9</kbd></dt><dd>その番号の項目へ直接ジャンプ</dd>
-      <dt><kbd>⌘F</kbd> / <kbd>Ctrl F</kbd></dt><dd>全文横断検索</dd>
-      <dt><kbd>⌘E</kbd> / <kbd>Ctrl E</kbd></dt><dd>右ペインを 連続 ⇔ ページ で切替</dd>
-      <dt><kbd>[</kbd> / <kbd>]</kbd></dt><dd>前後のファイルへ（複数読込時）</dd>
-      <dt><kbd>?</kbd></dt><dd>このヘルプ</dd>
-      <dt><kbd>Esc</kbd></dt><dd>閉じる / ハイライト解除</dd>
+      <dt><kbd>J</kbd> / <kbd>↓</kbd> / <kbd>→</kbd></dt><dd data-ja="次の項目へ" data-en="Next item">次の項目へ</dd>
+      <dt><kbd>K</kbd> / <kbd>↑</kbd> / <kbd>←</kbd></dt><dd data-ja="前の項目へ" data-en="Previous item">前の項目へ</dd>
+      <dt><kbd>1</kbd>…<kbd>9</kbd></dt><dd data-ja="その番号の項目へ直接ジャンプ" data-en="Jump straight to that item">その番号の項目へ直接ジャンプ</dd>
+      <dt><kbd>⌘F</kbd> / <kbd>Ctrl F</kbd></dt><dd data-ja="全文横断検索" data-en="Search all documents">全文横断検索</dd>
+      <dt><kbd>⌘E</kbd> / <kbd>Ctrl E</kbd></dt><dd data-ja="右ペインを 連続 ⇔ ページ で切替" data-en="Switch the right pane between continuous and paged">右ペインを 連続 ⇔ ページ で切替</dd>
+      <dt><kbd>[</kbd> / <kbd>]</kbd></dt><dd data-ja="前後のファイルへ（複数読込時）" data-en="Previous / next file (when several are loaded)">前後のファイルへ（複数読込時）</dd>
+      <dt><kbd>?</kbd></dt><dd data-ja="このヘルプ" data-en="This help">このヘルプ</dd>
+      <dt><kbd>Esc</kbd></dt><dd data-ja="閉じる / ハイライト解除" data-en="Close / clear the search highlight">閉じる / ハイライト解除</dd>
     </dl>
-    <h3>連続モードでは ↑↓ は通常のスクロールに使えます（J / K は常に項目移動）</h3>
-    <h3>文書側での指定</h3>
+    <h3 data-ja="連続モードでは ↑↓ は通常のスクロールに使えます（J / K は常に項目移動）" data-en="In continuous mode the arrow keys scroll as usual. J and K always move between items.">連続モードでは ↑↓ は通常のスクロールに使えます（J / K は常に項目移動）</h3>
+    <h3 data-ja="文書側での指定" data-en="Set in the document">文書側での指定</h3>
     <dl>
-      <dt><kbd>title</kbd></dt><dd>文書名</dd>
-      <dt><kbd>levels</kbd></dt><dd>項目に拾う見出しレベル（例 <kbd>[1, 2]</kbd>）</dd>
+      <dt><kbd>title</kbd></dt><dd data-ja="文書名" data-en="Document name">文書名</dd>
+      <dt><kbd>levels</kbd></dt><dd><span data-ja="項目に拾う見出しレベル（例" data-en="Heading levels to list as items (e.g.">項目に拾う見出しレベル（例</span> <kbd>[1, 2]</kbd><span data-ja="）" data-en=")">）</span></dd>
       <dt><kbd>style</kbd></dt><dd>standard / dark / book / api</dd>
       <dt><kbd>mode</kbd></dt><dd>scroll / page</dd>
-      <dt><kbd>collapse</kbd></dt><dd>下位項目をたたんで開く</dd>
+      <dt><kbd>collapse</kbd></dt><dd data-ja="下位項目をたたんで開く" data-en="Open with sub-items collapsed">下位項目をたたんで開く</dd>
     </dl>
-    <h3>.md の先頭を <kbd>---</kbd> で挟んだブロックに書きます（サンプル文書の6章参照）</h3>
+    <h3><span data-ja=".md の先頭を" data-en="Write these at the top of the .md, fenced by">.md の先頭を</span> <kbd>---</kbd> <span data-ja="で挟んだブロックに書きます（サンプル文書の6章参照）" data-en="(see section 6 of the sample document)">で挟んだブロックに書きます（サンプル文書の6章参照）</span></h3>
     <div class="ver" id="help-ver"></div>
   </div>
 </div>
@@ -536,12 +548,12 @@ function inline(src){
   s = s.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g, (m,a,u) => {
     const safe = safeUrl(u, true);
     return safe ? `<img data-src="${safe}" alt="${a}">`
-                : `<span class="blocked" title="安全でない画像URLのため表示しません">${a || '画像'}</span>`;
+                : `<span class="blocked" title="${escapeHtml(T('blockedImg'))}">${a || T('image')}</span>`;
   });
   s = s.replace(/\[([^\]]+)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g, (m,t,u) => {
     const safe = safeUrl(u, false);
     return safe ? `<a href="${safe}" target="_blank" rel="noopener noreferrer">${t}</a>`
-                : `<span class="blocked" title="安全でないリンクのため無効化しました">${t}</span>`;
+                : `<span class="blocked" title="${escapeHtml(T('blockedLink'))}">${t}</span>`;
   });
   s = s.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
   s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
@@ -732,6 +744,75 @@ const state = {
   pref: { levels:[2], mode:'scroll', style:'standard' },
 };
 
+
+/* ===================== 表示言語 =====================
+   サイトと同じ鍵（rw-lang）を使う。同じサイトの中で開かれていれば、
+   トップで EN にした人はこの画面も EN で開く。
+   単体のファイルとして開かれた場合は、そのファイル内での記憶になる。 */
+
+const LANG_KEY = 'rw-lang';
+let LANG = 'ja';
+
+const MSG = {
+  ja: {
+    empty:      'まだ文書が読み込まれていません。',
+    noHeadings: '選択中のレベルの見出しが見つかりません。ツールバーで H1〜H4 を切り替えてください。',
+    noHit:      '一致する箇所はありません。',
+    exporting:  '書き出しています…',
+    exported:   size => `${size} で書き出しました`,
+    exportedMissing: (size, n) => `${size} で書き出しました（画像 ${n} 点は見つからず未埋め込み）`,
+    needDoc:    '先に .md を読み込んでください',
+    noMd:       '.md ファイルが見つかりませんでした',
+    unreadable: '読み取れませんでした。「フォルダ…」から開いてみてください',
+    loaded:     n => `${n} ファイルを読み込みました`,
+    modePage:   'ページモード',
+    modeScroll: '連続モード',
+    blockedLink:'安全でないリンクのため無効化しました',
+    blockedImg: '安全でない画像URLのため表示しません',
+    image:      '画像',
+  },
+  en: {
+    empty:      'No document loaded yet.',
+    noHeadings: 'No headings at the selected levels. Try switching H1–H4 in the toolbar.',
+    noHit:      'No matches.',
+    exporting:  'Exporting…',
+    exported:   size => `Saved (${size})`,
+    exportedMissing: (size, n) => `Saved (${size}) — ${n} image(s) could not be found and were left out`,
+    needDoc:    'Load a .md file first',
+    noMd:       'No .md file was found',
+    unreadable: 'Could not read it. Try the “Open Folder…” button instead',
+    loaded:     n => `Loaded ${n} files`,
+    modePage:   'Paged mode',
+    modeScroll: 'Continuous mode',
+    blockedLink:'This link was disabled because it is not safe',
+    blockedImg: 'This image is not shown because its address is not safe',
+    image:      'image',
+  },
+};
+
+const T = k => (MSG[LANG] && MSG[LANG][k] !== undefined) ? MSG[LANG][k] : MSG.ja[k];
+
+function applyLang(lang, save){
+  LANG = (lang === 'en') ? 'en' : 'ja';
+  document.documentElement.lang = LANG;
+  $$('[data-ja][data-en]').forEach(el => {
+    const v = el.getAttribute('data-' + LANG);
+    if (v !== null) el.textContent = v;
+  });
+  $$('[data-title-ja][data-title-en]').forEach(el => {
+    const v = el.getAttribute('data-title-' + LANG);
+    if (v !== null) el.title = v;
+  });
+  $$('[data-ph-ja][data-ph-en]').forEach(el => {
+    const v = el.getAttribute('data-ph-' + LANG);
+    if (v !== null) el.placeholder = v;
+  });
+  $$('#lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === LANG)));
+  if (save !== false) { try { localStorage.setItem(LANG_KEY, LANG); } catch(e){} }
+  // 目次や通知は動的に作るので、開いている文書があれば組み立て直す
+  if (state.docs.length) showDoc(state.docIndex);
+}
+
 const view = $('#view'), docEl = $('#doc'), sideEl = $('#side'), dropEl = $('#drop');
 
 /* --- 設定の保存 / 復元 --- */
@@ -865,7 +946,7 @@ function applyDocMeta(doc){
 /* entries: [{file, path}] — .md と画像をまとめて受け取る */
 function openFiles(entries){
   const mds = entries.filter(e => MD_RE.test(e.file.name));
-  if (!mds.length) { toast('.md ファイルが見つかりませんでした'); return; }
+  if (!mds.length) { toast(T('noMd')); return; }
 
   state.assets.forEach(a => URL.revokeObjectURL(a.url));
   state.assets = new Map();
@@ -896,7 +977,7 @@ function finishOpen(){
   dropEl.hidden = true;
   docEl.hidden = false;
   showDoc(0);
-  toast(state.docs.length > 1 ? `${state.docs.length} ファイルを読み込みました` : state.docs[0].name);
+  toast(state.docs.length > 1 ? T('loaded')(state.docs.length) : state.docs[0].name);
 }
 
 function showDoc(index){
@@ -1009,7 +1090,7 @@ function buildToc(){
   if (!state.items.length) {
     const e = document.createElement('div');
     e.className = 'toc-empty';
-    e.textContent = '選択中のレベルの見出しが見つかりません。ツールバーで H1〜H4 を切り替えてください。';
+    e.textContent = T('noHeadings');
     sideEl.appendChild(e);
   }
 }
@@ -1224,7 +1305,7 @@ function runSearch(q){
     });
   });
 
-  if (!count) box.innerHTML = '<div class="res-none">一致する箇所はありません。</div>';
+  if (!count) box.innerHTML = '<div class="res-none">' + escapeHtml(T('noHit')) + '</div>';
 }
 
 function jumpToHit(docIndex, headingText, q){
@@ -1340,7 +1421,8 @@ async function buildExport(){
   q('#doc').innerHTML = '';
   q('#doc').setAttribute('hidden', '');
   q('#drop').removeAttribute('hidden');
-  q('#side').innerHTML = '<div class="toc-empty">まだ文書が読み込まれていません。</div>';
+  q('#side').innerHTML = '<div class="toc-empty" data-ja="まだ文書が読み込まれていません。" data-en="No document loaded yet.">'
+                       + escapeHtml(T('empty')) + '</div>';
   q('#side').removeAttribute('style');
   q('#toast').textContent = '';
   q('#toast').className = '';
@@ -1386,8 +1468,8 @@ async function buildExport(){
 }
 
 async function exportHtml(){
-  if (!state.docs.length) { toast('先に .md を読み込んでください'); return; }
-  toast('書き出しています…');
+  if (!state.docs.length) { toast(T('needDoc')); return; }
+  toast(T('exporting'));
   const { html, missing } = await buildExport();
 
   const blob = new Blob([html], { type:'text/html;charset=utf-8' });
@@ -1402,9 +1484,7 @@ async function exportHtml(){
 
   const mb = blob.size / 1024 / 1024;
   const size = mb >= 1 ? mb.toFixed(1) + ' MB' : Math.round(blob.size / 1024) + ' KB';
-  toast(missing.size
-    ? `${size} で書き出しました（画像 ${missing.size} 点は見つからず未埋め込み）`
-    : `${size} で書き出しました`);
+  toast(missing.size ? T('exportedMissing')(size, missing.size) : T('exported')(size));
 }
 
 /* ===================== モード / スタイル / レベル ===================== */
@@ -1524,8 +1604,8 @@ document.addEventListener('drop', async e => {
   }
 
   if (found.length) openFiles(found);
-  else if (plainFiles.length) toast('.md ファイルが見つかりませんでした');
-  else toast('読み取れませんでした。「フォルダ…」から開いてみてください');
+  else if (plainFiles.length) toast(T('noMd'));
+  else toast(T('unreadable'));
 });
 
 /* 分割線ドラッグ */
@@ -1581,7 +1661,7 @@ document.addEventListener('keydown', e => {
   if (mod && e.key.toLowerCase() === 'e') {
     e.preventDefault();
     setMode(state.mode === 'scroll' ? 'page' : 'scroll');
-    toast(state.mode === 'page' ? 'ページモード' : '連続モード');
+    toast(state.mode === 'page' ? T('modePage') : T('modeScroll'));
     return;
   }
   if (e.key === 'Escape') { closeModals(); clearMarks(); return; }
@@ -1625,7 +1705,7 @@ document.addEventListener('keydown', e => {
 
 /* ===================== 版数と保存リンク ===================== */
 
-const VERSION = 'v1.0 (2026-08-14)';
+const VERSION = 'v1.1 (2026-08-14)';
 $('#ver').textContent = 'DocPane ' + VERSION;
 $('#help-ver').textContent = 'DocPane ' + VERSION;
 
@@ -1639,8 +1719,27 @@ $('#help-ver').textContent = 'DocPane ' + VERSION;
   a.hidden = false;
 })();
 
+/* 言語の切り替え */
+$('#lang').onclick = e => {
+  const b = e.target.closest('button');
+  if (b) applyLang(b.dataset.lang);
+};
+
+/* 埋め込みデモでは、親ページの言語に追随する */
+window.addEventListener('message', e => {
+  if (e.source !== window.parent) return;
+  if (e.origin !== location.origin && e.origin !== 'null') return;
+  if (e.data && e.data.type === 'docpane:lang') applyLang(e.data.lang, false);
+});
+
 /* 起動 */
 loadPrefs();
+(function initLang(){
+  let saved = null;
+  try { saved = localStorage.getItem(LANG_KEY); } catch(e){}
+  if (!saved) saved = (navigator.language || '').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en';
+  applyLang(saved, false);
+})();
 setStyle(state.style);
 setMode(state.mode);
 syncLevelButtons();
@@ -1679,12 +1778,14 @@ if (CF_TOKEN && location.hostname === "rustyworks.jp") {
 </script>
 <script type="text/plain" class="docpane-doc" data-name="DocPane_manual.md">
 ---
-title: DocPane 取扱説明書
-levels: [2]
+title: DocPane 取扱説明書 / Manual
+levels: [1, 2]
 style: standard
+mode: page
+collapse: true
 ---
 
-# DocPane 取扱説明書
+# 日本語
 
 取扱説明書のための、2ペイン Markdown ビューアーです。
 `.md` を開くだけで「左に項目・右に本文」の閲覧画面になります。
@@ -1880,11 +1981,204 @@ DocPane は元の `.md` を書き換えませんが、重要な文書を扱う�
 Safari / Chrome / Firefox / Edge の、ここ数年の版であれば動きます。
 macOS・Windows・Linux を問いません。ネットワークに繋がっていなくても使えます。
 
-## 関連
+# English
 
-- [RustyWorks](../index.html)
-- [製品ページ](index.html)
-- [サイトのポリシー](../site_privacy.html)
+A two-pane Markdown viewer made for manuals. Open a `.md` file and you get a
+reading view with the items on the left and the text on the right.
+
+**This file itself was produced by DocPane's export.** What you are reading now
+is a working example of it.
+
+## 1. Getting started
+
+Double-click `DocPane.html` and it opens in your browser. There is nothing to
+install and nothing to set up.
+
+There are three ways to load a document.
+
+| How | What you get |
+| --- | --- |
+| Drop a single `.md` | Its headings become the items |
+| Drop a whole folder | The `.md` files are listed in filename order, and images are loaded with them |
+| The "Open File…" / "Open Folder…" buttons | The same, without dragging |
+
+**To see images, load the whole folder.** If you open a single `.md` on its own,
+DocPane has no way of knowing where the image files are.
+
+## 2. Reading the screen
+
+Items on the left, text on the right. Click an item and the right pane moves to it.
+
+As you scroll the right pane, the place you are reading lights up on the left.
+The range currently on screen is tinted, so you never lose your place.
+
+Drag the divider to change the width. It is remembered for next time.
+
+## 3. Choosing which headings become items
+
+Use `H1` `H2` `H3` `H4` in the toolbar to choose which heading levels appear as
+items. The default is H2 only.
+
+Select more than one and they are listed as a tree.
+
+```
+1  Getting started
+       Requirements
+           macOS
+           Windows
+       Installing
+2  Basic use
+       Loading files
+```
+
+Items with children get a disclosure triangle. Collapse one and everything under
+it is hidden. Even while collapsed, the heading you are currently reading is
+shown in small type at the right edge of the row.
+
+## 4. Two ways to read the right pane
+
+Switch with "Continuous / Paged" in the toolbar, or with `Ctrl/Cmd + E`.
+
+- **Continuous** — the whole document as one flow. Clicking an item scrolls to it.
+  Good for reading a long document through
+- **Paged** — only the range of the selected item is shown. One item, one page,
+  like turning the pages of a printed manual. Good for step-by-step instructions
+
+Pages are split at **the highest level you have selected**. If you include H1 as
+an item, one H1 becomes one page.
+
+## 5. Keyboard
+
+| Key | What it does |
+| --- | --- |
+| `J` / `↓` / `→` | Next item |
+| `K` / `↑` / `←` | Previous item |
+| `1` – `9` | Jump straight to that item |
+| `Ctrl/Cmd + F` | Search all loaded documents |
+| `Ctrl/Cmd + E` | Switch continuous / paged |
+| `[` / `]` | Previous / next file (when several are loaded) |
+| `?` | Help |
+| `Esc` | Close / clear the search highlight |
+
+In continuous mode the arrow keys scroll as usual. `J` and `K` always move
+between items.
+
+## 6. Display styles
+
+Four to choose from, depending on what you are reading.
+
+1. **Standard Manual** — white background, blue accent. For ordinary product manuals
+2. **Dark Minimal** — dark background, high contrast. For long sessions and night reading
+3. **Classic Book** — warm cream background with a serif face. Like a printed book
+4. **Technical API** — monospaced headings, tighter leading. For specifications
+
+## 7. Setting things in the document
+
+Rather than relying on the reader to set things up, you can specify them at the
+top of the `.md`. Put a block fenced by `---` at the very beginning.
+
+```
+---
+title: Product Manual
+levels: [1, 2]
+style: book
+mode: page
+collapse: true
+---
+
+# Product Manual
+```
+
+| Key | What it does | How to write it |
+| --- | --- | --- |
+| `title` | The document name (defaults to the H1, or the filename) | `title: Product Manual` |
+| `levels` | Heading levels to list as items | `[1, 2]` / `H2, H3` / `2` |
+| `style` | Display style | `standard` `dark` `book` `api` |
+| `mode` | How the right pane reads | `scroll` / `page` |
+| `collapse` | Open with sub-items collapsed | `true` |
+
+These set **the state the document opens in**. If the reader changes something,
+their choice wins, and their usual settings are never overwritten.
+
+## 8. Exporting one file for distribution
+
+Press "Export" in the toolbar and you get **one file that contains the document,
+the images, and a copy of DocPane itself**.
+
+Whoever receives it only has to double-click it. They do not need DocPane, the
+`.md`, or the image folder. The manual is on screen the moment it opens.
+
+- Images are embedded as Base64, so the file grows by roughly a third
+- **What is exported is what you are looking at.** Style, reading mode and heading
+  levels become the reader's starting state
+- To embed images, load the folder first
+- If any image could not be found, you are told how many after the export
+
+## 9. Search
+
+`Ctrl/Cmd + F` searches every document you have loaded. Choose a result and it
+moves there with the term highlighted. If the match is inside a collapsed
+section, that section is opened first.
+
+`Esc` clears the highlight.
+
+## 10. How it keeps you safe
+
+- **It never talks to the network.** Nothing about your document leaves your machine
+- HTML and scripts written inside a `.md` are shown as text, nothing more
+- Links are allowed only for `http` `https` `mailto` `tel`, relative paths and
+  in-page anchors. Anything that could run code when clicked is disabled and
+  marked with a dotted underline
+
+**Anyone can read the contents of an exported file.** There is no encryption, so
+it is not suitable for confidential documents.
+
+## 11. What it cannot do
+
+Plainly stated:
+
+- **No editing.** It is built for reading
+- No collaborative editing, no syncing
+- No support for formula or diagram notations such as Mermaid
+- It opens on a phone, but the two-pane layout wants a wider screen
+
+## 12. Licence
+
+**Personal use is free**, whatever the purpose. That includes freelancers and
+sole traders using it for their own work. You may change the file to suit yourself.
+
+**Files you export may be distributed and published freely.** They contain a copy
+of DocPane, and handing them out is exactly what the tool is for.
+
+**Please do not redistribute `DocPane.html` itself** (including modified copies).
+If you want to pass it on, point people at the download page instead.
+
+- <https://rustyworks.jp/docpane/>
+
+**Please get in touch for the following.** These are not conditions meant to
+refuse anyone; I would simply like to know where it is being used.
+
+- Use by a company or organisation as part of its work
+- Building it into a product or an internal system
+- Distributing or selling exported files as a company
+
+Write to <rustyworks.games@gmail.com>.
+
+**About being listed.** When you get in touch, I will ask whether your company or
+product may be named on the download page. **I list it only with permission, and
+only from the date you specify.** If you say "after our launch" or "from a given
+date", nothing appears before then — the information is not put on the page at
+all until that day. The wording follows your instructions, and if you ask for it
+to be removed it goes the same day, no questions asked.
+
+**No warranty.** Nothing is guaranteed to work, and I cannot take responsibility
+for any loss arising from its use. DocPane does not modify your original `.md`,
+but please keep your originals when the document matters.
+
+## 13. Requirements
+
+Any reasonably recent version of Safari, Chrome, Firefox or Edge will run it, on
+macOS, Windows or Linux. It works with no network connection.
 
 </script>
 </body>

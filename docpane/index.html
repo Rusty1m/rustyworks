@@ -7,7 +7,6 @@
 <link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
 <title>DocPane | RustyWorks</title>
-<link rel="canonical" href="https://rustyworks.jp/docpane/">
 <meta name="description" content="取扱説明書のための2ペイン Markdown ビューアー。.md を開くだけで、左に項目・右に本文の閲覧画面になります。1ファイル完結・インストール不要・通信なし。">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="RustyWorks">
@@ -24,7 +23,7 @@
 <meta name="twitter:image" content="https://rustyworks.jp/assets/og/docpane-og.jpg">
 <style>
 :root{
-  --bg:#ffffff; --bg-soft:#f5f5f6; --ink:#111214; --ink-2:#5f6368; --ink-3:#8a8d93;
+  --bg:#ffffff; --bg-soft:#f7f7f8; --panel:#f0f0f2; --ink:#111214; --ink-2:#5f6368; --ink-3:#8a8d93;
   --line:#e4e4e7; --blue:#1a4fd8; --blue-ink:#143fb0;
   --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
 }
@@ -38,17 +37,25 @@ body{
 a{color:var(--blue);}
 .container{max-width:1080px; margin:0 auto; padding:0 24px;}
 
-/* ---- 見出し周り ---- */
+/* ---- ヘッダー ---- */
 header.site{border-bottom:1px solid var(--line);}
 header.site .container{display:flex; align-items:center; height:56px; gap:16px;}
 header.site .brand{font-weight:700; letter-spacing:.02em; text-decoration:none; color:var(--ink);}
 header.site .spacer{flex:1;}
 header.site a.nav{font-size:13px; color:var(--ink-2); text-decoration:none;}
 header.site a.nav:hover{color:var(--blue);}
+.lang{display:flex; align-items:center; gap:4px; font-size:12px; color:var(--ink-3);}
+.lang button{
+  border:0; background:none; font:inherit; font-size:12px; padding:3px 6px;
+  color:var(--ink-3); cursor:pointer; border-radius:5px;
+}
+.lang button[aria-pressed="true"]{color:var(--blue); font-weight:700;}
+.lang button:hover{color:var(--blue);}
+.lang .sep{opacity:.5;}
 
 .hero{padding:64px 0 32px; text-align:center;}
-.hero h1{font-size:clamp(30px,5vw,46px); line-height:1.25; margin:0 0 14px; letter-spacing:-.01em;}
-.hero p.lead{font-size:clamp(15px,2vw,17px); color:var(--ink-2); margin:0 auto; max-width:34em;}
+.hero h1{font-size:clamp(28px,4.6vw,44px); line-height:1.28; margin:0 0 14px; letter-spacing:-.01em;}
+.hero p.lead{font-size:clamp(15px,2vw,17px); color:var(--ink-2); margin:0 auto; max-width:36em;}
 .badges{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:22px;}
 .badge{
   font-size:12px; color:var(--ink-2); background:var(--bg-soft);
@@ -57,9 +64,7 @@ header.site a.nav:hover{color:var(--blue);}
 
 /* ---- デモ ---- */
 .demo{padding:8px 0 12px;}
-.demo-head{
-  display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:12px;
-}
+.demo-head{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:12px;}
 .demo-head h2{font-size:15px; margin:0;}
 .demo-head span{font-size:12.5px; color:var(--ink-3);}
 .samples{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;}
@@ -78,22 +83,17 @@ header.site a.nav:hover{color:var(--blue);}
 }
 .frame .bar{
   display:flex; align-items:center; gap:7px; padding:9px 13px;
-  background:#ececee; border-bottom:1px solid var(--line);
+  background:var(--panel); border-bottom:1px solid var(--line);
 }
 .frame .bar i{width:11px; height:11px; border-radius:50%; background:#cfcfd3; display:block;}
-.frame .bar .name{
-  margin-left:8px; font-size:11.5px; color:var(--ink-3); font-family:var(--mono);
-}
+.frame .bar .name{margin-left:8px; font-size:11.5px; color:var(--ink-3); font-family:var(--mono);}
 .frame iframe{display:block; width:100%; height:620px; border:0; background:#fff;}
 .demo-note{font-size:12.5px; color:var(--ink-3); margin:10px 2px 0;}
 .demo-fallback{display:none; padding:28px 20px; text-align:center; color:var(--ink-2); font-size:14px;}
 .demo-fallback a{font-weight:600;}
 
 /* ---- 説明 ---- */
-.points{
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:18px; padding:56px 0 8px;
-}
+.points{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px; padding:56px 0 8px;}
 .point h3{font-size:15px; margin:0 0 8px;}
 .point p{font-size:14px; color:var(--ink-2); margin:0;}
 
@@ -104,13 +104,10 @@ header.site a.nav:hover{color:var(--blue);}
 .cases-lead{font-size:13px; color:var(--ink-3); margin:0 0 20px;}
 .cases ul{list-style:none; padding:0; margin:0; display:grid;
   grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px;}
-.cases li{
-  border:1px solid var(--line); border-radius:10px; padding:16px 18px; background:var(--bg);
-}
+.cases li{border:1px solid var(--line); border-radius:10px; padding:16px 18px; background:var(--bg);}
 .cases .name{font-size:14.5px; font-weight:600; display:block;}
 .cases .by{font-size:12.5px; color:var(--ink-3); display:block; margin-top:2px;}
 .cases .note{font-size:13px; color:var(--ink-2); margin:8px 0 0;}
-.cases a.name:hover{text-decoration:underline;}
 
 /* ---- ダウンロード ---- */
 .dl{
@@ -126,31 +123,28 @@ header.site a.nav:hover{color:var(--blue);}
 }
 .dl .btn:hover{background:var(--blue-ink);}
 .dl .meta{font-size:12px; color:var(--ink-3); margin-top:14px; font-family:var(--mono);}
-.dl ul{
-  list-style:none; padding:0; margin:22px auto 0; max-width:26em;
-  text-align:left; font-size:13.5px; color:var(--ink-2);
-}
+.dl ul{list-style:none; padding:0; margin:22px auto 0; max-width:28em; text-align:left;
+  font-size:13.5px; color:var(--ink-2);}
 .dl ul li{padding:5px 0 5px 22px; position:relative;}
 .dl ul li::before{content:"▸"; position:absolute; left:4px; color:var(--ink-3);}
-.license{
-  margin:30px auto 0; padding-top:24px; border-top:1px solid var(--line);
-  max-width:38em; text-align:left;
-}
+.license{margin:30px auto 0; padding-top:24px; border-top:1px solid var(--line);
+  max-width:38em; text-align:left;}
 .license h3{font-size:14px; margin:0 0 10px;}
 .license p{font-size:13.5px; color:var(--ink-2); margin:0 0 10px; max-width:none;}
 .license strong{color:var(--ink); font-weight:600;}
 .license .warranty{font-size:12.5px; color:var(--ink-3);}
 
 footer{border-top:1px solid var(--line); padding:28px 0; margin-top:8px;}
-footer .container{display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;}
+.footer-inner{display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;}
 footer .copy{font-size:13px; color:var(--ink-3);}
-footer a{font-size:13px; color:var(--ink-2); text-decoration:none; margin-left:18px;}
-footer a:hover{color:var(--blue);}
+.footer-links a{font-size:13px; color:var(--ink-2); text-decoration:none; margin-left:18px;}
+.footer-links a:hover{color:var(--blue);}
 
 @media (max-width:820px){
   .frame iframe{display:none;}
   .demo-fallback{display:block;}
   .hero{padding:44px 0 24px;}
+  .footer-links a{margin:0 14px 0 0;}
 }
 </style>
 </head>
@@ -160,23 +154,28 @@ footer a:hover{color:var(--blue);}
   <div class="container">
     <a class="brand" href="../index.html">RustyWorks</a>
     <span class="spacer"></span>
-    <a class="nav" href="../works.html">作品一覧</a>
+    <a class="nav" href="../works.html" data-ja="作品一覧" data-en="Works">作品一覧</a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="ja" aria-pressed="true">JA</button>
+      <span class="sep">/</span>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
   </div>
 </header>
 
 <main>
   <section class="hero">
     <div class="container">
-      <h1>取扱説明書のための<br>2ペイン Markdown ビューアー</h1>
-      <p class="lead">
-        <code>.md</code> を開くだけで、左に項目・右に本文の閲覧画面になります。
-        設定もビルドも要りません。
-      </p>
+      <h1 data-ja="取扱説明書のための2ペイン Markdown ビューアー"
+          data-en="A two-pane Markdown viewer, made for manuals">取扱説明書のための2ペイン Markdown ビューアー</h1>
+      <p class="lead"
+         data-ja=".md を開くだけで、左に項目・右に本文の閲覧画面になります。設定もビルドも要りません。"
+         data-en="Open a .md file and you get items on the left, text on the right. Nothing to set up, nothing to build.">.md を開くだけで、左に項目・右に本文の閲覧画面になります。設定もビルドも要りません。</p>
       <div class="badges">
-        <span class="badge">HTML 1ファイル</span>
-        <span class="badge">インストール不要</span>
-        <span class="badge">通信しません</span>
-        <span class="badge">Mac / Windows / Linux</span>
+        <span class="badge" data-ja="HTML 1ファイル" data-en="One HTML file">HTML 1ファイル</span>
+        <span class="badge" data-ja="インストール不要" data-en="No install">インストール不要</span>
+        <span class="badge" data-ja="通信しません" data-en="No network">通信しません</span>
+        <span class="badge" data-ja="Mac / Windows / Linux" data-en="Mac / Windows / Linux">Mac / Windows / Linux</span>
       </div>
     </div>
   </section>
@@ -184,8 +183,9 @@ footer a:hover{color:var(--blue);}
   <section class="demo">
     <div class="container">
       <div class="demo-head">
-        <h2>サンプルを選んでください</h2>
-        <span>下の窓の中で、実物がそのまま動いています</span>
+        <h2 data-ja="サンプルを選んでください" data-en="Pick a sample">サンプルを選んでください</h2>
+        <span data-ja="下の窓の中で、実物がそのまま動いています"
+              data-en="The real thing is running in the window below">下の窓の中で、実物がそのまま動いています</span>
       </div>
 
       <div class="samples" id="samples"></div>
@@ -195,38 +195,41 @@ footer a:hover{color:var(--blue);}
           <i></i><i></i><i></i>
           <span class="name" id="frame-name">DocPane</span>
         </div>
-        <iframe id="demo" src="app.html?demo=1" title="DocPane のデモ"></iframe>
+        <iframe id="demo" src="app.html?demo=1" title="DocPane"></iframe>
         <div class="demo-fallback">
-          デモは画面の広い端末でご覧ください。<br>
-          <a href="app.html?demo=1">それでも開く</a>
+          <span data-ja="デモは画面の広い端末でご覧ください。"
+                data-en="The demo needs a wider screen.">デモは画面の広い端末でご覧ください。</span><br>
+          <a href="app.html?demo=1" data-ja="それでも開く" data-en="Open it anyway">それでも開く</a>
         </div>
       </div>
 
-      <p class="demo-note">
-        左の項目をクリックすると右が該当箇所へ移動します。ツールバーで見出しレベル・表示スタイル・
-        「連続 / ページ」を切り替えられます。お手元の <code>.md</code> をこの窓に
-        ドラッグしても試せます（このデモでは保存・書き出しはできません）。
-      </p>
+      <p class="demo-note"
+         data-ja="左の項目をクリックすると右が該当箇所へ移動します。ツールバーで見出しレベル・表示スタイル・「連続 / ページ」を切り替えられます。お手元の .md をこの窓にドラッグしても試せます（このデモでは保存・書き出しはできません）。"
+         data-en="Click an item on the left and the right pane moves to it. The toolbar switches heading levels, display style, and continuous / paged reading. You can drag your own .md onto the window too (saving and exporting are disabled in this demo).">左の項目をクリックすると右が該当箇所へ移動します。ツールバーで見出しレベル・表示スタイル・「連続 / ページ」を切り替えられます。お手元の .md をこの窓にドラッグしても試せます（このデモでは保存・書き出しはできません）。</p>
     </div>
   </section>
 
   <section class="container">
     <div class="points">
       <div class="point">
-        <h3>項目に何を出すか選べる</h3>
-        <p>H1〜H4 のどれを項目として拾うかを切り替えられます。階層があれば入れ子で並び、折りたたみもできます。</p>
+        <h3 data-ja="項目に何を出すか選べる" data-en="Choose what becomes an item">項目に何を出すか選べる</h3>
+        <p data-ja="H1〜H4 のどれを項目として拾うかを切り替えられます。階層があれば入れ子で並び、折りたたみもできます。"
+           data-en="Pick which of H1–H4 become items. Nested headings are listed as a tree, and can be collapsed.">H1〜H4 のどれを項目として拾うかを切り替えられます。階層があれば入れ子で並び、折りたたみもできます。</p>
       </div>
       <div class="point">
-        <h3>2通りの読み方</h3>
-        <p>全文を続けて読む「連続」と、1項目＝1ページで紙の取説のようにめくる「ページ」を切り替えられます。</p>
+        <h3 data-ja="2通りの読み方" data-en="Two ways to read">2通りの読み方</h3>
+        <p data-ja="全文を続けて読む「連続」と、1項目＝1ページで紙の取説のようにめくる「ページ」を切り替えられます。"
+           data-en="Continuous for reading straight through, or paged — one item per page, like a printed manual.">全文を続けて読む「連続」と、1項目＝1ページで紙の取説のようにめくる「ページ」を切り替えられます。</p>
       </div>
       <div class="point">
-        <h3>書き手が指定できる</h3>
-        <p>ファイルの先頭に数行書くだけで、項目のレベル・表示スタイル・開いたときの状態を指定できます。</p>
+        <h3 data-ja="書き手が指定できる" data-en="The writer decides">書き手が指定できる</h3>
+        <p data-ja="ファイルの先頭に数行書くだけで、項目のレベル・表示スタイル・開いたときの状態を指定できます。"
+           data-en="A few lines at the top of the file set the heading levels, the style, and the state it opens in.">ファイルの先頭に数行書くだけで、項目のレベル・表示スタイル・開いたときの状態を指定できます。</p>
       </div>
       <div class="point">
-        <h3>配布用に1ファイルへ</h3>
-        <p>文書と画像を埋め込んだ HTML を書き出せます。渡した相手は、ダブルクリックするだけで読めます。</p>
+        <h3 data-ja="配布用に1ファイルへ" data-en="One file to hand over">配布用に1ファイルへ</h3>
+        <p data-ja="文書と画像を埋め込んだ HTML を書き出せます。渡した相手は、ダブルクリックするだけで読めます。"
+           data-en="Export an HTML file with the document and images inside. The person you send it to just double-clicks it.">文書と画像を埋め込んだ HTML を書き出せます。渡した相手は、ダブルクリックするだけで読めます。</p>
       </div>
     </div>
   </section>
@@ -236,66 +239,62 @@ footer a:hover{color:var(--blue);}
        中身が空のあいだは、この節ごと表示されない。 -->
   <section class="container">
     <div class="cases" id="cases-block" hidden>
-      <h2>使っていただいています</h2>
-      <p class="cases-lead">掲載のご許可をいただいたものだけを載せています。</p>
+      <h2 data-ja="使っていただいています" data-en="In use at">使っていただいています</h2>
+      <p class="cases-lead" data-ja="掲載のご許可をいただいたものだけを載せています。"
+         data-en="Listed only with permission.">掲載のご許可をいただいたものだけを載せています。</p>
       <ul id="cases"></ul>
     </div>
   </section>
 
   <section class="container">
     <div class="dl">
-      <h2>ダウンロード</h2>
-      <p>
-        無料です。展開して <code>DocPane.html</code> をダブルクリックすれば、すぐ使えます。
-      </p>
-      <a class="btn" href="download.html">DocPane をダウンロード（ZIP）</a>
+      <h2 data-ja="ダウンロード" data-en="Download">ダウンロード</h2>
+      <p data-ja="無料です。展開して DocPane.html をダブルクリックすれば、すぐ使えます。"
+         data-en="Free. Unzip it, double-click DocPane.html, and it runs.">無料です。展開して DocPane.html をダブルクリックすれば、すぐ使えます。</p>
+      <a class="btn" href="download.html"
+         data-ja="DocPane をダウンロード（ZIP）" data-en="Download DocPane (ZIP)">DocPane をダウンロード（ZIP）</a>
       <ul>
-        <li>DocPane.html — 本体。これ1つで動きます</li>
-        <li>DocPane_取扱説明書.html — 取説。DocPane で書き出したファイルなので、これ自体が使用例です</li>
-        <li>はじめにお読みください.txt — 使用許諾</li>
+        <li data-ja="DocPane.html — 本体。これ1つで動きます"
+            data-en="DocPane.html — the app. This one file is all it needs">DocPane.html — 本体。これ1つで動きます</li>
+        <li data-ja="DocPane_取扱説明書.html — 取説（日英）。DocPane で書き出したファイルなので、これ自体が使用例です"
+            data-en="DocPane_取扱説明書.html — the manual, in Japanese and English. It was exported by DocPane, so it is also a working example">DocPane_取扱説明書.html — 取説（日英）。DocPane で書き出したファイルなので、これ自体が使用例です</li>
+        <li data-ja="はじめにお読みください.txt — 使用許諾"
+            data-en="はじめにお読みください.txt — the licence (Japanese)">はじめにお読みください.txt — 使用許諾</li>
       </ul>
-      <div class="meta" id="dl-meta">v1.0 (2026-08-14)</div>
+      <div class="meta" id="dl-meta">v1.1 (2026-08-14)</div>
 
       <div class="license">
-        <h3>ライセンス</h3>
-        <p>
-          <strong>個人でお使いになる分には自由です。</strong>用途は問いません。お手元での改変も、
-          <strong>書き出したファイルの配布・公開も自由</strong>です（書き出したファイルには DocPane 本体が
-          含まれますが、その形で配ることが本来の使い方です）。
-        </p>
-        <p>
-          <strong>DocPane.html 本体を単体で再配布することはご遠慮ください。</strong>
-          人に渡したいときは、このページの場所を教えてください。
-        </p>
-        <p>
-          <strong>法人・団体としての業務利用、製品への組み込み、書き出したファイルの法人としての配布は、
-          ご相談ください。</strong>断るための条件ではありません。どこで使われているかを知りたいだけです。
-          <a href="../contact.html">お問い合わせ</a>からどうぞ。
-        </p>
-        <p>
-          ご相談の際に、<strong>社名や製品名をこのページへ掲載してよいかを伺います。</strong>
-          許可をいただいた場合のみ掲載し、<strong>時期はご指定に従います</strong>（「製品発表の後から」
-          「◯月◯日以降」など）。期日前の情報は、ページに書くこと自体をしません。
-          取り下げのご連絡は、その日のうちに反映します。
-        </p>
-        <p class="warranty">無保証です。使用によって生じた損害について責任を負いません。</p>
+        <h3 data-ja="ライセンス" data-en="Licence">ライセンス</h3>
+        <p data-ja="個人でお使いになる分には自由です。用途は問いません。お手元での改変も、書き出したファイルの配布・公開も自由です（書き出したファイルには DocPane 本体が含まれますが、その形で配ることが本来の使い方です）。"
+           data-en="Personal use is free, whatever the purpose. You may change the file to suit yourself, and files you export may be distributed and published freely — they contain a copy of DocPane, and handing them out is exactly what the tool is for.">個人でお使いになる分には自由です。用途は問いません。お手元での改変も、書き出したファイルの配布・公開も自由です（書き出したファイルには DocPane 本体が含まれますが、その形で配ることが本来の使い方です）。</p>
+        <p data-ja="DocPane.html 本体を単体で再配布することはご遠慮ください。人に渡したいときは、このページの場所を教えてください。"
+           data-en="Please do not redistribute DocPane.html itself. If you want to pass it on, point people at this page instead.">DocPane.html 本体を単体で再配布することはご遠慮ください。人に渡したいときは、このページの場所を教えてください。</p>
+        <p data-ja="法人・団体としての業務利用、製品への組み込み、書き出したファイルの法人としての配布は、ご相談ください。断るための条件ではありません。どこで使われているかを知りたいだけです。"
+           data-en="Please get in touch about use by a company or organisation, building it into a product, or distributing exported files commercially. These are not conditions meant to refuse anyone; I would simply like to know where it is being used.">法人・団体としての業務利用、製品への組み込み、書き出したファイルの法人としての配布は、ご相談ください。断るための条件ではありません。どこで使われているかを知りたいだけです。</p>
+        <p data-ja="ご相談の際に、社名や製品名をこのページへ掲載してよいかを伺います。許可をいただいた場合のみ掲載し、時期はご指定に従います。期日前の情報は、ページに書くこと自体をしません。"
+           data-en="When you get in touch I will ask whether your company or product may be named on this page. It is listed only with permission, and only from the date you specify — nothing is written on the page before then.">ご相談の際に、社名や製品名をこのページへ掲載してよいかを伺います。許可をいただいた場合のみ掲載し、時期はご指定に従います。期日前の情報は、ページに書くこと自体をしません。</p>
+        <p class="warranty" data-ja="無保証です。使用によって生じた損害について責任を負いません。"
+           data-en="No warranty. I cannot take responsibility for any loss arising from its use.">無保証です。使用によって生じた損害について責任を負いません。</p>
       </div>
     </div>
   </section>
 </main>
 
 <footer>
-  <div class="container">
-    <span class="copy">© RustyWorks</span>
-    <span>
-      <a href="../site_privacy.html">プライバシーポリシー</a>
-      <a href="../contact.html">お問い合わせ</a>
-    </span>
+  <div class="container footer-inner">
+    <span class="copy">&copy; RustyWorks</span>
+    <div class="footer-links">
+      <a href="../index.html">RustyWorks</a>
+      <a href="./" data-ja="製品ページ" data-en="Product">製品ページ</a>
+      <a href="manual.html" data-ja="取扱説明書" data-en="Manual">取扱説明書</a>
+      <a href="../site_privacy.html" data-ja="サイトのポリシー" data-en="Site Privacy">サイトのポリシー</a>
+    </div>
   </div>
 </footer>
 
-<!-- ================= サンプル文書 ================= -->
-<script type="text/plain" class="sample-doc" data-icon="📘" data-label="取扱説明書" data-name="dripmaker.md">
+<!-- ================= サンプル文書（日本語） ================= -->
+<script type="text/plain" class="sample-doc" data-lang="ja" data-icon="📘"
+        data-label="取扱説明書" data-name="dripmaker.md">
 ---
 title: ドリップメーカー M-100 取扱説明書
 levels: [2]
@@ -372,7 +371,8 @@ mode: page
 | 質量 | 約2.1 kg |
 </script>
 
-<script type="text/plain" class="sample-doc" data-icon="📋" data-label="社内手順書" data-name="keihi.md">
+<script type="text/plain" class="sample-doc" data-lang="ja" data-icon="📋"
+        data-label="社内手順書" data-name="keihi.md">
 ---
 title: 経費精算の手順
 levels: [2, 3]
@@ -436,7 +436,8 @@ mode: scroll
 - **宛名が個人名になっている** — 会社名でお願いします
 </script>
 
-<script type="text/plain" class="sample-doc" data-icon="❓" data-label="よくある質問" data-name="faq.md">
+<script type="text/plain" class="sample-doc" data-lang="ja" data-icon="❓"
+        data-label="よくある質問" data-name="faq.md">
 ---
 title: よくある質問
 levels: [2]
@@ -490,7 +491,8 @@ mode: page
 どのような操作をしたときに起きたかを添えていただけると助かります。
 </script>
 
-<script type="text/plain" class="sample-doc" data-icon="⚙️" data-label="技術文書" data-name="spec.md">
+<script type="text/plain" class="sample-doc" data-lang="ja" data-icon="⚙️"
+        data-label="技術文書" data-name="spec.md">
 ---
 title: 設定ファイル仕様
 levels: [2, 3]
@@ -574,77 +576,401 @@ warning: config.json line 12: unexpected token, using defaults
 ファイル自体が存在しない場合は、警告なしで既定値が使われます。
 </script>
 
+<!-- ================= Sample documents (English) ================= -->
+<script type="text/plain" class="sample-doc" data-lang="en" data-icon="📘"
+        data-label="Product manual" data-name="dripmaker.md">
+---
+title: Drip Maker M-100 — Instruction Manual
+levels: [2]
+style: standard
+mode: page
+---
+
+# Drip Maker M-100 — Instruction Manual
+
+Thank you for your purchase. Please read this manual through before use.
+
+## 1. Safety
+
+> Incorrect use can cause burns or damage the appliance.
+
+- Do not open the lid while brewing. Steam escapes
+- Do not immerse the body in water
+- Do not pull the cord to unplug it
+- Put nothing but water in the tank
+
+## 2. Parts
+
+| Part | Notes |
+| --- | --- |
+| Water tank | At the back. Removable and washable |
+| Filter holder | Takes a cone-shaped paper filter |
+| Warming plate | Switches off automatically 30 minutes after brewing |
+| Control panel | Two controls only: power and strength |
+
+## 3. Making coffee
+
+1. Fill the tank with water (marked for 2 to 10 cups)
+2. Open a paper filter and set it in the holder
+3. Add ground coffee. One tablespoon per cup is a good guide
+4. Place the carafe on the warming plate
+5. Press the power button
+
+Two short beeps mean brewing has finished.
+
+## 4. Strength
+
+The strength button gives two settings. Choose the stronger one when brewing a
+small amount, and the coffee will not come out thin.
+
+## 5. Cleaning
+
+Wash the carafe and the filter holder after every use.
+Once a month, clean the inside as follows.
+
+1. Put water and citric acid in the tank
+2. Run a brewing cycle with no coffee in the filter
+3. Then run two cycles with plain water to rinse
+
+## 6. If something goes wrong
+
+**Brewing stops part way**
+Check the water level. It stops if the level is below the mark.
+
+**Water leaks from the filter**
+Check that the filter is not folded over. Too much coffee can also cause it.
+
+**It will not switch on**
+Check the socket. If it still will not start, the warming plate may be hot from
+continuous use. Leave it for about 30 minutes and try again.
+
+## 7. Specifications
+
+| Item | Value |
+| --- | --- |
+| Capacity | 1.2 L (about 10 cups) |
+| Power | 700 W |
+| Dimensions | 185 × 265 × 320 mm |
+| Weight | About 2.1 kg |
+</script>
+
+<script type="text/plain" class="sample-doc" data-lang="en" data-icon="📋"
+        data-label="Internal procedure" data-name="expenses.md">
+---
+title: Claiming expenses
+levels: [2, 3]
+style: standard
+mode: scroll
+---
+
+# Claiming expenses
+
+Submit your claim by the end of the month, following the steps below.
+
+## What can be claimed
+
+- Travel for work
+- Meals connected to a meeting (state who attended and why)
+- Consumables used for work
+- Examination fees (these need approval beforehand)
+
+Not covered: travel within your commuting pass, anything with a personal
+element, and any expense without a receipt.
+
+## How to claim
+
+### 1. Gather the receipts
+
+Stick paper receipts on a sheet of A4 and photograph them. Several on one sheet
+is fine, as long as the amounts are readable.
+
+Save electronic receipts as PDF. Please avoid screenshots.
+
+### 2. Fill in the form
+
+| Field | How to fill it in |
+| --- | --- |
+| Date | The date of the expense. It must match the receipt |
+| Category | Travel / Meals / Consumables / Other |
+| Amount | Including tax, to the yen |
+| Purpose | Who it was with and what it was for, in one line |
+
+### 3. Submit it
+
+Send the form with the receipts to your line manager. Once approved, it goes to
+the finance team.
+
+## Deadline and payment
+
+| | |
+| --- | --- |
+| Deadline | Last day of the month |
+| Payment | The 25th of the following month, with your salary |
+
+Anything after the deadline moves to the next month. Talk to finance if it is urgent.
+
+## Why claims come back
+
+- **No purpose given** — "meeting" is not enough. Say who with, and what about
+- **Amount does not match the receipt** — usually rounding, or leaving out a service charge
+- **The date is in the future** — payments in advance are not covered
+- **Made out to a personal name** — please use the company name
+</script>
+
+<script type="text/plain" class="sample-doc" data-lang="en" data-icon="❓"
+        data-label="FAQ" data-name="faq.md">
+---
+title: Frequently asked questions
+levels: [2]
+style: book
+mode: page
+---
+
+# Frequently asked questions
+
+The questions we are asked most often.
+
+## What do I need to run it?
+
+Any ordinary desktop browser. There is nothing to configure. It opens on a phone
+as well, though it reads better on a wider screen.
+
+## Does it work without an internet connection?
+
+Yes. It never talks to the network, so it works in aeroplane mode.
+
+## Where is my data stored?
+
+Only on your own machine. Nothing is sent to a server.
+
+## Can several people edit at once?
+
+No. It is built for reading, so there is no editing or collaboration. Use it
+alongside another tool if you need those.
+
+## Can I print?
+
+Use your browser's print function. What is on screen is what prints.
+
+## Can I make the text larger?
+
+Use your browser's zoom (⌘ + or Ctrl +). Changing the display style also changes
+the leading and the typeface.
+
+## My images do not appear
+
+Load the whole folder, including the image files. If you open a single document
+on its own, there is no way to know where the images are.
+
+## What does it cost?
+
+Nothing, and there is no sign-up.
+
+## I found a bug
+
+Please get in touch through the contact page. It helps a great deal if you say
+what you were using and what you did when it happened.
+</script>
+
+<script type="text/plain" class="sample-doc" data-lang="en" data-icon="⚙️"
+        data-label="Technical" data-name="spec.md">
+---
+title: Configuration file
+levels: [2, 3]
+style: api
+mode: scroll
+---
+
+# Configuration file
+
+Settings live in a single JSON file. Anything you leave out falls back to its
+default.
+
+## Where it lives
+
+| Platform | Path |
+| --- | --- |
+| macOS | `~/Library/Application Support/example/config.json` |
+| Windows | `%APPDATA%\example\config.json` |
+| Linux | `~/.config/example/config.json` |
+
+## Shape
+
+```json
+{
+  "version": 1,
+  "output": {
+    "directory": "~/Documents/output",
+    "format": "png",
+    "overwrite": false
+  },
+  "limits": {
+    "maxItems": 200,
+    "timeoutSeconds": 30
+  }
+}
+```
+
+## Keys
+
+### version
+
+The version of the file format, as an integer. It exists for future changes to
+the format; `1` is the only valid value today.
+
+### output.directory
+
+Where files are written. Created at startup if it does not exist. A leading `~`
+expands to your home directory.
+
+### output.format
+
+| Value | Notes |
+| --- | --- |
+| `png` | The default. Lossless |
+| `jpeg` | Quality is fixed at 85 |
+| `webp` | Falls back to png where it is not supported |
+
+### limits.maxItems
+
+How many items are processed at once. From `1` to `1000`. Values outside that
+range are clamped to the nearest valid one.
+
+## Order of precedence
+
+1. Defaults built into the executable
+2. The configuration file
+3. Environment variables (those beginning with `EXAMPLE_`)
+4. Command-line arguments
+
+Later ones override earlier ones.
+
+## Errors
+
+If the file is malformed it is skipped and the defaults are used. One line of
+warning goes to standard error.
+
+```
+warning: config.json line 12: unexpected token, using defaults
+```
+
+If the file does not exist at all, the defaults are used with no warning.
+</script>
+
 <script>
-/* サンプルの一覧を作り、選ばれたものをデモの窓へ渡す。
+/* ===================== 表示言語 =====================
+   README「LP の決まりごと」の仕組み。保存先の rw-lang はサイト全体で共有する。
+   窓の中の DocPane にも postMessage で同じ言語を伝える。 */
+
+var LANG_KEY = 'rw-lang';
+var LANG = 'ja';
+var langButtons = document.querySelectorAll('.lang button');
+var langNodes = document.querySelectorAll('[data-ja][data-en]');
+
+function applyLang(lang) {
+  LANG = lang;
+  document.documentElement.lang = lang;
+  langNodes.forEach(function (el) {
+    var text = el.getAttribute('data-' + lang);
+    if (text !== null) el.textContent = text;
+  });
+  langButtons.forEach(function (b) {
+    b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
+  });
+  try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
+  buildSamples();
+  sendLang();
+}
+langButtons.forEach(function (b) {
+  b.addEventListener('click', function () { applyLang(b.dataset.lang); });
+});
+
+/* ===================== デモ =====================
+   サンプルは言語ごとに用意してあり、ページの言語に合わせて差し替える。
    窓の中身は app.html（DocPane 本体）で、?demo=1 のときだけ
    保存を伴う操作を隠し、この postMessage を受け取る。 */
-const docs = [...document.querySelectorAll('.sample-doc')].map(s => ({
-  icon: s.dataset.icon,
-  label: s.dataset.label,
-  name: s.dataset.name,
-  md: s.textContent.replace(/^\r?\n/, ''),
-}));
 
-const frame = document.getElementById('demo');
-const list = document.getElementById('samples');
-const frameName = document.getElementById('frame-name');
-let current = 0, ready = false;
+var frame = document.getElementById('demo');
+var list = document.getElementById('samples');
+var frameName = document.getElementById('frame-name');
+var current = 0, ready = false, docs = [];
 
-docs.forEach((d, i) => {
-  const b = document.createElement('button');
-  b.className = 'sample';
-  b.type = 'button';
-  b.setAttribute('aria-pressed', String(i === 0));
-  b.innerHTML = `<span class="ico">${d.icon}</span><span>${d.label}</span>`;
-  b.onclick = () => select(i);
-  list.appendChild(b);
-});
+function buildSamples(){
+  docs = [].slice.call(document.querySelectorAll('.sample-doc'))
+    .filter(function (s) { return s.dataset.lang === LANG; })
+    .map(function (s) {
+      return { icon:s.dataset.icon, label:s.dataset.label, name:s.dataset.name,
+               md:s.textContent.replace(/^\r?\n/, '') };
+    });
+  if (current >= docs.length) current = 0;
+  list.innerHTML = '';
+  docs.forEach(function (d, i) {
+    var b = document.createElement('button');
+    b.className = 'sample';
+    b.type = 'button';
+    b.setAttribute('aria-pressed', String(i === current));
+    b.innerHTML = '<span class="ico">' + d.icon + '</span><span></span>';
+    b.lastChild.textContent = d.label;
+    b.onclick = function () { select(i); };
+    list.appendChild(b);
+  });
+  frameName.textContent = docs[current].name;
+  send();
+}
 
 function select(i){
   current = i;
-  [...list.children].forEach((b, k) => b.setAttribute('aria-pressed', String(k === i)));
+  [].slice.call(list.children).forEach(function (b, k) {
+    b.setAttribute('aria-pressed', String(k === i));
+  });
   frameName.textContent = docs[i].name;
   send();
 }
 
 function send(){
-  if (!ready) return;
-  const d = docs[current];
+  if (!ready || !docs.length) return;
+  var d = docs[current];
   frame.contentWindow.postMessage({ type:'docpane:load', name:d.name, md:d.md }, '*');
 }
+function sendLang(){
+  if (!ready) return;
+  frame.contentWindow.postMessage({ type:'docpane:lang', lang:LANG }, '*');
+}
 
-// 窓の準備ができたら最初のサンプルを送る
-window.addEventListener('message', e => {
+window.addEventListener('message', function (e) {
   if (e.source !== frame.contentWindow) return;
-  if (e.data && e.data.type === 'docpane:ready') { ready = true; send(); }
+  if (e.data && e.data.type === 'docpane:ready') { ready = true; sendLang(); send(); }
 });
-
-frameName.textContent = docs[0].name;
 
 /* ---- 導入事例 ----
    掲載の許可と、相手が指定した時期を確認したものだけを、ここに1行足す。
    期日が来る前に書かないこと。隠しても、ページのソースを見れば読めてしまう。
    台帳は ~/DocPane/導入事例台帳.md（非公開）。
 
-   { name:'製品名', by:'会社名', note:'一行の説明', url:'https://…' }
-   url と note は省略できる。 */
-const CASES = [
+   { name:'製品名', by:'会社名', note:'一行の説明', url:'https://…' } */
+var CASES = [
 ];
 
 if (CASES.length) {
-  const ul = document.getElementById('cases');
-  CASES.forEach(c => {
-    const li = document.createElement('li');
-    const title = c.url
-      ? `<a class="name" href="${c.url}" target="_blank" rel="noopener noreferrer">${c.name}</a>`
-      : `<span class="name">${c.name}</span>`;
+  var ul = document.getElementById('cases');
+  CASES.forEach(function (c) {
+    var li = document.createElement('li');
+    var title = c.url
+      ? '<a class="name" href="' + c.url + '" target="_blank" rel="noopener noreferrer">' + c.name + '</a>'
+      : '<span class="name">' + c.name + '</span>';
     li.innerHTML = title
-      + (c.by ? `<span class="by">${c.by}</span>` : '')
-      + (c.note ? `<p class="note">${c.note}</p>` : '');
+      + (c.by ? '<span class="by">' + c.by + '</span>' : '')
+      + (c.note ? '<p class="note">' + c.note + '</p>' : '');
     ul.appendChild(li);
   });
   document.getElementById('cases-block').hidden = false;
 }
+
+/* 起動時の言語：記憶 → 無ければブラウザの言語 */
+var saved = null;
+try { saved = localStorage.getItem(LANG_KEY); } catch (e) {}
+if (!saved) saved = (navigator.language || '').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en';
+applyLang(saved);
 </script>
 
 <!-- アクセス計測。Cloudflare Web Analytics（Cookie を使わないので同意バナー不要）。
@@ -659,16 +985,5 @@ if (CF_TOKEN) {
   document.head.appendChild(b);
 }
 </script>
-
-<!-- 製品まわりの共通フッター（README「LP の決まりごと」4番）。ページごとに CSS が違うので、クラスに頼らず自己完結にしてある -->
-<nav class="rw-product-footer" aria-label="関連ページ" style="border-top:1px solid #e4e4e7;margin:56px 0 0;padding:20px 24px 26px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 16px;font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace;font-size:12.5px;line-height:1.6;">
-      <a href="../index.html" style="color:#5f6368;text-decoration:none;" data-ja="RustyWorks" data-en="RustyWorks">RustyWorks</a>
-      <span aria-hidden="true" style="color:#c9ccd1;">·</span>
-      <a href="index.html" style="color:#5f6368;text-decoration:none;" data-ja="製品ページ" data-en="Product">製品ページ</a>
-      <span aria-hidden="true" style="color:#c9ccd1;">·</span>
-      <a href="manual.html" style="color:#5f6368;text-decoration:none;" data-ja="取扱説明書" data-en="Manual">取扱説明書</a>
-      <span aria-hidden="true" style="color:#c9ccd1;">·</span>
-      <a href="../site_privacy.html" style="color:#5f6368;text-decoration:none;" data-ja="サイトのポリシー" data-en="Site Policy">サイトのポリシー</a>
-</nav>
 </body>
 </html>
