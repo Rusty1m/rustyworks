@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>不満ノート プライバシーポリシー</title>
+<title>不満ノート プライバシーポリシー | FumanNote Privacy Policy</title>
 <link rel="canonical" href="https://rustyworks.jp/fumannote_privacy.html">
-<meta name="description" content="不満ノートのプライバシーポリシー。ノートは端末内に保存され、書き直しを実行したときだけ本文が外部のAIサービスへ送信されます。">
+<meta name="description" content="不満ノートのプライバシーポリシー。ノートは端末内に保存され、書き直しを実行したときだけ本文が外部のAIサービスへ送信されます。Privacy policy for FumanNote, in Japanese and English.">
 <link rel="icon" href="assets/icons/fumannote.png">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -48,9 +48,11 @@
   <div class="card" style="display:flex; gap:22px; align-items:flex-start; flex-wrap:wrap;">
     <img src="assets/icons/fumannote.png" alt="不満ノート" style="width:76px; height:76px; border-radius:16px;">
     <div style="flex:1; min-width:240px;">
-      <h1 style="font-family:'IBM Plex Mono',monospace; font-size:29px; font-weight:500; margin-bottom:12px;">不満ノート プライバシーポリシー</h1>
+      <h1 style="font-family:'IBM Plex Mono',monospace; font-size:29px; font-weight:500; margin-bottom:12px;">不満ノート プライバシーポリシー<br>FumanNote Privacy Policy</h1>
       <p style="color:#45484d;">不満ノートは、腹が立ったことを書き出し、それを相手の視点で書き直す iOS アプリです。</p>
+      <p style="color:#45484d; margin-top:6px;">FumanNote is an iOS app for writing down what made you angry, then rewriting it from the other person's point of view.</p>
       <p style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#8a8a86; margin-top:12px;">Last updated: 2026-08-08</p>
+      <p style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; margin-top:14px;"><a href="#en" style="color:#c4472a;">→ Read this policy in English</a></p>
     </div>
   </div>
 
@@ -129,15 +131,84 @@
     <p style="font-family:'IBM Plex Mono',monospace; color:#96311a;">rustyworks.games@gmail.com</p>
   </div>
 
+  <div class="card" id="en" style="margin-top:44px;">
+    <h2>English Privacy Policy</h2>
+    <p style="color:#8a8a86;">The Japanese text above and the English text below describe the same policy.</p>
+  </div>
+
+  <div class="card warn">
+    <h2>0. First: your text is sent outside the app</h2>
+    <p><strong>When you run a rewrite, such as "an explanation from their point of view", the title and body you wrote are sent to an external AI service.</strong> This is not processed entirely within the app.</p>
+    <p>Text is sent only when you press the rewrite button. Writing a note or saving it sends nothing.</p>
+    <p><strong>If you write real names, company names, or addresses in the body, those are sent as well.</strong> They also remain in the generated text. The app does not mask proper nouns. Please check the content before you share or copy it.</p>
+  </div>
+
   <div class="card">
-    <h2>English Summary</h2>
-    <p><strong>Your notes stay on your device.</strong> Notes, generated text, and reflections are stored only on your iPhone. The developer has no server and receives none of it.</p>
-    <p><strong>Text is sent out only when you ask for a rewrite.</strong> Pressing the rewrite button sends the note's title and body to an external AI service (currently the OpenAI API, located in the United States). Writing and saving alone send nothing.</p>
-    <p><strong>Names are not redacted.</strong> If you write real names or company names, they are sent and they remain in the generated text. Please check before sharing.</p>
-    <p><strong>No account, no tracking.</strong> No sign-up, no analytics SDK, no advertising SDK, no device identifiers are sent.</p>
-    <p><strong>Third-party information.</strong> A complaint often contains information about another person, not only about you. If you do not want that sent, do not run the rewrite.</p>
-    <p>Subscriptions are handled by Apple; the developer never receives your payment details.</p>
-    <p>Contact: rustyworks.games@gmail.com</p>
+    <h2>1. Information we do not collect</h2>
+    <p>This app does not require an account. It never asks for your name, email address, phone number, or date of birth, and the developer never receives any of them.</p>
+    <p>No advertising SDK, no analytics SDK, and no external crash reporting are built in. The developer does not track how you use the app.</p>
+  </div>
+
+  <div class="card">
+    <h2>2. Information stored only on your device</h2>
+    <p>The following is stored only on your iPhone and is never sent to the developer's servers.</p>
+    <ul>
+      <li>The notes you write (title, body, date)</li>
+      <li>The generated text</li>
+      <li>Your reflections (how strong the anger was, what mattered to you at the time, and so on)</li>
+      <li>How many rewrites you have used in the current month</li>
+    </ul>
+    <p>The count is kept in the Keychain so that it survives reinstalling the app. Only the count and the month it applies to are stored; no note content is included.</p>
+    <p>Deleting the app removes your notes from the device. The developer cannot restore them.</p>
+  </div>
+
+  <div class="card">
+    <h2>3. Transmission to an external AI service</h2>
+    <p>Rewrites are processed by an external AI service (currently the OpenAI API). What is sent is:</p>
+    <ul>
+      <li>The note's title</li>
+      <li>The note's body</li>
+      <li>A fixed instruction text that tells the service what to do</li>
+    </ul>
+    <p>No account information, device identifiers, location, or contacts are sent. Nothing that identifies who sent it is included.</p>
+    <p>The destination is outside Japan (the United States). If the text contains personal information, a transfer of that information outside Japan takes place.</p>
+    <p>OpenAI does not use data submitted through the API to train its models. It may be retained for a limited period for abuse monitoring, in accordance with OpenAI's own terms. Please see OpenAI's policy for details.</p>
+    <p>The AI service in use may change in future for reasons of quality or cost. If it changes, this page will be updated.</p>
+  </div>
+
+  <div class="card">
+    <h2>4. Information about third parties</h2>
+    <p>A complaint often contains information about the other person involved, not only about you.</p>
+    <p>Please keep this in mind. You can choose not to write information you would rather not send, or write it and simply not run the rewrite. If you do not run a rewrite, the text never leaves your device.</p>
+  </div>
+
+  <div class="card">
+    <h2>5. Processing on your device</h2>
+    <p>On supported models, part of the reflection may be processed by on-device AI. That processing is completed inside your iPhone and is not sent anywhere.</p>
+    <p>When sending is not possible (no connection, the monthly limit reached, and so on), the app falls back to simple on-device processing. In that case too, the text does not leave your device.</p>
+  </div>
+
+  <div class="card">
+    <h2>6. Purchases and payment</h2>
+    <p>Subscriptions are purchased, renewed, and cancelled through Apple's App Store. The developer never receives payment details such as credit card information.</p>
+    <p>All the app receives is whether the subscription is currently valid. Apple's privacy policy governs how the transaction information is handled.</p>
+    <p>You can cancel from the Settings app on your iPhone, or from your account screen in the App Store.</p>
+  </div>
+
+  <div class="card">
+    <h2>7. Use by minors</h2>
+    <p>This app is not directed to children under 13. If you are a minor, please use it with the consent of a parent or guardian.</p>
+  </div>
+
+  <div class="card">
+    <h2>8. Changes to this policy</h2>
+    <p>If the content changes, the "Last updated" date on this page will be updated. For significant changes, we will also give notice inside the app.</p>
+  </div>
+
+  <div class="card">
+    <h2>9. Contact</h2>
+    <p>For questions about this policy, or about how your data is handled, please get in touch.</p>
+    <p style="font-family:'IBM Plex Mono',monospace; color:#96311a;">rustyworks.games@gmail.com</p>
   </div>
 
 </div>
