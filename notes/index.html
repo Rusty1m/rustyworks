@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>読み物 | RustyWorks</title>
+<link rel="canonical" href="https://rustyworks.jp/notes/">
+<meta name="description" content="つくったものと、つくる過程で分かったことの記録。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RustyWorks">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:url" content="https://rustyworks.jp/notes/">
+<meta property="og:title" content="読み物 | RustyWorks">
+<meta property="og:description" content="つくったものと、つくる過程で分かったことの記録。">
+<meta property="og:image" content="https://rustyworks.jp/assets/og/top-og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://rustyworks.jp/assets/og/top-og.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#ffffff;
+  --bg-soft:#f7f7f8;
+  --ink:#111214;
+  --ink-2:#5f6368;
+  --ink-3:#8a8d93;
+  --line:#e4e4e7;
+  --blue:#1a4fd8;
+  --blue-ink:#143fb0;
+  --sans:"Inter","Zen Kaku Gothic New",-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --pad:64px;
+  --maxw:1000px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-text-size-adjust:100%;}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+a{color:inherit;}
+.container{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad);}
+
+header{border-bottom:1px solid var(--line);}
+.header-inner{
+  max-width:var(--maxw);margin:0 auto;padding:0 var(--pad);height:64px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+}
+.site-home{font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;color:var(--ink-2);text-decoration:none;}
+.site-home:hover{color:var(--blue);}
+.lang{display:flex;align-items:center;gap:2px;font-family:var(--mono);font-size:12px;}
+.lang button{font:inherit;background:none;border:0;cursor:pointer;color:var(--ink-3);padding:4px 6px;border-radius:4px;}
+.lang button:hover{color:var(--ink);background:var(--bg-soft);}
+.lang button[aria-pressed="true"]{color:var(--ink);font-weight:500;}
+.lang .sep{color:var(--line);}
+
+.page-head{border-bottom:1px solid var(--line);padding:58px 0 44px;}
+.page-head h1{font-size:clamp(28px,3.2vw,38px);font-weight:800;letter-spacing:-.02em;line-height:1.15;}
+.page-head p{margin-top:16px;font-size:16px;color:var(--ink-2);max-width:620px;}
+.page-rule{margin-top:26px;width:56px;height:3px;background:var(--blue);}
+
+.list{padding:44px 0 72px;}
+.sec-title{
+  font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:20px;
+}
+/* 1件。左に日付、右に本文。狭いと縦に積む */
+.note{
+  display:grid;grid-template-columns:104px minmax(0,1fr);gap:26px;
+  padding:26px 0;border-top:1px solid var(--line);
+}
+.note:last-child{border-bottom:1px solid var(--line);}
+.note time{font-family:var(--mono);font-size:12.5px;color:var(--ink-3);padding-top:3px;}
+.note h2{font-size:19px;font-weight:700;line-height:1.5;letter-spacing:-.01em;}
+.note h2 a{text-decoration:none;}
+.note h2 a:hover{color:var(--blue);}
+.excerpt{margin-top:10px;color:var(--ink-2);font-size:14.5px;}
+.meta{
+  margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;
+  font-family:var(--mono);font-size:12px;color:var(--ink-3);
+}
+.tag{border:1px solid var(--line);border-radius:999px;padding:4px 11px;}
+.meta a{color:var(--blue);text-decoration:none;}
+.meta a:hover{color:var(--blue-ink);}
+/* 外に出ることが分かるようにしておく */
+.ext::after{content:" ↗";}
+
+footer{border-top:1px solid var(--line);padding:30px 0;}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:13px;color:var(--ink-2);}
+.footer-links{display:flex;align-items:center;gap:24px;}
+.footer-links a{text-decoration:none;}
+.footer-links a:hover{color:var(--blue);}
+
+@media (max-width:860px){
+  :root{--pad:22px;}
+  .note{grid-template-columns:1fr;gap:8px;}
+  .note time{padding-top:0;}
+  .page-head{padding:40px 0 32px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="site-home" href="../index.html">&larr; RustyWorks</a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="ja" aria-pressed="true">JA</button>
+      <span class="sep">/</span>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="page-head">
+    <div class="container">
+      <h1 data-ja="読み物" data-en="Notes">読み物</h1>
+      <p data-ja="つくったものと、つくる過程で分かったことの記録です。本文は note にあります。"
+         data-en="Notes on what I built and what I learned building it. The articles live on note. They are written in Japanese; some have an English version, translated by note's AI.">つくったものと、つくる過程で分かったことの記録です。本文は note にあります。</p>
+      <div class="page-rule"></div>
+    </div>
+  </div>
+
+  <div class="list">
+    <div class="container">
+      <div class="sec-title" data-ja="つくったものの話" data-en="On what I built">つくったものの話</div>
+
+      <article class="note">
+        <time datetime="2026-08-14">2026.08.14</time>
+        <div>
+          <h2><a class="ext" href="https://note.com/legit_fowl8567/n/n7744d60770e5"
+                 data-href-ja="https://note.com/legit_fowl8567/n/n7744d60770e5" data-href-en="https://note.com/legit_fowl8567/n/n7744d60770e5?hl=en"
+                 target="_blank" rel="noopener"
+                 data-ja="長すぎる .md に迷子になるので、取説専用のビューアーを作りました！" data-en="I got lost in long .md files, so I made a viewer specifically for manuals!">長すぎる .md に迷子になるので、取説専用のビューアーを作りました！</a></h2>
+          <p class="excerpt" data-ja="Markdown を「取扱説明書の画面」で読むためのビューアーを作りました。HTML ファイル1枚で、ダブルクリックするとブラウザで開き、.md を放り込むと左に項目・右に本文の2ペインになります。無料です。" data-en="A viewer that reads Markdown as if it were a manual. One HTML file: double-click it, drop a .md in, and you get items on the left and the text on the right. Free.">Markdown を「取扱説明書の画面」で読むためのビューアーを作りました。HTML ファイル1枚で、ダブルクリックするとブラウザで開き、.md を放り込むと左に項目・右に本文の2ペインになります。無料です。</p>
+          <div class="meta">
+            <span class="tag" data-ja="DocPane" data-en="DocPane">DocPane</span>
+            <a href="../docpane/" data-ja="製品ページ" data-en="Product page">製品ページ</a>
+            <a class="ext" href="https://note.com/legit_fowl8567/n/n7744d60770e5"
+               data-href-ja="https://note.com/legit_fowl8567/n/n7744d60770e5" data-href-en="https://note.com/legit_fowl8567/n/n7744d60770e5?hl=en"
+               target="_blank" rel="noopener"
+               data-ja="note で読む" data-en="Read on note">note で読む</a>
+            <span class="mt" data-ja="" data-en="English is note's AI translation"></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="note">
+        <time datetime="2026-08-08">2026.08.08</time>
+        <div>
+          <h2><a class="ext" href="https://note.com/legit_fowl8567/n/n60abe595a2ca"
+                 data-href-ja="https://note.com/legit_fowl8567/n/n60abe595a2ca" data-href-en="https://note.com/legit_fowl8567/n/n60abe595a2ca?hl=en"
+                 target="_blank" rel="noopener"
+                 data-ja="自身初のiOSアプリを作りました！(審査中)" data-en="I made my first iOS app! (Under review)">自身初のiOSアプリを作りました！(審査中)</a></h2>
+          <p class="excerpt" data-ja="危うく、AIが一度も動かないアプリを出すところだった。配布ビルドで API キーが必ず nil になる話、原価が減るはずが8%増えた話、「使い放題」と書けなかった話。提出直前に見つかったものの記録です。" data-en="I almost shipped an app where the AI never ran once. The API key that is always nil in a distribution build, the cost that grew 8% when it should have shrunk, and why I could not write “unlimited”. What turned up in the last stretch before submitting.">危うく、AIが一度も動かないアプリを出すところだった。配布ビルドで API キーが必ず nil になる話、原価が減るはずが8%増えた話、「使い放題」と書けなかった話。提出直前に見つかったものの記録です。</p>
+          <div class="meta">
+            <span class="tag" data-ja="不満ノート" data-en="FumanNote">不満ノート</span>
+            <a href="../fumannote.html" data-ja="製品ページ" data-en="Product page">製品ページ</a>
+            <a class="ext" href="https://note.com/legit_fowl8567/n/n60abe595a2ca"
+               data-href-ja="https://note.com/legit_fowl8567/n/n60abe595a2ca" data-href-en="https://note.com/legit_fowl8567/n/n60abe595a2ca?hl=en"
+               target="_blank" rel="noopener"
+               data-ja="note で読む" data-en="Read on note">note で読む</a>
+            <span class="mt" data-ja="" data-en="English is note's AI translation"></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="note">
+        <time datetime="2026-07-31">2026.07.31</time>
+        <div>
+          <h2><a class="ext" href="https://note.com/legit_fowl8567/n/na20f8c7c7fc7"
+                 data-href-ja="https://note.com/legit_fowl8567/n/na20f8c7c7fc7" data-href-en="https://note.com/legit_fowl8567/n/na20f8c7c7fc7"
+                 target="_blank" rel="noopener"
+                 data-ja="散らばった写真・動画・テキストを、動かさずに1つの棚にする Mac アプリ" data-en="散らばった写真・動画・テキストを、動かさずに1つの棚にする Mac アプリ">散らばった写真・動画・テキストを、動かさずに1つの棚にする Mac アプリ</a></h2>
+          <p class="excerpt" data-ja="あちこちに散らばったファイルを、元の場所から動かさないまま1つの棚にまとめて見る Mac アプリ。1.1 で macOS 14 以降に対応しました。" data-en="あちこちに散らばったファイルを、元の場所から動かさないまま1つの棚にまとめて見る Mac アプリ。1.1 で macOS 14 以降に対応しました。">あちこちに散らばったファイルを、元の場所から動かさないまま1つの棚にまとめて見る Mac アプリ。1.1 で macOS 14 以降に対応しました。</p>
+          <div class="meta">
+            <span class="tag" data-ja="ShelfNavigator" data-en="ShelfNavigator">ShelfNavigator</span>
+            <a href="../shelfnavigator.html" data-ja="製品ページ" data-en="Product page">製品ページ</a>
+            <a class="ext" href="https://note.com/legit_fowl8567/n/na20f8c7c7fc7"
+               data-href-ja="https://note.com/legit_fowl8567/n/na20f8c7c7fc7" data-href-en="https://note.com/legit_fowl8567/n/na20f8c7c7fc7"
+               target="_blank" rel="noopener"
+               data-ja="note で読む" data-en="Read on note">note で読む</a>
+            <span class="mt" data-ja="" data-en="Japanese only"></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="note">
+        <time datetime="2026-06-28">2026.06.28</time>
+        <div>
+          <h2><a class="ext" href="https://note.com/legit_fowl8567/n/n9277a17421a4"
+                 data-href-ja="https://note.com/legit_fowl8567/n/n9277a17421a4" data-href-en="https://note.com/legit_fowl8567/n/n9277a17421a4?hl=en"
+                 target="_blank" rel="noopener"
+                 data-ja="“いい色で動画を見たいだけ” だったのに、プレーヤーを自作してしまった話" data-en="The story of how I ended up building my own video player just because I wanted to watch videos with ‘good colors’">“いい色で動画を見たいだけ” だったのに、プレーヤーを自作してしまった話</a></h2>
+          <p class="excerpt" data-ja="色が浅い、暗部が潰れて何をしているか分からない。そう思いながら見るのが嫌で、Mac 用のプレーヤーを作ってしまうまでの話です。" data-en="Washed-out colour, crushed shadows, and not being able to see what is going on. Rather than keep watching like that, I ended up writing my own macOS player.">色が浅い、暗部が潰れて何をしているか分からない。そう思いながら見るのが嫌で、Mac 用のプレーヤーを作ってしまうまでの話です。</p>
+          <div class="meta">
+            <span class="tag" data-ja="Kuro" data-en="Kuro">Kuro</span>
+            <a href="../kuro.html" data-ja="製品ページ" data-en="Product page">製品ページ</a>
+            <a class="ext" href="https://note.com/legit_fowl8567/n/n9277a17421a4"
+               data-href-ja="https://note.com/legit_fowl8567/n/n9277a17421a4" data-href-en="https://note.com/legit_fowl8567/n/n9277a17421a4?hl=en"
+               target="_blank" rel="noopener"
+               data-ja="note で読む" data-en="Read on note">note で読む</a>
+            <span class="mt" data-ja="" data-en="English is note's AI translation"></span>
+          </div>
+        </div>
+      </article>
+
+      <div class="sec-title" data-ja="つくるときに調べたこと" data-en="What I looked into">つくるときに調べたこと</div>
+
+      <article class="note">
+        <time datetime="2026-08-07">2026.08.07</time>
+        <div>
+          <h2><a class="ext" href="https://note.com/legit_fowl8567/n/n24204978aa53"
+                 data-href-ja="https://note.com/legit_fowl8567/n/n24204978aa53" data-href-en="https://note.com/legit_fowl8567/n/n24204978aa53"
+                 target="_blank" rel="noopener"
+                 data-ja="「知らないと詰む」AI駆動開発の罠マップ" data-en="「知らないと詰む」AI駆動開発の罠マップ">「知らないと詰む」AI駆動開発の罠マップ</a></h2>
+          <p class="excerpt" data-ja="非エンジニアのための現場チェックリスト。全89項目。「わからないまま進める」と後で詰むところを、順番に潰せる形にまとめたものです。有料記事です。" data-en="非エンジニアのための現場チェックリスト。全89項目。「わからないまま進める」と後で詰むところを、順番に潰せる形にまとめたものです。有料記事です。">非エンジニアのための現場チェックリスト。全89項目。「わからないまま進める」と後で詰むところを、順番に潰せる形にまとめたものです。有料記事です。</p>
+          <div class="meta">
+            <span class="tag" data-ja="有料記事" data-en="Paid article">有料記事</span>
+            <a class="ext" href="https://note.com/legit_fowl8567/n/n24204978aa53"
+               data-href-ja="https://note.com/legit_fowl8567/n/n24204978aa53" data-href-en="https://note.com/legit_fowl8567/n/n24204978aa53"
+               target="_blank" rel="noopener"
+               data-ja="note で読む" data-en="Read on note">note で読む</a>
+            <span class="mt" data-ja="" data-en="Japanese only"></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="note">
+        <time datetime="2025-07-12">2025.07.12</time>
+        <div>
+          <h2><a class="ext" href="https://note.com/legit_fowl8567/n/nc0b14a68a72b"
+                 data-href-ja="https://note.com/legit_fowl8567/n/nc0b14a68a72b" data-href-en="https://note.com/legit_fowl8567/n/nc0b14a68a72b?hl=en"
+                 target="_blank" rel="noopener"
+                 data-ja="RPGツクールMZ　Chronusの便利なタイマー機能" data-en="RPG Maker MZ: Useful Timer Features in Chronus">RPGツクールMZ　Chronusの便利なタイマー機能</a></h2>
+          <p class="excerpt" data-ja="RPGツクールMZ のプラグイン Chronus が持つタイマー機能の使いどころを、動く画面つきで書いています。" data-en="Where the timer features of the Chronus plugin for RPG Maker MZ actually come in handy, with the screen in motion.">RPGツクールMZ のプラグイン Chronus が持つタイマー機能の使いどころを、動く画面つきで書いています。</p>
+          <div class="meta">
+            <span class="tag" data-ja="RPGツクールMZ" data-en="RPG Maker MZ">RPGツクールMZ</span>
+            <a class="ext" href="https://note.com/legit_fowl8567/n/nc0b14a68a72b"
+               data-href-ja="https://note.com/legit_fowl8567/n/nc0b14a68a72b" data-href-en="https://note.com/legit_fowl8567/n/nc0b14a68a72b?hl=en"
+               target="_blank" rel="noopener"
+               data-ja="note で読む" data-en="Read on note">note で読む</a>
+            <span class="mt" data-ja="" data-en="English is note's AI translation"></span>
+          </div>
+        </div>
+      </article>
+
+      <div class="sec-title" data-ja="読み物" data-en="Reading">読み物</div>
+
+      <article class="note">
+        <time datetime="2026-05-27">2026.05.27</time>
+        <div>
+          <h2><a class="ext" href="https://note.com/legit_fowl8567/n/n369d464163e1"
+                 data-href-ja="https://note.com/legit_fowl8567/n/n369d464163e1" data-href-en="https://note.com/legit_fowl8567/n/n369d464163e1"
+                 target="_blank" rel="noopener"
+                 data-ja="【宇宙物理】もし「超高温の世界」に生きる宇宙人がいたら？地球が“氷の星”に見える日" data-en="【宇宙物理】もし「超高温の世界」に生きる宇宙人がいたら？地球が“氷の星”に見える日">【宇宙物理】もし「超高温の世界」に生きる宇宙人がいたら？地球が“氷の星”に見える日</a></h2>
+          <p class="excerpt" data-ja="もし超高温の世界に生きる知性がいたら、地球はどう見えるのか。空想を交えた読み物です。" data-en="もし超高温の世界に生きる知性がいたら、地球はどう見えるのか。空想を交えた読み物です。">もし超高温の世界に生きる知性がいたら、地球はどう見えるのか。空想を交えた読み物です。</p>
+          <div class="meta">
+            <span class="tag" data-ja="宇宙物理" data-en="Astrophysics">宇宙物理</span>
+            <a class="ext" href="https://note.com/legit_fowl8567/n/n369d464163e1"
+               data-href-ja="https://note.com/legit_fowl8567/n/n369d464163e1" data-href-en="https://note.com/legit_fowl8567/n/n369d464163e1"
+               target="_blank" rel="noopener"
+               data-ja="note で読む" data-en="Read on note">note で読む</a>
+            <span class="mt" data-ja="" data-en="Japanese only"></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="note">
+        <time datetime="2026-05-16">2026.05.16</time>
+        <div>
+          <h2><a class="ext" href="https://note.com/legit_fowl8567/n/nf6835a934254"
+                 data-href-ja="https://note.com/legit_fowl8567/n/nf6835a934254" data-href-en="https://note.com/legit_fowl8567/n/nf6835a934254"
+                 target="_blank" rel="noopener"
+                 data-ja="ヒトという名の6.4Bモデル：1,000兆の重みデータを「デバッグ」する未来（後編）" data-en="ヒトという名の6.4Bモデル：1,000兆の重みデータを「デバッグ」する未来（後編）">ヒトという名の6.4Bモデル：1,000兆の重みデータを「デバッグ」する未来（後編）</a></h2>
+          <p class="excerpt" data-ja="前編の続き。1,000兆の重みデータを「デバッグ」するとはどういうことか、という話です。" data-en="前編の続き。1,000兆の重みデータを「デバッグ」するとはどういうことか、という話です。">前編の続き。1,000兆の重みデータを「デバッグ」するとはどういうことか、という話です。</p>
+          <div class="meta">
+            <span class="tag" data-ja="後編" data-en="Part 2">後編</span>
+            <a class="ext" href="https://note.com/legit_fowl8567/n/nf6835a934254"
+               data-href-ja="https://note.com/legit_fowl8567/n/nf6835a934254" data-href-en="https://note.com/legit_fowl8567/n/nf6835a934254"
+               target="_blank" rel="noopener"
+               data-ja="note で読む" data-en="Read on note">note で読む</a>
+            <span class="mt" data-ja="" data-en="Japanese only"></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="note">
+        <time datetime="2026-05-12">2026.05.12</time>
+        <div>
+          <h2><a class="ext" href="https://note.com/legit_fowl8567/n/n6829bc29c897"
+                 data-href-ja="https://note.com/legit_fowl8567/n/n6829bc29c897" data-href-en="https://note.com/legit_fowl8567/n/n6829bc29c897?hl=en"
+                 target="_blank" rel="noopener"
+                 data-ja="ヒトという名の6.4Bモデル：設計図はわずか800MB（前編）" data-en="The 6.4B Model Named Human: The Blueprint is Only 800MB (Part 1)">ヒトという名の6.4Bモデル：設計図はわずか800MB（前編）</a></h2>
+          <p class="excerpt" data-ja="ヒトの設計図（ゲノム）は 800MB ほどしかありません。自分たちを1つのモデルとして眺めてみると何が見えるか、という話です。" data-en="The human blueprint — the genome — is only about 800MB. What comes into view when you look at ourselves as if we were a model.">ヒトの設計図（ゲノム）は 800MB ほどしかありません。自分たちを1つのモデルとして眺めてみると何が見えるか、という話です。</p>
+          <div class="meta">
+            <span class="tag" data-ja="前編" data-en="Part 1">前編</span>
+            <a class="ext" href="https://note.com/legit_fowl8567/n/n6829bc29c897"
+               data-href-ja="https://note.com/legit_fowl8567/n/n6829bc29c897" data-href-en="https://note.com/legit_fowl8567/n/n6829bc29c897?hl=en"
+               target="_blank" rel="noopener"
+               data-ja="note で読む" data-en="Read on note">note で読む</a>
+            <span class="mt" data-ja="" data-en="English is note's AI translation"></span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <span>&copy; RustyWorks</span>
+    <div class="footer-links">
+      <a href="../index.html">RustyWorks</a>
+      <a href="../works.html" data-ja="作品一覧" data-en="Works">作品一覧</a>
+      <a href="../site_privacy.html" data-ja="サイトのポリシー" data-en="Site Policy">サイトのポリシー</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var KEY = 'rw-lang';
+  var buttons = document.querySelectorAll('.lang button');
+  var nodes = document.querySelectorAll('[data-ja][data-en]');
+  // note の記事に英語版がある場合、行き先も差し替える（?hl=en）
+  var linked = document.querySelectorAll('[data-href-ja][data-href-en]');
+
+  function apply(lang) {
+    document.documentElement.lang = lang;
+    nodes.forEach(function (el) {
+      var text = el.getAttribute('data-' + lang);
+      if (text !== null) el.textContent = text;
+    });
+    linked.forEach(function (el) {
+      var href = el.getAttribute('data-href-' + lang);
+      if (href) el.setAttribute('href', href);
+    });
+    buttons.forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
+    });
+    try { localStorage.setItem(KEY, lang); } catch (e) {}
+  }
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () { apply(b.dataset.lang); });
+  });
+
+  // 言語は強い順に決める。1. URL の ?lang  2. 前回の選択  3. 既定は日本語。
+  // ブラウザの言語では切り替えない。クローラーは en を名乗ることが多く、
+  // 日本語で書いたページが英語で索引されてしまうため。
+  var saved = null;
+  try {
+    var q = new URLSearchParams(location.search).get('lang');
+    if (q === 'en' || q === 'ja') {
+      saved = q;
+      localStorage.setItem(KEY, q);
+    }
+  } catch (e) {}
+  if (!saved) { try { saved = localStorage.getItem(KEY); } catch (e) {} }
+  if (!saved) saved = 'ja';
+  if (saved === 'en') apply('en');
+})();
+</script>
+
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "04f66ad1837a4b63af68beb6e835358f"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
