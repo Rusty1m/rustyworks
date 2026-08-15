@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ShelfNavigator — フォルダもドライブも、ひと目で。</title>
+<link rel="canonical" href="https://rustyworks.jp/shelfnavigator.html">
 <meta name="description" content="散らばったフォルダと外付けドライブを、1つの棚にまとめる macOS 用ビューア。">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="RustyWorks">
@@ -64,6 +65,14 @@
     0%, 100% { transform: translateX(0); opacity: .55; }
     50%      { transform: translateX(10px); opacity: 1; }
   }
+  .lang { display:flex; align-items:center; gap:6px; font-family:'IBM Plex Mono',monospace; font-size:12px; }
+  .lang button {
+    border:0; background:none; padding:2px; cursor:pointer; font:inherit;
+    color:var(--ink-3); letter-spacing:.04em; transition:color .18s ease;
+  }
+  .lang button:hover { color:var(--ink); }
+  .lang button[aria-pressed="true"] { color:var(--ink); font-weight:600; }
+  .lang .sep { color:var(--line-3); }
   @media (max-width: 760px) {
     #fs-nav-links { display: none !important; }
     .fs-two-col { grid-template-columns: 1fr !important; }
@@ -95,13 +104,20 @@
         <a href="#top" style="font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:.14em; font-size:15px; color:var(--ink);">SHELFNAVIGATOR</a>
       </div>
       <div id="fs-nav-links" style="display:flex; align-items:center; gap:32px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.04em;">
-        <a href="#one" style="color:var(--ink-3);">一覧</a>
-        <a href="#demo" style="color:var(--ink-3);">デモ</a>
-        <a href="#search" style="color:var(--ink-3);">検索</a>
-        <a href="#formats" style="color:var(--ink-3);">対応形式</a>
-        <a href="#safe" style="color:var(--ink-3);">安全性</a>
+        <a href="#one" style="color:var(--ink-3);" data-ja="一覧" data-en="One view">一覧</a>
+        <a href="#demo" style="color:var(--ink-3);" data-ja="デモ" data-en="Demo">デモ</a>
+        <a href="#search" style="color:var(--ink-3);" data-ja="検索" data-en="Search">検索</a>
+        <a href="#formats" style="color:var(--ink-3);" data-ja="対応形式" data-en="Formats">対応形式</a>
+        <a href="#safe" style="color:var(--ink-3);" data-ja="安全性" data-en="Safety">安全性</a>
       </div>
-      <a href="https://apps.apple.com/jp/app/id6794389638" target="_blank" rel="noopener" style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.03em; color:var(--ink); background:#e8a33d; padding:9px 18px; border-radius:6px; font-weight:500;">Mac App Store</a>
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div class="lang" role="group" aria-label="Language">
+          <button type="button" data-lang="ja" aria-pressed="true">JA</button>
+          <span class="sep">/</span>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <a href="https://apps.apple.com/app/id6794389638" target="_blank" rel="noopener" style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.03em; color:var(--ink); background:#e8a33d; padding:9px 18px; border-radius:6px; font-weight:500;">Mac App Store</a>
+      </div>
     </div>
   </nav>
 
@@ -110,38 +126,38 @@
     <!-- HERO -->
     <section class="fs-pad" style="max-width:1200px; margin:0 auto; padding:140px 40px 120px; animation:fs-rise .7s ease both;">
       <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.16em; color:var(--accent-ink); margin-bottom:34px;">macOS APP</div>
-      <h1 id="fs-hero-title" style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(7.4vw, 88px); line-height:1.1; letter-spacing:-.01em; white-space:nowrap;">フォルダもドライブも、<br>ひと目で。</h1>
-      <p style="margin-top:38px; font-size:20px; line-height:1.9; color:var(--ink-3); max-width:52ch;">散らばったフォルダと外付けドライブを、1つの棚にまとめる macOS 用ビューア。</p>
+      <h1 id="fs-hero-title" style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(7.4vw, 88px); line-height:1.1; letter-spacing:-.01em; white-space:nowrap;"><span data-ja="フォルダもドライブも、" data-en="Every file.">フォルダもドライブも、</span><br><span data-ja="ひと目で。" data-en="One shelf.">ひと目で。</span></h1>
+      <p style="margin-top:38px; font-size:20px; line-height:1.9; color:var(--ink-3); max-width:52ch;" data-ja="散らばったフォルダと外付けドライブを、1つの棚にまとめる macOS 用ビューア。" data-en="A macOS viewer that gathers scattered folders and external drives onto a single shelf.">散らばったフォルダと外付けドライブを、1つの棚にまとめる macOS 用ビューア。</p>
 
       <div style="margin-top:44px; display:flex; flex-wrap:wrap; gap:12px;">
-        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.02em; color:var(--ink); border:1px solid var(--line-3); padding:8px 15px; border-radius:6px;">数十万件</span>
-        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.02em; color:var(--ink); border:1px solid var(--line-3); padding:8px 15px; border-radius:6px;">全ドライブ横断</span>
-        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.02em; color:var(--ink); border:1px solid var(--line-3); padding:8px 15px; border-radius:6px;">通信しない</span>
-        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.02em; color:var(--ink); border:1px solid var(--line-3); padding:8px 15px; border-radius:6px;">RAW対応</span>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.02em; color:var(--ink); border:1px solid var(--line-3); padding:8px 15px; border-radius:6px;" data-ja="数十万件" data-en="Hundreds of thousands">数十万件</span>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.02em; color:var(--ink); border:1px solid var(--line-3); padding:8px 15px; border-radius:6px;" data-ja="全ドライブ横断" data-en="Across every drive">全ドライブ横断</span>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.02em; color:var(--ink); border:1px solid var(--line-3); padding:8px 15px; border-radius:6px;" data-ja="通信しない" data-en="No network">通信しない</span>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.02em; color:var(--ink); border:1px solid var(--line-3); padding:8px 15px; border-radius:6px;" data-ja="RAW対応" data-en="RAW support">RAW対応</span>
       </div>
 
       <div style="margin-top:48px;">
-        <a href="https://apps.apple.com/jp/app/id6794389638" target="_blank" rel="noopener" style="display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:14px; letter-spacing:.02em; color:var(--ink); background:#e8a33d; padding:15px 30px; border-radius:8px; font-weight:500;">Mac App Store</a>
+        <a href="https://apps.apple.com/app/id6794389638" target="_blank" rel="noopener" style="display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:14px; letter-spacing:.02em; color:var(--ink); background:#e8a33d; padding:15px 30px; border-radius:8px; font-weight:500;">Mac App Store</a>
       </div>
 
       <div style="margin-top:72px;">
-        <img src="assets/lp/shot/01-full.webp" alt="ShelfNavigator のグリッド表示と情報パネル" style="display:block; width:100%; height:auto;">
+        <img src="assets/lp/shot/01-full.webp" data-src-ja="assets/lp/shot/01-full.webp" data-src-en="assets/lp/shot/01e-full.webp" alt="ShelfNavigator のグリッド表示と情報パネル" data-alt-ja="ShelfNavigator のグリッド表示と情報パネル" data-alt-en="The ShelfNavigator grid with the info pane" style="display:block; width:100%; height:auto;">
       </div>
     </section>
 
     <!-- PROBLEM -->
     <section class="fs-pad" style="border-top:1px solid var(--line); background:var(--bg-2);">
       <div style="max-width:1200px; margin:0 auto; padding:88px 40px;">
-        <p style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:400; font-size:34px; line-height:1.7; letter-spacing:-.005em; color:var(--ink); max-width:32ch;">ファイルは、フォルダや外付けドライブ、何年分ものダウンロードに散らばっていきます。どこに何があるのか、だんだん分からなくなります。</p>
+        <p style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:400; font-size:34px; line-height:1.7; letter-spacing:-.005em; color:var(--ink); max-width:32ch;" data-ja="ファイルは、フォルダや外付けドライブ、何年分ものダウンロードに散らばっていきます。どこに何があるのか、だんだん分からなくなります。" data-en="Files scatter across folders, external drives and years of downloads. Little by little, you stop knowing what is where.">ファイルは、フォルダや外付けドライブ、何年分ものダウンロードに散らばっていきます。どこに何があるのか、だんだん分からなくなります。</p>
       </div>
     </section>
 
     <!-- 01 — HERO FEATURE: convergence -->
     <section id="one" class="fs-pad" style="border-top:1px solid var(--line);">
       <div style="max-width:1200px; margin:0 auto; padding:120px 40px;">
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:var(--accent-ink); margin-bottom:26px;">01 — すべてを1つのビューで</div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:var(--accent-ink); margin-bottom:26px;" data-ja="01 — すべてを1つのビューで" data-en="01 — Everything in one view">01 — すべてを1つのビューで</div>
 
-        <p style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-size:22px; line-height:1.8; color:var(--ink-2); max-width:44ch; margin:0 0 34px;">3つのフォルダを、別々のドライブに置いた状態です。左のリストを切り替えてみてください。</p>
+        <p style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-size:22px; line-height:1.8; color:var(--ink-2); max-width:44ch; margin:0 0 34px;" data-ja="3つのフォルダを、別々のドライブに置いた状態です。左のリストを切り替えてみてください。" data-en="Three folders, each sitting on a different drive. Try switching between them in the list on the left.">3つのフォルダを、別々のドライブに置いた状態です。左のリストを切り替えてみてください。</p>
 
         <div id="demo"><div class="sn-demo">
           <div class="sn-win">
@@ -150,50 +166,50 @@
               <span class="sn-dot" style="background:#febc2e"></span>
               <span class="sn-dot" style="background:#28c840"></span>
               <span class="sn-title">ShelfNavigator</span>
-              <span class="sn-live">実際に動きます</span>
+              <span class="sn-live" data-ja="実際に動きます" data-en="Live">実際に動きます</span>
             </div>
 
             <div class="sn-body">
               <aside class="sn-side">
-                <div class="sn-side-head">Libraries<span class="sn-tap">▸ 切り替えられます</span></div>
+                <div class="sn-side-head">Libraries<span class="sn-tap" data-ja="▸ 切り替えられます" data-en="▸ Switch between them">▸ 切り替えられます</span></div>
                 <button class="sn-lib is-on" data-lib="all">
                   <span class="sn-lib-main"><span class="sn-sq" style="background:#e8a33d"></span><span class="sn-lib-txt"><span class="sn-lib-name">All Files</span></span></span><span class="sn-count">18</span>
                 </button>
                 <button class="sn-lib" data-lib="a">
-                  <span class="sn-lib-main"><span class="sn-sq"></span><span class="sn-lib-txt"><span class="sn-lib-name">写真フォルダ</span><span class="sn-vol">SDカード</span></span></span><span class="sn-count">8</span>
+                  <span class="sn-lib-main"><span class="sn-sq"></span><span class="sn-lib-txt"><span class="sn-lib-name" data-ja="写真フォルダ" data-en="Photos">写真フォルダ</span><span class="sn-vol" data-ja="SDカード" data-en="SD Card">SDカード</span></span></span><span class="sn-count">8</span>
                 </button>
                 <button class="sn-lib" data-lib="b">
-                  <span class="sn-lib-main"><span class="sn-sq"></span><span class="sn-lib-txt"><span class="sn-lib-name">動画フォルダ</span><span class="sn-vol">外付けHDD</span></span></span><span class="sn-count">4</span>
+                  <span class="sn-lib-main"><span class="sn-sq"></span><span class="sn-lib-txt"><span class="sn-lib-name" data-ja="動画フォルダ" data-en="Videos">動画フォルダ</span><span class="sn-vol" data-ja="外付けHDD" data-en="External HDD">外付けHDD</span></span></span><span class="sn-count">4</span>
                 </button>
                 <button class="sn-lib" data-lib="c">
-                  <span class="sn-lib-main"><span class="sn-sq"></span><span class="sn-lib-txt"><span class="sn-lib-name">テキストフォルダ</span><span class="sn-vol">USBメモリ</span></span></span><span class="sn-count">6</span>
+                  <span class="sn-lib-main"><span class="sn-sq"></span><span class="sn-lib-txt"><span class="sn-lib-name" data-ja="テキストフォルダ" data-en="Notes">テキストフォルダ</span><span class="sn-vol" data-ja="USBメモリ" data-en="USB Stick">USBメモリ</span></span></span><span class="sn-count">6</span>
                 </button>
-                <div class="sn-side-note">3つの別々のドライブ。<br>アプリの中では区別なく並びます。</div>
+                <div class="sn-side-note"><span data-ja="3つの別々のドライブ。" data-en="Three separate drives.">3つの別々のドライブ。</span><br><span data-ja="アプリの中では区別なく並びます。" data-en="Inside the app they sit side by side.">アプリの中では区別なく並びます。</span></div>
               </aside>
 
               <div class="sn-main">
                 <div class="sn-bar">
                   <span class="sn-scope">All Files</span>
-                  <span class="sn-num"><b>18</b> 件</span>
+                  <span class="sn-num"><b>18</b> <span data-ja="件" data-en="items">件</span></span>
                 </div>
                 <div class="sn-grid" id="snGrid"></div>
               </div>
             </div>
           </div>
 
-          <p class="sn-hint">動画のタイルにカーソルを乗せると再生されます。アプリと同じ挙動です。</p>
+          <p class="sn-hint" data-ja="動画のタイルにカーソルを乗せると再生されます。アプリと同じ挙動です。" data-en="Hover a video tile and it plays — the same as in the app.">動画のタイルにカーソルを乗せると再生されます。アプリと同じ挙動です。</p>
         </div>
-        <p class="sn-disclaimer">この画面は、動きを試していただくためにこのページ上で組み立てたものです。アプリの画面そのものではありません。実際の画面は、下のスクリーンショットをご覧ください。</p>
+        <p class="sn-disclaimer" data-ja="この画面は、動きを試していただくためにこのページ上で組み立てたものです。アプリの画面そのものではありません。実際の画面は、下のスクリーンショットをご覧ください。" data-en="This panel was assembled on this page so you can try the interaction. It is not the app's own window. For the real thing, see the screenshots below.">この画面は、動きを試していただくためにこのページ上で組み立てたものです。アプリの画面そのものではありません。実際の画面は、下のスクリーンショットをご覧ください。</p>
         </div>
 
         <div style="margin-top:96px; margin-bottom:56px;">
-          <img src="assets/lp/shot/01.webp" alt="サイドバーに並んだ複数のライブラリと、1つに統合されたグリッド" style="display:block; width:100%; height:auto;" loading="lazy" decoding="async">
+          <img src="assets/lp/shot/01.webp" data-src-ja="assets/lp/shot/01.webp" data-src-en="assets/lp/shot/01e.webp" alt="サイドバーに並んだ複数のライブラリと、1つに統合されたグリッド" data-alt-ja="サイドバーに並んだ複数のライブラリと、1つに統合されたグリッド" data-alt-en="Several libraries in the sidebar, merged into one grid" style="display:block; width:100%; height:auto;" loading="lazy" decoding="async">
           <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; color:var(--ink-3); margin-top:14px;">7 libraries — 4,946 items — one grid</div>
         </div>
 
         <div class="fs-two-col" style="display:grid; grid-template-columns:1fr 1fr; gap:40px; max-width:none;">
-          <p style="font-size:18px; line-height:1.95; color:var(--ink-2);">フォルダは何個でも登録できます（内蔵・外付け・ネットワーク）。それらが1つのグリッドに並びます。コピーも取り込みも整理も不要。ファイルは元の場所に置いたままです。</p>
-          <p style="font-size:18px; line-height:1.95; color:var(--ink-2);">外付けを取り外しても、その中身は一覧に残ります。どのドライブに入れたか思い出せなくても、検索で見つかります。</p>
+          <p style="font-size:18px; line-height:1.95; color:var(--ink-2);" data-ja="フォルダは何個でも登録できます（内蔵・外付け・ネットワーク）。それらが1つのグリッドに並びます。コピーも取り込みも整理も不要。ファイルは元の場所に置いたままです。" data-en="Register as many folders as you like — internal, external or network. They line up in one grid. Nothing is copied, imported or reorganised; your files stay where they are.">フォルダは何個でも登録できます（内蔵・外付け・ネットワーク）。それらが1つのグリッドに並びます。コピーも取り込みも整理も不要。ファイルは元の場所に置いたままです。</p>
+          <p style="font-size:18px; line-height:1.95; color:var(--ink-2);" data-ja="外付けを取り外しても、その中身は一覧に残ります。どのドライブに入れたか思い出せなくても、検索で見つかります。" data-en="Unplug an external drive and its contents stay in the list. Even when you cannot remember which drive it went on, search still finds it.">外付けを取り外しても、その中身は一覧に残ります。どのドライブに入れたか思い出せなくても、検索で見つかります。</p>
         </div>
       </div>
     </section>
@@ -400,7 +416,12 @@
           items.push({ lib: 'c', kind: 'text', name: n[0], body: n[1] });
         });
 
-        var LABEL = { all: 'All Files', a: '写真フォルダ', b: '動画フォルダ', c: 'テキストフォルダ' };
+        var LABELS = {
+          ja: { all: 'All Files', a: '写真フォルダ', b: '動画フォルダ', c: 'テキストフォルダ' },
+          en: { all: 'All Files', a: 'Photos',       b: 'Videos',       c: 'Notes' }
+        };
+        var LABEL = LABELS.ja;
+        var current = 'all';
 
         function tile(it) {
           var el = document.createElement('div');
@@ -442,6 +463,7 @@
         }
 
         function render(lib) {
+          current = lib;
           var shown = items.filter(function (it) { return lib === 'all' || it.lib === lib; });
           GRID.innerHTML = '';
           shown.forEach(function (it, i) {
@@ -464,6 +486,14 @@
         });
 
         render('all');
+
+        // 切替スクリプトから呼ばれる。data-ja/data-en では届かない、
+        // JS が書き込んだ文字列（スコープ名）だけをここで直す。
+        window.snSetLang = function (lang) {
+          LABEL = LABELS[lang] || LABELS.ja;
+          var el = document.querySelector('.sn-scope');
+          if (el) el.textContent = LABEL[current];
+        };
       })();
     </script>
 
@@ -471,14 +501,14 @@
     <section class="fs-pad" style="border-top:1px solid var(--line); background:var(--bg-2);">
       <div class="fs-two-col" style="max-width:1200px; margin:0 auto; padding:104px 40px 56px; display:grid; grid-template-columns:0.85fr 1.15fr; gap:56px; align-items:start;">
         <div>
-          <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:var(--accent-ink); margin-bottom:22px;">02 — 大量のファイルを前提に</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:var(--accent-ink); margin-bottom:22px;" data-ja="02 — 大量のファイルを前提に" data-en="02 — Built for large collections">02 — 大量のファイルを前提に</div>
           <div style="font-family:'Space Grotesk',sans-serif; font-weight:500; font-size:56px; letter-spacing:-.01em; color:var(--ink);">100,000+</div>
           <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.06em; color:var(--ink-3); margin-top:6px;">LOCAL CATALOG</div>
         </div>
-        <p style="font-size:19px; line-height:1.95; color:var(--ink-2); padding-top:38px;">カタログはローカルの索引なので、数十万件でもスクロールは滑らかで、検索は即座です。新しいファイルや変更は、バックグラウンドで自動的に反映されます。</p>
+        <p style="font-size:19px; line-height:1.95; color:var(--ink-2); padding-top:38px;" data-ja="カタログはローカルの索引なので、数十万件でもスクロールは滑らかで、検索は即座です。新しいファイルや変更は、バックグラウンドで自動的に反映されます。" data-en="The catalog is a local index, so scrolling stays smooth and search stays instant even at several hundred thousand files. New files and changes are picked up in the background.">カタログはローカルの索引なので、数十万件でもスクロールは滑らかで、検索は即座です。新しいファイルや変更は、バックグラウンドで自動的に反映されます。</p>
       </div>
       <div style="max-width:1200px; margin:0 auto; padding:0 40px 104px;">
-        <img src="assets/lp/shot/03.webp" alt="サムネイルを小さくして大量のファイルを一度に見渡す" style="display:block; width:100%; height:auto;" loading="lazy" decoding="async">
+        <img src="assets/lp/shot/03.webp" data-src-ja="assets/lp/shot/03.webp" data-src-en="assets/lp/shot/03e.webp" alt="サムネイルを小さくして大量のファイルを一度に見渡す" data-alt-ja="サムネイルを小さくして大量のファイルを一度に見渡す" data-alt-en="Smaller thumbnails putting many files on screen at once" style="display:block; width:100%; height:auto;" loading="lazy" decoding="async">
       </div>
     </section>
 
@@ -486,8 +516,8 @@
     <!-- 03 — search -->
     <section id="search" class="fs-pad" style="border-top:1px solid var(--line);">
       <div style="max-width:1200px; margin:0 auto; padding:120px 40px;">
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:var(--accent-ink); margin-bottom:22px;">03 — 素早く絞り込める検索</div>
-        <p style="font-size:22px; line-height:1.85; color:var(--ink); max-width:34ch; margin-bottom:44px;">普通の言葉でも、正確な指定でも検索できます。</p>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:var(--accent-ink); margin-bottom:22px;" data-ja="03 — 素早く絞り込める検索" data-en="03 — Search that narrows fast">03 — 素早く絞り込める検索</div>
+        <p style="font-size:22px; line-height:1.85; color:var(--ink); max-width:34ch; margin-bottom:44px;" data-ja="普通の言葉でも、正確な指定でも検索できます。" data-en="Search in plain words, or with precise terms.">普通の言葉でも、正確な指定でも検索できます。</p>
 
         <div style="display:flex; flex-direction:column; gap:12px; max-width:640px;">
           <div style="border:1px solid var(--line-2); border-radius:8px; background:var(--bg-3); padding:16px 20px; font-family:'IBM Plex Mono',monospace; font-size:15px; color:var(--ink);"><span style="color:var(--accent-ink); margin-right:12px;">&gt;</span>beach ext:png size&gt;10mb</div>
@@ -495,16 +525,16 @@
           <div style="border:1px solid var(--line-2); border-radius:8px; background:var(--bg-3); padding:16px 20px; font-family:'IBM Plex Mono',monospace; font-size:15px; color:var(--ink);"><span style="color:var(--accent-ink); margin-right:12px;">&gt;</span>tag:family modified:2024</div>
         </div>
 
-        <p style="font-size:18px; line-height:1.95; color:var(--ink-3); max-width:56ch; margin-top:40px;">サイズ・解像度・再生時間・日付はパネルから、Finder タグはサイドバーから絞り込めます。</p>
+        <p style="font-size:18px; line-height:1.95; color:var(--ink-3); max-width:56ch; margin-top:40px;" data-ja="サイズ・解像度・再生時間・日付はパネルから、Finder タグはサイドバーから絞り込めます。" data-en="Size, resolution, duration and date come from a panel; Finder tags from the sidebar.">サイズ・解像度・再生時間・日付はパネルから、Finder タグはサイドバーから絞り込めます。</p>
 
         <div style="margin-top:56px;">
-          <img src="assets/lp/shot/02.webp" alt="サイズ・解像度・再生時間・日付で絞り込むフィルタパネル" style="display:block; width:100%; height:auto;" loading="lazy" decoding="async">
-          <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; color:var(--ink-3); margin-top:12px;">FILTERS — サイズ・解像度・再生時間・日付</div>
+          <img src="assets/lp/shot/02.webp" data-src-ja="assets/lp/shot/02.webp" data-src-en="assets/lp/shot/02e.webp" alt="検索欄に打ち込んだ絞り込みの例" data-alt-ja="検索欄に打ち込んだ絞り込みの例" data-alt-en="A narrowing query typed into the search field" style="display:block; width:100%; height:auto;" loading="lazy" decoding="async">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; color:var(--ink-3); margin-top:12px;" data-ja="SEARCH — 検索欄で絞り込む" data-en="SEARCH — narrowing in the field">SEARCH — 検索欄で絞り込む</div>
         </div>
 
         <div style="margin-top:40px;">
-          <img src="assets/lp/shot/06.webp" alt="名前・サイズ・種類・解像度・再生時間での並び替え" style="display:block; width:100%; height:auto;" loading="lazy" decoding="async">
-          <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; color:var(--ink-3); margin-top:12px;">SORT — 並び替え</div>
+          <img src="assets/lp/shot/06.webp" data-src-ja="assets/lp/shot/06.webp" data-src-en="assets/lp/shot/06e.webp" alt="名前・サイズ・種類・解像度・再生時間での並び替え" data-alt-ja="名前・サイズ・種類・解像度・再生時間での並び替え" data-alt-en="Sorting by name, size, kind, resolution or duration" style="display:block; width:100%; height:auto;" loading="lazy" decoding="async">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; color:var(--ink-3); margin-top:12px;" data-ja="SORT — 並び替え" data-en="SORT — ordering">SORT — 並び替え</div>
         </div>
       </div>
     </section>
@@ -512,24 +542,24 @@
     <!-- 04 — formats -->
     <section id="formats" class="fs-pad" style="border-top:1px solid var(--line); background:var(--bg-2);">
       <div style="max-width:1200px; margin:0 auto; padding:120px 40px;">
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:var(--accent-ink); margin-bottom:22px;">04 — 画像・動画・テキスト</div>
-        <p style="font-size:20px; line-height:1.95; color:var(--ink-2); max-width:56ch; margin-bottom:48px;">サムネイルの大きさを変えられるタイル表示と、フィルムストリップ付きのプレビュー表示。動画はアプリ内で再生でき、QuickTime が開けない形式にも対応します。テキストファイルは中身を表示。RAW 写真にも対応しています。</p>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:var(--accent-ink); margin-bottom:22px;" data-ja="04 — 画像・動画・テキスト" data-en="04 — Images, video, text">04 — 画像・動画・テキスト</div>
+        <p style="font-size:20px; line-height:1.95; color:var(--ink-2); max-width:56ch; margin-bottom:48px;" data-ja="サムネイルの大きさを変えられるタイル表示と、フィルムストリップ付きのプレビュー表示。動画はアプリ内で再生でき、QuickTime が開けない形式にも対応します。テキストファイルは中身を表示。RAW 写真にも対応しています。" data-en="A tile view whose thumbnails resize, and a preview view with a filmstrip below it. Video plays inside the app, including formats QuickTime will not open. Text files show their contents. RAW photos are supported.">サムネイルの大きさを変えられるタイル表示と、フィルムストリップ付きのプレビュー表示。動画はアプリ内で再生でき、QuickTime が開けない形式にも対応します。テキストファイルは中身を表示。RAW 写真にも対応しています。</p>
         <div style="display:flex; flex-wrap:wrap; gap:10px;">
-          <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--ink-3); border:1px solid var(--line-2); padding:7px 14px; border-radius:6px;">タイル表示</span>
-          <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--ink-3); border:1px solid var(--line-2); padding:7px 14px; border-radius:6px;">フィルムストリップ</span>
-          <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--ink-3); border:1px solid var(--line-2); padding:7px 14px; border-radius:6px;">アプリ内再生</span>
-          <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--ink-3); border:1px solid var(--line-2); padding:7px 14px; border-radius:6px;">テキスト表示</span>
-          <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--ink-3); border:1px solid var(--line-2); padding:7px 14px; border-radius:6px;">RAW対応</span>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--ink-3); border:1px solid var(--line-2); padding:7px 14px; border-radius:6px;" data-ja="タイル表示" data-en="Tile view">タイル表示</span>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--ink-3); border:1px solid var(--line-2); padding:7px 14px; border-radius:6px;" data-ja="フィルムストリップ" data-en="Filmstrip">フィルムストリップ</span>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--ink-3); border:1px solid var(--line-2); padding:7px 14px; border-radius:6px;" data-ja="アプリ内再生" data-en="In-app playback">アプリ内再生</span>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--ink-3); border:1px solid var(--line-2); padding:7px 14px; border-radius:6px;" data-ja="テキスト表示" data-en="Text preview">テキスト表示</span>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--ink-3); border:1px solid var(--line-2); padding:7px 14px; border-radius:6px;" data-ja="RAW対応" data-en="RAW support">RAW対応</span>
         </div>
 
         <div style="margin-top:56px;">
-          <img src="assets/lp/shot/04.webp" alt="フィルムストリップ付きのプレビュー表示" style="display:block; width:100%; height:auto;" loading="lazy" decoding="async">
-          <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; color:var(--ink-3); margin-top:12px;">PREVIEW — フィルムストリップ</div>
+          <img src="assets/lp/shot/04.webp" data-src-ja="assets/lp/shot/04.webp" data-src-en="assets/lp/shot/04e.webp" alt="フィルムストリップ付きのプレビュー表示" data-alt-ja="フィルムストリップ付きのプレビュー表示" data-alt-en="The preview view with its filmstrip" style="display:block; width:100%; height:auto;" loading="lazy" decoding="async">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; color:var(--ink-3); margin-top:12px;" data-ja="PREVIEW — フィルムストリップ" data-en="PREVIEW — filmstrip">PREVIEW — フィルムストリップ</div>
         </div>
 
         <div style="margin-top:40px;">
-          <img src="assets/text-and-video.jpg" alt="テキストファイルの中身と動画が同じグリッドに並ぶ" style="display:block; width:100%; height:auto;" loading="lazy" decoding="async">
-          <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; color:var(--ink-3); margin-top:12px;">TEXT + VIDEO — 同じグリッド上で</div>
+          <img src="assets/text-and-video.jpg" alt="テキストファイルの中身と動画が同じグリッドに並ぶ" data-alt-ja="テキストファイルの中身と動画が同じグリッドに並ぶ" data-alt-en="Text file contents and video side by side in one grid" style="display:block; width:100%; height:auto;" loading="lazy" decoding="async">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; color:var(--ink-3); margin-top:12px;" data-ja="TEXT + VIDEO — 同じグリッド上で" data-en="TEXT + VIDEO — in the same grid">TEXT + VIDEO — 同じグリッド上で</div>
         </div>
       </div>
     </section>
@@ -538,26 +568,26 @@
     <section class="fs-pad" style="border-top:1px solid var(--line);">
       <div class="fs-two-col" style="max-width:1200px; margin:0 auto; padding:104px 40px 56px; display:grid; grid-template-columns:1fr 1fr; gap:0;">
         <div style="padding-right:56px; border-right:1px solid var(--line);">
-          <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:var(--accent-ink); margin-bottom:22px;">05 — Finder と喧嘩しない</div>
-          <p style="font-size:18px; line-height:1.95; color:var(--ink-2);">Finder のタグを読み取り、サイドバーに表示します。任意のファイルを Finder で表示できます。ファイルの種類ごとに開くアプリを指定できますが、システムの既定は変更しません。</p>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:var(--accent-ink); margin-bottom:22px;" data-ja="05 — Finder と喧嘩しない" data-en="05 — It does not fight Finder">05 — Finder と喧嘩しない</div>
+          <p style="font-size:18px; line-height:1.95; color:var(--ink-2);" data-ja="Finder のタグを読み取り、サイドバーに表示します。任意のファイルを Finder で表示できます。ファイルの種類ごとに開くアプリを指定できますが、システムの既定は変更しません。" data-en="It reads your Finder tags and shows them in the sidebar. Any file can be revealed in Finder. You can pick an app per file kind without changing your system defaults.">Finder のタグを読み取り、サイドバーに表示します。任意のファイルを Finder で表示できます。ファイルの種類ごとに開くアプリを指定できますが、システムの既定は変更しません。</p>
         </div>
         <div id="dup" style="padding-left:56px;">
-          <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:var(--accent-ink); margin-bottom:22px;">06 — 重複を見つける</div>
-          <p style="font-size:18px; line-height:1.95; color:var(--ink-2);">登録したすべてのフォルダを横断し、名前ではなく内容で比較します。一致したファイルは、移動する直前にもう一度バイト単位で検証されます。</p>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:var(--accent-ink); margin-bottom:22px;" data-ja="06 — 重複を見つける" data-en="06 — Find duplicates">06 — 重複を見つける</div>
+          <p style="font-size:18px; line-height:1.95; color:var(--ink-2);" data-ja="登録したすべてのフォルダを横断し、名前ではなく内容で比較します。一致したファイルは、移動する直前にもう一度バイト単位で検証されます。" data-en="It looks across every registered folder and compares contents, not names. Matches are checked byte for byte once more immediately before anything is moved.">登録したすべてのフォルダを横断し、名前ではなく内容で比較します。一致したファイルは、移動する直前にもう一度バイト単位で検証されます。</p>
         </div>
       </div>
       <div style="max-width:1200px; margin:0 auto; padding:0 40px 104px;">
-        <img src="assets/lp/shot/05.webp" alt="重複スキャンの設定と推定コスト" style="display:block; width:100%; height:auto;" loading="lazy" decoding="async">
+        <img src="assets/lp/shot/05.webp" data-src-ja="assets/lp/shot/05.webp" data-src-en="assets/lp/shot/05e.webp" alt="重複スキャンの設定と推定コスト" data-alt-ja="重複スキャンの設定と推定コスト" data-alt-en="The duplicate scan, with what it found and what it can reclaim" style="display:block; width:100%; height:auto;" loading="lazy" decoding="async">
       </div>
     </section>
 
     <!-- 07 — safe -->
     <section id="safe" class="fs-pad" style="border-top:1px solid var(--line); background:var(--bg-2);">
       <div style="max-width:1200px; margin:0 auto; padding:120px 40px;">
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:var(--accent-ink); margin-bottom:26px;">07 — 既定で安全</div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:var(--accent-ink); margin-bottom:26px;" data-ja="07 — 既定で安全" data-en="07 — Safe by default">07 — 既定で安全</div>
         <div class="fs-two-col" style="display:grid; grid-template-columns:1fr 1fr; gap:40px;">
-          <p style="font-size:20px; line-height:1.95; color:var(--ink);">ShelfNavigator がファイルを消去することはありません。削除はゴミ箱への移動で、<span style="font-family:'IBM Plex Mono',monospace; color:var(--accent-ink);">⌘Z</span> ですぐに元へ戻せます。</p>
-          <p style="font-size:20px; line-height:1.95; color:var(--ink);">通信機能を持たないため、ファイルの情報が外部へ出ることはありません。</p>
+          <p style="font-size:20px; line-height:1.95; color:var(--ink);"><span data-ja="ShelfNavigator がファイルを消去することはありません。削除はゴミ箱への移動で、" data-en="ShelfNavigator never erases a file. Deleting means moving to the Trash, and ">ShelfNavigator がファイルを消去することはありません。削除はゴミ箱への移動で、</span><span style="font-family:'IBM Plex Mono',monospace; color:var(--accent-ink);">⌘Z</span><span data-ja=" ですぐに元へ戻せます。" data-en=" puts it straight back."> ですぐに元へ戻せます。</span></p>
+          <p style="font-size:20px; line-height:1.95; color:var(--ink);" data-ja="通信機能を持たないため、ファイルの情報が外部へ出ることはありません。" data-en="It has no networking at all, so nothing about your files ever leaves the Mac.">通信機能を持たないため、ファイルの情報が外部へ出ることはありません。</p>
         </div>
       </div>
     </section>
@@ -568,17 +598,77 @@
   <footer style="background:var(--bg-3); border-top:1px solid var(--line);">
     <div class="fs-pad" style="max-width:1200px; margin:0 auto; padding:56px 40px; display:flex; flex-wrap:wrap; gap:32px; justify-content:space-between; align-items:center;">
       <div style="font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:.14em; font-size:15px; color:var(--ink);">SHELFNAVIGATOR</div>
-      <div style="display:flex; flex-wrap:wrap; gap:28px; font-family:'IBM Plex Mono',monospace; font-size:13px;">
-        <a href="https://rustyworks.jp/shelfnavigator_manual.html" style="color:var(--ink-3);">マニュアル</a>
-        <a href="https://rustyworks.jp/shelfnavigator_privacy.html" style="color:var(--ink-3);">プライバシーポリシー</a>
-        <a href="site_privacy.html" style="color:var(--ink-3);">サイトのポリシー</a>
-        <a href="index.html" style="color:var(--ink-3);">RustyWorks トップ</a>
-      </div>
+      <!-- 製品まわりの共通フッター（README「LP の決まりごと」4番）。並びは3ページで揃える -->
+      <nav class="rw-product-footer" aria-label="関連ページ" style="display:flex; flex-wrap:wrap; align-items:center; gap:8px 16px; font-family:'IBM Plex Mono',monospace; font-size:13px;">
+        <a href="index.html" style="color:var(--ink-3);" data-ja="RustyWorks" data-en="RustyWorks">RustyWorks</a>
+        <span aria-hidden="true" style="color:var(--line-3);">·</span>
+        <a href="shelfnavigator.html" style="color:var(--ink-3);" data-ja="製品ページ" data-en="Product">製品ページ</a>
+        <span aria-hidden="true" style="color:var(--line-3);">·</span>
+        <a href="shelfnavigator_manual.html" style="color:var(--ink-3);" data-ja="取扱説明書" data-en="Manual">取扱説明書</a>
+        <span aria-hidden="true" style="color:var(--line-3);">·</span>
+        <a href="https://apps.apple.com/app/id6794389638" target="_blank" rel="noopener" style="color:var(--ink-3);" data-ja="App Store" data-en="App Store">App Store</a>
+        <span aria-hidden="true" style="color:var(--line-3);">·</span>
+        <a href="shelfnavigator_privacy.html" style="color:var(--ink-3);" data-ja="プライバシー" data-en="Privacy">プライバシー</a>
+        <span aria-hidden="true" style="color:var(--line-3);">·</span>
+        <a href="site_privacy.html" style="color:var(--ink-3);" data-ja="サイトのポリシー" data-en="Site Policy">サイトのポリシー</a>
+      </nav>
     </div>
     <div class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px 40px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-3);">© RustyWorks — ShelfNavigator</div>
   </footer>
 
 </div>
+<script>
+  /* サイト共通の日英切替。保存先の rw-lang は全ページで共有なので、
+     トップで EN にした人はこのページも EN で開く。
+     README の仕組みに、画像の差し替え（data-src-*）と代替文（data-alt-*）を足してある。 */
+  (function () {
+    var KEY = 'rw-lang';
+    var buttons = document.querySelectorAll('.lang button');
+    var nodes = document.querySelectorAll('[data-ja][data-en]');
+    var imgs = document.querySelectorAll('[data-src-ja][data-src-en]');
+    var alts = document.querySelectorAll('[data-alt-ja][data-alt-en]');
+
+    function apply(lang) {
+      document.documentElement.lang = lang;
+      nodes.forEach(function (el) {
+        var text = el.getAttribute('data-' + lang);
+        if (text !== null) el.textContent = text;
+      });
+      imgs.forEach(function (el) {
+        var src = el.getAttribute('data-src-' + lang);
+        if (src) el.setAttribute('src', src);
+      });
+      alts.forEach(function (el) {
+        var alt = el.getAttribute('data-alt-' + lang);
+        if (alt !== null) el.setAttribute('alt', alt);
+      });
+      buttons.forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
+      });
+      if (window.snSetLang) window.snSetLang(lang);
+      try { localStorage.setItem(KEY, lang); } catch (e) {}
+    }
+
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () { apply(b.dataset.lang); });
+    });
+
+    var saved = null;
+    // 言語は強い順に決める。1. URL の ?lang  2. 前回の選択  3. 既定は日本語。
+    // ブラウザの言語では切り替えない。クローラーは en を名乗ることが多く、
+    // 日本語で書いたページが英語で索引されてしまうため。
+    try {
+      var q = new URLSearchParams(location.search).get('lang');
+      if (q === 'en' || q === 'ja') {
+        saved = q;
+        localStorage.setItem(KEY, q);
+      }
+    } catch (e) {}
+    if (!saved) { try { saved = localStorage.getItem(KEY); } catch (e) {} }
+    if (!saved) saved = 'ja';
+    if (saved === 'en') apply('en');
+  })();
+</script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "04f66ad1837a4b63af68beb6e835358f"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
