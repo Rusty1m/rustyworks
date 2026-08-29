@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<!--
+  メンテナンス告知ページのテンプレート。
+
+  使い方:
+    1. 本来のページを  _<製品名>-page.html  に退避する
+    2. このファイルを  <製品名>.html  としてコピーする
+    3. 下の【要変更】3箇所を書き換える
+    4. 復旧するときは 1 で退避したファイルを戻す
+
+  ファイル名が _ で始まるものは Jekyll が公開対象から外すので、
+  このテンプレートと退避したページは rustyworks.jp には出ない。
+
+  noindex を入れてある。メンテナンス文が検索結果の説明文として
+  拾われると、復旧後もしばらくそのまま出てしまうため。
+  公開ページに戻すときは noindex の行を必ず消すこと。
+-->
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<!-- 【要変更 1】製品名 -->
+<title>Recoup — メンテナンス中 | RustyWorks</title>
+<!-- 【要変更 2】このページ本来の URL -->
+<link rel="canonical" href="https://rustyworks.jp/recoup.html">
+<!-- 【要変更 3】アイコン -->
+<link rel="icon" href="assets/icons/recoup.png">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #ffffff;
+    color: #111214;
+    font-family: 'Zen Kaku Gothic New', system-ui, sans-serif;
+    font-weight: 400;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  a { color: #1a4fd8; text-decoration: none; transition: color .18s ease; }
+  a:hover { color: #143fb0; }
+  ::selection { background: rgba(26,79,216,.16); color: inherit; }
+  @keyframes fs-rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @media (max-width: 760px) {
+    .fs-pad { padding-left: 24px !important; padding-right: 24px !important; }
+    .mt-title { font-size: 34px !important; }
+  }
+</style>
+</head>
+<body>
+
+  <nav style="border-bottom:1px solid rgba(17,18,20,.08);">
+    <div class="fs-pad" style="max-width:1200px; margin:0 auto; padding:18px 40px; display:flex; align-items:center;">
+      <span style="display:flex; align-items:center;">
+        <a href="index.html" style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.04em; color:#5f6368; margin-right:18px;" data-ja="&larr; RustyWorks" data-en="&larr; RustyWorks">&larr; RustyWorks</a>
+        <!-- 【要変更 1】製品名 -->
+        <span style="font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:.14em; font-size:15px; color:#111214;">RECOUP</span>
+      </span>
+      <div class="lang" role="group" aria-label="Language" style="display:flex; align-items:center; gap:2px; font-family:'IBM Plex Mono',monospace; font-size:12px; margin-left:auto;">
+        <button type="button" data-lang="ja" aria-pressed="true" style="font:inherit; background:none; border:0; cursor:pointer; color:#111214; padding:4px 6px; border-radius:4px;">JA</button>
+        <span style="color:#c9ccd1;">/</span>
+        <button type="button" data-lang="en" aria-pressed="false" style="font:inherit; background:none; border:0; cursor:pointer; color:#8a8d93; padding:4px 6px; border-radius:4px;">EN</button>
+      </div>
+    </div>
+  </nav>
+
+  <main style="flex:1; display:flex; align-items:center;">
+    <section class="fs-pad" style="max-width:1200px; margin:0 auto; padding:110px 40px; width:100%; animation:fs-rise .7s ease both;">
+
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.16em; color:#1a4fd8; margin-bottom:30px;" data-ja="MAINTENANCE" data-en="MAINTENANCE">MAINTENANCE</div>
+
+      <h1 class="mt-title" style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(6vw, 60px); line-height:1.2; letter-spacing:-.01em;" data-ja="このページは準備中です" data-en="This page is being updated">このページは準備中です</h1>
+
+      <p style="margin-top:32px; font-size:19px; line-height:1.95; color:#5f6368; max-width:50ch;" data-ja="内容を大きく変更しているため、一時的に公開を止めています。準備ができ次第、あらためて公開します。" data-en="We are making substantial changes, so this page is temporarily offline. It will be back once the update is ready.">内容を大きく変更しているため、一時的に公開を止めています。準備ができ次第、あらためて公開します。</p>
+
+      <div style="margin-top:44px; padding-top:30px; border-top:1px solid rgba(17,18,20,.1); max-width:50ch;">
+        <p style="font-size:15px; color:#5f6368;" data-ja="ご購入済みの方のサポートは通常どおり承っています。お問い合わせは下記までお願いします。" data-en="Support for existing customers continues as usual. Please get in touch at the address below.">ご購入済みの方のサポートは通常どおり承っています。お問い合わせは下記までお願いします。</p>
+        <p style="margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:15px;">
+          <a href="mailto:rustyworks.games@gmail.com">rustyworks.games@gmail.com</a>
+        </p>
+      </div>
+
+      <div style="margin-top:48px;">
+        <a href="index.html" style="display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:14px; color:#ffffff; background:#1a4fd8; padding:15px 30px; border-radius:8px; font-weight:500;" data-ja="ほかの製品を見る" data-en="See other products">ほかの製品を見る</a>
+      </div>
+
+    </section>
+  </main>
+
+  <footer style="border-top:1px solid rgba(17,18,20,.08);">
+    <div class="fs-pad" style="max-width:1200px; margin:0 auto; padding:26px 40px; display:flex; flex-wrap:wrap; gap:18px; align-items:center; font-family:'IBM Plex Mono',monospace; font-size:12.5px;">
+      <span style="color:#8a8d93;">&copy; RustyWorks</span>
+      <a href="index.html" style="color:#5f6368;" data-ja="トップ" data-en="Home">トップ</a>
+      <a href="works.html" style="color:#5f6368;" data-ja="製品一覧" data-en="Products">製品一覧</a>
+      <a href="site_privacy.html" style="color:#5f6368;" data-ja="サイトのポリシー" data-en="Site policy">サイトのポリシー</a>
+    </div>
+  </footer>
+
+  <script>
+  (function () {
+    'use strict';
+    // サイト共通の日英切り替え。選択は rw-lang に置くので、トップで EN に
+    // した人はこのページも EN で開く。入れ替えるのは textContent なので、
+    // 訳を付ける要素の中に別のタグを入れないこと。
+    var KEY = 'rw-lang';
+    var buttons = document.querySelectorAll('.lang button');
+    var nodes = document.querySelectorAll('[data-ja][data-en]');
+
+    function apply(lang) {
+      document.documentElement.lang = lang;
+      nodes.forEach(function (el) {
+        var text = el.getAttribute('data-' + lang);
+        if (text !== null) el.textContent = text;
+      });
+      buttons.forEach(function (b) {
+        var on = b.dataset.lang === lang;
+        b.setAttribute('aria-pressed', String(on));
+        b.style.color = on ? '#111214' : '#8a8d93';
+      });
+      try { localStorage.setItem(KEY, lang); } catch (e) {}
+    }
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () { apply(b.dataset.lang); });
+    });
+    var saved = null;
+    // 言語は強い順に決める。1. URL の ?lang  2. 前回の選択  3. 既定は日本語。
+    try {
+      var q = new URLSearchParams(location.search).get('lang');
+      if (q === 'en' || q === 'ja') {
+        saved = q;
+        localStorage.setItem(KEY, q);
+      }
+    } catch (e) {}
+    if (!saved) { try { saved = localStorage.getItem(KEY); } catch (e) {} }
+    if (!saved) saved = 'ja';
+    if (saved === 'en') apply('en');
+  })();
+  </script>
+</body>
+</html>
