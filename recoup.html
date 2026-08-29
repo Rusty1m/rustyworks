@@ -96,12 +96,27 @@
     </section>
 
 
-    <!-- 画面写真。見出しは画像に焼き込んである -->
-    <section class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px 120px;">
-      <img src="assets/shots/recoup-01.webp" width="2000" height="1318"
-           loading="lazy" decoding="async"
-           alt="Recoup の画面。復元元のディスクを選ぶところ"
-           style="display:block; width:100%; height:auto; border-radius:12px; border:1px solid rgba(17,18,20,.08);">
+    <!-- 画面写真。見出しが画像に焼き込んであるので、言語ごとに差し替える。
+         その言語の版が無いものは隠す。日本語UIの画面を英語圏の人に見せると
+         「日本語専用のアプリ」と誤解されるため。 -->
+    <section class="fs-pad" style="max-width:1200px; margin:0 auto; padding:0 40px 120px; display:grid; gap:44px;">
+      <img class="shot" src="assets/shots/recoup-01.webp"
+           data-ja-src="assets/shots/recoup-01.webp"
+           data-en-src="assets/shots/recoup-01-en.webp"
+           width="2000" height="1318" loading="lazy" decoding="async"
+           data-ja-alt="Recoup の画面。復元元のディスクを選ぶところ"
+           data-en-alt="Recoup: choosing which disk to recover from"
+           alt="Recoup の画面。復元元のディスクを選ぶところ" style="display:block; width:100%; height:auto; border-radius:12px; border:1px solid rgba(17,18,20,.08);">
+      <img class="shot" src="assets/shots/recoup-03.webp"
+           data-ja-src="assets/shots/recoup-03.webp"
+           width="2000" height="1317" loading="lazy" decoding="async"
+           data-ja-alt="スキャン中の画面。見つかったファイルが次々に表示される"
+           alt="スキャン中の画面。見つかったファイルが次々に表示される" style="display:block; width:100%; height:auto; border-radius:12px; border:1px solid rgba(17,18,20,.08);">
+      <img class="shot" src="assets/shots/recoup-02.webp"
+           data-ja-src="assets/shots/recoup-02.webp"
+           width="2000" height="1317" loading="lazy" decoding="async"
+           data-ja-alt="結果の画面。サムネイルで中身を確認してから復元できる"
+           alt="結果の画面。サムネイルで中身を確認してから復元できる" style="display:block; width:100%; height:auto; border-radius:12px; border:1px solid rgba(17,18,20,.08);">
     </section>
 
     <!-- 無料と有料の境界。復元ツールでは珍しい形なので、明示しないと伝わらない -->
@@ -291,11 +306,26 @@
   var buttons = document.querySelectorAll('.lang button');
   var nodes = document.querySelectorAll('[data-ja][data-en]');
 
+  var shots = document.querySelectorAll('img.shot');
+
   function apply(lang) {
     document.documentElement.lang = lang;
     nodes.forEach(function (el) {
       var text = el.getAttribute('data-' + lang);
       if (text !== null) el.textContent = text;
+    });
+    // 画面写真は見出しが焼き込んであるので、言語ごとに差し替える。
+    // その言語の版が無いものは隠す。
+    shots.forEach(function (img) {
+      var src = img.getAttribute('data-' + lang + '-src');
+      var alt = img.getAttribute('data-' + lang + '-alt');
+      if (src) {
+        img.src = src;
+        if (alt) img.alt = alt;
+        img.style.display = 'block';
+      } else {
+        img.style.display = 'none';
+      }
     });
     buttons.forEach(function (b) {
       var on = b.dataset.lang === lang;
