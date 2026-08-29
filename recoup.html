@@ -112,6 +112,26 @@
            width="2000" height="1317" loading="lazy" decoding="async"
            data-ja-alt="スキャン中の画面。見つかったファイルが次々に表示される"
            alt="スキャン中の画面。見つかったファイルが次々に表示される" style="display:block; width:100%; height:auto; border-radius:12px; border:1px solid rgba(17,18,20,.08);">
+      <!-- 実際に動いているところ。静止画では「スキャン中」だと伝わらない。
+           押されるまで YouTube に接続しない(サムネイルは自前で持つ)。
+           利用者が選んでいない第三者への通信を発生させないため。 -->
+      <figure style="margin:0;">
+        <button type="button" id="playScan"
+                data-ja-label="スキャンしているところを見る（YouTube）"
+                data-en-label="Watch it scanning (YouTube)"
+                aria-label="スキャンしているところを見る"
+                style="display:block; position:relative; width:100%; padding:0; border:1px solid rgba(17,18,20,.08); border-radius:12px; overflow:hidden; background:none; cursor:pointer;">
+          <img src="assets/video/recoup-scan-poster.webp" width="1280" height="720"
+               loading="lazy" decoding="async" alt=""
+               style="display:block; width:100%; height:auto;">
+          <span aria-hidden="true" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(17,18,20,.28);">
+            <span style="width:74px; height:74px; border-radius:50%; background:#ffffff; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 24px rgba(0,0,0,.28);">
+              <span style="width:0; height:0; border-left:22px solid #111214; border-top:14px solid transparent; border-bottom:14px solid transparent; margin-left:6px;"></span>
+            </span>
+          </span>
+        </button>
+        <figcaption style="margin-top:12px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#5f6368;" data-ja="実際にスキャンしているところ。見つかったファイルが次々に流れ込みます。" data-en="Recoup actually scanning. Files stream in as they are found.">実際にスキャンしているところ。見つかったファイルが次々に流れ込みます。</figcaption>
+      </figure>
       <img class="shot" src="assets/shots/recoup-02.webp"
            data-ja-src="assets/shots/recoup-02.webp"
            data-en-src="assets/shots/recoup-02-en.webp"
@@ -310,6 +330,21 @@
 
   var shots = document.querySelectorAll('img.shot');
 
+  // 動画は押されて初めて読み込む。ここまで YouTube への通信は一切ない。
+  var playBtn = document.getElementById('playScan');
+  if (playBtn) {
+    playBtn.addEventListener('click', function () {
+      var frame = document.createElement('iframe');
+      frame.src = 'https://www.youtube-nocookie.com/embed/3TR8YkMW9Bs?autoplay=1&rel=0';
+      frame.title = 'Recoup scanning';
+      frame.allow = 'autoplay; encrypted-media; picture-in-picture';
+      frame.allowFullscreen = true;
+      frame.setAttribute('style',
+        'display:block; width:100%; aspect-ratio:16/9; border:1px solid rgba(17,18,20,.08); border-radius:12px;');
+      playBtn.replaceWith(frame);
+    });
+  }
+
   function apply(lang) {
     document.documentElement.lang = lang;
     nodes.forEach(function (el) {
@@ -318,6 +353,10 @@
     });
     // 画面写真は見出しが焼き込んであるので、言語ごとに差し替える。
     // その言語の版が無いものは隠す。
+    if (playBtn) {
+      var label = playBtn.getAttribute('data-' + lang + '-label');
+      if (label) playBtn.setAttribute('aria-label', label);
+    }
     shots.forEach(function (img) {
       var src = img.getAttribute('data-' + lang + '-src');
       var alt = img.getAttribute('data-' + lang + '-alt');
