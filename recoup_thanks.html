@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- 導線の途中のページ。製品ページと検索結果で競合させない -->
+<meta name="robots" content="noindex, follow">
+<title>ダウンロードありがとうございます — Recoup</title>
+<link rel="icon" href="assets/icons/recoup.png">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #ffffff; color: #111214;
+    font-family: 'Zen Kaku Gothic New', system-ui, sans-serif;
+    line-height: 1.75; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    min-height: 100vh; display: flex; flex-direction: column;
+  }
+  a { color: #1a4fd8; text-decoration: none; transition: color .18s ease; }
+  a:hover { color: #143fb0; }
+  ::selection { background: rgba(26,79,216,.16); color: inherit; }
+  @keyframes fs-rise { from { opacity:0; transform:translateY(14px);} to { opacity:1; transform:none;} }
+  .step { display: grid; grid-template-columns: 34px 1fr; gap: 16px; align-items: start; margin-bottom: 26px; }
+  .num {
+    width: 34px; height: 34px; border-radius: 50%; background: #1a4fd8; color: #fff;
+    font-family: 'IBM Plex Mono', monospace; font-size: 14px;
+    display: flex; align-items: center; justify-content: center; margin-top: 2px;
+  }
+  .step h3 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+  .step p { color: #5f6368; line-height: 1.9; }
+  .card { border: 1px solid rgba(17,18,20,.1); border-radius: 14px; padding: 34px 32px; margin-bottom: 26px; }
+  @media (max-width: 760px) {
+    .fs-pad { padding-left: 24px !important; padding-right: 24px !important; }
+    .mt-title { font-size: 32px !important; }
+  }
+</style>
+</head>
+<body>
+
+  <nav style="border-bottom:1px solid rgba(17,18,20,.08);">
+    <div class="fs-pad" style="max-width:1000px; margin:0 auto; padding:18px 40px; display:flex; align-items:center;">
+      <span style="display:flex; align-items:center;">
+        <a href="index.html" style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.04em; color:#5f6368; margin-right:18px;" data-ja="&larr; RustyWorks" data-en="&larr; RustyWorks">&larr; RustyWorks</a>
+        <a href="recoup.html" style="font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:.14em; font-size:15px; color:#111214;">RECOUP</a>
+      </span>
+      <div class="lang" role="group" aria-label="Language" style="display:flex; align-items:center; gap:2px; font-family:'IBM Plex Mono',monospace; font-size:12px; margin-left:auto;">
+        <button type="button" data-lang="ja" aria-pressed="true" style="font:inherit; background:none; border:0; cursor:pointer; color:#111214; padding:4px 6px; border-radius:4px;">JA</button>
+        <span style="color:#c9ccd1;">/</span>
+        <button type="button" data-lang="en" aria-pressed="false" style="font:inherit; background:none; border:0; cursor:pointer; color:#8a8d93; padding:4px 6px; border-radius:4px;">EN</button>
+      </div>
+    </div>
+  </nav>
+
+  <main style="flex:1;">
+    <section class="fs-pad" style="max-width:1000px; margin:0 auto; padding:80px 40px 100px; animation:fs-rise .6s ease both;">
+
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.16em; color:#1a4fd8; margin-bottom:24px;">DOWNLOADING…</div>
+      <h1 class="mt-title" style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(5.4vw,46px); line-height:1.25;" data-ja="ダウンロードありがとうございます" data-en="Thanks for downloading">ダウンロードありがとうございます</h1>
+      <p style="margin-top:20px; font-size:18px; color:#5f6368; max-width:56ch;" data-ja="まもなくダウンロードが始まります。始まらない場合は、下のリンクを押してください。" data-en="Your download should start shortly. If it does not, use the link below.">まもなくダウンロードが始まります。始まらない場合は、下のリンクを押してください。</p>
+      <p style="margin-top:14px; font-family:'IBM Plex Mono',monospace; font-size:14px;">
+        <a id="dl" href="downloads/Recoup-2.0.dmg" data-ja="Recoup-2.0.dmg をダウンロード" data-en="Download Recoup-2.0.dmg">Recoup-2.0.dmg をダウンロード</a>
+      </p>
+
+      <h2 style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(4.2vw,32px); margin:64px 0 28px;" data-ja="インストール" data-en="Install">インストール</h2>
+
+      <div class="card">
+        <div class="step">
+          <div class="num">1</div>
+          <div>
+            <h3 data-ja="dmg を開く" data-en="Open the dmg">dmg を開く</h3>
+            <p data-ja="ダウンロードした Recoup-2.0.dmg をダブルクリックします。" data-en="Double-click the Recoup-2.0.dmg you just downloaded.">ダウンロードした Recoup-2.0.dmg をダブルクリックします。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <div>
+            <h3 data-ja="「アプリケーション」へドラッグする" data-en="Drag it onto Applications">「アプリケーション」へドラッグする</h3>
+            <p data-ja="開いたウインドウの中で、Recoup を右隣の「アプリケーション」フォルダへドラッグしてください。そのあと、ディスクイメージは取り出して構いません。" data-en="In the window that opens, drag Recoup onto the Applications folder beside it. You can eject the disk image afterwards.">開いたウインドウの中で、Recoup を右隣の「アプリケーション」フォルダへドラッグしてください。そのあと、ディスクイメージは取り出して構いません。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <div>
+            <h3 data-ja="「アプリケーション」から起動する" data-en="Launch it from Applications">「アプリケーション」から起動する</h3>
+            <p data-ja="初回だけ「開いてもよろしいですか？」と確認が出ることがあります。このアプリは Apple の署名と公証を受けているので、「開く」で問題ありません。" data-en="The first time, macOS may ask whether you want to open it. The app is signed and notarized by Apple, so you can safely click Open.">初回だけ「開いてもよろしいですか？」と確認が出ることがあります。このアプリは Apple の署名と公証を受けているので、「開く」で問題ありません。</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="border-left:3px solid #d97706; padding:4px 0 4px 20px; margin-bottom:56px;">
+        <h3 style="font-size:16px; font-weight:700; margin-bottom:8px;" data-ja="ディスクイメージから直接起動しないでください" data-en="Do not run it from the disk image">ディスクイメージから直接起動しないでください</h3>
+        <p style="color:#5f6368; line-height:1.9; max-width:62ch;" data-ja="ダウンロードしたアプリを macOS が一時的な場所へ隔離して実行するため、設定が保存されない、次に開いたときに状態が失われる、といったことが起こります。必ず「アプリケーション」へコピーしてから起動してください。" data-en="macOS runs downloaded apps from a temporary, read-only location, so settings may not persist and state can be lost the next time you open it. Always copy it to Applications first.">ダウンロードしたアプリを macOS が一時的な場所へ隔離して実行するため、設定が保存されない、次に開いたときに状態が失われる、といったことが起こります。必ず「アプリケーション」へコピーしてから起動してください。</p>
+      </div>
+
+      <h2 style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(4.2vw,32px); margin:0 0 28px;" data-ja="使う前に" data-en="Before you start">使う前に</h2>
+
+      <div class="card">
+        <div class="step">
+          <div class="num">!</div>
+          <div>
+            <h3 data-ja="そのディスクへの書き込みを止める" data-en="Stop writing to that disk">そのディスクへの書き込みを止める</h3>
+            <p data-ja="写真を撮り足したり、ファイルをコピーしたりすると、消えたデータが上書きされて戻せなくなります。" data-en="Taking more photos or copying files can overwrite the deleted data and put it out of reach.">写真を撮り足したり、ファイルをコピーしたりすると、消えたデータが上書きされて戻せなくなります。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="num">!</div>
+          <div>
+            <h3 data-ja="復元先は必ず別のディスクにする" data-en="Always recover to a different disk">復元先は必ず別のディスクにする</h3>
+            <p data-ja="復元元と同じディスクに書き込むと、まだ残っているデータを自分で壊してしまいます。Mac の内蔵ドライブや、別の外付けを保存先にしてください。" data-en="Writing to the same disk you are recovering from destroys the very data that is still there. Use your Mac's internal drive or another external drive.">復元元と同じディスクに書き込むと、まだ残っているデータを自分で壊してしまいます。Mac の内蔵ドライブや、別の外付けを保存先にしてください。</p>
+          </div>
+        </div>
+      </div>
+
+      <h2 style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(4.2vw,32px); margin:0 0 20px;" data-ja="ライセンスについて" data-en="About the license">ライセンスについて</h2>
+      <p style="color:#5f6368; line-height:1.9; max-width:62ch; margin-bottom:24px;" data-ja="スキャンと、見つかったファイルのサムネイル確認は無料です。まず走査して、ご自分のファイルが残っているかを確かめてください。ライセンスが必要なのは、ファイルをディスクへ書き出すときだけです。" data-en="Scanning and previewing what it finds are free. Run a scan first and see whether your files are still there. A license is required only to write the recovered files to disk.">スキャンと、見つかったファイルのサムネイル確認は無料です。まず走査して、ご自分のファイルが残っているかを確かめてください。ライセンスが必要なのは、ファイルをディスクへ書き出すときだけです。</p>
+      <p style="margin-bottom:56px;">
+        <a href="https://buy.polar.sh/polar_cl_H2n00KV7aUWpDOdA0nP43GvNLsREmGMUkaalP0RSeca" target="_blank" rel="noopener" style="display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:14px; color:#ffffff; background:#1a4fd8; padding:14px 28px; border-radius:8px; font-weight:500;" data-ja="ライセンスを購入 ↗" data-en="Buy a license ↗">ライセンスを購入 &nearr;</a>
+      </p>
+
+      <h2 style="font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; font-weight:500; font-size:min(4.2vw,32px); margin:0 0 20px;" data-ja="困ったときは" data-en="If you get stuck">困ったときは</h2>
+      <p style="color:#5f6368; line-height:1.9;" data-ja="取扱説明書に、症状別の使い分けと、うまくいかないときの対処をまとめています。" data-en="The manual covers which tool to use for which symptom, and what to do when things do not work.">取扱説明書に、症状別の使い分けと、うまくいかないときの対処をまとめています。</p>
+      <p style="margin-top:12px; font-family:'IBM Plex Mono',monospace; font-size:14px;">
+        <a href="recoup_manual.html" data-ja="取扱説明書を読む" data-en="Read the manual">取扱説明書を読む</a>
+        <span style="color:#c9ccd1; margin:0 12px;">·</span>
+        <a href="mailto:support@rustyworks.jp">support@rustyworks.jp</a>
+      </p>
+
+    </section>
+  </main>
+
+  <footer style="border-top:1px solid rgba(17,18,20,.08);">
+    <div class="fs-pad" style="max-width:1000px; margin:0 auto; padding:26px 40px; display:flex; flex-wrap:wrap; gap:18px; align-items:center; font-family:'IBM Plex Mono',monospace; font-size:12.5px;">
+      <span style="color:#8a8d93;">&copy; RustyWorks</span>
+      <a href="recoup.html" style="color:#5f6368;" data-ja="製品ページ" data-en="Product">製品ページ</a>
+      <a href="recoup_manual.html" style="color:#5f6368;" data-ja="取扱説明書" data-en="Manual">取扱説明書</a>
+      <a href="recoup_privacy.html" style="color:#5f6368;" data-ja="プライバシー" data-en="Privacy">プライバシー</a>
+      <a href="site_privacy.html" style="color:#5f6368;" data-ja="サイトのポリシー" data-en="Site policy">サイトのポリシー</a>
+    </div>
+  </footer>
+
+  <script>
+  (function () {
+    'use strict';
+    // ページを開いたら少し置いてダウンロードを始める。
+    // dmg は octet-stream なので、遷移せずダウンロードだけが走る。
+    var link = document.getElementById('dl');
+    if (link) { setTimeout(function () { window.location.href = link.getAttribute('href'); }, 700); }
+  })();
+  </script>
+
+  <script>
+  (function () {
+    'use strict';
+    // サイト共通の日英切り替え。選択は rw-lang に置く。
+    var KEY = 'rw-lang';
+    var buttons = document.querySelectorAll('.lang button');
+    var nodes = document.querySelectorAll('[data-ja][data-en]');
+    function apply(lang) {
+      document.documentElement.lang = lang;
+      nodes.forEach(function (el) {
+        var text = el.getAttribute('data-' + lang);
+        if (text !== null) el.textContent = text;
+      });
+      buttons.forEach(function (b) {
+        var on = b.dataset.lang === lang;
+        b.setAttribute('aria-pressed', String(on));
+        b.style.color = on ? '#111214' : '#8a8d93';
+      });
+      try { localStorage.setItem(KEY, lang); } catch (e) {}
+    }
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () { apply(b.dataset.lang); });
+    });
+    var saved = null;
+    try {
+      var q = new URLSearchParams(location.search).get('lang');
+      if (q === 'en' || q === 'ja') { saved = q; localStorage.setItem(KEY, q); }
+    } catch (e) {}
+    if (!saved) { try { saved = localStorage.getItem(KEY); } catch (e) {} }
+    if (!saved) saved = 'ja';
+    if (saved === 'en') apply('en');
+  })();
+  </script>
+  <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "04f66ad1837a4b63af68beb6e835358f"}'></script>
+</body>
+</html>
