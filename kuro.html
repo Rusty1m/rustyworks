@@ -250,6 +250,865 @@ window.RW = (function () {
   </div>
 
 
+  <!-- interactive demo — 1.5 auto-adjust -->
+  <div class="pad" id="try15" style="padding:88px 72px 72px;border-bottom:1px solid rgba(255,255,255,.06);">
+    <div style="max-width:1080px;margin:0 auto;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;color:#e5484d;">1.5 — AUTO ADJUST, REBUILT</div>
+      <h2 class="h-l" style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;margin:14px 0 12px;" data-ja="測ってから、決める。" data-en="Measure first, then decide.">測ってから、決める。</h2>
+      <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.75;color:#a4a4a0;max-width:660px;">
+        <span data-ja="上のデモの 1.1 は、クリップごとにあらかじめ用意した補正値を当てています。1.5 は違います。画面を 16×16 に区切って1マスずつ明るさと色を測り、そこから露出と白を決めます。左半分が 1.1、右半分が 1.5 です。 " data-en="The 1.1 demo above applies correction values prepared in advance for each clip. 1.5 does not. It divides the frame into 16×16 cells, measures brightness and color in each one, and decides exposure and white from that. Left half is 1.1, right half is 1.5. ">上のデモの 1.1 は、クリップごとにあらかじめ用意した補正値を当てています。1.5 は違います。画面を 16×16 に区切って
+        1マスずつ明るさと色を測り、そこから露出と白を決めます。左半分が 1.1、右半分が 1.5 です。 </span><span style="color:#e5484d;" data-ja="下に出ている数字は、いまこのフレームから実際に測った値です。" data-en="The numbers below are measured from this very frame, right now.">下に出ている数字は、いまこのフレームから実際に測った値です。</span>
+      </p>
+
+      <div class="stage" id="stage15">
+        <canvas id="gl15"></canvas>
+        <canvas id="zonesCv15" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .2s;pointer-events:none;"></canvas>
+        <span class="tag l" data-ja="Kuro 1.1（固定値）" data-en="Kuro 1.1 (fixed values)">Kuro 1.1（固定値）</span>
+        <span class="tag r" data-ja="Kuro 1.5（実測）" data-en="Kuro 1.5 (measured)">Kuro 1.5（実測）</span>
+        <div class="divider" id="divider15"></div>
+        <div class="knob" id="knob15">⇔</div>
+        <div class="hint" id="hint15" data-ja="ドラッグして比較" data-en="Drag to compare">ドラッグして比較</div>
+        <div class="loading" id="loading15" data-ja="読み込み中…" data-en="Loading…">読み込み中…</div>
+      </div>
+
+      <div class="clips" id="clips15"></div>
+
+      <div class="actions">
+        <button id="zoneBtn15">測光ゾーンを表示</button>
+        <label style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:13px;color:#a4a4a0;display:flex;align-items:center;gap:10px;">
+          <span data-ja="中和" data-en="Neutralize">中和</span>
+          <input type="range" id="neutral15" min="0" max="1" step="0.05" value="1" style="width:150px;">
+          <span class="val" id="neutral15_v" style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#7a7a76;">1.00</span>
+        </label>
+        <span style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:12px;color:#7a7a76;" data-ja="0 にすると、その場の色みを残したままにします。" data-en="At 0, the color of the light on the scene is left as it is.">0 にすると、その場の色みを残したままにします。</span>
+      </div>
+
+      <div id="readout15" style="margin-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 26px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#7a7a76;"></div>
+
+      <p class="note">
+        <span data-ja="※ 1.5 の自動調整は " data-en="Note: 1.5's auto-adjust decides only ">※ 1.5 の自動調整は </span><span style="color:#a4a4a0;font-weight:600;" data-ja="露出・黒レベル・ホワイトバランス" data-en="exposure, black level and white balance">露出・黒レベル・ホワイトバランス</span><span data-ja="だけを決めます。コントラストと彩度には触れません（1.1 の固定値には入っています）。ゾーン測光・黒体軌跡による白の推定・色温度で表しきれない分の残差ゲイン・カット検出は、アプリと同じ計算をそのまま移植しています。" data-en=". It leaves contrast and saturation alone (1.1's fixed values include them). Zone metering, white estimated from the blackbody locus, the residual gain for what temperature alone cannot express, and cut detection are all ported straight from the app.">だけを決めます。
+        コントラストと彩度には触れません（1.1 の固定値には入っています）。ゾーン測光・黒体軌跡による白の推定・
+        色温度で表しきれない分の残差ゲイン・カット検出は、アプリと同じ計算をそのまま移植しています。</span>
+      </p>
+    </div>
+  </div>
+
+<video id="vid15" playsinline muted loop preload="none" style="display:none"></video>
+
+<script>
+(function () {
+  'use strict';
+  const stage = document.getElementById('stage15');
+  const canvas = document.getElementById('gl15');
+  const video = document.getElementById('vid15');
+  let gl = null, started = false;
+
+  // ---- text this demo writes itself --------------------------------------
+  // The data-ja/data-en pass at the foot of the page cannot own any of this:
+  // it walks the DOM once, and every string below is written by JS afterwards.
+  const T = p => RW.t(p);
+  const STR = {
+    showZones: { ja:'測光ゾーンを表示', en:'Show metering zones' },
+    hideZones: { ja:'測光ゾーンを隠す', en:'Hide metering zones' },
+    noWebGL:   { ja:'お使いのブラウザは WebGL2 に対応していないため、このデモを表示できません。',
+                 en:'This browser does not support WebGL2, so this demo cannot run.' },
+    noFloat:   { ja:'このブラウザは浮動小数点のレンダーターゲットに対応していないため、測光を実行できません。',
+                 en:'This browser does not support floating-point render targets, so it cannot meter.' },
+  };
+  // The readout. Labels on the left, and the fragments that get spliced into
+  // the values on the right.
+  const RD = {
+    metered:    { ja:'測光値（線形輝度）',     en:'Metered value (linear luma)' },
+    exposure:   { ja:'露出（べき）',           en:'Exposure (power)' },
+    black:      { ja:'黒レベル',               en:'Black level' },
+    cct:        { ja:'色温度',                 en:'Temperature' },
+    confidence: { ja:'白の確からしさ',         en:'Confidence in the white' },
+    tempTint:   { ja:'色温度 / ティント',      en:'Temperature / tint' },
+    residual:   { ja:'残差ゲイン',             en:'Residual gain' },
+    channel:    { ja:'実効チャンネルゲイン',   en:'Effective channel gains' },
+    zones:      { ja:'測光に使ったゾーン',     en:'Zones used for metering' },
+    state:      { ja:'状態',                   en:'State' },
+    gainIs:     { ja:'1.1 はゲイン ',          en:'1.1 uses gain ' },
+    valueIs:    { ja:'1.1 は ',                en:'1.1 uses ' },
+    noEstimate: { ja:'推定できず',             en:'Could not estimate' },
+    clipped:    { ja:'白飛び ',                en:'clipped ' },
+    backlit:    { ja:'逆光',                   en:'Backlit' },
+    flat:       { ja:'平坦',                   en:'Flat' },
+    hlLimited:  { ja:'白飛び制限',             en:'Highlight-limited' },
+    cut:        { ja:'カット',                 en:'Cut' },
+  };
+
+  // ---- clips: the same four files the 1.1 demo uses, so nothing extra is
+  // fetched for a reader who has already scrolled through that one. `auto` is
+  // 1.1's baked-in answer, kept identical to the table above.
+  const CLIPS = [
+    { label:{ ja:'森の川', en:'Forest river' },   file:'assets/lp/demo-river.mp4',  poster:'assets/lp/demo-river.jpg',
+      auto:{ gain:1.10, lift:-0.018, con:1.20, temp:0.06, sat:1.28, tint:0 } },
+    { label:{ ja:'花畑', en:'Flower field' },     file:'assets/lp/demo-flower.mp4', poster:'assets/lp/demo-flower.jpg',
+      auto:{ gain:1.04, lift:-0.014, con:1.16, temp:0.03, sat:1.20, tint:0 } },
+    { label:{ ja:'夕景', en:'Sunset' },     file:'assets/lp/demo-sunset.mp4', poster:'assets/lp/demo-sunset.jpg',
+      auto:{ gain:1.14, lift:-0.010, con:1.14, temp:0.10, sat:1.18, tint:0 } },
+    { label:{ ja:'オーロラ', en:'Aurora' }, file:'assets/lp/demo-aurora.mp4', poster:'assets/lp/demo-aurora.jpg',
+      auto:{ gain:1.32, lift:-0.006, con:1.18, temp:-0.05, sat:1.26, tint:0 } },
+  ];
+  let clipIndex = 0;
+
+  // =========================================================================
+  //  Port of the app's colour maths. Names match the Swift so the two can be
+  //  diffed by eye: WhiteBalance, Chromaticity, ZoneMetering, ZoneAWB,
+  //  AutoAdjustEngine.
+  // =========================================================================
+
+  // ---- WhiteBalance.channelGains() ----------------------------------------
+  const ANCH_T = [-2000,-1000,0,1000,2000];
+  const T_R = [0.740,0.840,1.0,1.257,1.735];
+  const T_G = [1.016,1.016,1.0,0.970,0.907];
+  const T_B = [1.700,1.360,1.0,0.660,0.327];
+  const ANCH_U = [-100,0,50,100];
+  const U_R = [0.711,1.0,1.177,1.349];
+  const U_G = [1.117,1.0,0.945,0.874];
+  const U_B = [0.757,1.0,1.136,1.283];
+
+  function interp(x, xs, ys) {
+    const n = xs.length;
+    if (x <= xs[0])   return Math.max(0, ys[0] + (ys[1]-ys[0])/(xs[1]-xs[0]) * (x-xs[0]));
+    if (x >= xs[n-1]) return Math.max(0, ys[n-1] + (ys[n-1]-ys[n-2])/(xs[n-1]-xs[n-2]) * (x-xs[n-1]));
+    for (let i = 1; i < n; i++) if (x <= xs[i])
+      return ys[i-1] + (x-xs[i-1])/(xs[i]-xs[i-1]) * (ys[i]-ys[i-1]);
+    return ys[n-1];
+  }
+  function channelGains(temp, tint) {
+    const t = temp * 4000, u = tint * 100;
+    return [ interp(t,ANCH_T,T_R) * interp(u,ANCH_U,U_R),
+             interp(t,ANCH_T,T_G) * interp(u,ANCH_U,U_G),
+             interp(t,ANCH_T,T_B) * interp(u,ANCH_U,U_B) ];
+  }
+  const LUMA = [0.2126, 0.7152, 0.0722];
+  function normLuma(g) {
+    const w = g[0]*LUMA[0] + g[1]*LUMA[1] + g[2]*LUMA[2];
+    return w > 1e-6 ? [g[0]/w, g[1]/w, g[2]/w] : g.slice();
+  }
+  function clampf(v, lo, hi) { return Math.min(Math.max(v, lo), hi); }
+
+  // AutoAdjust.whiteBalanceMatching — coarse sweep then refine, exactly as the
+  // app does it. The table is not invertible in closed form, so this is a fit.
+  function whiteBalanceMatching(desired) {
+    const target = normLuma(desired);
+    let best = [0, 0], bestErr = Infinity;
+    function search(tLo, tHi, uLo, uHi, steps) {
+      for (let i = 0; i <= steps; i++) {
+        const t = tLo + (tHi - tLo) * i / steps;
+        for (let j = 0; j <= steps; j++) {
+          const u = uLo + (uHi - uLo) * j / steps;
+          const g = normLuma(channelGains(t, u));
+          const e = (g[0]-target[0])**2 + (g[1]-target[1])**2 + (g[2]-target[2])**2;
+          if (e < bestErr) { bestErr = e; best = [t, u]; }
+        }
+      }
+    }
+    search(-1, 1, -1, 1, 20);
+    const r = 0.1;
+    search(Math.max(-1,best[0]-r), Math.min(1,best[0]+r),
+           Math.max(-1,best[1]-r), Math.min(1,best[1]+r), 10);
+    return best;                       // [temperature, tint]
+  }
+
+  // ---- Chromaticity -------------------------------------------------------
+  const D65_XY = [0.3127, 0.3290], D65_CCT = 6504;
+  function xyFromLinear(rgb) {
+    const X = 0.4124564*rgb[0] + 0.3575761*rgb[1] + 0.1804375*rgb[2];
+    const Y = 0.2126729*rgb[0] + 0.7151522*rgb[1] + 0.0721750*rgb[2];
+    const Z = 0.0193339*rgb[0] + 0.1191920*rgb[1] + 0.9503041*rgb[2];
+    const s = X + Y + Z;
+    return s > 1e-9 ? [X/s, Y/s] : null;
+  }
+  function uv1960(xy) {
+    const d = -2*xy[0] + 12*xy[1] + 3;
+    return [4*xy[0]/d, 6*xy[1]/d];
+  }
+  function linearFromXY(xy) {
+    if (xy[1] <= 1e-6) return [1,1,1];
+    const X = xy[0]/xy[1], Y = 1, Z = (1 - xy[0] - xy[1])/xy[1];
+    return [ 3.2404542*X - 1.5371385*Y - 0.4985314*Z,
+            -0.9692660*X + 1.8760108*Y + 0.0415560*Z,
+             0.0556434*X - 0.2040259*Y + 1.0572252*Z ];
+  }
+  // CIE 1931 CMFs, multi-lobe Gaussian fits (Wyman/Sloan/Shirley 2013) — the
+  // same ones the app carries, so no 471-row table to mistype.
+  function gauss(x, mu, s1, s2) { const s = x < mu ? s1 : s2, t = (x-mu)/s; return Math.exp(-0.5*t*t); }
+  const xBar = l => 1.056*gauss(l,599.8,37.9,31.0) + 0.362*gauss(l,442.0,16.0,26.7) - 0.065*gauss(l,501.1,20.4,26.2);
+  const yBar = l => 0.821*gauss(l,568.8,46.9,40.5) + 0.286*gauss(l,530.9,16.3,31.1);
+  const zBar = l => 1.217*gauss(l,437.0,11.8,36.0) + 0.681*gauss(l,459.0,26.0,13.8);
+  const C2 = 1.4388e-2;
+  function planckianXY(T) {
+    let X = 0, Y = 0, Z = 0;
+    for (let nm = 360; nm <= 830; nm++) {
+      const lam = nm * 1e-9;
+      const b = 1 / (Math.pow(lam,5) * (Math.exp(C2/(lam*T)) - 1));
+      X += b * xBar(nm); Y += b * yBar(nm); Z += b * zBar(nm);
+    }
+    const s = X + Y + Z;
+    return s > 0 ? [X/s, Y/s] : D65_XY;
+  }
+  // Built once on first measurement, not at page load: a reader who never
+  // scrolls here should not pay for 740 Planck integrations.
+  let LOCUS = null;
+  function locus() {
+    if (!LOCUS) {
+      LOCUS = [];
+      for (let T = 1500; T <= 20000; T += 25) {
+        const uv = uv1960(planckianXY(T));
+        LOCUS.push({ cct:T, u:uv[0], v:uv[1] });
+      }
+    }
+    return LOCUS;
+  }
+  function temperatureOf(xy) {
+    const uv = uv1960(xy);
+    let best = null, bestD2 = Infinity;
+    for (const p of locus()) {
+      const du = uv[0]-p.u, dv = uv[1]-p.v, d2 = du*du + dv*dv;
+      if (d2 < bestD2) { bestD2 = d2; best = p; }
+    }
+    const dist = Math.sqrt(bestD2);
+    return { cct: best.cct, duv: uv[1] > best.v ? dist : -dist };
+  }
+  function locusXY(cct) { return planckianXY(clampf(cct, 1500, 20000)); }
+  function lerpCCT(from, to, t) {
+    const a = 1e6/Math.max(from,1), b = 1e6/Math.max(to,1);
+    return 1e6/Math.max(a + (b-a)*t, 1e-3);
+  }
+
+  // ---- ZoneStats ----------------------------------------------------------
+  const GW = 16, GH = 16;
+  // zones[i] = { linear:[r,g,b], validCount, luma, sampleCount, clippedCount }
+  function decodeZones(bufA, bufB) {
+    const zones = [];
+    for (let i = 0; i < GW*GH; i++) {
+      const valid = bufA[i*4+3], total = bufB[i*4+1];
+      if (total <= 0) { zones.push({ linear:[0,0,0], validCount:0, luma:0, sampleCount:0, clippedCount:0 }); continue; }
+      const lin = valid > 0 ? [bufA[i*4]/valid, bufA[i*4+1]/valid, bufA[i*4+2]/valid] : [0,0,0];
+      zones.push({ linear:lin, validCount:valid, luma:bufB[i*4]/total,
+                   sampleCount:total, clippedCount:bufB[i*4+2] });
+    }
+    return zones;
+  }
+  const zAt = (z, x, y) => z[y*GW + x];
+  const validLuma = z => z.linear[0]*LUMA[0] + z.linear[1]*LUMA[1] + z.linear[2]*LUMA[2];
+  const clippedFraction = z => z.sampleCount > 0 ? z.clippedCount/z.sampleCount : 0;
+
+  // ---- ZoneMetering.meter -------------------------------------------------
+  const MO = { neutralLo:0.05, neutralHi:0.70, gainLo:0.25, gainHi:4.0, centerSigma:0.55,
+               outlierStops:1.5, outlierFloor:0.15, backlitRatio:3, backlitSigma:0.12,
+               backlitFloor:0.10, centerProbe:0.35, surroundProbe:0.60, barLuma:0.005,
+               maxBarFraction:0.4, barContrastRatio:8, minZoneSpread:0.20,
+               blackFloorLo:0.16, blackFloorHi:0.24, blackStrength:0.7,
+               blackPercentile:0.05, clippedCeiling:0.02 };
+
+  function meter(zones) {
+    const rowIsBar = y => { for (let x=0;x<GW;x++){ const z=zAt(zones,x,y); if (!(z.sampleCount===0 || z.luma<=MO.barLuma)) return false; } return true; };
+    const colIsBar = x => { for (let y=0;y<GH;y++){ const z=zAt(zones,x,y); if (!(z.sampleCount===0 || z.luma<=MO.barLuma)) return false; } return true; };
+    let top=0, bottom=0, left=0, right=0;
+    while (top < GH && rowIsBar(top)) top++;
+    while (bottom < GH-top && rowIsBar(GH-1-bottom)) bottom++;
+    while (left < GW && colIsBar(left)) left++;
+    while (right < GW-left && colIsBar(GW-1-right)) right++;
+
+    function interiorLuma(t,b,l,r) {
+      let sum=0, n=0;
+      for (let y=t;y<GH-b;y++) for (let x=l;x<GW-r;x++) {
+        const z = zAt(zones,x,y); if (z.sampleCount===0) continue; sum += z.luma; n++;
+      }
+      return n>0 ? sum/n : 0;
+    }
+    const barFraction = ((top+bottom)*GW + (left+right)*GH) / (GW*GH);
+    if (barFraction > MO.maxBarFraction || interiorLuma(top,bottom,left,right) < MO.barLuma*MO.barContrastRatio) {
+      top = bottom = left = right = 0;
+    }
+
+    const lumas = [], coords = [];
+    for (let y=top;y<GH-bottom;y++) for (let x=left;x<GW-right;x++) {
+      const z = zAt(zones,x,y); if (z.sampleCount===0) continue;
+      lumas.push(z.luma); coords.push([x,y]);
+    }
+    if (!lumas.length) return null;
+
+    const median = lumas.slice().sort((a,b)=>a-b)[lumas.length>>1];
+    const cx = (GW-1)/2, cy = (GH-1)/2, halfDiag = Math.hypot(cx, cy);
+    const nd = c => Math.hypot(c[0]-cx, c[1]-cy) / Math.max(halfDiag, 1e-6);
+
+    function meanLuma(test) {
+      let sum=0, n=0;
+      for (let i=0;i<coords.length;i++) if (test(nd(coords[i]))) { sum += lumas[i]; n++; }
+      return n>0 ? sum/n : 0;
+    }
+    const centerLuma = meanLuma(d => d <= MO.centerProbe);
+    const surroundLuma = meanLuma(d => d >= MO.surroundProbe);
+    const backlit = centerLuma > 1e-6 && surroundLuma > centerLuma*MO.backlitRatio;
+    const sigma = backlit ? MO.backlitSigma : MO.centerSigma;
+
+    let weighted=0, wsum=0, used=0;
+    for (let i=0;i<coords.length;i++) {
+      const l = lumas[i], d = nd(coords[i]);
+      let w = Math.exp(-0.5 * Math.pow(d/sigma, 2));
+      if (median > 1e-6 && l > median) {
+        const stopsAbove = Math.log2(l/median);
+        const t = clampf((stopsAbove - MO.outlierStops) / Math.max(MO.outlierStops,1e-6), 0, 1);
+        w *= 1 - (1 - MO.outlierFloor) * t;
+      }
+      if (w <= 1e-6) continue;
+      weighted += l*w; wsum += w; used++;
+    }
+    if (wsum <= 1e-6) return null;
+    const metered = weighted/wsum;
+
+    let clipped=0, total=0;
+    for (const z of zones) if (z.sampleCount>0) { clipped += z.clippedCount; total += z.sampleCount; }
+    const clipFrac = total>0 ? clipped/total : 0;
+
+    const spreadMean = lumas.reduce((a,b)=>a+b,0)/lumas.length;
+    const spreadSD = Math.sqrt(lumas.reduce((a,b)=>a+(b-spreadMean)*(b-spreadMean),0)/lumas.length);
+    const isFlat = spreadMean > 1e-6 && spreadSD/spreadMean < MO.minZoneSpread;
+
+    let gain = 1, limited = false;
+    const floorV = backlit ? Math.max(MO.neutralLo, MO.backlitFloor) : MO.neutralLo;
+    if (metered > 1e-6 && !isFlat) {
+      if (metered < floorV) gain = floorV/metered;
+      else if (metered > MO.neutralHi) gain = MO.neutralHi/metered;
+    }
+    if (gain > 1 && clipFrac > MO.clippedCeiling) { gain = 1; limited = true; }
+    const clampedGain = clampf(gain, MO.gainLo, MO.gainHi);
+    if (clampedGain !== gain) limited = true;
+
+    const targetLuma = Math.min(Math.max(metered*clampedGain, 1e-4), 0.999);
+    const safeMetered = Math.min(Math.max(metered, 1e-4), 0.999);
+    let power = 1;
+    if (Math.abs(clampedGain - 1) > 1e-4)
+      power = Math.min(Math.max(Math.log(targetLuma)/Math.log(safeMetered), 0.5), 2.0);
+
+    const sorted = lumas.slice().sort((a,b)=>a-b);
+    const idx = Math.min(Math.floor(sorted.length*MO.blackPercentile), sorted.length-1);
+    const floorEncoded = Math.pow(Math.max(sorted[idx],0), 1/2.4);
+    let lift = 0, measuredFloor = 0;
+    if (!isFlat && floorEncoded >= MO.blackFloorLo && floorEncoded <= MO.blackFloorHi) {
+      measuredFloor = floorEncoded;
+      const target = floorEncoded * MO.blackStrength;
+      lift = -target / Math.max(1 - target, 1e-3);
+    }
+
+    return { meteredLuma:metered, gain:clampedGain, exposurePower:power,
+             bar:[top,bottom,left,right], zonesUsed:used, clippedFraction:clipFrac,
+             highlightLimited:limited, backlit, isFlat, lift, measuredBlackFloor:measuredFloor };
+  }
+
+  // ---- ZoneAWB ------------------------------------------------------------
+  const AO = { maxDuv:0.02, cctLo:2000, cctHi:12000, minLuma:0.002, maxClippedFraction:0.25,
+               zonesForFullConfidence:16, neutralDeadbandDegrees:2.5,
+               residualDeadbandDegrees:1.0, tightError:0.003, looseError:0.012 };
+
+  function awbEstimate(zones) {
+    const survivors = [];
+    let considered = 0;
+    for (const z of zones) {
+      if (z.sampleCount === 0 || z.validCount === 0) continue;
+      if (validLuma(z) < AO.minLuma) continue;
+      if (clippedFraction(z) > AO.maxClippedFraction) continue;
+      considered++;
+      const xy = xyFromLinear(z.linear); if (!xy) continue;
+      const t = temperatureOf(xy);
+      if (Math.abs(t.duv) > AO.maxDuv || t.cct < AO.cctLo || t.cct > AO.cctHi) continue;
+      survivors.push({ linear:z.linear, uv:uv1960(xy), weight:z.validCount });
+    }
+    if (!survivors.length) return null;
+
+    let sum=[0,0,0], uvSum=[0,0], wsum=0;
+    for (const s of survivors) {
+      sum[0]+=s.linear[0]*s.weight; sum[1]+=s.linear[1]*s.weight; sum[2]+=s.linear[2]*s.weight;
+      uvSum[0]+=s.uv[0]*s.weight;   uvSum[1]+=s.uv[1]*s.weight;   wsum += s.weight;
+    }
+    if (wsum <= 0) return null;
+    const mean = [sum[0]/wsum, sum[1]/wsum, sum[2]/wsum];
+    const uvMean = [uvSum[0]/wsum, uvSum[1]/wsum];
+
+    let varSum = 0;
+    for (const s of survivors) {
+      const du = s.uv[0]-uvMean[0], dv = s.uv[1]-uvMean[1];
+      varSum += (du*du + dv*dv) * s.weight;
+    }
+    const spread = Math.sqrt(varSum/wsum);
+    const stderr = spread / Math.max(Math.sqrt(survivors.length), 1);
+    const agreement = 1 - clampf((stderr - AO.tightError)/Math.max(AO.looseError-AO.tightError,1e-6), 0, 1);
+    const coverage = clampf(survivors.length/Math.max(AO.zonesForFullConfidence,1), 0, 1);
+
+    const xy = xyFromLinear(mean); if (!xy) return null;
+    const t = temperatureOf(xy);
+    return { illuminant:mean, cct:t.cct, duv:t.duv, confidence:agreement*coverage,
+             zonesUsed:survivors.length, zonesConsidered:considered };
+  }
+
+  function desiredGains(e, neutralization) {
+    const strength = clampf(neutralization, 0, 1);
+    const targetCCT = lerpCCT(e.cct, D65_CCT, strength);
+    const onLocus = locusXY(targetCCT);
+    const targetXY = [onLocus[0] + (D65_XY[0]-onLocus[0])*strength,
+                      onLocus[1] + (D65_XY[1]-onLocus[1])*strength];
+    const targetRGB = linearFromXY(targetXY);
+    if (Math.min(...e.illuminant) <= 1e-5 || Math.min(...targetRGB) <= 1e-5) return null;
+    return [targetRGB[0]/e.illuminant[0], targetRGB[1]/e.illuminant[1], targetRGB[2]/e.illuminant[2]];
+  }
+
+  function angleBetween(a, b) {
+    const la = Math.hypot(...a), lb = Math.hypot(...b);
+    if (la <= 1e-9 || lb <= 1e-9) return 0;
+    const cos = (a[0]*b[0]+a[1]*b[1]+a[2]*b[2])/(la*lb);
+    return Math.acos(clampf(cos,-1,1)) * 180/Math.PI;
+  }
+
+  function awbWhiteBalance(e, neutralization) {
+    const d65 = linearFromXY(D65_XY);
+    if (angleBetween(e.illuminant, d65) <= AO.neutralDeadbandDegrees) return [0,0];
+    const desired = desiredGains(e, neutralization);
+    if (!desired) return [0,0];
+    const fitted = whiteBalanceMatching(desired);
+    const c = clampf(e.confidence, 0, 1);
+    return [fitted[0]*c, fitted[1]*c];
+  }
+
+  function awbCorrection(e, neutralization) {
+    const wb = awbWhiteBalance(e, neutralization);
+    if (wb[0] === 0 && wb[1] === 0) return { wb, residual:[1,1,1] };
+    const desired = desiredGains(e, neutralization);
+    if (!desired) return { wb, residual:[1,1,1] };
+    const full = whiteBalanceMatching(desired);
+    const achieved = normLuma(channelGains(full[0], full[1]));
+    const want = normLuma(desired);
+    let residual = [ want[0]/Math.max(achieved[0],1e-4),
+                     want[1]/Math.max(achieved[1],1e-4),
+                     want[2]/Math.max(achieved[2],1e-4) ];
+    if (angleBetween(residual, [1,1,1]) <= AO.residualDeadbandDegrees) return { wb, residual:[1,1,1] };
+    const c = clampf(e.confidence, 0, 1);
+    residual = [Math.pow(residual[0],c), Math.pow(residual[1],c), Math.pow(residual[2],c)];
+    return { wb, residual: normLuma(residual) };
+  }
+
+  // ---- AutoAdjustEngine ---------------------------------------------------
+  const TUNE = { cutStops:0.7, powerDeadband:0.03, wbDeadband:0.02, ease:0.08 };
+  const engine = {
+    prevLumas:null, wb:[0,0], power:1, lift:0, residual:[1,1,1], started:false,
+    reset() { this.prevLumas = null; this.wb = [0,0]; this.power = 1; this.lift = 0;
+              this.residual = [1,1,1]; this.started = false; },
+    isCut(lumas) {
+      const prev = this.prevLumas;
+      if (!prev || prev.length !== lumas.length) return true;
+      let sum = 0;
+      for (let i=0;i<lumas.length;i++)
+        sum += Math.abs(Math.log2(Math.max(lumas[i],1e-4)/Math.max(prev[i],1e-4)));
+      return sum/lumas.length > TUNE.cutStops;
+    },
+    update(zones, neutralization) {
+      const m = meter(zones); if (!m) return null;
+      const e = awbEstimate(zones);
+      const c = e ? awbCorrection(e, neutralization) : null;
+      const targetWB = c ? c.wb : this.wb;
+      const targetResidual = c ? c.residual : this.residual;
+
+      const lumas = zones.map(z => z.luma);
+      const cut = this.isCut(lumas);
+      this.prevLumas = lumas;
+      const snap = cut || !this.started;
+      this.started = true;
+
+      if (snap) {
+        this.wb = targetWB; this.power = m.exposurePower;
+        this.lift = m.lift; this.residual = targetResidual;
+      } else {
+        if (Math.abs(m.exposurePower - this.power) > TUNE.powerDeadband)
+          this.power += (m.exposurePower - this.power) * TUNE.ease;
+        if (Math.abs(m.lift - this.lift) > TUNE.powerDeadband)
+          this.lift += (m.lift - this.lift) * TUNE.ease;
+        const dr = Math.hypot(targetResidual[0]-this.residual[0], targetResidual[1]-this.residual[1], targetResidual[2]-this.residual[2]);
+        if (dr > TUNE.wbDeadband)
+          for (let i=0;i<3;i++) this.residual[i] += (targetResidual[i]-this.residual[i]) * TUNE.ease;
+        if (Math.abs(targetWB[0]-this.wb[0]) > TUNE.wbDeadband || Math.abs(targetWB[1]-this.wb[1]) > TUNE.wbDeadband) {
+          this.wb = [ this.wb[0] + (targetWB[0]-this.wb[0])*TUNE.ease,
+                      this.wb[1] + (targetWB[1]-this.wb[1])*TUNE.ease ];
+        }
+      }
+      return { metering:m, awb:e, snap };
+    }
+  };
+
+  // =========================================================================
+  //  WebGL
+  // =========================================================================
+  const VS = `#version 300 es
+  out vec2 vUv;
+  void main() {
+    vec2 p = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
+    vUv = p;
+    gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0);
+  }`;
+
+  // Both sides in one pass. Left of uSplit is 1.1's fixed answer, right is
+  // 1.5's measured one, from the same texel of the same frame — the only way
+  // the comparison is honest.
+  const FS = `#version 300 es
+  precision highp float;
+  in vec2 vUv;
+  out vec4 frag;
+  uniform sampler2D uTex;
+  uniform float uSplit;
+  // 1.1 — fixed per clip
+  uniform vec3  aWB; uniform float aGain, aLift, aCon, aSat;
+  // 1.5 — measured per frame
+  uniform vec3  bWB, bResidual; uniform float bPower, bLift;
+  uniform float uPivot;
+
+  vec3 dec(vec3 v) { return sign(v) * pow(abs(v), vec3(2.4)); }
+  vec3 enc(vec3 v) { return sign(v) * pow(abs(v), vec3(1.0/2.4)); }
+
+  vec3 grade11(vec3 src) {
+    vec3 c = dec(src) * aWB;
+    vec3 g = enc(c) * aGain;
+    g = g + aLift * (vec3(1.0) - g);
+    c = dec(g);
+    if (abs(aCon - 1.0) > 0.001) {
+      float e = pow(max(2.0 - aCon, 1e-3), -1.17);
+      float pv = clamp(uPivot, 0.01, 0.99);
+      vec3 x = enc(c);
+      vec3 below = pow(max(x/pv, 0.0), vec3(e)) * pv;
+      vec3 above = 1.0 - pow(max((1.0-x)/(1.0-pv), 0.0), vec3(e)) * (1.0-pv);
+      c = dec(mix(below, above, step(vec3(pv), x)));
+    }
+    if (abs(aSat - 1.0) > 0.001) {
+      vec3 x = enc(clamp(c, 0.0, 1.0));
+      float y = dot(x, vec3(0.2126, 0.7152, 0.0722));
+      c = dec(clamp(mix(vec3(y), x, aSat), 0.0, 1.0));
+    }
+    return enc(c);
+  }
+
+  // 1.5 sets exposure as a POWER on linear light — the exponent that carries
+  // the metered luma to its target — not a multiply. No contrast, no
+  // saturation: the rebuilt auto-adjust does not touch them.
+  vec3 grade15(vec3 src) {
+    vec3 c = dec(src) * bWB * bResidual;
+    c = pow(max(c, vec3(0.0)), vec3(bPower));
+    vec3 g = enc(c);
+    g = g + bLift * (vec3(1.0) - g);
+    return g;
+  }
+
+  void main() {
+    vec3 src = texture(uTex, vec2(vUv.x, 1.0 - vUv.y)).rgb;
+    vec3 o = (vUv.x < uSplit) ? grade11(src) : grade15(src);
+    frag = vec4(clamp(o, 0.0, 1.0), 1.0);
+  }`;
+
+  // Zone statistics. No compute shaders in WebGL2 and no atomics, so this
+  // gathers instead of scattering: one fragment per zone, looping over its own
+  // patch. 16x16 fragments x 12x12 taps is nothing, and it keeps the readback
+  // to two 16x16 buffers.
+  const FS_ZONE = `#version 300 es
+  precision highp float;
+  uniform sampler2D uTex;
+  uniform ivec2 uSize;
+  uniform int uTaps;
+  layout(location = 0) out vec4 outA;   // sumR, sumG, sumB, validCount
+  layout(location = 1) out vec4 outB;   // sumLuma, sampleCount, clippedCount, 0
+  const float VALID_LO = 0.02, VALID_HI = 0.98, CLIP = 0.996;
+  void main() {
+    ivec2 zone = ivec2(gl_FragCoord.xy);
+    int x0 = uSize.x * zone.x / 16, x1 = uSize.x * (zone.x + 1) / 16;
+    int y0 = uSize.y * zone.y / 16, y1 = uSize.y * (zone.y + 1) / 16;
+    vec3 sumRGB = vec3(0.0); float valid = 0.0, sumL = 0.0, n = 0.0, clip = 0.0;
+    for (int i = 0; i < uTaps; i++) {
+      for (int j = 0; j < uTaps; j++) {
+        int px = x0 + (x1 - x0) * i / uTaps;
+        int py = y0 + (y1 - y0) * j / uTaps;
+        if (px >= uSize.x || py >= uSize.y || px >= x1 || py >= y1) continue;
+        vec3 e = clamp(texelFetch(uTex, ivec2(px, py), 0).rgb, 0.0, 1.0);
+        vec3 lin = pow(e, vec3(2.4));
+        if (all(greaterThanEqual(e, vec3(VALID_LO))) && all(lessThanEqual(e, vec3(VALID_HI)))) {
+          sumRGB += lin; valid += 1.0;
+        }
+        sumL += dot(lin, vec3(0.2126, 0.7152, 0.0722));
+        n += 1.0;
+        if (any(greaterThanEqual(e, vec3(CLIP)))) clip += 1.0;
+      }
+    }
+    outA = vec4(sumRGB, valid);
+    outB = vec4(sumL, n, clip, 0.0);
+  }`;
+
+  let prog, progZone, tex, fbo, texA, texB, uni = {}, uniZ = {};
+
+  function compile(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+    return s;
+  }
+  function link(vs, fs) {
+    const p = gl.createProgram();
+    gl.attachShader(p, compile(gl.VERTEX_SHADER, vs));
+    gl.attachShader(p, compile(gl.FRAGMENT_SHADER, fs));
+    gl.linkProgram(p);
+    if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
+    return p;
+  }
+
+  function initGL() {
+    gl = canvas.getContext('webgl2', { antialias:false, alpha:false });
+    if (!gl) { stage.innerHTML = '<div class="fallback">' + T(STR.noWebGL) + '</div>'; return false; }
+    if (!gl.getExtension('EXT_color_buffer_float')) {
+      stage.innerHTML = '<div class="fallback">' + T(STR.noFloat) + '</div>';
+      return false;
+    }
+    prog = link(VS, FS);
+    progZone = link(VS, FS_ZONE);
+
+    gl.useProgram(prog);
+    ['uTex','uSplit','aWB','aGain','aLift','aCon','aSat','bWB','bResidual','bPower','bLift','uPivot']
+      .forEach(n => uni[n] = gl.getUniformLocation(prog, n));
+    gl.uniform1i(uni.uTex, 0);
+    gl.uniform1f(uni.uPivot, 0.435);
+
+    gl.useProgram(progZone);
+    ['uTex','uSize','uTaps'].forEach(n => uniZ[n] = gl.getUniformLocation(progZone, n));
+    gl.uniform1i(uniZ.uTex, 0);
+    gl.uniform1i(uniZ.uTaps, 12);
+
+    tex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+    function mkTarget() {
+      const t = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, t);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, GW, GH, 0, gl.RGBA, gl.FLOAT, null);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      return t;
+    }
+    texA = mkTarget(); texB = mkTarget();
+    fbo = gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texA, 0);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT1, gl.TEXTURE_2D, texB, 0);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    return true;
+  }
+
+  // ---- measurement --------------------------------------------------------
+  const bufA = new Float32Array(GW*GH*4), bufB = new Float32Array(GW*GH*4);
+  let lastZones = null, lastResult = null;
+
+  function measure() {
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+    gl.drawBuffers([gl.COLOR_ATTACHMENT0, gl.COLOR_ATTACHMENT1]);
+    gl.viewport(0, 0, GW, GH);
+    gl.useProgram(progZone);
+    gl.uniform2i(uniZ.uSize, video.videoWidth, video.videoHeight);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    gl.readBuffer(gl.COLOR_ATTACHMENT0); gl.readPixels(0,0,GW,GH, gl.RGBA, gl.FLOAT, bufA);
+    gl.readBuffer(gl.COLOR_ATTACHMENT1); gl.readPixels(0,0,GW,GH, gl.RGBA, gl.FLOAT, bufB);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+    lastZones = decodeZones(bufA, bufB);
+    const out = engine.update(lastZones, parseFloat(document.getElementById('neutral15').value));
+    if (out) { lastResult = out; showReadout(out); }
+  }
+
+  // ---- readout ------------------------------------------------------------
+  function cell(label, value, accent) {
+    return '<div><span style="color:#55554f;">' + label + '</span><br>' +
+           '<span style="color:' + (accent || '#a4a4a0') + ';">' + value + '</span></div>';
+  }
+  function showReadout(out) {
+    const m = out.metering, e = out.awb, a = CLIPS[clipIndex].auto;
+    const g = channelGains(engine.wb[0], engine.wb[1]);
+    const ja = RW.lang === 'ja';
+    const flags = [];
+    if (m.backlit) flags.push(T(RD.backlit));
+    if (m.isFlat) flags.push(T(RD.flat));
+    if (m.highlightLimited) flags.push(T(RD.hlLimited));
+    if (out.snap) flags.push(T(RD.cut));
+    const aside = s => '　<span style="color:#55554f;">' + s + '</span>';
+    document.getElementById('readout15').innerHTML =
+      cell(T(RD.metered), m.meteredLuma.toFixed(4) + '  →  ' + (m.meteredLuma*m.gain).toFixed(4)) +
+      cell(T(RD.exposure), m.exposurePower.toFixed(3) + aside(T(RD.gainIs) + a.gain.toFixed(2))) +
+      cell(T(RD.black), engine.lift.toFixed(4) + aside(T(RD.valueIs) + a.lift.toFixed(3))) +
+      cell(T(RD.cct), e ? Math.round(e.cct) + ' K　Duv ' + (e.duv>=0?'+':'') + e.duv.toFixed(4) : T(RD.noEstimate)) +
+      cell(T(RD.confidence), e ? (e.confidence*100).toFixed(0) + '%　' +
+           (ja ? '（' + e.zonesUsed + '/' + e.zonesConsidered + ' ゾーン）'
+               : '(' + e.zonesUsed + '/' + e.zonesConsidered + ' zones)') : '—') +
+      cell(T(RD.tempTint), engine.wb[0].toFixed(3) + ' / ' + engine.wb[1].toFixed(3) +
+           aside(T(RD.valueIs) + a.temp.toFixed(2) + ' / ' + a.tint.toFixed(2))) +
+      cell(T(RD.residual), engine.residual.map(v=>v.toFixed(3)).join(' / ')) +
+      cell(T(RD.channel), g.map(v=>v.toFixed(3)).join(' / ')) +
+      cell(T(RD.zones), m.zonesUsed + ' / 256　' + T(RD.clipped) + (m.clippedFraction*100).toFixed(1) + '%') +
+      cell(T(RD.state), flags.length ? flags.join(ja ? '・' : ', ') : '—', flags.length ? '#e5484d' : '#a4a4a0');
+  }
+
+  // ---- zone overlay -------------------------------------------------------
+  const zonesCv = document.getElementById('zonesCv15');
+  let showZones = false;
+  function drawZones() {
+    if (!showZones || !lastZones) return;
+    const w = zonesCv.width, h = zonesCv.height;
+    const ctx = zonesCv.getContext('2d');
+    ctx.clearRect(0,0,w,h);
+    const cw = w/GW, ch = h/GH;
+    for (let y=0;y<GH;y++) for (let x=0;x<GW;x++) {
+      const z = zAt(lastZones,x,y);
+      ctx.strokeStyle = 'rgba(255,255,255,.12)';
+      ctx.strokeRect(x*cw, y*ch, cw, ch);
+      if (z.validCount === 0) continue;
+      // Fill with the zone's own measured chromaticity at a fixed brightness,
+      // so the grid shows what the estimator sees rather than the picture.
+      const l = z.linear, s = Math.max(l[0],l[1],l[2]) || 1;
+      const r = Math.pow(Math.min(l[0]/s,1), 1/2.4)*255;
+      const gg = Math.pow(Math.min(l[1]/s,1), 1/2.4)*255;
+      const b = Math.pow(Math.min(l[2]/s,1), 1/2.4)*255;
+      ctx.fillStyle = 'rgba(' + (r|0) + ',' + (gg|0) + ',' + (b|0) + ',.55)';
+      ctx.fillRect(x*cw+cw*0.30, y*ch+ch*0.30, cw*0.40, ch*0.40);
+    }
+  }
+
+  // ---- render loop --------------------------------------------------------
+  let sized = false, frame = 0, split = 0.5;
+
+  function draw() {
+    if (!looping) return;
+    requestAnimationFrame(draw);
+    if (video.readyState < 2 || !video.videoWidth) return;
+
+    if (!sized) {
+      canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+      zonesCv.width = video.videoWidth; zonesCv.height = video.videoHeight;
+      sized = true; stage.classList.add('ready');
+    }
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, video);
+
+    // Metering every 6th frame. The app meters every frame on a GPU it owns;
+    // here a readback stalls the pipeline, and auto-adjust is a slow control
+    // loop anyway — it eases at 0.08 per update.
+    if (frame % 6 === 0) { measure(); drawZones(); }
+    frame++;
+
+    const a = CLIPS[clipIndex].auto;
+    gl.useProgram(prog);
+    gl.uniform1f(uni.uSplit, split);
+    gl.uniform3fv(uni.aWB, channelGains(a.temp, a.tint));
+    gl.uniform1f(uni.aGain, a.gain);
+    gl.uniform1f(uni.aLift, a.lift);
+    gl.uniform1f(uni.aCon, a.con);
+    gl.uniform1f(uni.aSat, a.sat);
+    gl.uniform3fv(uni.bWB, channelGains(engine.wb[0], engine.wb[1]));
+    gl.uniform3fv(uni.bResidual, engine.residual);
+    gl.uniform1f(uni.bPower, engine.power);
+    gl.uniform1f(uni.bLift, engine.lift);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  }
+
+  // ---- clip switching -----------------------------------------------------
+  const clipsEl = document.getElementById('clips15');
+  function selectClip(i) {
+    clipIndex = i;
+    [...clipsEl.children].forEach((b, n) => b.setAttribute('aria-pressed', n === i ? 'true' : 'false'));
+    stage.classList.remove('ready');
+    sized = false;
+    engine.reset();
+    video.src = CLIPS[i].file;
+    video.poster = CLIPS[i].poster;
+    video.play().catch(() => {});
+  }
+  CLIPS.forEach((c, i) => {
+    const b = document.createElement('button');
+    b.textContent = T(c.label); b.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
+    b.addEventListener('click', () => selectClip(i));
+    clipsEl.appendChild(b);
+  });
+
+  // ---- split drag ---------------------------------------------------------
+  const divider = document.getElementById('divider15'), knob = document.getElementById('knob15');
+  const hint = document.getElementById('hint15');
+  function place() {
+    divider.style.left = (split*100) + '%';
+    knob.style.left = (split*100) + '%';
+  }
+  function setSplitFromEvent(ev) {
+    const r = stage.getBoundingClientRect();
+    const x = (ev.touches ? ev.touches[0].clientX : ev.clientX) - r.left;
+    split = clampf(x / r.width, 0, 1);
+    place();
+    hint.style.opacity = '0';
+  }
+  let dragging = false;
+  stage.addEventListener('pointerdown', e => { dragging = true; setSplitFromEvent(e); });
+  window.addEventListener('pointermove', e => { if (dragging) setSplitFromEvent(e); });
+  window.addEventListener('pointerup', () => { dragging = false; });
+  place();
+
+  const zoneBtn = document.getElementById('zoneBtn15');
+  zoneBtn.addEventListener('click', function () {
+    showZones = !showZones;
+    zonesCv.style.opacity = showZones ? '1' : '0';
+    this.textContent = T(showZones ? STR.hideZones : STR.showZones);
+    drawZones();
+  });
+
+  // Re-paint on a language switch, and once at load — an English reader gets
+  // here with Japanese still in the markup for the strings JS owns.
+  function repaint() {
+    [...clipsEl.children].forEach((b, i) => b.textContent = T(CLIPS[i].label));
+    zoneBtn.textContent = T(showZones ? STR.hideZones : STR.showZones);
+    if (lastResult) showReadout(lastResult);
+  }
+  RW.onChange(repaint);
+  repaint();
+  const neutral = document.getElementById('neutral15');
+  neutral.addEventListener('input', () => {
+    document.getElementById('neutral15_v').textContent = parseFloat(neutral.value).toFixed(2);
+  });
+
+  // ---- run only while on screen ------------------------------------------
+  // Same shape as the 1.1 demo above: the observer decides whether this
+  // section is live, and leaving it stops the video AND the metering readback
+  // rather than letting both run behind the reader's back.
+  let onScreen = !('IntersectionObserver' in window);
+  let looping = false;
+
+  function resume() {
+    if (!onScreen) return;
+    if (!gl && !initGL()) return;
+    if (!started) { started = true; selectClip(0); }
+    else video.play().catch(() => {});
+    if (!looping) { looping = true; draw(); }
+  }
+  function suspend() { video.pause(); looping = false; }
+
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) resume(); });
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(entries => {
+      onScreen = entries[0].isIntersecting;
+      onScreen ? resume() : suspend();
+    }, { threshold: 0.1 }).observe(stage);
+  }
+  stage.style.backgroundImage = 'url("' + CLIPS[0].poster + '")';
+  resume();
+})();
+</script>
+
   <!-- player showcase -->
   <div class="pad" style="padding:96px 72px 40px;display:flex;flex-direction:column;align-items:center;gap:14px;">
     <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;color:#e5484d;">THE PLAYER</div>
@@ -336,16 +1195,19 @@ window.RW = (function () {
             <tr><td colspan="3" style="padding:26px 16px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;color:#e5484d;border-bottom:1px solid rgba(255,255,255,.08);" data-ja="カラーグレーディング" data-en="Color grading">カラーグレーディング</td></tr>
             <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="自動調整 — ワンクリックで色を整える" data-en="Auto adjust — one press sets the color">自動調整 — ワンクリックで色を整える</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span><span style="font-size:11px;color:#7a7a76;margin-left:6px;" data-ja="バランス" data-en="Balanced">バランス</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span><span style="font-size:11px;color:#7a7a76;margin-left:6px;" data-ja="全モード" data-en="All modes">全モード</span></td></tr>
             <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="シーン毎に自動調整 — カットが変わるたび追従" data-en="Auto-adjust per scene — follows every cut">シーン毎に自動調整 — カットが変わるたび追従</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span><span style="font-size:11px;color:#7a7a76;margin-left:6px;" data-ja="バランス" data-en="Balanced">バランス</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span><span style="font-size:11px;color:#7a7a76;margin-left:6px;" data-ja="暗部強調も" data-en="Shadow boost too">暗部強調も</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="プライマリ（リフト / ガンマ / ゲイン）" data-en="Primary (lift / gamma / gain)">プライマリ（リフト / ガンマ / ゲイン）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="露出・黒レベル・ガンマ（マスター）" data-en="Exposure, black level, gamma (master)">露出・黒レベル・ガンマ（マスター）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="カラーホイール・チャンネル別のリフト / ガンマ / ゲイン" data-en="Colour wheels, per-channel lift / gamma / gain">カラーホイール・チャンネル別のリフト / ガンマ / ゲイン</span></td><td style="padding:11px 6px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:15px;color:#5a5a56;">—</td><td style="padding:11px 6px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:15px;color:#e5484d;background:rgba(229,72,77,.05);">✓</td></tr>
             <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="オフセット（ASC CDL）" data-en="Offset (ASC CDL)">オフセット（ASC CDL）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="コントラスト / ピボット" data-en="Contrast / pivot">コントラスト / ピボット</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="コントラスト" data-en="Contrast">コントラスト</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="コントラストのピボット" data-en="Contrast pivot">コントラストのピボット</span></td><td style="padding:11px 6px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:15px;color:#5a5a56;">—</td><td style="padding:11px 6px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:15px;color:#e5484d;background:rgba(229,72,77,.05);">✓</td></tr>
             <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="3-Way カラー補正（シャドウ / ミッド / ハイライト）" data-en="3-Way color correction (shadows / mids / highlights)">3-Way カラー補正（シャドウ / ミッド / ハイライト）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="色温度 / ティント" data-en="Temperature / tint">色温度 / ティント</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="色相 / 彩度（HSL）" data-en="Hue / saturation (HSL)">色相 / 彩度（HSL）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="色温度 / ティント" data-en="Temperature / tint">色温度 / ティント</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="彩度" data-en="Saturation">彩度</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="色相（HSL）" data-en="Hue (HSL)">色相（HSL）</span></td><td style="padding:11px 6px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:15px;color:#5a5a56;">—</td><td style="padding:11px 6px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:15px;color:#e5484d;background:rgba(229,72,77,.05);">✓</td></tr>
             <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="カーブ（Y / R / G / B）" data-en="Curves (Y / R / G / B)">カーブ（Y / R / G / B）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
             <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="トーンマップ（シャドウ / ハイライト / ピボット）" data-en="Tone map (shadows / highlights / pivot)">トーンマップ（シャドウ / ハイライト / ピボット）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
             <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="AWB / AE アイドロッパー — 白や露出を画面から拾う" data-en="AWB / AE eyedroppers — pick white or exposure off the picture">AWB / AE アイドロッパー — 白や露出を画面から拾う</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="A/B バイパス — 補正前後を一瞬で比較" data-en="A/B bypass — before and after, instantly">A/B バイパス — 補正前後を一瞬で比較</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="A/B 比較 — 全体 / スライダー" data-en="A/B compare — whole or split">A/B 比較 — 全体 / スライダー</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
             <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="LUT 読み込み（.cube）" data-en="Load a LUT (.cube)">LUT 読み込み（.cube）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
             <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="LUT 書き出し — 作った色を他のソフトへ" data-en="Export a LUT — take your color to other software">LUT 書き出し — 作った色を他のソフトへ</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
             <tr><td colspan="3" style="padding:26px 16px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;color:#e5484d;border-bottom:1px solid rgba(255,255,255,.08);" data-ja="画質" data-en="Quality">画質</td></tr>
@@ -358,7 +1220,7 @@ window.RW = (function () {
             <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="デインターレース" data-en="Deinterlacing">デインターレース</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4a4a46;">—</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
             <tr><td colspan="3" style="padding:26px 16px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;color:#e5484d;border-bottom:1px solid rgba(255,255,255,.08);" data-ja="プレーヤー" data-en="Player">プレーヤー</td></tr>
             <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="libmpv ベース — 幅広いコンテナ / コーデック" data-en="Built on libmpv — a wide range of containers / codecs">libmpv ベース — 幅広いコンテナ / コーデック</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="HDR → EDR 表示（BT.2390 トーンマップ）" data-en="HDR → EDR display (BT.2390 tone mapping)">HDR → EDR 表示（BT.2390 トーンマップ）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="HDR → SDR 表示（実測で決めたトーンカーブ）" data-en="HDR → SDR display (a tone curve fitted to measurements)">HDR → SDR 表示（実測で決めたトーンカーブ）</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
             <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="フレーム単位の前後移動" data-en="Step a frame at a time, forward and back">フレーム単位の前後移動</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
             <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="シークバーのサムネイルプレビュー" data-en="Thumbnail preview on the seek bar">シークバーのサムネイルプレビュー</span><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#e5484d;border:1px solid rgba(229,72,77,.5);border-radius:4px;padding:1px 5px;margin-left:8px;vertical-align:middle;">NEW</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
             <tr style="border-bottom:1px solid rgba(255,255,255,.045);"><td style="padding:11px 12px;font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#c4c4c0;"><span data-ja="プレイリスト / フォルダを開く" data-en="Playlist / open a folder">プレイリスト / フォルダを開く</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;"><span style="color:#4ec27a;">✓</span></td><td style="padding:11px 6px;text-align:center;font-size:15px;white-space:nowrap;background:rgba(229,72,77,.05);"><span style="color:#4ec27a;">✓</span></td></tr>
