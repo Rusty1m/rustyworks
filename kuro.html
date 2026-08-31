@@ -80,7 +80,7 @@
   /* Auto-adjust, once its values are actually in effect: flips from a filled
      call-to-action to an outlined "this is on" state, so the button reports
      whether the grade is currently the auto one. */
-  #auto { min-width:132px; }
+  #auto15 { min-width:132px; }
   button.primary.applied { background:transparent; color:#e5484d; }
   .note { font-family:'Zen Kaku Gothic New',sans-serif; font-size:13px; line-height:1.8; color:#7a7a76; margin-top:22px; }
   .fallback { padding:40px; text-align:center; font-family:'Zen Kaku Gothic New',sans-serif; color:#a4a4a0; }
@@ -128,7 +128,7 @@
 <body>
 
 <!-- Language, resolved before anything else runs.
-     It has to be this early because the two demos below write their own button
+     It has to be this early because the demo below writes its own button
      and readout text from JS: by the time the switcher at the foot of the page
      walks the DOM, those strings do not exist yet. So the demos read `RW.lang`
      as they build, and re-paint through `RW.onChange`. -->
@@ -202,69 +202,22 @@ window.RW = (function () {
   </div>
 
 
-  <!-- interactive demo -->
+  <!-- interactive demo — 1.5 auto-adjust -->
   <div class="pad" id="try" style="padding:88px 72px 72px;border-bottom:1px solid rgba(255,255,255,.06);">
     <div style="max-width:1080px;margin:0 auto;">
       <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;color:#e5484d;">TRY IT IN YOUR BROWSER</div>
-      <h2 class="h-l" style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;margin:14px 0 12px;" data-ja="触ってみてください。" data-en="Try it right here.">触ってみてください。</h2>
-      <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.75;color:#a4a4a0;max-width:640px;" data-ja="右半分は Kuro が自動調整した結果、左半分は元のままの映像です。仕切りを左右にドラッグして見比べてみてください。動いているのは、Kuro が実際に使っているのと同じ計算です。スライダーで自分で追い込むことも、「リセット」で元に戻すこともできます。" data-en="The right half is what Kuro's auto-adjust produced; the left half is the footage as it came. Drag the divider across to compare. What is running here is the same math the app itself uses. Push it further with the sliders, or put it back with Reset.">右半分は Kuro が自動調整した結果、左半分は元のままの映像です。仕切りを左右にドラッグして見比べてみてください。動いているのは、Kuro が実際に使っているのと同じ計算です。スライダーで自分で追い込むことも、「リセット」で元に戻すこともできます。</p>
-
-  <div class="stage" id="stage">
-    <canvas id="gl"></canvas>
-    <span class="tag l" data-ja="元映像" data-en="Original">元映像</span>
-    <span class="tag r">Kuro 1.1</span>
-    <div class="divider" id="divider"></div>
-    <div class="knob" id="knob">⇔</div>
-    <div class="hint" id="hint" data-ja="ドラッグして比較" data-en="Drag to compare">ドラッグして比較</div>
-    <div class="loading" id="loading">読み込み中…</div>
-  </div>
-
-  <div class="clips" id="clips"></div>
-
-  <div class="actions">
-    <button class="primary" id="auto">自動調整</button>
-    <button id="reset" data-ja="リセット" data-en="Reset">リセット</button>
-  </div>
-
-  <div class="panel" id="panel">
-    <div class="row"><label data-ja="露出" data-en="Exposure">露出</label><input type="range" id="gain"     min="0.5"  max="1.8"  step="0.01" value="1"><span class="val" id="gain_v">1.00</span></div>
-    <div class="row"><label data-ja="黒レベル" data-en="Black level">黒レベル</label><input type="range" id="lift"  min="-0.06" max="0.06" step="0.002" value="0"><span class="val" id="lift_v">0.000</span></div>
-    <div class="row"><label data-ja="コントラスト" data-en="Contrast">コントラスト</label><input type="range" id="con" min="0.5"  max="1.6"  step="0.01" value="1"><span class="val" id="con_v">1.00</span></div>
-    <div class="row"><label data-ja="色温度" data-en="Temperature">色温度</label><input type="range" id="temp"    min="-0.5" max="0.5"  step="0.01" value="0"><span class="val" id="temp_v">0.00</span></div>
-    <div class="row"><label data-ja="彩度" data-en="Saturation">彩度</label><input type="range" id="sat"       min="0"    max="2"    step="0.01" value="1"><span class="val" id="sat_v">1.00</span></div>
-    <div class="row"><label data-ja="ティント" data-en="Tint">ティント</label><input type="range" id="tint"  min="-0.5" max="0.5"  step="0.01" value="0"><span class="val" id="tint_v">0.00</span></div>
-  </div>
-
-
-  <p class="note">
-    <span data-ja="※ 移植しているのは " data-en="Note: this is ">※ 移植しているのは </span><span style="color:#a4a4a0;font-weight:600;">Kuro 1.1</span><span data-ja=" の色処理そのものです（Rec.709 Gamma 2.4 で符号化した空間でのリフト／ゲイン、実測に基づく色温度の RGB ゲイン、輝度を保つ彩度、ピボット付きコントラスト）。アップスケールやノイズ除去、HDR 表示といった機能はブラウザでは再現できないため含まれていません。" data-en="'s own color math, ported as it is (lift and gain in the Rec.709 Gamma 2.4 encoded space, measured RGB gains for temperature, luma-preserving saturation, contrast with a pivot). Upscaling, noise reduction and HDR display cannot be reproduced in a browser, so they are not here."> の色処理そのものです（Rec.709 Gamma 2.4 で符号化した空間での
-    リフト／ゲイン、実測に基づく色温度の RGB ゲイン、輝度を保つ彩度、ピボット付きコントラスト）。
-    アップスケールやノイズ除去、HDR 表示といった機能はブラウザでは再現できないため含まれていません。</span>
-  </p>
-
-      <div style="margin-top:26px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
-        <a href="https://apps.apple.com/app/apple-store/id6782262572?pt=128819275&amp;ct=website&amp;mt=8" style="background:#e5484d;color:#0a0a0b;font-weight:600;font-size:16px;padding:15px 30px;border-radius:8px;" data-ja="Mac App Store で無料ダウンロード" data-en="Download free on the Mac App Store">Mac App Store で無料ダウンロード</a>
-        <span style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#7a7a76;" data-ja="アプリなら、これを自分の動画で。" data-en="In the app, this runs on your own footage.">アプリなら、これを自分の動画で。</span>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- interactive demo — 1.5 auto-adjust -->
-  <div class="pad" id="try15" style="padding:88px 72px 72px;border-bottom:1px solid rgba(255,255,255,.06);">
-    <div style="max-width:1080px;margin:0 auto;">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;color:#e5484d;">1.5 — AUTO ADJUST, REBUILT</div>
       <h2 class="h-l" style="font-size:40px;color:#f2f2f0;font-weight:700;letter-spacing:-.01em;margin:14px 0 12px;" data-ja="測ってから、決める。" data-en="Measure first, then decide.">測ってから、決める。</h2>
       <p style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:16px;line-height:1.75;color:#a4a4a0;max-width:660px;">
-        <span data-ja="上のデモの 1.1 は、クリップごとにあらかじめ用意した補正値を当てています。1.5 は違います。画面を 16×16 に区切って1マスずつ明るさと色を測り、そこから露出と白を決めます。左半分が 1.1、右半分が 1.5 です。 " data-en="The 1.1 demo above applies correction values prepared in advance for each clip. 1.5 does not. It divides the frame into 16×16 cells, measures brightness and color in each one, and decides exposure and white from that. Left half is 1.1, right half is 1.5. ">上のデモの 1.1 は、クリップごとにあらかじめ用意した補正値を当てています。1.5 は違います。画面を 16×16 に区切って
-        1マスずつ明るさと色を測り、そこから露出と白を決めます。左半分が 1.1、右半分が 1.5 です。 </span><span style="color:#e5484d;" data-ja="下に出ている数字は、いまこのフレームから実際に測った値です。" data-en="The numbers below are measured from this very frame, right now.">下に出ている数字は、いまこのフレームから実際に測った値です。</span>
+        <span data-ja="左半分が元の映像、右半分が Kuro の自動調整です。仕切りをドラッグして見比べてください。Kuro は画面を 16×16 に区切って1マスずつ明るさと色を測り、そこから露出・黒レベル・白を決めます。クリップごとに用意しておいた値ではありません。スライダーで自分で追い込むこともできます。 " data-en="The left half is the footage as it came, the right half is Kuro's auto-adjust. Drag the divider to compare. Kuro divides the frame into 16×16 cells, measures brightness and color in each one, and decides exposure, black level and white from that — nothing here was prepared per clip. You can also push it further yourself with the sliders. ">左半分が元の映像、右半分が Kuro の自動調整です。仕切りをドラッグして見比べてください。
+        Kuro は画面を 16×16 に区切って1マスずつ明るさと色を測り、そこから露出・黒レベル・白を決めます。
+        クリップごとに用意しておいた値ではありません。スライダーで自分で追い込むこともできます。 </span><span style="color:#e5484d;" data-ja="下に出ている数字は、いまこのフレームから実際に測った値です。" data-en="The numbers below are measured from this very frame, right now.">下に出ている数字は、いまこのフレームから実際に測った値です。</span>
       </p>
 
       <div class="stage" id="stage15">
         <canvas id="gl15"></canvas>
         <canvas id="zonesCv15" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .2s;pointer-events:none;"></canvas>
-        <span class="tag l" data-ja="Kuro 1.1（固定値）" data-en="Kuro 1.1 (fixed values)">Kuro 1.1（固定値）</span>
-        <span class="tag r" data-ja="Kuro 1.5（実測）" data-en="Kuro 1.5 (measured)">Kuro 1.5（実測）</span>
+        <span class="tag l" data-ja="元映像" data-en="Original">元映像</span>
+        <span class="tag r">Kuro 1.5</span>
         <div class="divider" id="divider15"></div>
         <div class="knob" id="knob15">⇔</div>
         <div class="hint" id="hint15" data-ja="ドラッグして比較" data-en="Drag to compare">ドラッグして比較</div>
@@ -274,22 +227,45 @@ window.RW = (function () {
       <div class="clips" id="clips15"></div>
 
       <div class="actions">
+        <button class="primary" id="auto15" data-ja="自動調整" data-en="Auto-adjust">自動調整</button>
+        <button id="reset15" data-ja="リセット" data-en="Reset">リセット</button>
         <button id="zoneBtn15">測光ゾーンを表示</button>
         <label style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:13px;color:#a4a4a0;display:flex;align-items:center;gap:10px;">
           <span data-ja="中和" data-en="Neutralize">中和</span>
-          <input type="range" id="neutral15" min="0" max="1" step="0.05" value="1" style="width:150px;">
-          <span class="val" id="neutral15_v" style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#7a7a76;">1.00</span>
+          <input type="range" id="neutral15" min="0" max="1" step="0.05" value="0.5" style="width:150px;">
+          <span class="val" id="neutral15_v" style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#7a7a76;">0.50</span>
         </label>
         <span style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:12px;color:#7a7a76;" data-ja="0 にすると、その場の色みを残したままにします。" data-en="At 0, the color of the light on the scene is left as it is.">0 にすると、その場の色みを残したままにします。</span>
+      </div>
+
+      <!-- The free panel's controls, in the app's own ranges. Auto-adjust
+           decides exposure / black level / white; these ride on top of it,
+           exactly as they do in the app. -->
+      <div class="panel" id="panel15">
+        <div class="row"><label data-ja="露出" data-en="Exposure">露出</label><input type="range" id="m_gain"  min="0"     max="4"    step="0.01"  value="1"><span class="val" id="m_gain_v">1.00</span></div>
+        <div class="row"><label data-ja="黒レベル" data-en="Black level">黒レベル</label><input type="range" id="m_lift" min="-0.5" max="0.5"  step="0.002" value="0"><span class="val" id="m_lift_v">0.000</span></div>
+        <div class="row"><label data-ja="ガンマ" data-en="Gamma">ガンマ</label><input type="range" id="m_gamma" min="-0.5" max="1"    step="0.01"  value="0"><span class="val" id="m_gamma_v">0.00</span></div>
+        <div class="row"><label data-ja="コントラスト" data-en="Contrast">コントラスト</label><input type="range" id="m_con" min="0" max="2" step="0.005" value="1"><span class="val" id="m_con_v">1.000</span></div>
+        <div class="row"><label data-ja="色温度" data-en="Temperature">色温度</label><input type="range" id="m_temp" min="-4000" max="4000" step="10" value="0"><span class="val" id="m_temp_v">0</span></div>
+        <div class="row"><label data-ja="ティント" data-en="Tint">ティント</label><input type="range" id="m_tint" min="-100" max="100" step="1" value="0"><span class="val" id="m_tint_v">0</span></div>
+        <div class="row"><label data-ja="彩度" data-en="Saturation">彩度</label><input type="range" id="m_sat" min="0" max="100" step="1" value="50"><span class="val" id="m_sat_v">50</span></div>
       </div>
 
       <div id="readout15" style="margin-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 26px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#7a7a76;"></div>
 
       <p class="note">
-        <span data-ja="※ 1.5 の自動調整は " data-en="Note: 1.5's auto-adjust decides only ">※ 1.5 の自動調整は </span><span style="color:#a4a4a0;font-weight:600;" data-ja="露出・黒レベル・ホワイトバランス" data-en="exposure, black level and white balance">露出・黒レベル・ホワイトバランス</span><span data-ja="だけを決めます。コントラストと彩度には触れません（1.1 の固定値には入っています）。ゾーン測光・黒体軌跡による白の推定・色温度で表しきれない分の残差ゲイン・カット検出は、アプリと同じ計算をそのまま移植しています。" data-en=". It leaves contrast and saturation alone (1.1's fixed values include them). Zone metering, white estimated from the blackbody locus, the residual gain for what temperature alone cannot express, and cut detection are all ported straight from the app.">だけを決めます。
-        コントラストと彩度には触れません（1.1 の固定値には入っています）。ゾーン測光・黒体軌跡による白の推定・
-        色温度で表しきれない分の残差ゲイン・カット検出は、アプリと同じ計算をそのまま移植しています。</span>
+        <span data-ja="※ 自動調整が決めるのは " data-en="Note: auto-adjust decides only ">※ 自動調整が決めるのは </span><span style="color:#a4a4a0;font-weight:600;" data-ja="露出・黒レベル・ホワイトバランス" data-en="exposure, black level and white balance">露出・黒レベル・ホワイトバランス</span><span data-ja="だけです。コントラストと彩度には触れません — そこは手で決めるところだからです。ゾーン測光・黒体軌跡による白の推定・色温度で表しきれない分の残差ゲイン・カット検出、それにスライダー7本の色処理は、すべてアプリと同じ計算をそのまま移植しています（Rec.709 Gamma 2.4 で符号化した空間でのリフト／ガンマ／ゲイン、実測に基づく色温度の RGB ゲイン、輝度を保つ彩度、ピボット 0.435 のコントラスト）。アップスケールやノイズ除去、HDR 表示はブラウザでは再現できないため含まれていません。" data-en=". It leaves contrast and saturation alone — those are yours to decide. Zone metering, white estimated from the blackbody locus, the residual gain for what temperature alone cannot express, cut detection, and the color math behind all seven sliders are ported straight from the app (lift / gamma / gain in the Rec.709 Gamma 2.4 encoded space, measured RGB gains for temperature, luma-preserving saturation, contrast about a 0.435 pivot). Upscaling, noise reduction and HDR display cannot be reproduced in a browser, so they are not here.">だけです。
+        コントラストと彩度には触れません — そこは手で決めるところだからです。ゾーン測光・黒体軌跡による白の推定・
+        色温度で表しきれない分の残差ゲイン・カット検出、それにスライダー7本の色処理は、すべてアプリと同じ計算を
+        そのまま移植しています（Rec.709 Gamma 2.4 で符号化した空間でのリフト／ガンマ／ゲイン、実測に基づく色温度の
+        RGB ゲイン、輝度を保つ彩度、ピボット 0.435 のコントラスト）。アップスケールやノイズ除去、HDR 表示は
+        ブラウザでは再現できないため含まれていません。</span>
       </p>
+
+      <div style="margin-top:26px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
+        <a href="https://apps.apple.com/app/apple-store/id6782262572?pt=128819275&amp;ct=website&amp;mt=8" style="background:#e5484d;color:#0a0a0b;font-weight:600;font-size:16px;padding:15px 30px;border-radius:8px;" data-ja="Mac App Store で無料ダウンロード" data-en="Download free on the Mac App Store">Mac App Store で無料ダウンロード</a>
+        <span style="font-family:'Zen Kaku Gothic New',sans-serif;font-size:14px;color:#7a7a76;" data-ja="アプリなら、これを自分の動画で。ここにあるスライダーは無料版のものです。" data-en="In the app, this runs on your own footage. Every slider here is in the free version.">アプリなら、これを自分の動画で。ここにあるスライダーは無料版のものです。</span>
+      </div>
     </div>
   </div>
 
@@ -328,8 +304,6 @@ window.RW = (function () {
     channel:    { ja:'実効チャンネルゲイン',   en:'Effective channel gains' },
     zones:      { ja:'測光に使ったゾーン',     en:'Zones used for metering' },
     state:      { ja:'状態',                   en:'State' },
-    gainIs:     { ja:'1.1 はゲイン ',          en:'1.1 uses gain ' },
-    valueIs:    { ja:'1.1 は ',                en:'1.1 uses ' },
     noEstimate: { ja:'推定できず',             en:'Could not estimate' },
     clipped:    { ja:'白飛び ',                en:'clipped ' },
     backlit:    { ja:'逆光',                   en:'Backlit' },
@@ -338,18 +312,16 @@ window.RW = (function () {
     cut:        { ja:'カット',                 en:'Cut' },
   };
 
-  // ---- clips: the same four files the 1.1 demo uses, so nothing extra is
-  // fetched for a reader who has already scrolled through that one. `auto` is
-  // 1.1's baked-in answer, kept identical to the table above.
+  // ---- clips: four clips the rebuilt auto-adjust actually has work to do on.
+  // Chosen by running this very code over the candidates and keeping the ones
+  // where the metering moves: moss is badly underexposed, logs is backlit on
+  // every frame, sea and river have lifted blacks. Nothing is prepared per
+  // clip — what you see is measured live, here, in your browser.
   const CLIPS = [
-    { label:{ ja:'森の川', en:'Forest river' },   file:'assets/lp/demo-river.mp4',  poster:'assets/lp/demo-river.jpg',
-      auto:{ gain:1.10, lift:-0.018, con:1.20, temp:0.06, sat:1.28, tint:0 } },
-    { label:{ ja:'花畑', en:'Flower field' },     file:'assets/lp/demo-flower.mp4', poster:'assets/lp/demo-flower.jpg',
-      auto:{ gain:1.04, lift:-0.014, con:1.16, temp:0.03, sat:1.20, tint:0 } },
-    { label:{ ja:'夕景', en:'Sunset' },     file:'assets/lp/demo-sunset.mp4', poster:'assets/lp/demo-sunset.jpg',
-      auto:{ gain:1.14, lift:-0.010, con:1.14, temp:0.10, sat:1.18, tint:0 } },
-    { label:{ ja:'オーロラ', en:'Aurora' }, file:'assets/lp/demo-aurora.mp4', poster:'assets/lp/demo-aurora.jpg',
-      auto:{ gain:1.32, lift:-0.006, con:1.18, temp:-0.05, sat:1.26, tint:0 } },
+    { label:{ ja:'逆光の林道', en:'Backlit track' }, file:'assets/lp/demo15-logs.mp4',  poster:'assets/lp/demo15-logs.jpg' },
+    { label:{ ja:'暗い樹皮',   en:'Dark bark' },     file:'assets/lp/demo15-moss.mp4',  poster:'assets/lp/demo15-moss.jpg' },
+    { label:{ ja:'渓流',       en:'Mountain river' },file:'assets/lp/demo15-river.mp4', poster:'assets/lp/demo15-river.jpg' },
+    { label:{ ja:'夕景',       en:'Sunset' },        file:'assets/lp/demo15-sea.mp4',   poster:'assets/lp/demo15-sea.jpg' },
   ];
   let clipIndex = 0;
 
@@ -749,41 +721,44 @@ window.RW = (function () {
     gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0);
   }`;
 
-  // Both sides in one pass. Left of uSplit is 1.1's fixed answer, right is
-  // 1.5's measured one, from the same texel of the same frame — the only way
-  // the comparison is honest.
+  // Both sides in one pass. Left of uSplit is the frame as it came, right is
+  // what Kuro decided — from the same texel of the same frame, which is the
+  // only way the comparison is honest.
   const FS = `#version 300 es
   precision highp float;
   in vec2 vUv;
   out vec4 frag;
   uniform sampler2D uTex;
   uniform float uSplit;
-  // 1.1 — fixed per clip
-  uniform vec3  aWB; uniform float aGain, aLift, aCon, aSat;
-  // 1.5 — measured per frame
+  // auto-adjust — measured per frame
   uniform vec3  bWB, bResidual; uniform float bPower, bLift;
+  // the panel's seven sliders, riding on top of it
+  uniform vec3  mWB; uniform float mGain, mLift, mGammaExp, mCon, mSat;
   uniform float uPivot;
 
   vec3 dec(vec3 v) { return sign(v) * pow(abs(v), vec3(2.4)); }
   vec3 enc(vec3 v) { return sign(v) * pow(abs(v), vec3(1.0/2.4)); }
 
-  vec3 grade11(vec3 src) {
-    vec3 c = dec(src) * aWB;
-    vec3 g = enc(c) * aGain;
-    g = g + aLift * (vec3(1.0) - g);
+  // The free panel, in the app's own order: white balance, then lift / gamma /
+  // gain, then contrast about a pivot, then luma-preserving saturation.
+  vec3 manual(vec3 src) {
+    vec3 c = dec(src) * mWB;
+    vec3 g = enc(c) * mGain;
+    g = g + mLift * (vec3(1.0) - g);
+    g = pow(max(g, vec3(0.0)), vec3(1.0) / max(mGammaExp, 0.001));
     c = dec(g);
-    if (abs(aCon - 1.0) > 0.001) {
-      float e = pow(max(2.0 - aCon, 1e-3), -1.17);
+    if (abs(mCon - 1.0) > 0.001) {
+      float e = pow(max(2.0 - mCon, 1e-3), -1.17);
       float pv = clamp(uPivot, 0.01, 0.99);
       vec3 x = enc(c);
       vec3 below = pow(max(x/pv, 0.0), vec3(e)) * pv;
       vec3 above = 1.0 - pow(max((1.0-x)/(1.0-pv), 0.0), vec3(e)) * (1.0-pv);
       c = dec(mix(below, above, step(vec3(pv), x)));
     }
-    if (abs(aSat - 1.0) > 0.001) {
+    if (abs(mSat - 1.0) > 0.001) {
       vec3 x = enc(clamp(c, 0.0, 1.0));
       float y = dot(x, vec3(0.2126, 0.7152, 0.0722));
-      c = dec(clamp(mix(vec3(y), x, aSat), 0.0, 1.0));
+      c = dec(clamp(mix(vec3(y), x, mSat), 0.0, 1.0));
     }
     return enc(c);
   }
@@ -801,7 +776,7 @@ window.RW = (function () {
 
   void main() {
     vec3 src = texture(uTex, vec2(vUv.x, 1.0 - vUv.y)).rgb;
-    vec3 o = (vUv.x < uSplit) ? grade11(src) : grade15(src);
+    vec3 o = (vUv.x < uSplit) ? src : manual(grade15(src));
     frag = vec4(clamp(o, 0.0, 1.0), 1.0);
   }`;
 
@@ -869,7 +844,7 @@ window.RW = (function () {
     progZone = link(VS, FS_ZONE);
 
     gl.useProgram(prog);
-    ['uTex','uSplit','aWB','aGain','aLift','aCon','aSat','bWB','bResidual','bPower','bLift','uPivot']
+    ['uTex','uSplit','bWB','bResidual','bPower','bLift','mWB','mGain','mLift','mGammaExp','mCon','mSat','uPivot']
       .forEach(n => uni[n] = gl.getUniformLocation(prog, n));
     gl.uniform1i(uni.uTex, 0);
     gl.uniform1f(uni.uPivot, 0.435);
@@ -929,7 +904,7 @@ window.RW = (function () {
            '<span style="color:' + (accent || '#a4a4a0') + ';">' + value + '</span></div>';
   }
   function showReadout(out) {
-    const m = out.metering, e = out.awb, a = CLIPS[clipIndex].auto;
+    const m = out.metering, e = out.awb;
     const g = channelGains(engine.wb[0], engine.wb[1]);
     const ja = RW.lang === 'ja';
     const flags = [];
@@ -937,17 +912,15 @@ window.RW = (function () {
     if (m.isFlat) flags.push(T(RD.flat));
     if (m.highlightLimited) flags.push(T(RD.hlLimited));
     if (out.snap) flags.push(T(RD.cut));
-    const aside = s => '　<span style="color:#55554f;">' + s + '</span>';
     document.getElementById('readout15').innerHTML =
       cell(T(RD.metered), m.meteredLuma.toFixed(4) + '  →  ' + (m.meteredLuma*m.gain).toFixed(4)) +
-      cell(T(RD.exposure), m.exposurePower.toFixed(3) + aside(T(RD.gainIs) + a.gain.toFixed(2))) +
-      cell(T(RD.black), engine.lift.toFixed(4) + aside(T(RD.valueIs) + a.lift.toFixed(3))) +
+      cell(T(RD.exposure), m.exposurePower.toFixed(3)) +
+      cell(T(RD.black), engine.lift.toFixed(4)) +
       cell(T(RD.cct), e ? Math.round(e.cct) + ' K　Duv ' + (e.duv>=0?'+':'') + e.duv.toFixed(4) : T(RD.noEstimate)) +
       cell(T(RD.confidence), e ? (e.confidence*100).toFixed(0) + '%　' +
            (ja ? '（' + e.zonesUsed + '/' + e.zonesConsidered + ' ゾーン）'
                : '(' + e.zonesUsed + '/' + e.zonesConsidered + ' zones)') : '—') +
-      cell(T(RD.tempTint), engine.wb[0].toFixed(3) + ' / ' + engine.wb[1].toFixed(3) +
-           aside(T(RD.valueIs) + a.temp.toFixed(2) + ' / ' + a.tint.toFixed(2))) +
+      cell(T(RD.tempTint), engine.wb[0].toFixed(3) + ' / ' + engine.wb[1].toFixed(3)) +
       cell(T(RD.residual), engine.residual.map(v=>v.toFixed(3)).join(' / ')) +
       cell(T(RD.channel), g.map(v=>v.toFixed(3)).join(' / ')) +
       cell(T(RD.zones), m.zonesUsed + ' / 256　' + T(RD.clipped) + (m.clippedFraction*100).toFixed(1) + '%') +
@@ -1003,18 +976,20 @@ window.RW = (function () {
     if (frame % 6 === 0) { measure(); drawZones(); }
     frame++;
 
-    const a = CLIPS[clipIndex].auto;
+    const man = readManual();
     gl.useProgram(prog);
     gl.uniform1f(uni.uSplit, split);
-    gl.uniform3fv(uni.aWB, channelGains(a.temp, a.tint));
-    gl.uniform1f(uni.aGain, a.gain);
-    gl.uniform1f(uni.aLift, a.lift);
-    gl.uniform1f(uni.aCon, a.con);
-    gl.uniform1f(uni.aSat, a.sat);
-    gl.uniform3fv(uni.bWB, channelGains(engine.wb[0], engine.wb[1]));
-    gl.uniform3fv(uni.bResidual, engine.residual);
-    gl.uniform1f(uni.bPower, engine.power);
-    gl.uniform1f(uni.bLift, engine.lift);
+    // With auto off, the identity: the right half is then the manual panel alone.
+    gl.uniform3fv(uni.bWB, autoOn ? channelGains(engine.wb[0], engine.wb[1]) : [1,1,1]);
+    gl.uniform3fv(uni.bResidual, autoOn ? engine.residual : [1,1,1]);
+    gl.uniform1f(uni.bPower, autoOn ? engine.power : 1);
+    gl.uniform1f(uni.bLift, autoOn ? engine.lift : 0);
+    gl.uniform3fv(uni.mWB, channelGains(man.temp, man.tint));
+    gl.uniform1f(uni.mGain, man.gain);
+    gl.uniform1f(uni.mLift, man.lift);
+    gl.uniform1f(uni.mGammaExp, man.gammaExp);
+    gl.uniform1f(uni.mCon, man.con);
+    gl.uniform1f(uni.mSat, man.sat);
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   }
@@ -1022,6 +997,7 @@ window.RW = (function () {
   // ---- clip switching -----------------------------------------------------
   const clipsEl = document.getElementById('clips15');
   function selectClip(i) {
+    resetManual(); autoOn = true; syncAutoBtn();
     clipIndex = i;
     [...clipsEl.children].forEach((b, n) => b.setAttribute('aria-pressed', n === i ? 'true' : 'false'));
     stage.classList.remove('ready');
@@ -1058,6 +1034,54 @@ window.RW = (function () {
   window.addEventListener('pointerup', () => { dragging = false; });
   place();
 
+  // ---- the manual panel ---------------------------------------------------
+  // Ranges and neutrals are the app's free panel, not a demo-friendly subset:
+  // exposure 0-4, black level +-0.5, gamma -0.5..1 (DaVinci 0-centered),
+  // contrast 0-2, temperature +-4000, tint +-100, saturation 0-100.
+  const MSLIDERS = [
+    { id:'m_gain',  neutral:1,  dp:2 },
+    { id:'m_lift',  neutral:0,  dp:3 },
+    { id:'m_gamma', neutral:0,  dp:2 },
+    { id:'m_con',   neutral:1,  dp:3 },
+    { id:'m_temp',  neutral:0,  dp:0 },
+    { id:'m_tint',  neutral:0,  dp:0 },
+    { id:'m_sat',   neutral:50, dp:0 },
+  ];
+  const mEl = {};
+  MSLIDERS.forEach(sl => { mEl[sl.id] = document.getElementById(sl.id); });
+  function showManual() {
+    MSLIDERS.forEach(sl => {
+      document.getElementById(sl.id + '_v').textContent =
+        parseFloat(mEl[sl.id].value).toFixed(sl.dp);
+    });
+  }
+  // MetalRenderer.davinciGammaToExponent — the 0-centered wheel value the app
+  // shows is not the exponent; it is converted at upload time.
+  function gammaExponent(g) { return g >= 0 ? (1 + 4*g) : (1 / (1 - 4*g)); }
+  function readManual() {
+    const v = id => parseFloat(mEl[id].value);
+    return { gain:v('m_gain'), lift:v('m_lift'), gammaExp:gammaExponent(v('m_gamma')),
+             con:v('m_con'), temp:v('m_temp')/4000, tint:v('m_tint')/100,
+             sat:v('m_sat')/50 };
+  }
+  function resetManual() {
+    MSLIDERS.forEach(sl => { mEl[sl.id].value = sl.neutral; });
+    showManual();
+  }
+  MSLIDERS.forEach(sl => mEl[sl.id].addEventListener('input', showManual));
+  showManual();
+
+  // Auto-adjust is the state the demo opens in; the sliders ride on top of it.
+  // "Reset" drops both, so the right half becomes the untouched frame and the
+  // divider has nothing left to show — which is the honest way to say off.
+  let autoOn = true;
+  const autoBtn = document.getElementById('auto15');
+  const resetBtn = document.getElementById('reset15');
+  function syncAutoBtn() { autoBtn.classList.toggle('applied', autoOn); }
+  autoBtn.addEventListener('click', () => { autoOn = true; resetManual(); syncAutoBtn(); });
+  resetBtn.addEventListener('click', () => { autoOn = false; resetManual(); syncAutoBtn(); });
+  syncAutoBtn();
+
   const zoneBtn = document.getElementById('zoneBtn15');
   zoneBtn.addEventListener('click', function () {
     showZones = !showZones;
@@ -1081,7 +1105,7 @@ window.RW = (function () {
   });
 
   // ---- run only while on screen ------------------------------------------
-  // Same shape as the 1.1 demo above: the observer decides whether this
+  // The observer decides whether this
   // section is live, and leaving it stops the video AND the metering readback
   // rather than letting both run behind the reader's back.
   let onScreen = !('IntersectionObserver' in window);
@@ -1288,382 +1312,13 @@ window.RW = (function () {
   </div>
 
 </div>
-<!-- No src / preload="none": the clip is only fetched once the demo is actually
-     scrolled to, so a reader who never reaches it pays nothing for it. -->
-<video id="vid" playsinline muted loop preload="none" style="display:none"></video>
-
-<script>
-(function () {
-  const video  = document.getElementById('vid');
-  const canvas = document.getElementById('gl');
-  const gl = canvas.getContext('webgl2', { antialias:false, alpha:false });
-
-  // ---- text this demo writes itself --------------------------------------
-  // Same reason as the 1.5 demo below: the data-ja/data-en pass runs once over
-  // the DOM, and JS writes all of this after it.
-  const T = p => RW.t(p);
-  const STR = {
-    auto:      { ja:'自動調整',                 en:'Auto adjust' },
-    autoOn:    { ja:'✓ 自動調整',               en:'✓ Auto adjust' },
-    loading:   { ja:'読み込み中…',              en:'Loading…' },
-    tapToPlay: { ja:'タップして再生',           en:'Tap to play' },
-    loadFailed:{ ja:'映像を読み込めませんでした', en:'The video could not be loaded' },
-    noWebGL:   { ja:'お使いのブラウザは WebGL2 に対応していないため、このデモを表示できません。',
-                 en:'This browser does not support WebGL2, so this demo cannot run.' },
-  };
-
-  if (!gl) {
-    document.getElementById('stage').innerHTML =
-      '<div class="fallback">' + T(STR.noWebGL) + '</div>';
-    return;
-  }
-
-  // ---- shaders -------------------------------------------------------------
-  // Faithful port of Kuro's correctFragment. The video texture carries the same
-  // Rec.709 signal mpv hands the app, so the pipeline is identical: decode with
-  // Gamma 2.4, grade, re-encode.
-  const VS = `#version 300 es
-  out vec2 vUv;
-  void main() {
-    vec2 p = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2);
-    vUv = p;                       // 0..1
-    gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0);
-  }`;
-
-  const FS = `#version 300 es
-  precision highp float;
-  in vec2 vUv;
-  out vec4 frag;
-
-  uniform sampler2D uTex;
-  uniform vec3  uWBGain;    // measured temperature x tint channel gains
-  uniform vec3  uLift;
-  uniform vec3  uGamma;     // effective exponent, already converted CPU-side
-  uniform vec3  uGain;
-  uniform float uContrast;
-  uniform float uPivot;
-  uniform float uSat;
-  uniform float uSplit;     // 0..1 — left of this shows the untouched source
-
-  vec3 g24Decode(vec3 v) { return sign(v) * pow(abs(v), vec3(2.4)); }
-  vec3 g24Encode(vec3 v) { return sign(v) * pow(abs(v), vec3(1.0 / 2.4)); }
-
-  void main() {
-    vec3 src = texture(uTex, vec2(vUv.x, 1.0 - vUv.y)).rgb;
-
-    if (vUv.x < uSplit) { frag = vec4(src, 1.0); return; }
-
-    // Pass 1 — source transfer to linear BT.709
-    vec3 c = g24Decode(src);
-
-    // Pass 1.5 — white balance: a constant per-channel gain in linear light
-    c *= uWBGain;
-
-    // Pass 2 — lift / gamma / gain, applied on the Gamma-2.4 encoded signal
-    {
-      vec3 g = g24Encode(c);
-      g = g * uGain;
-      g = g + uLift * (vec3(1.0) - g);
-      g = pow(max(g, vec3(0.0)), vec3(1.0) / max(uGamma, vec3(0.001)));
-      c = g24Decode(g);
-    }
-
-    // Pass 3.5 — contrast about a pivot, also in encoded space
-    if (abs(uContrast - 1.0) > 0.001) {
-      float e = pow(max(2.0 - uContrast, 1e-3), -1.17);
-      float pv = clamp(uPivot, 0.01, 0.99);
-      vec3 enc = g24Encode(c);
-      vec3 below = pow(max(enc / pv, 0.0), vec3(e)) * pv;
-      vec3 above = 1.0 - pow(max((1.0 - enc) / (1.0 - pv), 0.0), vec3(e)) * (1.0 - pv);
-      enc = mix(below, above, step(vec3(pv), enc));
-      c = g24Decode(enc);
-    }
-
-    // Pass 4 — saturation, luma-preserving, around the 2.4 luma
-    if (abs(uSat - 1.0) > 0.001) {
-      vec3 enc = g24Encode(clamp(c, 0.0, 1.0));
-      float y = dot(enc, vec3(0.2126, 0.7152, 0.0722));
-      enc = mix(vec3(y), enc, uSat);
-      c = g24Decode(clamp(enc, 0.0, 1.0));
-    }
-
-    frag = vec4(clamp(g24Encode(c), 0.0, 1.0), 1.0);
-  }`;
-
-  function compile(type, src) {
-    const s = gl.createShader(type);
-    gl.shaderSource(s, src); gl.compileShader(s);
-    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
-    return s;
-  }
-  const prog = gl.createProgram();
-  gl.attachShader(prog, compile(gl.VERTEX_SHADER, VS));
-  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FS));
-  gl.linkProgram(prog);
-  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
-  gl.useProgram(prog);
-
-  const U = n => gl.getUniformLocation(prog, n);
-  const uni = { tex:U('uTex'), wb:U('uWBGain'), lift:U('uLift'), gamma:U('uGamma'), gain:U('uGain'),
-                con:U('uContrast'), pivot:U('uPivot'), sat:U('uSat'), split:U('uSplit') };
-
-  const tex = gl.createTexture();
-  gl.bindTexture(gl.TEXTURE_2D, tex);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-  gl.uniform1i(uni.tex, 0);
-  gl.uniform1f(uni.pivot, 0.435);   // Kuro's default contrast pivot
-
-  // ---- white balance model -------------------------------------------------
-  // Same measured anchors the app uses; gains interpolate and compose
-  // multiplicatively, exactly as in WhiteBalance.channelGains().
-  const ANCH_T = [-2000,-1000,0,1000,2000];
-  const T_R = [0.740,0.840,1.0,1.257,1.735];
-  const T_G = [1.016,1.016,1.0,0.970,0.907];
-  const T_B = [1.700,1.360,1.0,0.660,0.327];
-  const ANCH_U = [-100,0,50,100];
-  const U_R = [0.711,1.0,1.177,1.349];
-  const U_G = [1.117,1.0,0.945,0.874];
-  const U_B = [0.757,1.0,1.136,1.283];
-
-  function interp(x, xs, ys) {
-    const n = xs.length;
-    if (x <= xs[0])     return Math.max(0, ys[0] + (ys[1]-ys[0])/(xs[1]-xs[0]) * (x-xs[0]));
-    if (x >= xs[n-1])   return Math.max(0, ys[n-1] + (ys[n-1]-ys[n-2])/(xs[n-1]-xs[n-2]) * (x-xs[n-1]));
-    for (let i = 1; i < n; i++) if (x <= xs[i])
-      return ys[i-1] + (x-xs[i-1])/(xs[i]-xs[i-1]) * (ys[i]-ys[i-1]);
-    return ys[n-1];
-  }
-  function wbGain(temp, tint) {
-    const t = temp * 4000, u = tint * 100;
-    return [ interp(t,ANCH_T,T_R) * interp(u,ANCH_U,U_R),
-             interp(t,ANCH_T,T_G) * interp(u,ANCH_U,U_G),
-             interp(t,ANCH_T,T_B) * interp(u,ANCH_U,U_B) ];
-  }
-
-  // ---- controls ------------------------------------------------------------
-  const ids = ['gain','lift','con','temp','sat','tint'];
-  const el = {}; ids.forEach(i => { el[i] = document.getElementById(i); el[i+'_v'] = document.getElementById(i+'_v'); });
-  const DEFAULTS = { gain:1, lift:0, con:1, temp:0, sat:1, tint:0 };
-
-  // Each clip carries its own "自動調整" target, because that is what the app
-  // does — auto-adjust reads the picture, so one fixed set of numbers would be
-  // wrong for footage this different (a hazy forest vs a backlit sunset).
-  const CLIPS = [
-    { label:{ ja:'森の川', en:'Forest river' },   file:'assets/lp/demo-river.mp4',  poster:'assets/lp/demo-river.jpg',
-      auto:{ gain:1.10, lift:-0.018, con:1.20, temp:0.06, sat:1.28, tint:0 } },
-    { label:{ ja:'花畑', en:'Flower field' },     file:'assets/lp/demo-flower.mp4', poster:'assets/lp/demo-flower.jpg',
-      auto:{ gain:1.04, lift:-0.014, con:1.16, temp:0.03, sat:1.20, tint:0 } },
-    { label:{ ja:'夕景', en:'Sunset' },     file:'assets/lp/demo-sunset.mp4', poster:'assets/lp/demo-sunset.jpg',
-      auto:{ gain:1.14, lift:-0.010, con:1.14, temp:0.10, sat:1.18, tint:0 } },
-    { label:{ ja:'オーロラ', en:'Aurora' }, file:'assets/lp/demo-aurora.mp4', poster:'assets/lp/demo-aurora.jpg',
-      auto:{ gain:1.32, lift:-0.006, con:1.18, temp:-0.05, sat:1.26, tint:0 } },
-  ];
-  let clipIndex = 0, loadedSrc = null;
-
-  function readable(id, v) { return (id === 'lift') ? v.toFixed(3) : v.toFixed(2); }
-
-  function readValues() {
-    const v = {}; ids.forEach(i => v[i] = parseFloat(el[i].value)); return v;
-  }
-  function push() {
-    const v = readValues();
-    ids.forEach(i => el[i+'_v'].textContent = readable(i, v[i]));
-    gl.uniform3fv(uni.wb, wbGain(v.temp, v.tint));
-    gl.uniform3f(uni.gain, v.gain, v.gain, v.gain);
-    gl.uniform3f(uni.lift, v.lift, v.lift, v.lift);
-    gl.uniform3f(uni.gamma, 1, 1, 1);      // gamma untouched in this prototype
-    gl.uniform1f(uni.con, v.con);
-    gl.uniform1f(uni.sat, v.sat);
-    syncButtons(v);
-  }
-
-  // Report, on the buttons themselves, what state the grade is actually in:
-  // whether the auto values are the ones in effect, and whether there is
-  // anything left to reset. Without this the controls give no acknowledgement
-  // of a press, which reads as the button being broken.
-  const autoBtn = document.getElementById('auto'), resetBtn = document.getElementById('reset');
-  function matches(v, set) {
-    return ids.every(i => Math.abs(v[i] - set[i]) <= (i === 'lift' ? 5e-4 : 5e-3));
-  }
-  function syncButtons(v) {
-    const isAuto = matches(v, CLIPS[clipIndex].auto);
-    autoBtn.classList.toggle('applied', isAuto);
-    autoBtn.textContent = T(isAuto ? STR.autoOn : STR.auto);
-    resetBtn.disabled = matches(v, DEFAULTS);
-  }
-  ids.forEach(i => el[i].addEventListener('input', push));
-
-  function applySet(set, animate) {
-    if (!animate) { ids.forEach(i => el[i].value = set[i]); push(); return; }
-    const from = {}; ids.forEach(i => from[i] = parseFloat(el[i].value));
-    const t0 = performance.now(), dur = 420;
-    (function step(now) {
-      const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
-      ids.forEach(i => el[i].value = from[i] + (set[i] - from[i]) * e);
-      push();
-      if (k < 1) requestAnimationFrame(step);
-    })(t0);
-  }
-  document.getElementById('auto').addEventListener('click',  () => applySet(CLIPS[clipIndex].auto, true));
-  document.getElementById('reset').addEventListener('click', () => applySet(DEFAULTS, true));
-
-  // ---- clip switching ------------------------------------------------------
-  // The grade is deliberately KEPT when switching, so the same settings can be
-  // judged against very different footage.
-  const clipBar = document.getElementById('clips');
-  CLIPS.forEach((c, i) => {
-    const b = document.createElement('button');
-    b.textContent = T(c.label);
-    b.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
-    b.addEventListener('click', () => selectClip(i));
-    clipBar.appendChild(b);
-  });
-  function selectClip(i) {
-    if (i === clipIndex) return;
-    // If the grade is still this clip's auto — i.e. the visitor hasn't dialled
-    // anything themselves — carry that over as the NEXT clip's auto, since auto
-    // is the default state. Anything they set by hand is left alone instead of
-    // being wiped by a clip change.
-    const wasAuto = matches(readValues(), CLIPS[clipIndex].auto);
-    clipIndex = i;
-    [...clipBar.children].forEach((b, j) => b.setAttribute('aria-pressed', j === i ? 'true' : 'false'));
-    sized = false;                 // clips may differ in size — re-fit the canvas
-    stage.classList.remove('ready');
-    stage.style.backgroundImage = `url("${CLIPS[i].poster}")`;
-    if (wasAuto) applySet(CLIPS[i].auto, false);
-    else push();                   // re-evaluates "✓ 自動調整" against the new target
-    resume();                      // resume() performs the actual load
-  }
-
-  // Auto-adjust is the state the demo OPENS in: the split then shows the
-  // difference the moment it scrolls into view, rather than depending on the
-  // visitor finding a button first.
-  applySet(CLIPS[clipIndex].auto, false);
-
-  // ---- split divider -------------------------------------------------------
-  const stage = document.getElementById('stage');
-  const divider = document.getElementById('divider'), knob = document.getElementById('knob');
-  const hint = document.getElementById('hint');
-  let split = 0.5, dragging = false, touched = false;
-
-  function setSplit(clientX) {
-    const r = stage.getBoundingClientRect();
-    split = Math.min(1, Math.max(0, (clientX - r.left) / r.width));
-    gl.uniform1f(uni.split, split);
-    divider.style.left = knob.style.left = (split * 100) + '%';
-    if (!touched) { touched = true; hint.style.opacity = 0; }
-  }
-  stage.addEventListener('pointerdown', e => {
-    // A tap doubles as the user gesture that unblocks playback when autoplay
-    // was refused (Low Power Mode), so the demo isn't a dead poster.
-    if (needsGesture) { needsGesture = false; setLoading('loading'); resume(); }
-    dragging = true; stage.setPointerCapture(e.pointerId); setSplit(e.clientX);
-  });
-  stage.addEventListener('pointermove', e => { if (dragging) setSplit(e.clientX); });
-  stage.addEventListener('pointerup',   () => dragging = false);
-
-  // ---- render loop ---------------------------------------------------------
-  // Gated on visibility of the SECTION only. A background tab needs no guard of
-  // its own — requestAnimationFrame already stops firing there — and gating on
-  // `document.hidden` as well is actively harmful: if it reads true at load the
-  // loop never starts. The browser may still pause the video in the background,
-  // which is what the visibilitychange resume below is for.
-  // Starts FALSE when an observer is available, so nothing is fetched until the
-  // section is genuinely in view. Initialising it to true meant the trailing
-  // resume() below loaded the clip immediately and the laziness did nothing.
-  // Without an observer there is no signal to wait for, so run straight away.
-  let sized = false, running = false;
-  let onScreen = !('IntersectionObserver' in window);
-
-  function draw() {
-    if (!onScreen) { running = false; return; }
-    if (video.readyState >= 2) {
-      if (!sized) {
-        canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-        gl.viewport(0, 0, canvas.width, canvas.height);
-        // Draw the divider at the CURRENT split, not a hard-coded 50%. This
-        // block runs again on every clip change (sized is reset to re-fit the
-        // canvas), so the literal used to snap the line back to the middle
-        // while the shader kept splitting where the visitor had dragged it —
-        // line and seam ended up in different places.
-        divider.style.left = knob.style.left = (split * 100) + '%';
-        gl.uniform1f(uni.split, split);
-        push();
-        sized = true;
-        stage.classList.add('ready');   // first real frame — fade off the poster
-      }
-      gl.bindTexture(gl.TEXTURE_2D, tex);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
-      gl.drawArrays(gl.TRIANGLES, 0, 3);
-    }
-    requestAnimationFrame(draw);
-  }
-  // Fetches the clip the first time it is genuinely needed — i.e. when the demo
-  // scrolls into view, not on page load.
-  function ensureLoaded() {
-    const want = CLIPS[clipIndex].file;
-    if (loadedSrc === want) return;
-    loadedSrc = want;
-    video.src = want;
-    video.load();
-  }
-  // Autoplay is refused outright in iOS Low Power Mode, and a clip can simply
-  // fail to load. Both used to leave "読み込み中…" on screen forever with no way
-  // out, so surface the state and let a tap recover it.
-  const loadingEl = document.getElementById('loading');
-  let needsGesture = false;
-  let loadingKey = 'loading';
-  function setLoading(key) { loadingKey = key; loadingEl.textContent = T(STR[key]); }
-
-  function resume() {
-    if (!onScreen) return;
-    ensureLoaded();
-    video.play()
-      .then(() => { needsGesture = false; })
-      .catch(() => { needsGesture = true; setLoading('tapToPlay'); });
-    if (!running) { running = true; requestAnimationFrame(draw); }
-  }
-  video.addEventListener('error', () => {
-    setLoading('loadFailed');
-    stage.classList.remove('ready');
-  });
-  function suspend() { video.pause(); }
-
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) resume(); });
-  video.addEventListener('loadeddata', resume);
-
-  stage.style.backgroundImage = `url("${CLIPS[clipIndex].poster}")`;
-
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(entries => {
-      onScreen = entries[0].isIntersecting;
-      onScreen ? resume() : suspend();
-    }, { threshold: 0.1 }).observe(stage);
-  }
-
-  // Re-paint on a language switch, and once at load. push() is what re-derives
-  // the auto button's label, so it stands in for the button here.
-  function repaint() {
-    [...clipBar.children].forEach((b, i) => b.textContent = T(CLIPS[i].label));
-    setLoading(loadingKey);
-    push();
-  }
-  RW.onChange(repaint);
-  repaint();
-
-  resume();
-})();
-</script>
 <script>
 // The language switch. Same shape as the top page — the choice is shared in
 // localStorage, so EN carries across the site — with two additions this page
 // needs and the top page does not:
 //
 //   · screenshots whose UI is inside the picture, swapped through data-src-*
-//   · RW.notify(), for the strings the two WebGL demos write from JS
+//   · RW.notify(), for the strings the WebGL demo writes from JS
 (function () {
   var buttons = document.querySelectorAll('.lang button');
   var nodes   = document.querySelectorAll('[data-ja][data-en]');
