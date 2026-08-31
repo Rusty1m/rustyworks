@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kuro — その映像の、本当の色を。｜RustyWorks</title>
+<link rel="canonical" href="https://rustyworks.jp/kuro.html">
 <meta name="description" content="プロ品質のカラーグレーディングを積んだ、macOS 用の動画プレーヤー。再生しながら、リファレンス基準の色へ。本体無料、Kuro PRO は買い切り。">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="RustyWorks">
@@ -134,9 +135,16 @@
      as they build, and re-paint through `RW.onChange`. -->
 <script>
 window.RW = (function () {
+  // 言語は強い順に決める。1. URL の ?lang  2. 前回の選択  3. 既定は日本語。
+  // ブラウザの言語では切り替えない。クローラーは en を名乗ることが多く、
+  // 日本語で書いたページが英語で索引されてしまうため。
   var KEY = 'rw-lang', saved = null;
-  try { saved = localStorage.getItem(KEY); } catch (e) {}
-  if (!saved) saved = (navigator.language || '').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en';
+  try {
+    var q = new URLSearchParams(location.search).get('lang');
+    if (q === 'en' || q === 'ja') { saved = q; localStorage.setItem(KEY, q); }
+  } catch (e) {}
+  if (!saved) { try { saved = localStorage.getItem(KEY); } catch (e) {} }
+  if (!saved) saved = 'ja';
   var subs = [];
   return {
     key: KEY,
@@ -1312,6 +1320,20 @@ window.RW = (function () {
   </div>
 
 </div>
+<!-- 製品まわりの共通フッター（README「LP の決まりごと」4番）。このページは地が暗いので、配色だけ合わせてある -->
+<nav class="rw-product-footer" aria-label="関連ページ" style="border-top:1px solid rgba(255,255,255,.10);margin:56px 0 0;padding:20px 24px 26px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 16px;font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace;font-size:12.5px;line-height:1.6;">
+      <a href="index.html" style="color:#8a8a86;text-decoration:none;" data-ja="RustyWorks" data-en="RustyWorks">RustyWorks</a>
+      <span aria-hidden="true" style="color:rgba(255,255,255,.18);">·</span>
+      <a href="kuro.html" style="color:#8a8a86;text-decoration:none;" data-ja="製品ページ" data-en="Product">製品ページ</a>
+      <span aria-hidden="true" style="color:rgba(255,255,255,.18);">·</span>
+      <a href="kuro_manual.html" style="color:#8a8a86;text-decoration:none;" data-ja="取扱説明書" data-en="Manual">取扱説明書</a>
+      <span aria-hidden="true" style="color:rgba(255,255,255,.18);">·</span>
+      <a href="https://apps.apple.com/app/apple-store/id6782262572?pt=128819275&amp;ct=website&amp;mt=8" style="color:#8a8a86;text-decoration:none;" target="_blank" rel="noopener" data-ja="App Store" data-en="App Store">App Store</a>
+      <span aria-hidden="true" style="color:rgba(255,255,255,.18);">·</span>
+      <a href="kuro_privacy.html" style="color:#8a8a86;text-decoration:none;" data-ja="プライバシー" data-en="Privacy">プライバシー</a>
+      <span aria-hidden="true" style="color:rgba(255,255,255,.18);">·</span>
+      <a href="site_privacy.html" style="color:#8a8a86;text-decoration:none;" data-ja="サイトのポリシー" data-en="Site Policy">サイトのポリシー</a>
+</nav>
 <script>
 // The language switch. Same shape as the top page — the choice is shared in
 // localStorage, so EN carries across the site — with two additions this page
