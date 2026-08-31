@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kuro — 中で何をしているか｜RustyWorks</title>
+<link rel="canonical" href="https://rustyworks.jp/kuro_tech.html">
+<meta name="description" content="Kuro が業務用ツールと同じ数字になる根拠。作業空間の統一、黒体軌跡による白の決定、冪としての露出、HDR のトーンカーブ。数値はすべて実測です。">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="RustyWorks">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:url" content="https://rustyworks.jp/kuro_tech.html">
+<meta property="og:title" content="Kuro — 中で何をしているか">
+<meta property="og:description" content="正しい色を、再生しながら。作業空間の統一、黒体軌跡による白の決定、冪としての露出、HDR のトーンカーブ。">
+<meta property="og:image" content="https://rustyworks.jp/assets/og/kuro-og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Kuro — 中で何をしているか">
+<meta name="twitter:description" content="正しい色を、再生しながら。数値はすべて実測です。">
+<meta name="twitter:image" content="https://rustyworks.jp/assets/og/kuro-og.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ─────────────────────────────────────────────
+     色は黒体軌跡から取る。タングステンの琥珀から
+     D65 の中立、日陰の青まで — 製品が実際に判断
+     している軸そのもの。地色は D65 相当の中立紙。
+     ───────────────────────────────────────────── */
+  :root {
+    --tungsten: #C97B33;
+    --shade: #4E7FAE;
+
+    --ground: #F3F4F6;
+    --raised: #FFFFFF;
+    --ink: #16181D;
+    --ink-2: #4C525C;
+    --ink-3: #767D88;
+    --rule: #D9DCE1;
+    --rule-strong: #BCC1C9;
+    --band: rgba(78, 127, 174, 0.10);
+
+    --measure: 34rem;
+    --step--1: 0.8125rem;
+    --step-0: 1rem;
+    --step-1: 1.1875rem;
+    --step-3: 2rem;
+    --step-4: 2.75rem;
+
+    --serif: ui-serif, "New York", Georgia, "Times New Roman", serif;
+    --sans: system-ui, -apple-system, "Hiragino Sans", "Yu Gothic", sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --tungsten: #E3A163;
+        --shade: #8AB2D8;
+        --ground: #131519;
+      --raised: #1A1D22;
+      --ink: #E8EAEE;
+      --ink-2: #A8AEB8;
+      --ink-3: #7B828D;
+      --rule: #2A2E35;
+      --rule-strong: #3D434C;
+      --band: rgba(138, 178, 216, 0.12);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --tungsten: #E3A163;
+    --shade: #8AB2D8;
+    --ground: #131519;
+    --raised: #1A1D22;
+    --ink: #E8EAEE;
+    --ink-2: #A8AEB8;
+    --ink-3: #7B828D;
+    --rule: #2A2E35;
+    --rule-strong: #3D434C;
+    --band: rgba(138, 178, 216, 0.12);
+  }
+
+  :root[data-theme="light"] {
+    --tungsten: #C97B33;
+    --shade: #4E7FAE;
+    --ground: #F3F4F6;
+    --raised: #FFFFFF;
+    --ink: #16181D;
+    --ink-2: #4C525C;
+    --ink-3: #767D88;
+    --rule: #D9DCE1;
+    --rule-strong: #BCC1C9;
+    --band: rgba(78, 127, 174, 0.10);
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: var(--step-0);
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: clamp(2rem, 6vw, 5rem) clamp(1.1rem, 4vw, 2.5rem) 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+  }
+
+  /* 本文は 1 カラムに閉じ込め、計測結果だけが幅いっぱいに出る */
+  .prose { max-width: var(--measure); display: flex; flex-direction: column; gap: 1.15rem; }
+  .prose p { margin: 0; }
+
+  /* ── 冒頭 ── */
+  .lede { display: flex; flex-direction: column; gap: 1.6rem; }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-size: var(--step-4);
+    line-height: 1.12;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    margin: 0;
+    max-width: 22ch;
+  }
+  .standfirst {
+    font-family: var(--serif);
+    font-size: var(--step-1);
+    line-height: 1.65;
+    color: var(--ink-2);
+    max-width: var(--measure);
+    margin: 0;
+  }
+
+  /* ── 節 ── */
+  /* min-width:0 が要る。.page と section はどちらも縦の flex で、flex アイテムの
+     既定 min-width:auto は中身の最小幅より縮まない。表の中身が広いと section が
+     ビューポートより広くなり、.data の overflow-x:auto が効かずページ全体が
+     横スクロールする（英語版の長い見出しで踏んだ）。 */
+  section { display: flex; flex-direction: column; gap: 1.5rem; min-width: 0; }
+  .data, .figframe { min-width: 0; max-width: 100%; }
+  .head { display: flex; flex-direction: column; gap: 0.5rem; }
+  .head-rule { border: 0; border-top: 1px solid var(--rule-strong); margin: 0; }
+  h2 {
+    font-family: var(--serif);
+    font-size: var(--step-3);
+    line-height: 1.2;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    margin: 0;
+    max-width: 24ch;
+  }
+  h3 {
+    font-family: var(--sans);
+    font-size: var(--step-1);
+    font-weight: 650;
+    line-height: 1.4;
+    margin: 1rem 0 0;
+    max-width: 30ch;
+  }
+
+  strong { font-weight: 650; }
+  em { font-style: normal; color: var(--tungsten); font-weight: 600; }
+  code {
+    font-family: var(--mono);
+    font-size: 0.875em;
+    background: var(--raised);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 0.08em 0.34em;
+           /* 長い API 名（maximumPotentialExtendedDynamicRange…）は折り返さないと
+              ページごと横スクロールになる。必要なときだけ割れる anywhere を使う。 */
+           overflow-wrap: anywhere; }
+
+  /* ── 計測結果 ── */
+  .data {
+    background: var(--raised);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow-x: auto;
+  }
+  table { border-collapse: collapse; width: 100%; font-size: var(--step--1); }
+  caption {
+    text-align: left;
+    font-family: var(--mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding: 0.85rem 1rem 0.6rem;
+  }
+  th, td { padding: 0.5rem 1rem; text-align: left; vertical-align: top; }
+  thead th {
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    border-bottom: 1px solid var(--rule-strong);
+    white-space: nowrap;
+  }
+  tbody tr + tr td { border-top: 1px solid var(--rule); }
+  td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td.pass-mark { color: var(--shade); font-weight: 600; white-space: nowrap; }
+  td.fail-mark { color: var(--tungsten); font-weight: 600; white-space: nowrap; }
+  tr.rejected td:first-child { color: var(--ink-2); }
+
+  /* ── 図 ── */
+  figure { margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+  figure svg { max-width: 100%; height: auto; display: block; }
+  .figframe {
+    background: var(--raised);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 1.25rem 1rem;
+    overflow-x: auto;
+  }
+  figcaption {
+    font-size: var(--step--1);
+    line-height: 1.6;
+    color: var(--ink-2);
+    max-width: var(--measure);
+  }
+
+  /* ── 機能の一覧 ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .cell { background: var(--raised); padding: 1.1rem 1.15rem; display: flex; flex-direction: column; gap: 0.4rem; }
+  .cell h4 { margin: 0; font-size: var(--step-0); font-weight: 650; line-height: 1.4; }
+  .cell p { margin: 0; font-size: var(--step--1); line-height: 1.65; color: var(--ink-2); }
+  .tier {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .tier.pro { color: var(--tungsten); }
+
+  /* ── 引き ── */
+  .pull {
+    border-left: 2px solid var(--tungsten);
+    padding-left: 1.15rem;
+    font-family: var(--serif);
+    font-size: var(--step-1);
+    line-height: 1.6;
+    color: var(--ink-2);
+    max-width: var(--measure);
+  }
+
+  .note {
+    font-size: var(--step--1);
+    color: var(--ink-3);
+    max-width: var(--measure);
+    line-height: 1.7;
+  }
+
+  footer {
+    border-top: 1px solid var(--rule-strong);
+    padding-top: 1.5rem;
+    font-size: var(--step--1);
+    color: var(--ink-3);
+    max-width: var(--measure);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    a { transition: color 120ms ease; }
+  }
+  a { color: var(--shade); }
+  a:focus-visible { outline: 2px solid var(--tungsten); outline-offset: 2px; border-radius: 2px; }
+</style>
+<style>
+  /* サイト側の器。記事本体の CSS は上のブロックのまま触らない。 */
+  body { background: var(--bg); }
+  .site-nav { display:flex; align-items:center; justify-content:space-between;
+              padding:20px 40px; background:#050506;
+              border-bottom:1px solid rgba(255,255,255,.06);
+              font-family:'Space Grotesk','Zen Kaku Gothic New',sans-serif; }
+  .site-nav .mark { display:flex; align-items:center; gap:11px; color:#f2f2f0;
+                    font-size:19px; font-weight:700; letter-spacing:.12em; }
+  .site-nav .mark span { width:18px; height:18px; border-radius:5px; background:#0a0a0b;
+                         border:1.5px solid #e5484d; display:inline-block; }
+  .site-nav .links { display:flex; align-items:center; gap:20px;
+                     font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8a8a86; }
+  .site-nav .links a { color:#8a8a86; text-decoration:none; }
+  .site-nav .links a:hover { color:#e5484d; }
+  .lang { display:flex; align-items:center; gap:6px; }
+  .lang button { background:none; border:0; padding:0; cursor:pointer;
+                 font-family:'IBM Plex Mono',monospace; font-size:12px; color:#6a6a66; }
+  .lang button[aria-pressed="true"] { color:#f2f2f0; font-weight:500; }
+  .lang .sep { color:rgba(255,255,255,.18); }
+  .cta { background:#e5484d; color:#0a0a0b !important; font-weight:600;
+         padding:8px 16px; border-radius:6px; }
+  [data-lang-block] { display:none; }
+  [data-lang-block].on { display:block; }
+  @media (max-width:640px) {
+    .site-nav { padding:16px 20px; flex-wrap:wrap; gap:12px; }
+    .site-nav .links { gap:14px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 言語。他ページと同じ順で決める。1. ?lang  2. 前回の選択  3. 既定は日本語。
+     ブラウザの言語では切り替えない（クローラーが en を名乗るため）。 -->
+<script>
+window.RW = (function () {
+  var KEY = 'rw-lang', saved = null;
+  try {
+    var q = new URLSearchParams(location.search).get('lang');
+    if (q === 'en' || q === 'ja') { saved = q; localStorage.setItem(KEY, q); }
+  } catch (e) {}
+  if (!saved) { try { saved = localStorage.getItem(KEY); } catch (e) {} }
+  if (!saved) saved = 'ja';
+  var subs = [];
+  return { key: KEY, lang: saved,
+    onChange: function (fn) { subs.push(fn); },
+    notify: function () { for (var i = 0; i < subs.length; i++) subs[i](); } };
+})();
+</script>
+
+<nav class="site-nav">
+  <div class="mark"><span></span>KURO</div>
+  <div class="links">
+    <a href="index.html">RustyWorks</a>
+    <a href="kuro.html" data-ja="製品ページ" data-en="Product">製品ページ</a>
+    <a href="kuro_manual.html" data-ja="取扱説明書" data-en="Manual">取扱説明書</a>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="ja" aria-pressed="true">JA</button>
+      <span class="sep">/</span>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+    <a class="cta" href="https://apps.apple.com/app/apple-store/id6782262572?pt=128819275&amp;ct=website&amp;mt=8" data-ja="無料DL" data-en="Get it free">無料DL</a>
+  </div>
+</nav>
+
+<!-- 本文は日英で2ブロック。サイト共通の切替は textContent を書き換えるので、
+     <strong> や <code> の入った長い散文には使えない。ここだけ表示の出し分けにする。 -->
+<div data-lang-block="ja">
+<div class="page">
+
+  <header class="lede">
+    <p class="eyebrow">RustyWorks / Kuro — 技術解説</p>
+    <h1>正しい色を、再生しながら</h1>
+    <p class="standfirst">
+      Kuro は macOS の動画プレイヤーですが、中身の大半はカラーコレクターです。
+      再生しながら映像を grade し、その結果が業務用ツールと同じ数字になるように作ってあります。
+      このページは、その「同じ数字になる」を何によって担保しているかの説明です。
+    </p>
+  </header>
+
+  <section>
+    <div class="head">
+      <hr class="head-rule">
+      <h2>作業空間をひとつに畳む</h2>
+    </div>
+    <div class="prose">
+      <p>
+        映像の色が合わないとき、原因のほとんどは演算そのものではなく
+        <strong>どの空間で演算したか</strong>です。同じ「明るさ +10」でも、リニアで足すのと
+        ガンマの掛かった符号値に足すのとでは結果が違います。
+      </p>
+      <p>
+        Kuro はパイプライン全体を <strong>Rec.709 / Gamma 2.4（BT.1886）</strong> に統一しています。
+        デコードは <code>pow(v, 2.4)</code> で、素通しの 128 が 128 のまま出ます。
+        以前は sRGB の EOTF を使っていて、これは<em>中間調を約 7 コード持ち上げていました</em> —
+        誰も操作していないのに絵が変わる、という状態です。廃止しました。
+      </p>
+    </div>
+
+    <figure>
+      <div class="figframe">
+        <svg viewBox="0 0 760 250" role="img"
+             aria-label="信号はデコード後リニアでホワイトバランスだけを受け、Gamma 2.4 に符号化してから残りのグレード演算を全て受け、最後に表示トランスファへ渡る">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5"
+                    markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <!-- 空間の帯 -->
+          <rect x="150" y="34" width="140" height="150" rx="3"
+                fill="none" stroke="currentColor" stroke-opacity="0.28" stroke-dasharray="3 3"/>
+          <text x="220" y="26" text-anchor="middle" font-family="ui-monospace, monospace"
+                font-size="11" fill="currentColor" fill-opacity="0.6">リニア</text>
+
+          <rect x="330" y="34" width="290" height="150" rx="3"
+                fill="none" stroke="currentColor" stroke-opacity="0.28" stroke-dasharray="3 3"/>
+          <text x="475" y="26" text-anchor="middle" font-family="ui-monospace, monospace"
+                font-size="11" fill="currentColor" fill-opacity="0.6">Gamma 2.4 符号空間</text>
+
+          <!-- 流れ -->
+          <line x1="24" y1="109" x2="60" y2="109" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/>
+          <text x="24" y="96" font-size="12" fill="currentColor">素材</text>
+
+          <rect x="62" y="90" width="76" height="38" rx="3" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <text x="100" y="114" text-anchor="middle" font-size="12" fill="currentColor">デコード</text>
+
+          <line x1="138" y1="109" x2="168" y2="109" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/>
+
+          <rect x="170" y="90" width="100" height="38" rx="3"
+                fill="none" stroke="var(--tungsten)" stroke-width="1.6"/>
+          <text x="220" y="114" text-anchor="middle" font-size="12" fill="currentColor">色温度 / ティント</text>
+          <text x="220" y="146" text-anchor="middle" font-family="ui-monospace, monospace"
+                font-size="10.5" fill="var(--tungsten)">1.5</text>
+
+          <line x1="270" y1="109" x2="326" y2="109" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/>
+          <text x="298" y="101" text-anchor="middle" font-size="10.5" fill="currentColor" fill-opacity="0.75">符号化</text>
+
+          <rect x="330" y="90" width="122" height="38" rx="3" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <text x="391" y="114" text-anchor="middle" font-size="12" fill="currentColor">Lift / Gamma / Gain</text>
+          <text x="391" y="146" text-anchor="middle" font-family="ui-monospace, monospace"
+                font-size="10.5" fill="currentColor" fill-opacity="0.6">2 — 2.5</text>
+
+          <line x1="452" y1="109" x2="474" y2="109" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/>
+
+          <rect x="476" y="90" width="144" height="38" rx="3" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <text x="548" y="114" text-anchor="middle" font-size="12" fill="currentColor">3-Way・コントラスト</text>
+          <text x="548" y="146" text-anchor="middle" font-family="ui-monospace, monospace"
+                font-size="10.5" fill="currentColor" fill-opacity="0.6">3 — 7</text>
+
+          <line x1="620" y1="109" x2="654" y2="109" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/>
+          <text x="637" y="101" text-anchor="middle" font-size="10.5" fill="currentColor" fill-opacity="0.75">復号</text>
+
+          <rect x="656" y="90" width="80" height="38" rx="3" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <text x="696" y="108" text-anchor="middle" font-size="12" fill="currentColor">表示</text>
+          <text x="696" y="122" text-anchor="middle" font-size="10.5" fill="currentColor" fill-opacity="0.6">709→P3</text>
+
+          <text x="24" y="215" font-size="11.5" fill="currentColor" fill-opacity="0.8">
+            ホワイトバランスだけがリニアにある。チャンネル別の一定ゲインは、光源そのものの
+          </text>
+          <text x="24" y="232" font-size="11.5" fill="currentColor" fill-opacity="0.8">
+            強度比を直す操作だから — 符号空間で掛けると比が保たれない。
+          </text>
+        </svg>
+      </div>
+      <figcaption>
+        各演算がどの空間にいるか。リファレンス一致の根拠はここに集約されていて、
+        個々の式より先に決まっている。
+      </figcaption>
+    </figure>
+
+    <div class="prose">
+      <p>
+        その上で、各コントロールは DaVinci Resolve（Rec.709 / Gamma 2.4 タイムライン）に対して
+        <strong>1つずつスポットプローブとスコープで突き合わせ、実測でモデル化</strong>してあります。
+        推測した式ではありません。基準パッチで<em>おおむね ±2 コード</em>の一致です。
+      </p>
+      <p>
+        実測から出た形はどれも素直ではありません。ガンマは 0 中心表記を実効指数へ移す必要があり
+        （<code>G≥0: 1+4G</code> / <code>G&lt;0: 1/(1−4G)</code>）、コントラストは
+        <code>e=(2−contrast)^-1.17</code>、ピボットは 0.435。色相回転にいたっては
+        回転量が色相自身に依存していて、2次高調波でフィットしています
+        （<code>ΔH(H) = −25.63 − 7.43·cos2H + 15.96·sin2H</code>）。
+        <strong>合わせるとはこういう作業です。</strong>
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <hr class="head-rule">
+      <h2>白を、平均ではなく証拠から決める</h2>
+    </div>
+    <div class="prose">
+      <p>
+        自動ホワイトバランスの古典的なやり方は<strong>グレーワールド</strong> — 画面全体の平均が
+        無彩色になるように直す、というものです。単純で、そして赤い壁や夕景で必ず外します。
+        画面の平均は光源の色ではないからです。
+      </p>
+      <p>
+        Kuro は違う道を取ります。画面を <strong>16×16 = 256 のゾーン</strong>に分け、
+        各ゾーンの色度を計算し、<strong>黒体軌跡からどれだけ離れているか（Duv）</strong>で
+        <em>ゾーンごとに採否を決めます</em>。照明はほぼ軌跡の上に乗り、色のついた物体は乗らない —
+        この一点だけで、平均では区別できなかったものが分かれます。
+      </p>
+    </div>
+
+    <figure>
+      <div class="figframe">
+        <svg viewBox="0 0 760 400" role="img"
+             aria-label="CCT を横軸、Duv を縦軸に取ると、照明は Duv プラスマイナス0.02 の帯の内側に収まり、赤い壁・芝生・青い看板は帯の外に落ちる">
+          <!-- 採用帯 -->
+          <rect x="70" y="140" width="620" height="80" fill="var(--band)"/>
+          <line x1="70" y1="140" x2="690" y2="140" stroke="var(--shade)" stroke-width="1" stroke-dasharray="4 3"/>
+          <line x1="70" y1="220" x2="690" y2="220" stroke="var(--shade)" stroke-width="1" stroke-dasharray="4 3"/>
+          <text x="678" y="134" text-anchor="end" font-family="ui-monospace, monospace"
+                font-size="10.5" fill="var(--shade)">Duv +0.02</text>
+          <text x="678" y="234" text-anchor="end" font-family="ui-monospace, monospace"
+                font-size="10.5" fill="var(--shade)">Duv −0.02</text>
+
+          <!-- 軌跡（Duv 0） -->
+          <line x1="70" y1="180" x2="690" y2="180" stroke="currentColor" stroke-width="1.4"/>
+          <text x="74" y="196" font-size="11" fill="currentColor" fill-opacity="0.7">黒体軌跡</text>
+
+          <!-- 軸 -->
+          <line x1="70" y1="330" x2="690" y2="330" stroke="currentColor" stroke-width="1" stroke-opacity="0.45"/>
+          <text x="70" y="352" font-size="11" fill="currentColor" fill-opacity="0.65">2000K</text>
+          <text x="429" y="352" text-anchor="middle" font-size="11" fill="currentColor" fill-opacity="0.65">4200K</text>
+          <text x="547" y="352" text-anchor="middle" font-size="11" fill="currentColor" fill-opacity="0.65">6500K</text>
+          <text x="690" y="352" text-anchor="end" font-size="11" fill="currentColor" fill-opacity="0.65">20000K</text>
+          <text x="380" y="376" text-anchor="middle" font-family="ui-monospace, monospace"
+                font-size="10.5" fill="currentColor" fill-opacity="0.55">相関色温度（ミレッド等間隔）</text>
+
+          <!-- 採用された測定点 -->
+          <circle cx="429" cy="165" r="5" fill="var(--shade)"/>
+          <text x="429" y="154" text-anchor="middle" font-size="11.5" fill="currentColor">電球</text>
+
+          <circle cx="547" cy="174" r="5" fill="var(--shade)"/>
+          <text x="547" y="199" text-anchor="middle" font-size="11.5" fill="currentColor">中立グレー</text>
+
+          <circle cx="608" cy="175" r="5" fill="var(--shade)"/>
+          <text x="622" y="192" text-anchor="middle" font-size="11.5" fill="currentColor">曇天</text>
+
+          <circle cx="543" cy="147" r="5" fill="var(--shade)"/>
+          <text x="543" y="136" text-anchor="middle" font-size="11.5" fill="currentColor">蛍光灯</text>
+
+          <!-- 除外された測定点 -->
+          <circle cx="530" cy="57" r="5" fill="none" stroke="var(--tungsten)" stroke-width="1.8"/>
+          <text x="530" y="46" text-anchor="middle" font-size="11.5" fill="var(--tungsten)">芝生</text>
+
+          <circle cx="133" cy="231" r="5" fill="none" stroke="var(--tungsten)" stroke-width="1.8"/>
+          <text x="133" y="252" text-anchor="middle" font-size="11.5" fill="var(--tungsten)">赤い壁</text>
+
+          <circle cx="690" cy="263" r="5" fill="none" stroke="var(--tungsten)" stroke-width="1.8"/>
+          <text x="668" y="283" text-anchor="middle" font-size="11.5" fill="var(--tungsten)">青い看板</text>
+        </svg>
+      </div>
+      <figcaption>
+        実測値。照明は最大でも Duv 0.017 に収まり、色のついた物体は最小でも 0.026 離れる。
+        <strong>その隙間に閾値を置ける</strong> — ホワイトマップの実体はこの一行だけです。
+      </figcaption>
+    </figure>
+
+    <div class="data">
+      <table>
+        <caption>ゾーンの採否 — 実測</caption>
+        <thead>
+          <tr><th>ゾーン</th><th>CCT</th><th>Duv</th><th>判定</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>中立グレー</td><td class="num">6500K</td><td class="num">+0.0031</td><td class="pass-mark">採用</td></tr>
+          <tr><td>電球</td><td class="num">4175K</td><td class="num">+0.0075</td><td class="pass-mark">採用</td></tr>
+          <tr><td>曇天</td><td class="num">9125K</td><td class="num">+0.0027</td><td class="pass-mark">採用</td></tr>
+          <tr><td>蛍光灯</td><td class="num">6375K</td><td class="num">+0.0165</td><td class="pass-mark">採用</td></tr>
+          <tr class="rejected"><td>赤い壁</td><td class="num">2200K</td><td class="num">−0.0257</td><td class="fail-mark">除外</td></tr>
+          <tr class="rejected"><td>芝生</td><td class="num">6025K</td><td class="num">+0.0617</td><td class="fail-mark">除外</td></tr>
+          <tr class="rejected"><td>青い看板</td><td class="num">20000K</td><td class="num">−0.0415</td><td class="fail-mark">除外</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="prose">
+      <p>
+        計算の健全性は 1 行で確かめられます。R=G=B を入れて <strong>6500K / Duv +0.0031</strong> が
+        返ればよい。D65 が軌跡から +0.003 だけ緑側にあるのは既知の値なので、
+        <strong>これが出るなら実装は正しい</strong>という基準になります。
+      </p>
+      <p>
+        採用されたゾーンの意見がどれだけ揃っているかが、そのまま<strong>信頼度</strong>になります。
+        信頼度が低ければ補正は控えられます。<em>手がかりが無いときに無理に決めない</em>ことも、
+        自動処理の仕事のうちです。
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <hr class="head-rule">
+      <h2>露出は、掛け算ではなく冪で動かす</h2>
+    </div>
+    <div class="prose">
+      <p>
+        暗い映像を明るくする一番素朴な方法はゲイン、つまり全体に定数を掛けることです。
+        これには避けられない副作用があります。<strong>1.0 に掛けると 1.0 を超える</strong> —
+        白が飛びます。持ち上げれば持ち上げるほど、上端から情報が消えていきます。
+      </p>
+      <p>
+        Kuro は露出を<strong>冪</strong>として扱います。符号空間でガンマを動かすことは、
+        リニアで冪を取ることと同じで（<code>(L^(1/2.4))^e)^2.4 = L^e</code>）、
+        <em>0 は 0 のまま、1 は 1 のまま</em>で中間だけが動きます。端点が原理的に壊れません。
+      </p>
+      <p class="pull">
+        暗い画をゲインで持ち上げると、測定した 21 点のうち複数が 1.0 を超えて白飛びした。
+        同じ量をガンマで動かすと、1 点も飛ばなかった。
+      </p>
+    </div>
+
+    <h3>触らない、という判断のほうが多い</h3>
+    <div class="prose">
+      <p>
+        自動調整で難しいのは直すことより<strong>直さないこと</strong>です。
+        雪景色を「明るすぎる」と判断して暗くしてしまえば、撮影者の意図を壊します。
+        実素材 1287 フレームで各機構がどれだけ働いたかを測りました。
+      </p>
+    </div>
+
+    <div class="data">
+      <table>
+        <caption>発火率 — 1287 フレーム</caption>
+        <thead>
+          <tr><th>機構</th><th>プロ素材 807</th><th>アマ素材 480</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>逆光と判定</td><td class="num">2.6%</td><td class="num">2.7%</td></tr>
+          <tr><td>レターボックス検出</td><td class="num">3.8%</td><td class="num">0%</td></tr>
+          <tr><td>平坦（グラフィック）</td><td class="num">0.4%</td><td class="num">2.9%</td></tr>
+          <tr><td><strong>露出をほぼ触らない</strong></td><td class="num"><strong>88.8%</strong></td><td class="num"><strong>96.7%</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="note">
+      レターボックス検出が、レターボックスのあるプロ素材にだけ 3.8% 出て、
+      アマチュア素材で 0% なのが分かりやすい例です。どの機構も枠は小さいが、空振りしていません。
+    </p>
+  </section>
+
+  <section>
+    <div class="head">
+      <hr class="head-rule">
+      <h2>HDR を、暗くせずに SDR の画面へ</h2>
+    </div>
+    <div class="prose">
+      <p>
+        HDR 映像を普通のプレイヤーで開くと、たいてい<strong>眠い絵</strong>になります。
+        1000 nits を前提に作られた信号を 100 nits の画面へ素直に押し込むからです。
+      </p>
+      <p>
+        Kuro は <code>video-params/gamma</code> が PQ / HLG を返した時点で経路を切り替え、
+        <strong>輝度にだけ</strong>ショルダーを掛けます。RGB を個別に潰さず、
+        輝度の比 <code>y/Y</code> を三成分に等しく掛けるので、
+        <strong>明るさを畳んでも色相が動きません</strong>。
+      </p>
+      <p>
+        曲線は <strong>Reinhard のショルダー</strong>
+        <code>y = s·x/(1+s·x) · (1+s)/s</code>（<code>s = 2.62</code>）で、
+        入力は BT.2408 の基準白 203 nits で正規化した輝度
+        <code>x = Y · 203/(ソースピーク)</code>。ソースのピークがちょうど 1.0 に乗ります。
+      </p>
+      <p>
+        ここは当初 <strong>ITU-R BT.2390 の EETF</strong> でした。
+        <em>実素材で二度試して、二度とも測定で落ちています</em>。
+        EETF は 203 nits の拡散白を画面の 0.88 に置いてしまい、
+        絵の大半がその上の狭い範囲に詰まる — 眠さを直すはずの経路が眠さを作っていました。
+        2026-08-28 に削除しました。<strong>規格の名前がそのまま良い絵になるとは限りません。</strong>
+      </p>
+      <p>
+        ヘッドルームについても、期待と実測が違いました。
+        <code>maximumPotentialExtendedDynamicRangeColorComponentValue</code> は
+        手元の2台（INNOCN 32M2V / BenQ SW2700）とも
+        <strong>実測 1.00</strong>、EDR レイヤーを実際に画面へ出した状態でも 1.00 です。
+        <em>使える余地が無いものを設計の前提には置けない</em>ので、
+        現行の曲線はヘッドルームを見ずに 1.0 へ写します。
+        ヘッドルームのある画面で本当にハイライトを SDR 白より上へ出すのは、別の設計として残しています。
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <hr class="head-rule">
+      <h2>できること</h2>
+    </div>
+    <div class="prose">
+      <p>
+        グレーディングが中心ですが、プレイヤーとしての足回りも同じ基準で作ってあります。
+        以下は無料で使える範囲と、Kuro PRO で開く範囲の実際の線引きです。
+      </p>
+    </div>
+
+    <div class="grid">
+      <div class="cell">
+        <span class="tier">無料</span>
+        <h4>何でも開く</h4>
+        <p>libmpv が積んであるので、MKV・WebM・VP9・AV1・MPEG-1/2 まで、
+           AVFoundation が開けない形式もそのまま再生します。</p>
+      </div>
+      <div class="cell">
+        <span class="tier">無料</span>
+        <h4>ワンクリック自動調整</h4>
+        <p>ゾーン測光と軌跡ベースの AWB。シーンが変わるたびに測り直す
+           「シーン毎」も無料側です。</p>
+      </div>
+      <div class="cell">
+        <span class="tier">無料</span>
+        <h4>スコープとプローブ</h4>
+        <p>波形・ベクトルスコープ・ヒストグラムを Metal compute で描画。
+           画面上の一点の補正後 Rec.709 値も読めます。</p>
+      </div>
+      <div class="cell">
+        <span class="tier">無料</span>
+        <h4>音声まわり</h4>
+        <p>音声トラック切替、A/V 同期のずれ補正、静かなセリフを持ち上げて
+           大音量を抑えるナイトモード。</p>
+      </div>
+      <div class="cell">
+        <span class="tier">無料</span>
+        <h4>手で追い込む</h4>
+        <p>露出・黒レベル・ガンマ・コントラスト・色温度／ティント・彩度。
+           マスターの7本は無料側です。実測モデルはそのまま使えます。</p>
+      </div>
+      <div class="cell">
+        <span class="tier">無料</span>
+        <h4>A/B 比較</h4>
+        <p>全体切替と、画面を縦に割って左右で見比べるスライダー。
+           補正が何をしたのかを、記憶ではなく同時に見て確かめられます。</p>
+      </div>
+      <div class="cell">
+        <span class="tier pro">Kuro PRO</span>
+        <h4>グレーディングの全段</h4>
+        <p>カラーホイールとチャンネル別の Lift / Gamma / Gain、オフセット（ASC CDL）、
+           3-Way、コントラストのピボット、色相（HSL）、カーブ、トーンマップ。</p>
+      </div>
+      <div class="cell">
+        <span class="tier pro">Kuro PRO</span>
+        <h4>AWB / AE スポイト</h4>
+        <p>白い場所、適正にしたい場所を直接指すと、そこを基準に合わせます。
+           自動が迷う画で効きます。</p>
+      </div>
+      <div class="cell">
+        <span class="tier pro">Kuro PRO</span>
+        <h4>LUT 書き出し</h4>
+        <p>作ったグレードを .cube に。ここで作った色を、そのまま別の編集ツールへ
+           持っていけます。</p>
+      </div>
+      <div class="cell">
+        <span class="tier pro">Kuro PRO</span>
+        <h4>Wiener デブラー</h4>
+        <p>ぼけの逆畳み込み。フレーム毎に FFT は回さず、sigma と K が変わったときだけ
+           CPU で空間カーネルを作り直して畳み込みます。</p>
+      </div>
+      <div class="cell">
+        <span class="tier pro">Kuro PRO</span>
+        <h4>ノイズ低減とデバンド</h4>
+        <p>エッジを保存する空間バイラテラルと、動きに追従する時間 NR。
+           空のグラデーションに出る縞にはデバンド。</p>
+      </div>
+      <div class="cell">
+        <span class="tier pro">Kuro PRO</span>
+        <h4>アップスケール</h4>
+        <p>MetalFX、Anime4K、Apple の低遅延 SR。mpv は等倍で描き、
+           Metal のパスで拡大します。</p>
+      </div>
+      <div class="cell">
+        <span class="tier pro">Kuro PRO</span>
+        <h4>3D LUT 読み込み</h4>
+        <p>.cube をテトラヘドラル補間で適用。強度も可変です。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <hr class="head-rule">
+      <h2>App Store にいること自体が、設計上の制約だった</h2>
+    </div>
+    <div class="prose">
+      <p>
+        Mac の定番プレイヤーである IINA と VLC は、<strong>Mac App Store に構造的に入れません</strong>。
+        GPL のコンポーネントを含むからで、これは品質の問題ではなくライセンスの問題です。
+      </p>
+      <p>
+        Kuro は同梱する libmpv と FFmpeg を <code>-Dgpl=false</code> / <code>--disable-gpl</code> で
+        自前ビルドしています。GPL のフィルタが 1 つでも混ざれば配布できないので、
+        <em>入場券として払っている制約</em>です。Homebrew のビルドは使えません。
+      </p>
+      <p>
+        結果として、Mac App Store の中では
+        <strong>波形とベクトルスコープを積んだプレイヤー</strong>という枠が
+        ほとんど空いたままになっています。スコープは普通、再生ソフトではなく
+        専用の監視ツールに付くものだからです。
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    RustyWorks — 数値はすべて実測です。DaVinci Resolve との突き合わせ、ゾーンの色度測定、1287 フレームの発火率、いずれも計測結果です。
+  </footer>
+
+</div>
+</div>
+
+<div data-lang-block="en">
+<div class="page">
+
+  <header class="lede">
+    <p class="eyebrow">RustyWorks / Kuro — How it works</p>
+    <h1>The right color, while it plays</h1>
+    <p class="standfirst">
+      Kuro is a macOS video player, but most of what is inside it is a color corrector.
+      It grades the picture during playback, and it is built so the result lands on the same
+      numbers a professional tool produces. This page explains what makes “the same numbers” true.
+    </p>
+  </header>
+
+  <section>
+    <div class="head">
+      <hr class="head-rule">
+      <h2>Collapsing the working space into one</h2>
+    </div>
+    <div class="prose">
+      <p>
+        When colors do not match, the cause is usually not the arithmetic — it is
+        <strong>which space the arithmetic happened in</strong>. “Brightness +10” means one thing
+        added to linear light and another thing added to a gamma-encoded code value.
+      </p>
+      <p>
+        Kuro puts the whole pipeline in <strong>Rec.709 / Gamma 2.4 (BT.1886)</strong>.
+        Decode is <code>pow(v, 2.4)</code>, so a passthrough 128 comes out as 128.
+        It used to use the sRGB EOTF, whose toe <em>lifted midtones by about 7 code values</em> —
+        the picture changed with nobody touching a control. That is gone.
+      </p>
+    </div>
+
+<figure>
+      <div class="figframe">
+        <svg viewBox="0 0 760 250" role="img"
+             aria-label="Signal is decoded to linear, receives white balance only, is encoded to Gamma 2.4 where every remaining grade operation happens, then goes to the display transfer">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5"
+                    markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+
+          <!-- 空間の帯 -->
+          <rect x="150" y="34" width="140" height="150" rx="3"
+                fill="none" stroke="currentColor" stroke-opacity="0.28" stroke-dasharray="3 3"/>
+          <text x="220" y="26" text-anchor="middle" font-family="ui-monospace, monospace"
+                font-size="11" fill="currentColor" fill-opacity="0.6">linear</text>
+
+          <rect x="330" y="34" width="290" height="150" rx="3"
+                fill="none" stroke="currentColor" stroke-opacity="0.28" stroke-dasharray="3 3"/>
+          <text x="475" y="26" text-anchor="middle" font-family="ui-monospace, monospace"
+                font-size="11" fill="currentColor" fill-opacity="0.6">Gamma 2.4 encoded</text>
+
+          <!-- 流れ -->
+          <line x1="24" y1="109" x2="60" y2="109" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/>
+          <text x="24" y="96" font-size="12" fill="currentColor">source</text>
+
+          <rect x="62" y="90" width="76" height="38" rx="3" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <text x="100" y="114" text-anchor="middle" font-size="12" fill="currentColor">decode</text>
+
+          <line x1="138" y1="109" x2="168" y2="109" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/>
+
+          <rect x="170" y="90" width="100" height="38" rx="3"
+                fill="none" stroke="var(--tungsten)" stroke-width="1.6"/>
+          <text x="220" y="114" text-anchor="middle" font-size="12" fill="currentColor">temp / tint</text>
+          <text x="220" y="146" text-anchor="middle" font-family="ui-monospace, monospace"
+                font-size="10.5" fill="var(--tungsten)">1.5</text>
+
+          <line x1="270" y1="109" x2="326" y2="109" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/>
+          <text x="298" y="101" text-anchor="middle" font-size="10.5" fill="currentColor" fill-opacity="0.75">encode</text>
+
+          <rect x="330" y="90" width="122" height="38" rx="3" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <text x="391" y="114" text-anchor="middle" font-size="12" fill="currentColor">Lift / Gamma / Gain</text>
+          <text x="391" y="146" text-anchor="middle" font-family="ui-monospace, monospace"
+                font-size="10.5" fill="currentColor" fill-opacity="0.6">2 — 2.5</text>
+
+          <line x1="452" y1="109" x2="474" y2="109" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/>
+
+          <rect x="476" y="90" width="144" height="38" rx="3" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <text x="548" y="114" text-anchor="middle" font-size="12" fill="currentColor">3-Way, contrast</text>
+          <text x="548" y="146" text-anchor="middle" font-family="ui-monospace, monospace"
+                font-size="10.5" fill="currentColor" fill-opacity="0.6">3 — 7</text>
+
+          <line x1="620" y1="109" x2="654" y2="109" stroke="currentColor" stroke-width="1.5" marker-end="url(#ar)"/>
+          <text x="637" y="101" text-anchor="middle" font-size="10.5" fill="currentColor" fill-opacity="0.75">decode</text>
+
+          <rect x="656" y="90" width="80" height="38" rx="3" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <text x="696" y="108" text-anchor="middle" font-size="12" fill="currentColor">display</text>
+          <text x="696" y="122" text-anchor="middle" font-size="10.5" fill="currentColor" fill-opacity="0.6">709→P3</text>
+
+          <text x="24" y="215" font-size="11.5" fill="currentColor" fill-opacity="0.8">White balance is the only stage in linear: a per-channel constant gain corrects the</text>
+          <text x="24" y="232" font-size="11.5" fill="currentColor" fill-opacity="0.8">intensity ratio of the light itself, and that ratio is not preserved in an encoded space.</text>
+        </svg>
+      </div>
+      <figcaption>
+        Which space each operation lives in. The claim to reference accuracy is concentrated here, and it is settled before any individual formula is.
+      </figcaption>
+    </figure>
+
+    <div class="prose">
+      <p>
+        On top of that, every control was matched against DaVinci Resolve (Rec.709 / Gamma 2.4
+        timeline) <strong>one at a time, with a spot probe and scopes, and modelled from the
+        measurements</strong>. These are not guessed formulas. Agreement on the reference patches
+        is <em>roughly ±2 code values</em>.
+      </p>
+      <p>
+        None of the shapes that came out of the measurements are tidy. Gamma needs its 0-centered
+        value carried to an effective exponent (<code>G≥0: 1+4G</code> / <code>G&lt;0: 1/(1−4G)</code>),
+        contrast is <code>e=(2−contrast)^-1.17</code> with a pivot of 0.435, and hue rotation has a
+        rotation amount that depends on hue itself, fitted as a second harmonic
+        (<code>ΔH(H) = −25.63 − 7.43·cos2H + 15.96·sin2H</code>).
+        <strong>That is what matching actually consists of.</strong>
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <hr class="head-rule">
+      <h2>Deciding white from evidence, not from an average</h2>
+    </div>
+    <div class="prose">
+      <p>
+        The classic approach to auto white balance is <strong>gray world</strong> — correct so the
+        average of the whole frame is neutral. It is simple, and it is reliably wrong on a red wall
+        or a sunset, because the average of the frame is not the color of the light.
+      </p>
+      <p>
+        Kuro takes a different route. The frame is divided into <strong>16×16 = 256 zones</strong>,
+        each zone’s chromaticity is computed, and each zone is
+        <strong>accepted or rejected on how far it sits from the blackbody locus (Duv)</strong>.
+        Illuminants land close to the locus and colored objects do not — that single fact separates
+        what an average cannot.
+      </p>
+    </div>
+
+<figure>
+      <div class="figframe">
+        <svg viewBox="0 0 760 400" role="img"
+             aria-label="With CCT on the horizontal axis and Duv on the vertical, illuminants fall inside a band of Duv plus/minus 0.02 while the red wall, grass and blue sign fall outside it">
+          <!-- 採用帯 -->
+          <rect x="70" y="140" width="620" height="80" fill="var(--band)"/>
+          <line x1="70" y1="140" x2="690" y2="140" stroke="var(--shade)" stroke-width="1" stroke-dasharray="4 3"/>
+          <line x1="70" y1="220" x2="690" y2="220" stroke="var(--shade)" stroke-width="1" stroke-dasharray="4 3"/>
+          <text x="678" y="134" text-anchor="end" font-family="ui-monospace, monospace"
+                font-size="10.5" fill="var(--shade)">Duv +0.02</text>
+          <text x="678" y="234" text-anchor="end" font-family="ui-monospace, monospace"
+                font-size="10.5" fill="var(--shade)">Duv −0.02</text>
+
+          <!-- 軌跡（Duv 0） -->
+          <line x1="70" y1="180" x2="690" y2="180" stroke="currentColor" stroke-width="1.4"/>
+          <text x="74" y="196" font-size="11" fill="currentColor" fill-opacity="0.7">blackbody locus</text>
+
+          <!-- 軸 -->
+          <line x1="70" y1="330" x2="690" y2="330" stroke="currentColor" stroke-width="1" stroke-opacity="0.45"/>
+          <text x="70" y="352" font-size="11" fill="currentColor" fill-opacity="0.65">2000K</text>
+          <text x="429" y="352" text-anchor="middle" font-size="11" fill="currentColor" fill-opacity="0.65">4200K</text>
+          <text x="547" y="352" text-anchor="middle" font-size="11" fill="currentColor" fill-opacity="0.65">6500K</text>
+          <text x="690" y="352" text-anchor="end" font-size="11" fill="currentColor" fill-opacity="0.65">20000K</text>
+          <text x="380" y="376" text-anchor="middle" font-family="ui-monospace, monospace"
+                font-size="10.5" fill="currentColor" fill-opacity="0.55">correlated color temperature (even in mired)</text>
+
+          <!-- 採用された測定点 -->
+          <circle cx="429" cy="165" r="5" fill="var(--shade)"/>
+          <text x="429" y="154" text-anchor="middle" font-size="11.5" fill="currentColor">tungsten</text>
+
+          <circle cx="547" cy="174" r="5" fill="var(--shade)"/>
+          <text x="547" y="199" text-anchor="middle" font-size="11.5" fill="currentColor">neutral gray</text>
+
+          <circle cx="608" cy="175" r="5" fill="var(--shade)"/>
+          <text x="622" y="192" text-anchor="middle" font-size="11.5" fill="currentColor">overcast</text>
+
+          <circle cx="543" cy="147" r="5" fill="var(--shade)"/>
+          <text x="543" y="136" text-anchor="middle" font-size="11.5" fill="currentColor">fluorescent</text>
+
+          <!-- 除外された測定点 -->
+          <circle cx="530" cy="57" r="5" fill="none" stroke="var(--tungsten)" stroke-width="1.8"/>
+          <text x="530" y="46" text-anchor="middle" font-size="11.5" fill="var(--tungsten)">grass</text>
+
+          <circle cx="133" cy="231" r="5" fill="none" stroke="var(--tungsten)" stroke-width="1.8"/>
+          <text x="133" y="252" text-anchor="middle" font-size="11.5" fill="var(--tungsten)">red wall</text>
+
+          <circle cx="690" cy="263" r="5" fill="none" stroke="var(--tungsten)" stroke-width="1.8"/>
+          <text x="668" y="283" text-anchor="middle" font-size="11.5" fill="var(--tungsten)">blue sign</text>
+        </svg>
+      </div>
+      <figcaption>
+        Measured. Illuminants stay within Duv 0.017 at worst and colored objects are at least 0.026 away. <strong>There is a gap to put a threshold in</strong> — that one line is the whole of the white map.
+      </figcaption>
+    </figure>
+
+    <div class="data">
+      <table>
+        <caption>Zone accept / reject — measured</caption>
+        <thead>
+          <tr><th>Zone</th><th>CCT</th><th>Duv</th><th>Verdict</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Neutral gray</td><td class="num">6500K</td><td class="num">+0.0031</td><td class="pass-mark">accept</td></tr>
+          <tr><td>Tungsten</td><td class="num">4175K</td><td class="num">+0.0075</td><td class="pass-mark">accept</td></tr>
+          <tr><td>Overcast</td><td class="num">9125K</td><td class="num">+0.0027</td><td class="pass-mark">accept</td></tr>
+          <tr><td>Fluorescent</td><td class="num">6375K</td><td class="num">+0.0165</td><td class="pass-mark">accept</td></tr>
+          <tr class="rejected"><td>Red wall</td><td class="num">2200K</td><td class="num">−0.0257</td><td class="fail-mark">reject</td></tr>
+          <tr class="rejected"><td>Grass</td><td class="num">6025K</td><td class="num">+0.0617</td><td class="fail-mark">reject</td></tr>
+          <tr class="rejected"><td>Blue sign</td><td class="num">20000K</td><td class="num">−0.0415</td><td class="fail-mark">reject</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="prose">
+      <p>
+        The soundness of the math can be checked in one line. Feed it R=G=B and it must return
+        <strong>6500K / Duv +0.0031</strong>. D65 sitting +0.003 to the green side of the locus is a
+        known value, so <strong>getting it back is a real check on the implementation</strong>.
+      </p>
+      <p>
+        How well the accepted zones agree with each other becomes the <strong>confidence</strong>.
+        When confidence is low, the correction is held back.
+        <strong>Not deciding when there is nothing to decide from</strong> is part of an automatic
+        system’s job.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <hr class="head-rule">
+      <h2>Moving exposure with a power, not a multiply</h2>
+    </div>
+    <div class="prose">
+      <p>
+        The obvious way to brighten a dark shot is gain — multiply everything by a constant.
+        That has a side effect you cannot avoid: <strong>multiply 1.0 and you go past 1.0</strong> —
+        highlights clip. The harder you lift, the more of the top end is thrown away.
+      </p>
+      <p>
+        Kuro treats exposure as a <strong>power</strong>. Moving gamma in the encoded space is the
+        same as taking a power in linear (<code>((L^(1/2.4))^e)^2.4 = L^e</code>), so
+        <strong>0 stays 0 and 1 stays 1</strong> and only the middle moves. The endpoints cannot
+        break by construction.
+      </p>
+      <p class="pull">
+        Lifting a dark frame with gain pushed several of 21 measured patches past 1.0 and clipped
+        them. Moving the same amount with gamma clipped none of them.
+      </p>
+    </div>
+
+    <h3>Most of the time, the decision is to leave it alone</h3>
+    <div class="prose">
+      <p>
+        The hard part of auto-adjust is not correcting — it is <strong>not correcting</strong>.
+        Decide that a snow scene is “too bright” and darken it, and you have destroyed what the
+        person shooting it intended. Across 1287 frames of real material, this is how often each
+        mechanism actually fired.
+      </p>
+    </div>
+
+    <div class="data">
+      <table>
+        <caption>Fire rate — 1287 frames</caption>
+        <thead>
+          <tr><th>Mechanism</th><th>Pro material, 807</th><th>Amateur material, 480</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Judged backlit</td><td class="num">2.6%</td><td class="num">2.7%</td></tr>
+          <tr><td>Letterbox detected</td><td class="num">3.8%</td><td class="num">0%</td></tr>
+          <tr><td>Flat (graphics)</td><td class="num">0.4%</td><td class="num">2.9%</td></tr>
+          <tr><td><strong>Exposure left essentially alone</strong></td><td class="num"><strong>88.8%</strong></td><td class="num"><strong>96.7%</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="note">
+      Letterbox detection is the legible one: 3.8% on professional material, which has
+      letterboxing, and 0% on amateur material, which does not. Every mechanism has a small
+      envelope, and none of them are swinging at nothing.
+    </p>
+  </section>
+
+  <section>
+    <div class="head">
+      <hr class="head-rule">
+      <h2>HDR onto an SDR screen, without making it dark</h2>
+    </div>
+    <div class="prose">
+      <p>
+        Open HDR footage in an ordinary player and it usually looks <strong>washed out</strong>:
+        a signal authored for 1000 nits is being pushed straight into a 100-nit screen.
+      </p>
+      <p>
+        Kuro switches paths the moment <code>video-params/gamma</code> reports PQ or HLG, and
+        applies a shoulder <strong>to luminance only</strong>. It does not crush R, G and B
+        separately — it multiplies all three by the same luminance ratio <code>y/Y</code>, so
+        <strong>folding the brightness does not move the hue</strong>.
+      </p>
+      <p>
+        The curve is a <strong>Reinhard shoulder</strong>,
+        <code>y = s·x/(1+s·x) · (1+s)/s</code> with <code>s = 2.62</code>, taking a luminance
+        normalised on the BT.2408 reference white of 203 nits,
+        <code>x = Y · 203/(source peak)</code>. The source peak lands exactly on 1.0.
+      </p>
+      <p>
+        This used to be the <strong>ITU-R BT.2390 EETF</strong>.
+        <em>It was tried on real material twice and rejected by measurement both times.</em>
+        The EETF puts 203-nit diffuse white at 0.88 of the display, packing most of the picture into
+        the narrow band above it — the path that exists to fix washed-out was producing it.
+        It was deleted on 2026-08-28.
+        <strong>A standard’s name does not by itself make a good picture.</strong>
+      </p>
+      <p>
+        Headroom turned out differently from expectation too.
+        <code>maximumPotentialExtendedDynamicRangeColorComponentValue</code> measures
+        <strong>1.00</strong> on both displays here (INNOCN 32M2V and BenQ SW2700), and still 1.00
+        with a real EDR layer actually on screen. <em>You cannot base a design on room that is not
+        there</em>, so the current curve maps to 1.0 without consulting headroom at all. Actually
+        putting highlights above SDR white on a display that does have headroom is kept as a
+        separate design.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <hr class="head-rule">
+      <h2>Being in the App Store was itself a design constraint</h2>
+    </div>
+    <div class="prose">
+      <p>
+        IINA and VLC — the two default answers on the Mac —
+        <strong>structurally cannot ship on the Mac App Store</strong>. They contain GPL components.
+        That is a licensing fact, not a quality one.
+      </p>
+      <p>
+        Kuro builds its own libmpv and FFmpeg with <code>-Dgpl=false</code> /
+        <code>--disable-gpl</code>. One GPL filter anywhere in the bundle and it cannot be
+        distributed, so this is <em>the constraint paid as an entry ticket</em>.
+        Homebrew’s builds cannot be used.
+      </p>
+      <p>
+        The result is that inside the Mac App Store,
+        <strong>a player carrying a waveform and a vectorscope</strong> is a slot that has stayed
+        largely empty — scopes normally belong to a dedicated monitoring tool rather than to
+        playback software.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="head">
+      <hr class="head-rule">
+      <h2>What it does</h2>
+    </div>
+    <div class="prose">
+      <p>
+        Grading is the center of it, but the player underneath is built to the same standard.
+        Below is the actual line between what is free and what Kuro PRO opens.
+      </p>
+    </div>
+
+    <div class="grid">
+      <div class="cell">
+        <span class="tier">Free</span>
+        <h4>Opens anything</h4>
+        <p>libmpv is bundled, so MKV, WebM, VP9, AV1 and MPEG-1/2 play as they are,
+           including what AVFoundation will not open.</p>
+      </div>
+      <div class="cell">
+        <span class="tier">Free</span>
+        <h4>One-click auto-adjust</h4>
+        <p>Zone metering and locus-based AWB. Re-metering on every scene change is
+           on the free side too.</p>
+      </div>
+      <div class="cell">
+        <span class="tier">Free</span>
+        <h4>Scopes and probe</h4>
+        <p>Waveform, vectorscope and histogram drawn in Metal compute. The corrected
+           Rec.709 value of any single point on screen is readable.</p>
+      </div>
+      <div class="cell">
+        <span class="tier">Free</span>
+        <h4>Audio</h4>
+        <p>Track switching, A/V sync offset, and a night mode that lifts quiet
+           dialogue while holding loud passages down.</p>
+      </div>
+      <div class="cell">
+        <span class="tier">Free</span>
+        <h4>Grade it by hand</h4>
+        <p>Exposure, black level, gamma, contrast, temperature / tint, saturation.
+           The seven master controls are on the free side, measured models and all.</p>
+      </div>
+      <div class="cell">
+        <span class="tier">Free</span>
+        <h4>A/B compare</h4>
+        <p>A whole-frame toggle, and a divider you drag across the picture.
+           What the correction did, seen side by side rather than from memory.</p>
+      </div>
+      <div class="cell">
+        <span class="tier pro">Kuro PRO</span>
+        <h4>The full grading stack</h4>
+        <p>Color wheels and per-channel Lift / Gamma / Gain, offset (ASC CDL), 3-Way,
+           the contrast pivot, hue (HSL), curves, tone map.</p>
+      </div>
+      <div class="cell">
+        <span class="tier pro">Kuro PRO</span>
+        <h4>AWB / AE eyedroppers</h4>
+        <p>Point at what should be white, or at what should be correctly exposed,
+           and it matches to that. For the frames automation hesitates on.</p>
+      </div>
+      <div class="cell">
+        <span class="tier pro">Kuro PRO</span>
+        <h4>LUT export</h4>
+        <p>Write the grade to <code>.cube</code> and carry the color straight into
+           another editor.</p>
+      </div>
+      <div class="cell">
+        <span class="tier pro">Kuro PRO</span>
+        <h4>Wiener deblur</h4>
+        <p>Deconvolution of blur. No per-frame FFT — the spatial kernel is rebuilt on
+           the CPU only when sigma or K changes, then convolved.</p>
+      </div>
+      <div class="cell">
+        <span class="tier pro">Kuro PRO</span>
+        <h4>Noise reduction and debanding</h4>
+        <p>Edge-preserving spatial bilateral and motion-following temporal NR.
+           Debanding for the rings in sky gradients.</p>
+      </div>
+      <div class="cell">
+        <span class="tier pro">Kuro PRO</span>
+        <h4>Upscaling</h4>
+        <p>MetalFX, Anime4K, and Apple’s low-latency SR. mpv draws at native size and
+           a Metal pass scales it.</p>
+      </div>
+      <div class="cell">
+        <span class="tier pro">Kuro PRO</span>
+        <h4>3D LUT import</h4>
+        <p><code>.cube</code> applied with tetrahedral interpolation, with variable
+           strength.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    RustyWorks — every number here is measured: the control-by-control match against DaVinci
+    Resolve, the zone chromaticity readings, and the fire rates over 1287 frames.
+  </footer>
+
+</div>
+
+</div>
+
+<!-- 製品まわりの共通フッター（README「LP の決まりごと」4番） -->
+<nav class="rw-product-footer" aria-label="関連ページ" style="border-top:1px solid rgba(255,255,255,.10);margin:56px 0 0;padding:20px 24px 26px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 16px;font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace;font-size:12.5px;line-height:1.6;">
+      <a href="index.html" style="color:#8a8a86;text-decoration:none;" data-ja="RustyWorks" data-en="RustyWorks">RustyWorks</a>
+      <span aria-hidden="true" style="color:rgba(255,255,255,.18);">·</span>
+      <a href="kuro.html" style="color:#8a8a86;text-decoration:none;" data-ja="製品ページ" data-en="Product">製品ページ</a>
+      <span aria-hidden="true" style="color:rgba(255,255,255,.18);">·</span>
+      <a href="kuro_manual.html" style="color:#8a8a86;text-decoration:none;" data-ja="取扱説明書" data-en="Manual">取扱説明書</a>
+      <span aria-hidden="true" style="color:rgba(255,255,255,.18);">·</span>
+      <a href="https://apps.apple.com/app/apple-store/id6782262572?pt=128819275&amp;ct=website&amp;mt=8" style="color:#8a8a86;text-decoration:none;" target="_blank" rel="noopener" data-ja="App Store" data-en="App Store">App Store</a>
+      <span aria-hidden="true" style="color:rgba(255,255,255,.18);">·</span>
+      <a href="kuro_privacy.html" style="color:#8a8a86;text-decoration:none;" data-ja="プライバシー" data-en="Privacy">プライバシー</a>
+      <span aria-hidden="true" style="color:rgba(255,255,255,.18);">·</span>
+      <a href="site_privacy.html" style="color:#8a8a86;text-decoration:none;" data-ja="サイトのポリシー" data-en="Site Policy">サイトのポリシー</a>
+</nav>
+
+<script>
+(function () {
+  var buttons = document.querySelectorAll('.lang button');
+  var nodes   = document.querySelectorAll('[data-ja][data-en]');
+  var blocks  = document.querySelectorAll('[data-lang-block]');
+  var TITLE = { ja: document.title, en: 'Kuro — how it works | RustyWorks' };
+  function apply(lang) {
+    RW.lang = lang;
+    document.documentElement.lang = lang;
+    document.title = TITLE[lang];
+    nodes.forEach(function (el) {
+      var t = el.getAttribute('data-' + lang);
+      if (t !== null) el.textContent = t;
+    });
+    blocks.forEach(function (b) {
+      b.classList.toggle('on', b.getAttribute('data-lang-block') === lang);
+    });
+    buttons.forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
+    });
+    try { localStorage.setItem(RW.key, lang); } catch (e) {}
+    RW.notify();
+  }
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () { apply(b.dataset.lang); });
+  });
+  apply(RW.lang);   // どちらの言語でも一度通す（既定でどちらのブロックも非表示のため）
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "04f66ad1837a4b63af68beb6e835358f"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
