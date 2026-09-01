@@ -480,6 +480,31 @@ window.RW = (function () {
         <strong>合わせるとはこういう作業です。</strong>
       </p>
     </div>
+
+    <h3>画面に届くまでに、もう一度ガンマが掛かる</h3>
+    <div class="prose">
+      <p>
+        ここまでは Kuro の中の話です。macOS には続きがあります。
+        <code>CAMetalLayer</code> の色空間を <code>extendedLinearDisplayP3</code> に
+        している以上、<strong>コンポジタが最後に sRGB 形状の OETF を掛けます</strong>。
+        パイプラインを 2.4 で統一しても、素直に出力したのでは
+        <em>画面に届くのは 2.4 ではありません</em>。
+      </p>
+      <p>
+        そこで最終段は <code>srgbEOTF(gamma24Encode(·))</code> を書き込みます。
+        コンポジタの sRGB OETF がこれを打ち消すので、
+        <strong>パネルに残るのは純粋な 2.4 のコード</strong>です。
+        2.4 をそのままパネルへ送る DaVinci のビューアと一致するのは、この一段があるからです。
+        「素通しの 128 が 128 で出る」の根拠も、実はここまで含めた話です。
+      </p>
+      <p>
+        設定で <strong>sRGB</strong> を選ぶと、リニアで書いてコンポジタに任せます。
+        Mac の色管理としてはこちらが正確ですが、DaVinci と比べて
+        <strong>シャドウが約 9 コード暗く</strong>なります。
+        <em>どちらが正しいかではなく、何に合わせるかの選択</em>です。
+        リファレンスに合わせたいなら 2.4、Mac の他のアプリと揃えたいなら sRGB。
+      </p>
+    </div>
   </section>
 
   <section>
@@ -920,6 +945,32 @@ window.RW = (function () {
         rotation amount that depends on hue itself, fitted as a second harmonic
         (<code>ΔH(H) = −25.63 − 7.43·cos2H + 15.96·sin2H</code>).
         <strong>That is what matching actually consists of.</strong>
+      </p>
+    </div>
+
+    <h3>One more gamma, on the way to the screen</h3>
+    <div class="prose">
+      <p>
+        That was all inside Kuro. macOS has a postscript. As long as the
+        <code>CAMetalLayer</code> colorspace is <code>extendedLinearDisplayP3</code>,
+        <strong>the compositor applies an sRGB-shape OETF at the very end</strong>.
+        Unifying the pipeline on 2.4 is not enough: write the value out plainly and
+        <em>what reaches the screen is not 2.4</em>.
+      </p>
+      <p>
+        So the final stage writes <code>srgbEOTF(gamma24Encode(·))</code>. The
+        compositor's sRGB OETF undoes that, and <strong>what lands on the panel is
+        the pure 2.4-encoded code</strong> — which is why it matches DaVinci's
+        viewer, a viewer that sends 2.4 straight to the display. “A passthrough 128
+        comes out as 128” only holds because of this step.
+      </p>
+      <p>
+        Choosing <strong>sRGB</strong> in the settings writes linear and lets the
+        compositor do its thing. That is the colorimetrically accurate answer for
+        the Mac panel, but it is <strong>about 9 code values darker in the
+        shadows</strong> than DaVinci. <em>This is not a question of which is
+        correct, but of what you are matching</em> — 2.4 to match a reference, sRGB
+        to match everything else on the Mac.
       </p>
     </div>
   </section>
