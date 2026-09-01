@@ -499,9 +499,24 @@ window.RW = (function () {
       </p>
       <p>
         設定で <strong>sRGB</strong> を選ぶと、リニアで書いてコンポジタに任せます。
-        Mac の色管理としてはこちらが正確ですが、DaVinci と比べて
-        <strong>シャドウが約 9 コード暗く</strong>なります。
-        <em>どちらが正しいかではなく、何に合わせるかの選択</em>です。
+        Mac の色管理としてはこちらが正確で、そして
+        <strong>Gamma 2.4 より暗く出ます</strong>（DaVinci と比べて
+        シャドウが約 9 コード）。
+      </p>
+      <p>
+        ここは向きが分かりにくいところです。「2.2 のほうが明るいはずでは」と
+        思ったなら、その直感は正しく、<em>それがそのまま理由</em>です。
+        <strong>Gamma 2.4 の側は、2.4 で符号化したコードを ≒2.2 のパネルが解くので、
+        基準より明るく出ます</strong>。sRGB の側はリニアに戻してから渡すため、
+        BT.1886 が指定するとおりの光量 —— つまり<strong>暗いほう</strong>になります。
+        設定の名前は<em>何を送っているか</em>であって、何が掛かるかではありません。
+        差はシャドウで最も大きく、ハイライトではほとんど消えます。
+      </p>
+      <p>
+        そして <strong>Gamma 2.4 が DaVinci と一致するのは、色として正しいから
+        ではありません</strong>。DaVinci のビューアも同じようにコードをパネルへ
+        直接渡すからで、パネルが何をしようと両者が同じ影響を受ける、というだけです。
+        <em>どちらが正しいかではなく、何に合わせるかの選択</em>。
         リファレンスに合わせたいなら 2.4、Mac の他のアプリと揃えたいなら sRGB。
       </p>
     </div>
@@ -967,10 +982,27 @@ window.RW = (function () {
       <p>
         Choosing <strong>sRGB</strong> in the settings writes linear and lets the
         compositor do its thing. That is the colorimetrically accurate answer for
-        the Mac panel, but it is <strong>about 9 code values darker in the
-        shadows</strong> than DaVinci. <em>This is not a question of which is
-        correct, but of what you are matching</em> — 2.4 to match a reference, sRGB
-        to match everything else on the Mac.
+        the Mac panel, and it comes out <strong>darker than Gamma 2.4</strong> —
+        about 9 code values in the shadows.
+      </p>
+      <p>
+        The direction of that trips people up. If your first thought was “surely
+        2.2 is the brighter one”, you are right, and <em>that is exactly the
+        reason</em>. <strong>On the Gamma 2.4 path, a 2.4-encoded code is decoded by
+        a panel that is closer to 2.2, so it comes out brighter than the
+        reference.</strong> The sRGB path converts back to linear first, so what the
+        panel emits is the light BT.1886 actually specifies — the darker one. The
+        name of the setting says <em>what is being sent</em>, not what gets applied
+        to it. The gap is largest in the shadows and all but disappears in the
+        highlights.
+      </p>
+      <p>
+        And <strong>Gamma 2.4 matches DaVinci not because it is colorimetrically
+        right</strong>. It matches because DaVinci's viewer hands codes to the panel
+        the same way, so whatever the panel does, it does to both.
+        <em>This is not a question of which is correct, but of what you are
+        matching</em> — 2.4 to match a reference, sRGB to match everything else on
+        the Mac.
       </p>
     </div>
   </section>
