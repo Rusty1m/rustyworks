@@ -1850,7 +1850,9 @@ ShelfNavigator は、登録したフォルダを索引して、まとめて閲�
 - `modified:2024` `created:2024-03`
 - `AND` `OR` `NOT`（大文字）
 - `-語` で除外、`"引用符"` で語順を固定
+- `( )` でまとめる（`kind:video AND (tag:family OR tag:trip)`）
 - 範囲は `size:1mb..2mb` のように指定
+- 別名も使えます。`path:` `dir:`（folder）、`extension:`（ext）、`type:`（kind）、`dur:` `len:` `length:`（duration）、`date:` `mdate:`（modified）、`cdate:`（created）
 
 フィルタボタンからは、サイズ・解像度・再生時間・日付を画面上で指定できます。Finder タグはサイドバーから選べます。
 
@@ -1877,7 +1879,7 @@ ShelfNavigator は、登録したフォルダを索引して、まとめて閲�
 
 ツールバーの **重複**（`⌘⇧D`）で、登録した全フォルダを横断して重複を検出します。名前ではなく**内容**で比較します。
 
-結果画面では、残すファイルを選んでから他をゴミ箱へ移動できます。移動の直前に、走査したときからサイズ・更新日時・記録した内容のハッシュが変わっていないかを確かめるので、変わっていたものは自動的に除外されます。
+結果画面では、残すファイルを選んでから他をゴミ箱へ移動できます。移動の直前に、残す側と移す側の全体をもう一度読んで照合するので、走査してからの間に中身が変わっていたものは自動的に除外されます。
 
 「Duplicate」タグを付けるだけにして、後で Finder で確認することもできます。
 
@@ -2008,7 +2010,9 @@ The search field takes plain words, and also:
 - `modified:2024` `created:2024-03`
 - `AND` `OR` `NOT` (uppercase)
 - `-word` excludes; `"quotes"` keep words in order
+- `( )` groups terms (`kind:video AND (tag:family OR tag:trip)`)
 - Ranges are written `size:1mb..2mb`
+- Aliases work too: `path:` `dir:` (folder), `extension:` (ext), `type:` (kind), `dur:` `len:` `length:` (duration), `date:` `mdate:` (modified), `cdate:` (created)
 
 The filter button sets size, resolution, duration and dates without typing. Finder tags are picked from the sidebar.
 
@@ -2035,7 +2039,7 @@ The filter button sets size, resolution, duration and dates without typing. Find
 
 **Duplicates** in the toolbar (`⌘⇧D`) looks across every registered folder. It compares file **contents**, not names.
 
-In the results you choose which copy to keep and send the rest to the Trash. Immediately before anything is moved, each file is checked against what the scan recorded — its size, its modification date and its content hash — so anything that changed in the meantime is dropped from the operation.
+In the results you choose which copy to keep and send the rest to the Trash. Immediately before anything is moved, the copy you are keeping and every copy being moved are read in full and compared again, so anything whose contents changed since the scan is dropped from the operation.
 
 You can also just apply the “Duplicate” tag and review them in Finder later.
 
