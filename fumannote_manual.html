@@ -9,7 +9,6 @@
      書き出した取説では、このメタごと connect-src 'none' の厳格版に差し替わる。 -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'unsafe-inline'; img-src 'self' data: blob: file: https: http:; font-src data:; connect-src https://cloudflareinsights.com; form-action 'none'; base-uri 'none'; frame-src 'none'; object-src 'none'; media-src 'self' data: blob: file:;">
 <title>不満ノート 取説 / Manual</title>
-<link rel="canonical" href="https://rustyworks.jp/fumannote_manual.html">
 <style>
 /* ===== テーマ変数 =========================================== */
 :root{
@@ -86,6 +85,14 @@ body[data-demo] #open-file,
 body[data-demo] #open-dir,
 body[data-demo] #save-app{display:none;}
 header > *{flex:0 0 auto;}
+.lang{display:flex; align-items:center; gap:4px; font-size:12px; color:var(--muted);}
+.lang button{
+  border:0; background:none; font:inherit; font-size:12px; padding:3px 5px;
+  color:var(--muted); cursor:pointer; border-radius:5px;
+}
+.lang button[aria-pressed="true"]{color:var(--accent); font-weight:700;}
+.lang button:hover{color:var(--accent);}
+.lang .sep{opacity:.5;}
 header .spacer{flex:1 1 auto;}
 @media (max-width:920px){
   header{gap:8px; padding:0 8px; overflow-x:auto;}
@@ -283,11 +290,10 @@ kbd{
 <body data-style="standard" data-mode="scroll" data-embedded="1">
 
 <header>
-  <a class="site-home" href="index.html" style="color:var(--muted); text-decoration:none; font-size:11.5px; letter-spacing:.02em; margin-right:10px; white-space:nowrap;">&larr; RustyWorks</a>
   <span class="brand">DocPane</span>
 
   <div class="group">
-    <span class="label">項目</span>
+    <span class="label" data-ja="項目" data-en="Items">項目</span>
     <div class="seg" id="levels">
       <button data-lv="1" aria-pressed="false">H1</button>
       <button data-lv="2" aria-pressed="true">H2</button>
@@ -297,41 +303,46 @@ kbd{
   </div>
 
   <div class="group">
-    <span class="label">右ペイン</span>
+    <span class="label" data-ja="右ペイン" data-en="Right pane">右ペイン</span>
     <div class="seg" id="modes">
-      <button data-mode="scroll" aria-pressed="true">連続</button>
-      <button data-mode="page" aria-pressed="false">ページ</button>
+      <button data-mode="scroll" aria-pressed="true" data-ja="連続" data-en="Continuous">連続</button>
+      <button data-mode="page" aria-pressed="false" data-ja="ページ" data-en="Paged">ページ</button>
     </div>
   </div>
 
   <div class="spacer"></div>
 
-  <select id="style-sel" title="表示スタイル">
+  <select id="style-sel" title="表示スタイル" data-title-ja="表示スタイル" data-title-en="Display style">
     <option value="standard">Standard Manual</option>
     <option value="dark">Dark Minimal</option>
     <option value="book">Classic Book</option>
     <option value="api">Technical API</option>
   </select>
-  <button class="btn" id="open-file">ファイル…</button>
-  <button class="btn" id="open-dir">フォルダ…</button>
-  <button class="btn" id="export-btn" title="いまの文書と画像を1枚の HTML にまとめて保存">書き出し</button>
-  <button class="btn" id="help-btn" title="ショートカット">?</button>
+  <button class="btn" id="open-file" data-ja="ファイル…" data-en="Open File…">ファイル…</button>
+  <button class="btn" id="open-dir" data-ja="フォルダ…" data-en="Open Folder…">フォルダ…</button>
+  <button class="btn" id="export-btn" title="いまの文書と画像を1枚の HTML にまとめて保存" data-title-ja="いまの文書と画像を1枚の HTML にまとめて保存" data-title-en="Save the current document and images as one HTML file" data-ja="書き出し" data-en="Export">書き出し</button>
+  <div class="lang" id="lang" role="group" aria-label="Language">
+    <button type="button" data-lang="ja" aria-pressed="true">JA</button>
+    <span class="sep">/</span>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+  <button class="btn" id="help-btn" title="ショートカット" data-title-ja="ショートカット" data-title-en="Shortcuts">?</button>
 </header>
 
 <main>
-  <aside id="side"><div class="toc-empty">まだ文書が読み込まれていません。</div></aside>
+  <aside id="side"><div class="toc-empty" data-ja="まだ文書が読み込まれていません。" data-en="No document loaded yet.">まだ文書が読み込まれていません。</div></aside>
   <div id="splitter"></div>
   <section id="view">
     <div id="drop">
-      <h2>.md ファイル / フォルダをドロップ</h2>
+      <h2 data-ja=".md ファイル / フォルダをドロップ" data-en="Drop a .md file or a folder">.md ファイル / フォルダをドロップ</h2>
       <p>
-        単一ファイルなら見出しが項目に、複数ファイルならファイルが項目になります。<br>
-        左の項目をクリックすると、右ペインが該当箇所へジャンプします。
+        <span data-ja="単一ファイルなら見出しが項目に、複数ファイルならファイルが項目になります。" data-en="One file: its headings become the items. Several files: each file becomes an item.">単一ファイルなら見出しが項目に、複数ファイルならファイルが項目になります。</span><br>
+        <span data-ja="左の項目をクリックすると、右ペインが該当箇所へジャンプします。" data-en="Click an item on the left and the right pane jumps to it.">左の項目をクリックすると、右ペインが該当箇所へジャンプします。</span>
       </p>
       <div class="row">
-        <button class="btn" id="drop-file">ファイルを選ぶ</button>
-        <button class="btn" id="drop-dir">フォルダを選ぶ</button>
-        <button class="btn" id="drop-sample">サンプルを開く</button>
+        <button class="btn" id="drop-file" data-ja="ファイルを選ぶ" data-en="Choose a file">ファイルを選ぶ</button>
+        <button class="btn" id="drop-dir" data-ja="フォルダを選ぶ" data-en="Choose a folder">フォルダを選ぶ</button>
+        <button class="btn" id="drop-sample" data-ja="サンプルを開く" data-en="Open the sample">サンプルを開く</button>
       </div>
       <!-- 保存リンクは、サイト上で開かれているときだけ出す -->
       <div class="ver" id="ver"></div>
@@ -342,34 +353,34 @@ kbd{
 
 <div class="modal" id="search-modal">
   <div class="panel">
-    <input type="search" id="search-input" placeholder="全文横断検索…（Enter で移動、Esc で閉じる）" autocomplete="off">
+    <input type="search" id="search-input" placeholder="全文横断検索…（Enter で移動、Esc で閉じる）" data-ph-ja="全文横断検索…（Enter で移動、Esc で閉じる）" data-ph-en="Search all documents…  (Enter to go, Esc to close)" autocomplete="off">
     <div id="results"></div>
   </div>
 </div>
 
 <div class="modal" id="help-modal">
   <div class="panel help">
-    <h3>キーボード操作</h3>
+    <h3 data-ja="キーボード操作" data-en="Keyboard">キーボード操作</h3>
     <dl>
-      <dt><kbd>J</kbd> / <kbd>↓</kbd> / <kbd>→</kbd></dt><dd>次の項目へ</dd>
-      <dt><kbd>K</kbd> / <kbd>↑</kbd> / <kbd>←</kbd></dt><dd>前の項目へ</dd>
-      <dt><kbd>1</kbd>…<kbd>9</kbd></dt><dd>その番号の項目へ直接ジャンプ</dd>
-      <dt><kbd>⌘F</kbd> / <kbd>Ctrl F</kbd></dt><dd>全文横断検索</dd>
-      <dt><kbd>⌘E</kbd> / <kbd>Ctrl E</kbd></dt><dd>右ペインを 連続 ⇔ ページ で切替</dd>
-      <dt><kbd>[</kbd> / <kbd>]</kbd></dt><dd>前後のファイルへ（複数読込時）</dd>
-      <dt><kbd>?</kbd></dt><dd>このヘルプ</dd>
-      <dt><kbd>Esc</kbd></dt><dd>閉じる / ハイライト解除</dd>
+      <dt><kbd>J</kbd> / <kbd>↓</kbd> / <kbd>→</kbd></dt><dd data-ja="次の項目へ" data-en="Next item">次の項目へ</dd>
+      <dt><kbd>K</kbd> / <kbd>↑</kbd> / <kbd>←</kbd></dt><dd data-ja="前の項目へ" data-en="Previous item">前の項目へ</dd>
+      <dt><kbd>1</kbd>…<kbd>9</kbd></dt><dd data-ja="その番号の項目へ直接ジャンプ" data-en="Jump straight to that item">その番号の項目へ直接ジャンプ</dd>
+      <dt><kbd>⌘F</kbd> / <kbd>Ctrl F</kbd></dt><dd data-ja="全文横断検索" data-en="Search all documents">全文横断検索</dd>
+      <dt><kbd>⌘E</kbd> / <kbd>Ctrl E</kbd></dt><dd data-ja="右ペインを 連続 ⇔ ページ で切替" data-en="Switch the right pane between continuous and paged">右ペインを 連続 ⇔ ページ で切替</dd>
+      <dt><kbd>[</kbd> / <kbd>]</kbd></dt><dd data-ja="前後のファイルへ（複数読込時）" data-en="Previous / next file (when several are loaded)">前後のファイルへ（複数読込時）</dd>
+      <dt><kbd>?</kbd></dt><dd data-ja="このヘルプ" data-en="This help">このヘルプ</dd>
+      <dt><kbd>Esc</kbd></dt><dd data-ja="閉じる / ハイライト解除" data-en="Close / clear the search highlight">閉じる / ハイライト解除</dd>
     </dl>
-    <h3>連続モードでは ↑↓ は通常のスクロールに使えます（J / K は常に項目移動）</h3>
-    <h3>文書側での指定</h3>
+    <h3 data-ja="連続モードでは ↑↓ は通常のスクロールに使えます（J / K は常に項目移動）" data-en="In continuous mode the arrow keys scroll as usual. J and K always move between items.">連続モードでは ↑↓ は通常のスクロールに使えます（J / K は常に項目移動）</h3>
+    <h3 data-ja="文書側での指定" data-en="Set in the document">文書側での指定</h3>
     <dl>
-      <dt><kbd>title</kbd></dt><dd>文書名</dd>
-      <dt><kbd>levels</kbd></dt><dd>項目に拾う見出しレベル（例 <kbd>[1, 2]</kbd>）</dd>
+      <dt><kbd>title</kbd></dt><dd data-ja="文書名" data-en="Document name">文書名</dd>
+      <dt><kbd>levels</kbd></dt><dd><span data-ja="項目に拾う見出しレベル（例" data-en="Heading levels to list as items (e.g.">項目に拾う見出しレベル（例</span> <kbd>[1, 2]</kbd><span data-ja="）" data-en=")">）</span></dd>
       <dt><kbd>style</kbd></dt><dd>standard / dark / book / api</dd>
       <dt><kbd>mode</kbd></dt><dd>scroll / page</dd>
-      <dt><kbd>collapse</kbd></dt><dd>下位項目をたたんで開く</dd>
+      <dt><kbd>collapse</kbd></dt><dd data-ja="下位項目をたたんで開く" data-en="Open with sub-items collapsed">下位項目をたたんで開く</dd>
     </dl>
-    <h3>.md の先頭を <kbd>---</kbd> で挟んだブロックに書きます（サンプル文書の6章参照）</h3>
+    <h3><span data-ja=".md の先頭を" data-en="Write these at the top of the .md, fenced by">.md の先頭を</span> <kbd>---</kbd> <span data-ja="で挟んだブロックに書きます（サンプル文書の6章参照）" data-en="(see section 6 of the sample document)">で挟んだブロックに書きます（サンプル文書の6章参照）</span></h3>
     <div class="ver" id="help-ver"></div>
   </div>
 </div>
@@ -537,12 +548,12 @@ function inline(src){
   s = s.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g, (m,a,u) => {
     const safe = safeUrl(u, true);
     return safe ? `<img data-src="${safe}" alt="${a}">`
-                : `<span class="blocked" title="安全でない画像URLのため表示しません">${a || '画像'}</span>`;
+                : `<span class="blocked" title="${escapeHtml(T('blockedImg'))}">${a || T('image')}</span>`;
   });
   s = s.replace(/\[([^\]]+)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g, (m,t,u) => {
     const safe = safeUrl(u, false);
     return safe ? `<a href="${safe}" target="_blank" rel="noopener noreferrer">${t}</a>`
-                : `<span class="blocked" title="安全でないリンクのため無効化しました">${t}</span>`;
+                : `<span class="blocked" title="${escapeHtml(T('blockedLink'))}">${t}</span>`;
   });
   s = s.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
   s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
@@ -733,6 +744,75 @@ const state = {
   pref: { levels:[2], mode:'scroll', style:'standard' },
 };
 
+
+/* ===================== 表示言語 =====================
+   サイトと同じ鍵（rw-lang）を使う。同じサイトの中で開かれていれば、
+   トップで EN にした人はこの画面も EN で開く。
+   単体のファイルとして開かれた場合は、そのファイル内での記憶になる。 */
+
+const LANG_KEY = 'rw-lang';
+let LANG = 'ja';
+
+const MSG = {
+  ja: {
+    empty:      'まだ文書が読み込まれていません。',
+    noHeadings: '選択中のレベルの見出しが見つかりません。ツールバーで H1〜H4 を切り替えてください。',
+    noHit:      '一致する箇所はありません。',
+    exporting:  '書き出しています…',
+    exported:   size => `${size} で書き出しました`,
+    exportedMissing: (size, n) => `${size} で書き出しました（画像 ${n} 点は見つからず未埋め込み）`,
+    needDoc:    '先に .md を読み込んでください',
+    noMd:       '.md ファイルが見つかりませんでした',
+    unreadable: '読み取れませんでした。「フォルダ…」から開いてみてください',
+    loaded:     n => `${n} ファイルを読み込みました`,
+    modePage:   'ページモード',
+    modeScroll: '連続モード',
+    blockedLink:'安全でないリンクのため無効化しました',
+    blockedImg: '安全でない画像URLのため表示しません',
+    image:      '画像',
+  },
+  en: {
+    empty:      'No document loaded yet.',
+    noHeadings: 'No headings at the selected levels. Try switching H1–H4 in the toolbar.',
+    noHit:      'No matches.',
+    exporting:  'Exporting…',
+    exported:   size => `Saved (${size})`,
+    exportedMissing: (size, n) => `Saved (${size}) — ${n} image(s) could not be found and were left out`,
+    needDoc:    'Load a .md file first',
+    noMd:       'No .md file was found',
+    unreadable: 'Could not read it. Try the “Open Folder…” button instead',
+    loaded:     n => `Loaded ${n} files`,
+    modePage:   'Paged mode',
+    modeScroll: 'Continuous mode',
+    blockedLink:'This link was disabled because it is not safe',
+    blockedImg: 'This image is not shown because its address is not safe',
+    image:      'image',
+  },
+};
+
+const T = k => (MSG[LANG] && MSG[LANG][k] !== undefined) ? MSG[LANG][k] : MSG.ja[k];
+
+function applyLang(lang, save){
+  LANG = (lang === 'en') ? 'en' : 'ja';
+  document.documentElement.lang = LANG;
+  $$('[data-ja][data-en]').forEach(el => {
+    const v = el.getAttribute('data-' + LANG);
+    if (v !== null) el.textContent = v;
+  });
+  $$('[data-title-ja][data-title-en]').forEach(el => {
+    const v = el.getAttribute('data-title-' + LANG);
+    if (v !== null) el.title = v;
+  });
+  $$('[data-ph-ja][data-ph-en]').forEach(el => {
+    const v = el.getAttribute('data-ph-' + LANG);
+    if (v !== null) el.placeholder = v;
+  });
+  $$('#lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === LANG)));
+  if (save !== false) { try { localStorage.setItem(LANG_KEY, LANG); } catch(e){} }
+  // 目次や通知は動的に作るので、開いている文書があれば組み立て直す
+  if (state.docs.length) showDoc(state.docIndex);
+}
+
 const view = $('#view'), docEl = $('#doc'), sideEl = $('#side'), dropEl = $('#drop');
 
 /* --- 設定の保存 / 復元 --- */
@@ -866,7 +946,7 @@ function applyDocMeta(doc){
 /* entries: [{file, path}] — .md と画像をまとめて受け取る */
 function openFiles(entries){
   const mds = entries.filter(e => MD_RE.test(e.file.name));
-  if (!mds.length) { toast('.md ファイルが見つかりませんでした'); return; }
+  if (!mds.length) { toast(T('noMd')); return; }
 
   state.assets.forEach(a => URL.revokeObjectURL(a.url));
   state.assets = new Map();
@@ -897,7 +977,7 @@ function finishOpen(){
   dropEl.hidden = true;
   docEl.hidden = false;
   showDoc(0);
-  toast(state.docs.length > 1 ? `${state.docs.length} ファイルを読み込みました` : state.docs[0].name);
+  toast(state.docs.length > 1 ? T('loaded')(state.docs.length) : state.docs[0].name);
 }
 
 function showDoc(index){
@@ -1010,7 +1090,7 @@ function buildToc(){
   if (!state.items.length) {
     const e = document.createElement('div');
     e.className = 'toc-empty';
-    e.textContent = '選択中のレベルの見出しが見つかりません。ツールバーで H1〜H4 を切り替えてください。';
+    e.textContent = T('noHeadings');
     sideEl.appendChild(e);
   }
 }
@@ -1225,7 +1305,7 @@ function runSearch(q){
     });
   });
 
-  if (!count) box.innerHTML = '<div class="res-none">一致する箇所はありません。</div>';
+  if (!count) box.innerHTML = '<div class="res-none">' + escapeHtml(T('noHit')) + '</div>';
 }
 
 function jumpToHit(docIndex, headingText, q){
@@ -1341,7 +1421,8 @@ async function buildExport(){
   q('#doc').innerHTML = '';
   q('#doc').setAttribute('hidden', '');
   q('#drop').removeAttribute('hidden');
-  q('#side').innerHTML = '<div class="toc-empty">まだ文書が読み込まれていません。</div>';
+  q('#side').innerHTML = '<div class="toc-empty" data-ja="まだ文書が読み込まれていません。" data-en="No document loaded yet.">'
+                       + escapeHtml(T('empty')) + '</div>';
   q('#side').removeAttribute('style');
   q('#toast').textContent = '';
   q('#toast').className = '';
@@ -1387,8 +1468,8 @@ async function buildExport(){
 }
 
 async function exportHtml(){
-  if (!state.docs.length) { toast('先に .md を読み込んでください'); return; }
-  toast('書き出しています…');
+  if (!state.docs.length) { toast(T('needDoc')); return; }
+  toast(T('exporting'));
   const { html, missing } = await buildExport();
 
   const blob = new Blob([html], { type:'text/html;charset=utf-8' });
@@ -1403,9 +1484,7 @@ async function exportHtml(){
 
   const mb = blob.size / 1024 / 1024;
   const size = mb >= 1 ? mb.toFixed(1) + ' MB' : Math.round(blob.size / 1024) + ' KB';
-  toast(missing.size
-    ? `${size} で書き出しました（画像 ${missing.size} 点は見つからず未埋め込み）`
-    : `${size} で書き出しました`);
+  toast(missing.size ? T('exportedMissing')(size, missing.size) : T('exported')(size));
 }
 
 /* ===================== モード / スタイル / レベル ===================== */
@@ -1525,8 +1604,8 @@ document.addEventListener('drop', async e => {
   }
 
   if (found.length) openFiles(found);
-  else if (plainFiles.length) toast('.md ファイルが見つかりませんでした');
-  else toast('読み取れませんでした。「フォルダ…」から開いてみてください');
+  else if (plainFiles.length) toast(T('noMd'));
+  else toast(T('unreadable'));
 });
 
 /* 分割線ドラッグ */
@@ -1582,7 +1661,7 @@ document.addEventListener('keydown', e => {
   if (mod && e.key.toLowerCase() === 'e') {
     e.preventDefault();
     setMode(state.mode === 'scroll' ? 'page' : 'scroll');
-    toast(state.mode === 'page' ? 'ページモード' : '連続モード');
+    toast(state.mode === 'page' ? T('modePage') : T('modeScroll'));
     return;
   }
   if (e.key === 'Escape') { closeModals(); clearMarks(); return; }
@@ -1626,7 +1705,7 @@ document.addEventListener('keydown', e => {
 
 /* ===================== 版数と保存リンク ===================== */
 
-const VERSION = 'v1.0 (2026-08-14)';
+const VERSION = 'v1.1 (2026-08-14)';
 $('#ver').textContent = 'DocPane ' + VERSION;
 $('#help-ver').textContent = 'DocPane ' + VERSION;
 
@@ -1640,8 +1719,27 @@ $('#help-ver').textContent = 'DocPane ' + VERSION;
   a.hidden = false;
 })();
 
+/* 言語の切り替え */
+$('#lang').onclick = e => {
+  const b = e.target.closest('button');
+  if (b) applyLang(b.dataset.lang);
+};
+
+/* 埋め込みデモでは、親ページの言語に追随する */
+window.addEventListener('message', e => {
+  if (e.source !== window.parent) return;
+  if (e.origin !== location.origin && e.origin !== 'null') return;
+  if (e.data && e.data.type === 'docpane:lang') applyLang(e.data.lang, false);
+});
+
 /* 起動 */
 loadPrefs();
+(function initLang(){
+  let saved = null;
+  try { saved = localStorage.getItem(LANG_KEY); } catch(e){}
+  if (!saved) saved = (navigator.language || '').toLowerCase().indexOf('ja') === 0 ? 'ja' : 'en';
+  applyLang(saved, false);
+})();
 setStyle(state.style);
 setMode(state.mode);
 syncLevelButtons();
@@ -1776,7 +1874,7 @@ collapse: true
 
 ### 月300回 — 月額300円
 
-- **月300回まで**（通常200回 → ローンチ特典で1.5倍）
+- **AI整理を月300回まで**
 - 1日10回に相当する枠
 - 上限に達しても簡易版で書き続けられる
 - 自動更新・いつでも解約できる
@@ -1822,10 +1920,9 @@ rustyworks.games@gmail.com
 
 ## 関連
 
-- [RustyWorks](index.html)
 - [製品ページ](fumannote.html)
 - [プライバシーポリシー](fumannote_privacy.html)
-- [サイトのポリシー](site_privacy.html)
+- [RustyWorks](index.html)
 
 # English
 
@@ -1943,7 +2040,7 @@ Open the **設定** (Settings) tab to see your current plan and how many uses ar
 
 ### 300 uses a month — ¥300 / month
 
-- **Up to 300 uses a month** (normally 200 — a launch bonus makes it 1.5×)
+- **AI tidying, up to 300 times a month**
 - Around 10 a day
 - Even at the limit, you can keep writing with the simplified version
 - Auto-renewing, cancel any time
@@ -2000,10 +2097,9 @@ rustyworks.games@gmail.com
 
 ## Related
 
-- [RustyWorks](index.html)
 - [Product page](fumannote.html)
 - [Privacy policy](fumannote_privacy.html)
-- [Site policy](site_privacy.html)
+- [RustyWorks](index.html)
 
 </script>
 </body>
