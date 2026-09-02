@@ -822,8 +822,8 @@ window.RW = (function () {
     </div>
     <div class="prose">
       <p>
-        Mac の定番プレイヤーである IINA と VLC は、<strong>Mac App Store に構造的に入れません</strong>。
-        GPL のコンポーネントを含むからで、これは品質の問題ではなくライセンスの問題です。
+        メディア再生の世界で広く使われている部品には、<strong>GPL のものが多くあります</strong>。
+        GPL のコンポーネントが 1 つでも入ると Mac App Store では配布できません。品質の問題ではなく、ライセンスの問題です。
       </p>
       <p>
         Kuro は同梱する libmpv と FFmpeg を <code>-Dgpl=false</code> / <code>--disable-gpl</code> で
@@ -831,10 +831,9 @@ window.RW = (function () {
         <em>入場券として払っている制約</em>です。Homebrew のビルドは使えません。
       </p>
       <p>
-        結果として、Mac App Store の中では
-        <strong>波形とベクトルスコープを積んだプレイヤー</strong>という枠が
-        ほとんど空いたままになっています。スコープは普通、再生ソフトではなく
-        専用の監視ツールに付くものだからです。
+        スコープは普通、再生ソフトではなく専用の監視ツールに付くものです。
+        <strong>再生しながら波形とベクトルスコープを見る</strong>という形は、
+        この制約を先に払ったうえで選んだものです。
       </p>
     </div>
   </section>
@@ -1219,8 +1218,8 @@ window.RW = (function () {
     </div>
     <div class="prose">
       <p>
-        IINA and VLC — the two default answers on the Mac —
-        <strong>structurally cannot ship on the Mac App Store</strong>. They contain GPL components.
+        Much of what the media-playback world is built on is <strong>GPL</strong>.
+        One GPL component anywhere in a bundle and it cannot ship on the Mac App Store.
         That is a licensing fact, not a quality one.
       </p>
       <p>
@@ -1230,10 +1229,9 @@ window.RW = (function () {
         Homebrew’s builds cannot be used.
       </p>
       <p>
-        The result is that inside the Mac App Store,
-        <strong>a player carrying a waveform and a vectorscope</strong> is a slot that has stayed
-        largely empty — scopes normally belong to a dedicated monitoring tool rather than to
-        playback software.
+        Scopes normally belong to a dedicated monitoring tool rather than to playback
+        software. <strong>Watching a waveform and a vectorscope while the video plays</strong> is
+        a shape that only becomes available once that constraint is paid up front.
       </p>
     </div>
   </section>
