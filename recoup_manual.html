@@ -1710,19 +1710,61 @@ FAT / exFAT / NTFS / APFS を問わず動作し、フォルダにはもう表示
 | 対象 | 外付けHDD・SSD・SDカード・USBメモリ |
 | 保存先 | 復元元とは**別のディスク**の空き容量 |
 | 権限 | 生ディスクの走査に管理者パスワードが必要 |
-| ライセンス | 走査と確認は無料。ファイルの書き出しに必要 |
+| ライセンス | 走査・確認・保全は無料。書き出しに必要 |
+
+## まず「はじめに」から
+
+アプリを開くと「はじめに」の画面が出ます。**ここから始めてください。**
+
+どの作業をすべきかは、ドライブの状態で変わります。**弱ったドライブは読み取りを
+繰り返すほど悪化します。** 状態を確かめずに全体を走査すると、それが止めを刺して
+しまうことがあります。
+
+「はじめに」では、ドライブの状態を軽く確認し、正しい手順へ案内します。確認のために
+読むのはディスクのごく一部だけなので、負担はほとんどありません。
+
+**異音がする、接続が切れる、といった心当たりがあれば、必ずチェックを入れてください。**
+そうした兆候は機械では分からないので、確認の結果より優先して判断します。
+
+なお「異常なし」と出ても、**健康だと確定したわけではありません。** 確認したのは
+ディスクのごく一部です。作業中に異音やエラーに気づいたら、すぐ中止して保全に
+切り替えてください。スキャン中に読めない箇所が見つかった場合は、画面に警告が出ます。
+
+### 不調の兆候があった場合
+
+**先に「保全」をおすすめします。** 1回だけ全体を読んで複製を作り、以降の作業は
+その複製に対して行います。こうすれば、**弱ったドライブを読むのは生涯で1回だけ**に
+なります。
+
+1. このドライブを保全する（1回だけ通し読みします）
+2. 保全した複製に対してスキャンし、中身を確認する
+3. 必要なファイルを取り出す
 
 ## 無料でできること / ライセンスが必要なこと
 
 **ディスクの走査と、見つかったファイルの確認は無料です。** サムネイルで中身を見て、
 自分のファイルが本当に救えるかを確かめてから購入を判断できます。
 
-**ライセンスが必要なのは、ファイルをディスクへ書き出すときだけです。**
+**弱ったドライブの保全も無料です。** データが失われつつあるときに、まず安全を確保
+する作業でお金をいただくことはしません。
 
 | | |
 | --- | --- |
-| 無料 | 走査 · サムネイル表示 · 種類と状態の確認 · 中断と再開 |
-| 要ライセンス | 復元（ファイルの書き出し） |
+| 無料 | ドライブの状態の確認 · 走査 · サムネイル表示 · 種類と状態の確認 · 中断と再開 · **保全アーカイブの作成** · 保全アーカイブの走査と確認 · 救出コピーの対象を調べる |
+| 要ライセンス | 復元（ファイルの書き出し） · 救出コピーの実行 · **保全アーカイブを .img に変換** |
+
+### 保全アーカイブ（.recoupsafe）について
+
+無料で作成できる保全アーカイブは、**Recoup が読み取ることを前提とした独自の形式**です。
+Finder でマウントすることはできません。
+
+アーカイブに対するスキャンとサムネイルでの確認は無料で行えます。**弱ったドライブを
+何度も読むことなく、中身を全部確かめてから購入を判断できます。**
+
+ライセンスをお持ちの場合、**標準のディスクイメージ（.img）に変換**できます。変換すると
+Finder でマウントでき、ファイル名やフォルダ構成を保ったまま取り出せます。変換は同じ
+ファイルをその場で書き換えるので、**追加の空き容量は要りません。** 中断しても同じ操作で
+続きから再開できます。
 
 ライセンスは買い切りで、**Mac 3台まで**登録できます。使わなくなった Mac の登録は、
 購入時のメールにある管理ページからご自身で解除できます。
@@ -1777,19 +1819,35 @@ Mac の内蔵ドライブや、別の外付けドライブを保存先にして�
 読めないブロックはその部分だけ飛ばして続行するので、1ファイル丸ごと諦めません。
 「写真・動画・音声のみ」フィルタを外せば、**ファイル種別を問わず**退避できます。
 
-### ディスクをイメージ化
+### 保全（ディスクをイメージ化）
 
-異音がする、頻繁に切断されるドライブ向け。一度だけ全体を読んで `.img` に保存します。
-作成したイメージは「削除ファイル復元」の読み取り元として使えるので、以降は弱ったドライブに
+異音がする、頻繁に切断されるドライブ向け。一度だけ全体を読んで保存します。
+保存したものは「削除ファイル復元」の読み取り元として使えるので、以降は弱ったドライブに
 触らずに作業できます。
 
-### 使い分けの目安
+ライセンスの有無で保存の形式が変わります。どちらも読み取り方は同じで、**中身に違いは
+ありません。**
 
-| 症状 | 使う機能 |
+| | 保存される形式 |
 | --- | --- |
-| 軽症（消しただけ・ディスクは健康） | 削除ファイル復元 |
-| 中症（読めるがエラーが出る） | 救出コピー |
-| 重症（異音・切断・大量エラー） | イメージ化 → イメージに対して復元 |
+| ライセンスなし | 保全アーカイブ（`.recoupsafe`）。Recoup で読めます |
+| ライセンスあり | 標準のディスクイメージ（`.img`）。Finder でマウントできます |
+
+無料で作った保全アーカイブは、あとから `.img` に変換できます（ライセンスが必要）。
+
+### 使い分け
+
+**この判断は「はじめに」の画面が行います。** 症状をご自分で見分ける必要はありません。
+以下は、その内部で何が起きているかの説明です。
+
+| ドライブの状態 | 進む工程 |
+| --- | --- |
+| 消しただけ・ディスクは健康 | 削除ファイル復元 |
+| マウントできるが中身を丸ごと退避したい | 救出コピー |
+| 不調の兆候がある（異音・切断・エラー） | **保全 → 保全した複製に対して復元** |
+
+**迷ったときは保全してください。** 健康なドライブを保全しても、余分に時間と空き容量が
+かかるだけで害はありません。逆に、弱ったドライブをいきなり走査すると取り返しがつきません。
 
 ## 結果を見る
 
@@ -1870,7 +1928,7 @@ Finder にも表示されない場合は、カードリーダーやカード自�
 ### スキャンが遅い / 時間がかかる
 
 数TBの全走査には時間がかかります。中断しても続きから再開できます。
-重症のドライブは、先に「イメージ化」してからイメージに対してスキャンする方が、
+不調の兆候があるドライブは、先に「保全」してから複製に対してスキャンする方が、
 ドライブへの負担が少なく安全です。
 
 ### 復元したファイルが壊れている / 一部しか表示されない
@@ -1918,19 +1976,60 @@ written only to the destination you choose.
 | Works with | External HDDs, SSDs, SD cards, USB drives |
 | Destination | Free space on a **separate disk** |
 | Permission | Administrator password for raw disk access |
-| License | Free to scan and preview; required to write files out |
+| License | Free to scan, preview and preserve; required to write out |
+
+## Start with "Start here"
+
+When you open the app you land on the **Start here** screen. Begin there.
+
+What you should do depends on the condition of the drive. **A failing drive gets worse
+every time it is read.** Scanning the whole thing without checking first can be what
+finally kills it.
+
+Start here checks the drive's condition and points you to the right step. It reads only
+a small fraction of the disk, so the load is negligible.
+
+**If the drive makes noises or drops its connection, tick those boxes.** Software cannot
+detect those symptoms, so we trust your report over the measurement.
+
+Note that "no problems found" does **not** mean the drive is healthy — we only checked a
+small part of it. If you notice noises or errors while working, stop and switch to
+preserving it. If the scan hits unreadable areas, a warning appears on screen.
+
+### If there are signs of trouble
+
+**Preserve it first.** Read the drive through once to make a copy, then do everything
+else on that copy. That way the failing drive is **read exactly once, ever.**
+
+1. Preserve this drive (one single pass over it)
+2. Scan that copy and check what is there
+3. Recover the files you need
 
 ## What is Free, What Needs a License
 
 **Scanning the disk and previewing what it finds are free.** You can look at the
 thumbnails and confirm your own files are really recoverable before deciding to buy.
 
-**A license is required only to write the recovered files to disk.**
+**Preserving a failing drive is also free.** We will not charge you for the step that
+stops you losing data.
 
 | | |
 | --- | --- |
-| Free | Scan · Preview thumbnails · Check kind and condition · Pause and resume |
-| Needs a license | Recovery (writing files out) |
+| Free | Checking the drive's condition · Scan · Preview thumbnails · Check kind and condition · Pause and resume · **Creating a safe archive** · Scanning and previewing that archive · Seeing what salvage copy would copy |
+| Needs a license | Recovery (writing files out) · Running salvage copy · **Converting a safe archive to .img** |
+
+### About safe archives (.recoupsafe)
+
+The safe archive you can create for free is **a private format that only Recoup reads**.
+It cannot be mounted in Finder.
+
+Scanning that archive and previewing its contents is free. **You can check everything
+that is recoverable before deciding to buy, without reading the failing drive again.**
+
+With a license you can **convert it to a standard disk image (.img)**, which mounts in
+Finder and lets you recover files with their names and folder structure intact. The
+conversion rewrites the same file in place, so **no extra free space is needed**, and it
+resumes if interrupted.
 
 The license is a one-time purchase and activates on **up to 3 Macs**. You can
 deactivate a Mac you no longer use from the management page linked in your
@@ -1986,19 +2085,34 @@ For drives that still mount but are misbehaving. Copies the files that can be re
 block is unreadable it skips just that part and carries on, instead of giving up on the whole
 file. Turn off the "photo, video, and audio only" filter to copy **any file type**.
 
-### Disk Image
+### Preserve (Disk Image)
 
 For drives in bad shape — odd noises, frequent disconnects. Reads the whole disk once and
-saves it as an `.img`. The resulting image can be used as a source for "Recover Deleted
-Files", so you never have to touch the failing drive again.
+saves it. The result can be used as a source for "Recover Deleted Files", so you never
+have to touch the failing drive again.
 
-### Which tool to use
+The format depends on your license. Both read the same way; **the contents are identical.**
 
-| Condition | Tool |
+| | Saved as |
 | --- | --- |
-| Mild — files deleted, drive is healthy | Recover Deleted Files |
-| Moderate — readable but throwing errors | Salvage Copy |
-| Severe — noises, disconnects, many errors | Disk Image, then recover from the image |
+| No license | A safe archive (`.recoupsafe`), readable by Recoup |
+| Licensed | A standard disk image (`.img`), mountable in Finder |
+
+A safe archive made for free can be converted to `.img` later (this requires a license).
+
+### Which step to take
+
+**Start here makes this call for you.** You do not need to diagnose the drive yourself.
+This table just describes what happens under the hood.
+
+| Condition of the drive | Step |
+| --- | --- |
+| Files deleted, drive is healthy | Recover Deleted Files |
+| Mounts fine, you want its contents copied off | Salvage Copy |
+| Signs of trouble (noises, disconnects, errors) | **Preserve, then recover from that copy** |
+
+**When in doubt, preserve.** Preserving a healthy drive only costs you time and disk
+space. Scanning a failing drive without preserving it can cost you everything.
 
 ## Reviewing Results
 
