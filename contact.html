@@ -545,6 +545,12 @@ footer{border-top:1px solid var(--line);padding:30px 0;}
       var radio = document.querySelector('input[name="kind"][value="' + CSS.escape(wantKind) + '"]');
       if (radio) radio.checked = true;
     }
+    // ゲームから開いたときは、版と遊んだ回数が ?env= で来る（LOOT MULE。2026-09-26）。
+    // クリップボードに入れる形は itch.io の枠の中では書き込みが止められるので、こちらで受ける。
+    // 見えている欄に入るだけなので、送る前に本人が読めて、消せる。
+    var wantEnv = params.get('env');
+    var envInput = document.getElementById('env');
+    if (wantEnv && envInput && !envInput.value) envInput.value = wantEnv.slice(0, 120);
   } catch (e) {}
 
   // ── モバイルのメニュー ──────────────────
