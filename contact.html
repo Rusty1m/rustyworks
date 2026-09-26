@@ -268,6 +268,10 @@ footer{border-top:1px solid var(--line);padding:30px 0;}
               <span data-ja="要望" data-en="Request">要望</span>
             </label>
             <label class="choice">
+              <input type="radio" name="kind" value="感想">
+              <span data-ja="感想" data-en="Feedback">感想</span>
+            </label>
+            <label class="choice">
               <input type="radio" name="kind" value="その他">
               <span data-ja="その他" data-en="Other">その他</span>
             </label>
@@ -287,6 +291,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;}
             <option value="戦闘画面UIカスタマイザー" data-ja="戦闘画面UIカスタマイザー" data-en="BattleUICustomizer">戦闘画面UIカスタマイザー</option>
             <option value="オートダビング構文" data-ja="オートダビング構文" data-en="AutoDub">オートダビング構文</option>
             <option value="DocPane">DocPane</option>
+            <option value="LOOT MULE">LOOT MULE</option>
             <option value="サイト" data-ja="このサイト" data-en="This website">このサイト</option>
           </select>
         </div>
@@ -523,6 +528,24 @@ footer{border-top:1px solid var(--line);padding:30px 0;}
   if (!saved) { try { saved = localStorage.getItem(KEY); } catch (e) {} }
   if (!saved) saved = 'ja';
   if (saved === 'en') apply('en');
+
+  // ?product= と ?kind= を最初から選んでおく（ゲームなどから開いたとき）。
+  // 知らない値は無視する（選択肢に無ければ何もしない）。
+  try {
+    var params = new URLSearchParams(location.search);
+    var wantProduct = params.get('product');
+    if (wantProduct) {
+      var select = document.getElementById('product');
+      for (var i = 0; i < select.options.length; i++) {
+        if (select.options[i].value === wantProduct) { select.selectedIndex = i; break; }
+      }
+    }
+    var wantKind = params.get('kind');
+    if (wantKind) {
+      var radio = document.querySelector('input[name="kind"][value="' + CSS.escape(wantKind) + '"]');
+      if (radio) radio.checked = true;
+    }
+  } catch (e) {}
 
   // ── モバイルのメニュー ──────────────────
   var toggle = document.getElementById('navToggle');
