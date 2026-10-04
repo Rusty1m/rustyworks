@@ -66,6 +66,8 @@
   .lang .sep { color: #cdc5b3; }
   .btn { display: inline-block; font-family: 'IBM Plex Mono', monospace; letter-spacing: .03em; color: #fff; background: var(--accent); border: 1px solid var(--accent); border-radius: 6px; transition: background .18s ease; }
   .btn:hover { color: #fff; background: var(--accent-hover); }
+  .btn-ghost { color: var(--accent); background: #fff; }
+  .btn-ghost:hover { color: #fff; background: var(--accent); }
   .btn-sm { font-size: 12.5px; padding: 8px 14px; }
   .btn-lg { font-size: 14px; padding: 15px 26px; }
 
@@ -121,12 +123,14 @@
   .demo-box .price { font-size: 30px; font-weight: 700; margin: 6px 0 4px; }
   .demo-box .sub { color: var(--muted); font-size: 14.5px; margin-bottom: 24px; }
   .demo-box .btn { width: 100%; text-align: center; }
+  .demo-box .btn + .btn { margin-top: 10px; }
   .demo-box .fine { margin-top: 16px; font-size: 13.5px; color: var(--muted); line-height: 1.8; }
 
   /* 締め */
   .closing { text-align: center; }
   .closing h2 { margin-bottom: 16px; }
   .closing .cta-note { margin-bottom: 34px; }
+  .closing .btn + .btn { margin-left: 10px; }
 
   .site-foot { border-top: 1px solid var(--line); padding: 40px 0; }
   .site-foot .wrap { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--muted); }
@@ -142,6 +146,7 @@
     .hero { padding-top: 72px; }
     .lead { font-size: 17px; }
     .btn-lg { width: 100%; text-align: center; }
+    .closing .btn + .btn { margin: 10px 0 0; }
     .section { padding-bottom: 80px; }
     .section > .wrap > .rule { padding-top: 56px; }
   }
@@ -189,7 +194,8 @@
         </div>
         <div class="cta-row">
           <a class="btn btn-lg" href="https://rustyworks.itch.io/loot-mule-demo" target="_blank" rel="noopener" data-ja="ブラウザで無料で遊ぶ（itch.io）" data-en="Play the free demo (itch.io)">ブラウザで無料で遊ぶ（itch.io）</a>
-          <span class="cta-note" data-ja="Web · 日本語 / English · 無料体験版" data-en="Web · Japanese / English · Free demo">Web · 日本語 / English · 無料体験版</span>
+          <a class="btn btn-lg btn-ghost" href="https://unityroom.com/games/loot_mule_demo" target="_blank" rel="noopener" data-ja="unityroom で遊ぶ" data-en="Play on unityroom">unityroom で遊ぶ</a>
+          <span class="cta-note" data-ja="Web · 12言語 · 無料体験版" data-en="Web · 12 languages · Free demo">Web · 12言語 · 無料体験版</span>
         </div>
         <div class="hero-art">
           <img src="assets/lp/loot-mule-hero.webp" width="1280" height="720" alt="LOOT MULE のタイトル。大きな荷を背負った冒険者と犬が、迷宮の入口の石段を上っていく絵。">
@@ -307,14 +313,15 @@
               <li data-ja="最初のダンジョン「古びた屋敷」をまるごと（地下5階・屋敷の主まで）" data-en="The whole first dungeon, The Old Manor (5 floors, up to its lord)">最初のダンジョン「古びた屋敷」をまるごと（地下5階・屋敷の主まで）</li>
               <li data-ja="インストール不要。パソコンのブラウザで遊べます" data-en="Nothing to install — play in a desktop browser">インストール不要。パソコンのブラウザで遊べます</li>
               <li data-ja="キーボード・マウス・ゲームパッドに対応" data-en="Keyboard, mouse and gamepad supported">キーボード・マウス・ゲームパッドに対応</li>
-              <li data-ja="日本語・英語" data-en="Japanese and English">日本語・英語</li>
+              <li data-ja="12言語（日本語・英語・中国語 簡体字/繁体字・韓国語・ロシア語・スペイン語・ポルトガル語・ドイツ語・フランス語・ポーランド語・トルコ語）" data-en="12 languages (English, Japanese, Simplified/Traditional Chinese, Korean, Russian, Spanish, Brazilian Portuguese, German, French, Polish, Turkish)">12言語（日本語・英語・中国語 簡体字/繁体字・韓国語・ロシア語・スペイン語・ポルトガル語・ドイツ語・フランス語・ポーランド語・トルコ語）</li>
               <li data-ja="セーブはブラウザの中に残ります（製品版には引き継ぎません）" data-en="Your save stays in your browser (it does not carry over to the full game)">セーブはブラウザの中に残ります（製品版には引き継ぎません）</li>
             </ul>
             <div class="demo-box">
               <div class="mono" style="font-size:12.5px; color:var(--accent);" data-ja="体験版" data-en="Demo">体験版</div>
               <p class="price" data-ja="無料" data-en="Free">無料</p>
-              <p class="sub" data-ja="itch.io で公開中。製品版は開発中です。" data-en="Available on itch.io. The full game is in development.">itch.io で公開中。製品版は開発中です。</p>
+              <p class="sub" data-ja="itch.io と unityroom で公開中。製品版は開発中です。" data-en="Available on itch.io and unityroom. The full game is in development.">itch.io と unityroom で公開中。製品版は開発中です。</p>
               <a class="btn btn-lg" href="https://rustyworks.itch.io/loot-mule-demo" target="_blank" rel="noopener" data-ja="itch.io で遊ぶ" data-en="Play on itch.io">itch.io で遊ぶ</a>
+              <a class="btn btn-lg btn-ghost" href="https://unityroom.com/games/loot_mule_demo" target="_blank" rel="noopener" data-ja="unityroom で遊ぶ" data-en="Play on unityroom">unityroom で遊ぶ</a>
               <p class="fine" data-ja="感想や不具合は、itch.io のコメントか、お問い合わせフォームへ。ゲームの設定にある「感想・不具合を伝える」からも開けます。" data-en="Send feedback and bug reports via the itch.io comments or the contact form. You can also open it from “Send feedback” in the game settings.">感想や不具合は、itch.io のコメントか、お問い合わせフォームへ。ゲームの設定にある「感想・不具合を伝える」からも開けます。</p>
               <p class="fine"><a href="contact.html?product=LOOT%20MULE&amp;kind=%E6%84%9F%E6%83%B3" data-ja="お問い合わせフォームを開く →" data-en="Open the contact form →">お問い合わせフォームを開く →</a></p>
             </div>
@@ -330,6 +337,7 @@
           <h2>LOOT MULE</h2>
           <p class="cta-note" data-ja="ターン制ダンジョン・ローグライト · Web · 無料体験版" data-en="Turn-based dungeon roguelite · Web · Free demo">ターン制ダンジョン・ローグライト · Web · 無料体験版</p>
           <a class="btn btn-lg" href="https://rustyworks.itch.io/loot-mule-demo" target="_blank" rel="noopener" data-ja="ブラウザで無料で遊ぶ" data-en="Play the free demo">ブラウザで無料で遊ぶ</a>
+          <a class="btn btn-lg btn-ghost" href="https://unityroom.com/games/loot_mule_demo" target="_blank" rel="noopener" data-ja="unityroom で遊ぶ" data-en="Play on unityroom">unityroom で遊ぶ</a>
         </div>
       </div>
     </section>
@@ -350,6 +358,8 @@
       <a href="loot-mule.html" style="color:#5f6368;text-decoration:none;" data-ja="製品ページ" data-en="Product">製品ページ</a>
       <span aria-hidden="true" style="color:#c9ccd1;">·</span>
       <a href="https://rustyworks.itch.io/loot-mule-demo" target="_blank" rel="noopener" style="color:#5f6368;text-decoration:none;" data-ja="ストア" data-en="Store">ストア</a>
+      <span aria-hidden="true" style="color:#c9ccd1;">·</span>
+      <a href="https://unityroom.com/games/loot_mule_demo" target="_blank" rel="noopener" style="color:#5f6368;text-decoration:none;" data-ja="unityroom" data-en="unityroom">unityroom</a>
       <span aria-hidden="true" style="color:#c9ccd1;">·</span>
       <a href="site_privacy.html" style="color:#5f6368;text-decoration:none;" data-ja="サイトのポリシー" data-en="Site Policy">サイトのポリシー</a>
 </nav>
