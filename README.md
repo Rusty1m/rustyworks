@@ -62,6 +62,7 @@ HTTPS + キーチェーン。Personal Access Token（fine-grained・`Contents: R
 | 不満ノート（FumanNote） | `fumannote.html` / `fumannote_manual.html` / `fumannote_privacy.html` |
 | Plain Video Saver | `pvs.html` / `pvs_privacy.html` |
 | UADB | `UADB_manual.html` / `uadb_privacy.html` |
+| VERDANT（ゲーム・体験版は itch.io と unityroom） | `verdant.html` のみ（取説・専用のプライバシーは無い。ゲームは何も送らないので `site_privacy.html` で足りる） |
 | LOOT MULE（ゲーム・体験版は itch.io と unityroom） | `loot-mule.html` のみ（取説・専用のプライバシーは無い。ゲームは何も送らないので `site_privacy.html` で足りる） |
 | オートダビング構文（Web アプリ） | `autodub/index.html` / `autodub/notes.html`（解説記事） |
 | トップ | `index.html` |
