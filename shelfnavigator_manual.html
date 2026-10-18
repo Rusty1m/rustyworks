@@ -1789,7 +1789,7 @@ collapse: true
 
 ![ShelfNavigator](assets/icons/shelfnavigator.png)
 
-ShelfNavigator は、登録したフォルダを索引して、まとめて閲覧・検索する macOS 用アプリです。ドライブをまたいだ写真・動画・テキストが、フォルダの区切りなく1つの一覧になります。
+ShelfNavigator は、登録したフォルダを索引して、まとめて閲覧・検索する macOS 用アプリです。ドライブをまたいだ写真・動画・音声・テキストが、フォルダの区切りなく1つの一覧になります。
 
 ## 概要
 
@@ -1804,7 +1804,7 @@ ShelfNavigator は、登録したフォルダを索引して、まとめて閲�
 - `macOS 14` 以降
 - **Apple Silicon**（M1 以降）専用
 - Mac App Store で配布
-- 対象：画像・動画・テキストファイル
+- 対象：画像・動画・音声・テキストファイル
 - 内蔵・外付け・ネットワークのフォルダに対応
 
 > ネットワークに接続しません。索引はこの Mac の中だけに保存され、外部へ送信されることはありません。
@@ -1822,7 +1822,7 @@ ShelfNavigator は、登録したフォルダを索引して、まとめて閲�
 
 ### サイドバー
 
-登録したフォルダと Finder タグの一覧。件数付き。
+登録したフォルダ、Finder タグ、パレットの一覧。件数付き。
 
 ### グリッド
 
@@ -1879,11 +1879,51 @@ ShelfNavigator は、登録したフォルダを索引して、まとめて閲�
 
 - ダブルクリック / `⌘⌥P` — 別ウインドウで大きく表示
 - `Return` または `⌘↓` — 既定のアプリで開く
-- `Space` — 動画の再生・一時停止
+- `Space` — 動画・音声の再生・一時停止
 - `F` または `⌘⇧R` — Finder で表示
 - `I` または `⌘⌥I` — 情報パネル
 
 > 設定の「開くアプリ」で、種類ごとに使うアプリを指定できます。macOS の既定は変更されません。
+
+## 音声
+
+1.5 から、音声ファイルを一覧できます。ゲームの効果音や BGM を選ぶときに使えます。
+
+- 対応形式：`WAV` `AIFF` `MP3` `M4A` `AAC` `FLAC` `Ogg` `Opus` `CAF` `WMA`
+- タイルには**波形**が出ます。短い効果音と長い曲、立ち上がりの鋭い音とゆっくり鳴る音が、再生しなくても見分けられます
+- タイルにポインタを重ねると、その音を試聴できます。設定の **タイル** でオフにできます
+- プレビュー表示と別ウインドウでは、大きな波形の下に再生バーが出ます。`Space` で再生・一時停止
+- 種類フィルタの **音声**、または検索の `kind:audio` で音声だけに絞れます（`sound` `sfx` `se` `music` `bgm` でも同じ）。`duration<2` のように長さでも絞り込めます
+
+> 長いファイルの波形は、先頭90秒ぶんを描いたものです。MIDI は音そのものが入っていないため、音声としては扱いません。
+
+## パレット
+
+1.5 から、一覧の中から候補のファイルを集めて、同じ大きさで並べて見比べられます。アイコンや背景の素材選びなどに使えます。
+
+#### 作る・集める
+
+1. サイドバー下部の **新規パレット**（`⌥⌘N`）を押す
+2. パレットができて収集が始まり、パレットのウインドウが開く
+3. 一覧のファイルをクリックすると追加、もう一度クリックすると外れる
+
+- 収集中は、ツールバーに **収集中: パレット名** が出て、パレットに入っているタイルに ✓ が付きます
+- `⌘` クリック・`⇧` クリックは、収集中も通常の選択だけです。選んだものをまとめて入れるには、右クリックの **パレットに追加** を使います
+- ダブルクリックで大きく表示しても、パレットの中身は変わりません
+- 収集をやめるには、ツールバーの ✕ か、パレットのウインドウの **収集を終了** を押します。普通のクリックは選択に戻ります
+
+#### パレットのウインドウ
+
+- 集めたファイルが同じ大きさで並びます。上部のスライダーで大きさを変えられます。小さな画像（ドット絵など）は、ぼかさずに拡大します
+- ドラッグで並べ替えられます
+- 外すには、選んでから **−** ボタンか、右クリックの **パレットから外す**。ファイル自体は消えません
+- 選んだファイルをウインドウの外へドラッグすると、Finder などへ**コピー**として渡せます。元のファイルが移動することはありません
+- **Finder で表示** のボタンで、選んだファイル（選択がなければ全部）を Finder で表示します
+
+#### サイドバーのパレット
+
+- 作ったパレットはサイドバーの **パレット** に並びます。選ぶと、フォルダと同じように一覧に表示されます
+- 右クリックで **このパレットに収集**・**パレットウインドウを開く**・**名前を変更…**・**パレットを削除…**。削除されるのはパレットだけで、ファイルはそのまま残ります
 
 ## 重複を探す
 
@@ -1905,7 +1945,7 @@ ShelfNavigator は、登録したフォルダを索引して、まとめて閲�
 
 ### タイル
 
-ホバーで動画を再生するかどうか。
+ポインタを重ねたときに、動画を再生するか、音声を再生するか（それぞれ指定できます）。
 
 ### パフォーマンス
 
@@ -1917,7 +1957,7 @@ ShelfNavigator は、登録したフォルダを索引して、まとめて閲�
 
 ### 開くアプリ
 
-画像・動画・テキストごとに使うアプリを指定。
+画像・動画・音声・テキストごとに使うアプリを指定。
 
 「このアプリについて」からは、同梱しているオープンソースライブラリのライセンスを確認できます。
 
@@ -1931,8 +1971,10 @@ ShelfNavigator は、登録したフォルダを索引して、まとめて閲�
 - `I` — **情報パネル**（`⌘⌥I`）
 - `F` — **Finder で表示**（`⌘⇧R`）
 - `Return` — **開く**（`⌘↓`）
-- `Space` — **動画の再生・一時停止**
+- `Space` — **動画・音声の再生・一時停止**
 - `⌘A` — **すべて選択**
+- `⌥⌘N` — **新規パレット**
+- `⌥⌘L` — **パレットを表示**
 - `⌘⇧D` — **重複を探す**
 - `⌘⌫` — **ゴミ箱に入れる**
 - `⌘Z` — **ゴミ箱への移動を取り消す**
@@ -1941,7 +1983,7 @@ ShelfNavigator は、登録したフォルダを索引して、まとめて閲�
 
 - **一覧に何も出ない** — 種類フィルタや検索条件が残っていないか確認してください。絞り込み中はその旨がバーに表示されます
 - **「アクセス許可が必要」と出る** — 外付けを繋ぎ直したか、macOS の許可が切れています。その項目から再度許可してください
-- **サムネイルが出ない** — 破損したファイルや、拡張子と中身が食い違うファイルでは出ないことがあります
+- **サムネイルが出ない** — 破損したファイルや、拡張子と中身が食い違うファイルでは出ないことがあります。音声で波形が描けないときは、代わりにアイコンが表示されます
 - **件数が想定と違う** — フォルダを入れ子で登録している場合、内側のファイルは外側にも含まれるため、合計は一致しません
 - **古い WMV のサムネイルが乱れる** — 一部の `.wmv`（Windows Media Video 9）で、サムネイルにノイズが出ることがあります。ファイルが壊れているわけではなく、**再生とプレビューは正常**です。この形式は内部の索引が不完全なことが多く、途中の位置から画を取り出す際に生じます
 
@@ -1960,7 +2002,7 @@ ShelfNavigator は、登録したフォルダを索引して、まとめて閲�
 
 ![ShelfNavigator](assets/icons/shelfnavigator.png)
 
-ShelfNavigator is a macOS app that indexes the folders you register and browses them as one. Photos, videos and text spread across several drives appear in a single grid, with the folder boundaries out of the way.
+ShelfNavigator is a macOS app that indexes the folders you register and browses them as one. Photos, videos, audio and text spread across several drives appear in a single grid, with the folder boundaries out of the way.
 
 ## Overview
 
@@ -1975,7 +2017,7 @@ It never moves or copies your files. It reads them and lists them; your folder s
 - `macOS 14` or later
 - **Apple Silicon** only (M1+)
 - Distributed on the Mac App Store
-- Handles images, video and text files
+- Handles images, video, audio and text files
 - Works with internal, external and network folders
 
 > The app has no network access. The index stays on this Mac and is never sent anywhere.
@@ -1993,7 +2035,7 @@ It never moves or copies your files. It reads them and lists them; your folder s
 
 ### Sidebar
 
-Registered folders and Finder tags, with counts.
+Registered folders, Finder tags and palettes, with counts.
 
 ### Grid
 
@@ -2050,11 +2092,51 @@ The filter button sets size, resolution, duration and dates without typing. Find
 
 - Double-click / `⌘⌥P` — show the file big in a window of its own
 - `Return` or `⌘↓` — open in the default app
-- `Space` — play or pause video
+- `Space` — play or pause video and audio
 - `F` or `⌘⇧R` — show in Finder
 - `I` or `⌘⌥I` — toggle the info pane
 
 > Settings → Open With picks an app per file kind. Your macOS defaults are left unchanged.
+
+## Audio
+
+From 1.5, audio files are listed too — made for choosing sound effects and music for a game.
+
+- Formats: `WAV` `AIFF` `MP3` `M4A` `AAC` `FLAC` `Ogg` `Opus` `CAF` `WMA`
+- Tiles show the **waveform**. A short effect and a long track, a sharp hit and a slow swell, can be told apart without playing them
+- Hover over a tile to hear it. Turn this off under **Tiles** in Settings
+- In Preview mode and in its own window, a play bar sits under a large waveform. `Space` plays and pauses
+- The **Audio** kind filter, or `kind:audio` in the search field, shows only sound (`sound` `sfx` `se` `music` `bgm` work too). Narrow by length with `duration<2` and the like
+
+> For long files the waveform covers the first 90 seconds. MIDI files carry no sound of their own and are not treated as audio.
+
+## Palettes
+
+From 1.5, you can collect candidate files out of the grid and compare them side by side at the same size — for choosing icons, backgrounds and other assets.
+
+#### Making One and Collecting
+
+1. Click **New Palette** (`⌥⌘N`) at the bottom of the sidebar
+2. The palette is made, collecting starts, and the palette window opens
+3. Click a file in the grid to add it; click it again to take it out
+
+- While collecting, the toolbar shows **Collecting: name** and tiles in the palette carry a ✓
+- `⌘` and `⇧` clicks still only select. To add a selection in one go, use **Add to Palette** in the context menu
+- Double-clicking a file to look at it does not change the palette
+- To stop, click the ✕ in the toolbar or **Stop Collecting** in the palette window. Plain clicks go back to selecting
+
+#### The Palette Window
+
+- Collected files stand side by side at one size; the slider at the top changes it. Small images such as pixel art are enlarged without smoothing
+- Drag to reorder
+- To take files out, select them and click **−**, or use **Remove from Palette** in the context menu. The files themselves are not touched
+- Drag selected files out of the window to hand them to the Finder or another app as a **copy**. The originals never move
+- **Show in Finder** shows the selected files, or all of them when none is selected
+
+#### Palettes in the Sidebar
+
+- Palettes are listed under **Palettes** in the sidebar. Select one to see it in the grid, as with a folder
+- The context menu has **Collect into This Palette**, **Open Palette Window**, **Rename…** and **Delete Palette…**. Deleting removes the palette only; the files stay where they are
 
 ## Finding Duplicates
 
@@ -2076,7 +2158,7 @@ You can also just apply the “Duplicate” tag and review them in Finder later.
 
 ### Tiles
 
-Whether video previews start when you hover a tile.
+Whether hovering a tile plays its video, and whether it plays its audio — set separately.
 
 ### Performance
 
@@ -2088,7 +2170,7 @@ Shows what is on disk and clears it. Unregistering a folder discards its thumbna
 
 ### Open With
 
-Pick an app per file kind.
+Pick an app per file kind: image, video, audio and text.
 
 About lists the licences of the open-source libraries the app bundles.
 
@@ -2102,8 +2184,10 @@ About lists the licences of the open-source libraries the app bundles.
 - `I` — **Toggle Info Pane** (`⌘⌥I`)
 - `F` — **Show in Finder** (`⌘⇧R`)
 - `Return` — **Open** (`⌘↓`)
-- `Space` — **Play or Pause**
+- `Space` — **Play or Pause** (video and audio)
 - `⌘A` — **Select All**
+- `⌥⌘N` — **New Palette**
+- `⌥⌘L` — **Show Palette**
 - `⌘⇧D` — **Find Duplicates**
 - `⌘⌫` — **Move to Trash**
 - `⌘Z` — **Undo Move to Trash**
@@ -2112,7 +2196,7 @@ About lists the licences of the open-source libraries the app bundles.
 
 - **The grid is empty** — check whether a kind filter or search is still applied; the bar says so while one is active
 - **“Access needed” on a folder** — the drive was reconnected, or the macOS permission lapsed. Grant access again from that row
-- **No thumbnail** — damaged files, and files whose extension disagrees with their contents, may not produce one
+- **No thumbnail** — damaged files, and files whose extension disagrees with their contents, may not produce one. An audio file whose waveform cannot be drawn shows an icon instead
 - **The counts do not add up** — with nested folders a file belongs to every folder above it, so the totals deliberately overlap
 - **A garbled thumbnail on an old WMV** — some `.wmv` files (Windows Media Video 9) produce a noisy thumbnail. The file is not damaged and **playback and preview are unaffected**: the format often carries an incomplete index, which can garble a frame taken from partway in
 
