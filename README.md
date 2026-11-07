@@ -61,6 +61,7 @@ HTTPS + キーチェーン。Personal Access Token（fine-grained・`Contents: R
 | Kuro | `kuro.html` / `kuro_manual.html` / `kuro_privacy.html` |
 | 不満ノート（FumanNote） | `fumannote.html` / `fumannote_manual.html` / `fumannote_privacy.html` |
 | スタンプカウンター（Stamp Counter） | `stampcounter.html` / `stampcounter_manual.html` / `stampcounter_privacy.html` |
+| ランダムルーレット（Random Roulette） | `randomroulette.html` / `randomroulette_manual.html` / `randomroulette_privacy.html` |
 | Plain Video Saver | `pvs.html` / `pvs_privacy.html` |
 | UADB | `UADB_manual.html` / `uadb_privacy.html` |
 | VERDANT（ゲーム・体験版は itch.io と unityroom） | `verdant.html` のみ（取説・専用のプライバシーは無い。ゲームは何も送らないので `site_privacy.html` で足りる） |
