@@ -66,6 +66,7 @@ HTTPS + キーチェーン。Personal Access Token（fine-grained・`Contents: R
 | UADB | `UADB_manual.html` / `uadb_privacy.html` |
 | VERDANT（ゲーム・体験版は itch.io と unityroom） | `verdant.html` のみ（取説・専用のプライバシーは無い。ゲームは何も送らないので `site_privacy.html` で足りる） |
 | LOOT MULE（ゲーム・体験版は itch.io と unityroom） | `loot-mule.html` のみ（取説・専用のプライバシーは無い。ゲームは何も送らないので `site_privacy.html` で足りる） |
+| CRUCIBLE OF THE ABYSS（ゲーム・Steam・2026-11-14 追加） | `crucible-of-the-abyss.html` のみ（LOOT MULE と同じ理由で取説・専用のプライバシーは無い。体験版を出したら itch.io・unityroom のリンクを足す） |
 | オートダビング構文（Web アプリ） | `autodub/index.html` / `autodub/notes.html`（解説記事） |
 | トップ | `index.html` |
 | サイト共通 | `works.html`（作品一覧） / `contact.html`（お問い合わせ・noindex） / `site_privacy.html` |
