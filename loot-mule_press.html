@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOOT MULE プレスキット / Press Kit｜RustyWorks</title>
+<link rel="canonical" href="https://rustyworks.jp/loot-mule_press.html">
+<meta name="description" content="LOOT MULE のプレスキット。基本情報・紹介文・スクリーンショット・ロゴ・キーアート・トレーラー。Press kit for LOOT MULE, a turn-based dungeon roguelite.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RustyWorks">
+<meta property="og:url" content="https://rustyworks.jp/loot-mule_press.html">
+<meta property="og:title" content="LOOT MULE — Press Kit">
+<meta property="og:description" content="Turn-based dungeon roguelite. Steam, December 22, 2026.">
+<meta property="og:image" content="https://rustyworks.jp/assets/og/loot-mule-og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://rustyworks.jp/assets/og/loot-mule-og.jpg">
+<link rel="icon" href="assets/icons/loot-mule.png">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* 地は明るい羊皮紙色（サイト共通の「ライトテーマの地」）。暗いのは絵と映像の枠だけ */
+  :root {
+    --bg: #f4efe4;
+    --panel: #fbf8f1;
+    --line: rgba(29,26,22,.12);
+    --ink: #1d1a16;
+    --ink-2: #3b362d;
+    --muted: #625c50;
+    --faint: #948c7c;
+    --accent: #8a3f14;
+    --accent-hover: #6d300e;
+    --frame: #0d0c0b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Zen Kaku Gothic New', system-ui, sans-serif;
+    line-height: 1.8;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: var(--accent); text-decoration: none; transition: color .18s ease; }
+  a:hover { color: var(--accent-hover); }
+  ::selection { background: rgba(138,63,20,.18); }
+  img, video { display: block; max-width: 100%; }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+  .wrap { max-width: 1160px; margin: 0 auto; padding: 0 40px; }
+
+  /* ヘッダー */
+  .nav { position: sticky; top: 0; z-index: 50; background: rgba(244,239,228,.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .nav-in { height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+  .nav-left { display: flex; align-items: center; gap: 18px; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; letter-spacing: .04em; }
+  .nav-left .home { color: var(--muted); }
+  .nav-left .mark { color: var(--ink); font-weight: 500; letter-spacing: .12em; }
+  .nav-links { display: flex; gap: 28px; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; }
+  .nav-links a { color: var(--muted); }
+  .nav-right { display: flex; align-items: center; gap: 14px; }
+  .lang { display: flex; align-items: center; gap: 2px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+  .lang button { font: inherit; background: none; border: 0; cursor: pointer; color: var(--faint); padding: 4px 6px; border-radius: 4px; }
+  .lang button[aria-pressed="true"] { color: var(--ink); }
+  .lang .sep { color: #cdc5b3; }
+  .btn { display: inline-block; font-family: 'IBM Plex Mono', monospace; letter-spacing: .03em; color: #fff; background: var(--accent); border: 1px solid var(--accent); border-radius: 6px; transition: background .18s ease; }
+  .btn:hover { color: #fff; background: var(--accent-hover); }
+  .btn-ghost { color: var(--accent); background: #fff; }
+  .btn-ghost:hover { color: #fff; background: var(--accent); }
+  .btn-sm { font-size: 12.5px; padding: 8px 14px; }
+  .btn-lg { font-size: 14px; padding: 15px 26px; }
+
+  /* 見出し */
+  .kicker { font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; letter-spacing: .16em; color: var(--accent); margin-bottom: 26px; }
+  h1, h2, h3 { font-family: 'Space Grotesk', 'Zen Kaku Gothic New', sans-serif; font-weight: 500; }
+  h1 { font-size: min(6.4vw, 72px); line-height: 1.15; letter-spacing: -.01em; }
+  h1 span { display: block; }
+  h2 { font-size: min(5vw, 42px); line-height: 1.3; margin-bottom: 28px; }
+  .lead { margin-top: 32px; font-size: 19px; line-height: 1.95; color: var(--muted); max-width: 56ch; }
+  .section { padding: 0 0 110px; }
+  .section > .wrap > .rule { border-top: 1px solid var(--line); padding-top: 76px; }
+
+  /* ヒーロー */
+  .hero { padding: 120px 0 72px; animation: rise .7s ease both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .chips { margin-top: 36px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .chips span { font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); border: 1px solid rgba(29,26,22,.2); padding: 7px 14px; border-radius: 6px; }
+  .cta-row { margin-top: 42px; display: flex; flex-wrap: wrap; gap: 14px 18px; align-items: center; }
+  .cta-note { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--muted); }
+  .hero-art { margin-top: 64px; border-radius: 12px; overflow: hidden; background: var(--frame); box-shadow: 0 24px 60px -30px rgba(29,26,22,.5); }
+  .hero-art img { width: 100%; height: auto; }
+
+  /* 映像 */
+  .video { border-radius: 12px; overflow: hidden; background: var(--frame); }
+  .video video { width: 100%; height: auto; aspect-ratio: 16 / 9; }
+  .caption { margin-top: 14px; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--muted); }
+
+  /* 特徴 */
+  .body-text { color: var(--ink-2); line-height: 1.95; max-width: 62ch; }
+  .cards { margin-top: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 28px; }
+  .card .num { font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .14em; color: var(--accent); margin-bottom: 10px; }
+  .card h3 { font-size: 22px; line-height: 1.45; margin-bottom: 12px; }
+  .card p { color: var(--muted); line-height: 1.9; }
+
+  /* 画面 */
+  .shots { display: grid; grid-template-columns: 1fr 1fr; gap: 40px 28px; }
+  .shots figure:first-child { grid-column: 1 / -1; }
+  .shots img { width: 100%; height: auto; border-radius: 10px; background: var(--frame); border: 1px solid rgba(29,26,22,.18); }
+  .shots figcaption { margin-top: 14px; }
+  .shots .num { font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .14em; color: var(--accent); margin-bottom: 4px; }
+  .shots h3 { font-size: 19px; line-height: 1.5; margin-bottom: 4px; }
+  .shots p { color: var(--muted); line-height: 1.85; font-size: 15px; }
+
+  /* 体験版 */
+  .demo { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: start; }
+  .demo ul { list-style: none; }
+  .demo li { position: relative; padding: 12px 0 12px 22px; border-top: 1px solid var(--line); color: var(--ink-2); line-height: 1.8; }
+  .demo li:last-child { border-bottom: 1px solid var(--line); }
+  .demo li::before { content: ""; position: absolute; left: 2px; top: 23px; width: 7px; height: 7px; border-radius: 1px; background: var(--accent); }
+  .demo-box { background: var(--panel); border: 1px solid rgba(138,63,20,.3); border-radius: 10px; padding: 30px; }
+  .demo-box .price { font-size: 30px; font-weight: 700; margin: 6px 0 4px; }
+  .demo-box .sub { color: var(--muted); font-size: 14.5px; margin-bottom: 24px; }
+  .demo-box .btn { width: 100%; text-align: center; }
+  .demo-box .btn + .btn { margin-top: 10px; }
+  .demo-box .fine { margin-top: 16px; font-size: 13.5px; color: var(--muted); line-height: 1.8; }
+
+  /* 締め */
+  .closing { text-align: center; }
+  .closing h2 { margin-bottom: 16px; }
+  .closing .cta-note { margin-bottom: 34px; }
+  .closing .btn + .btn { margin-left: 10px; }
+
+  .site-foot { border-top: 1px solid var(--line); padding: 40px 0; }
+  .site-foot .wrap { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--muted); }
+  .site-foot a { color: var(--muted); }
+
+  @media (max-width: 860px) {
+    .nav-links { display: none; }
+    .cards, .shots, .demo { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .wrap { padding: 0 20px; }
+    .nav-left .mark { display: none; }
+    .hero { padding-top: 72px; }
+    .lead { font-size: 17px; }
+    .btn-lg { width: 100%; text-align: center; }
+    .closing .btn + .btn { margin: 10px 0 0; }
+    .section { padding-bottom: 80px; }
+    .section > .wrap > .rule { padding-top: 56px; }
+  }
+</style>
+<style>
+  .press h1 { font-family: 'Space Grotesk', 'Zen Kaku Gothic New', sans-serif; font-size: clamp(30px, 5vw, 46px); margin: 8px 0 14px; }
+  .press h2 { font-size: 22px; margin: 44px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+  .press p, .press li { line-height: 1.85; color: var(--ink-2); }
+  .press ul { padding-left: 1.3em; }
+  .facts { width: 100%; border-collapse: collapse; font-size: 15px; }
+  .facts th, .facts td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .facts th { width: 11em; color: var(--muted); font-weight: 500; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .grid figure { margin: 0; }
+  .grid img { width: 100%; display: block; border-radius: 6px; background: var(--frame); image-rendering: pixelated; }
+  .grid figcaption { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .art img { image-rendering: auto; object-fit: contain; aspect-ratio: 16/9; }
+  .dl { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+  .press video { width: 100%; border-radius: 8px; background: var(--frame); }
+  .note { font-size: 14px; color: var(--muted); }
+</style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="wrap nav-in">
+      <div class="nav-left">
+        <a class="home" href="loot-mule.html">&larr; LOOT MULE</a>
+        <span class="mark" data-ja="プレスキット" data-en="Press Kit">プレスキット</span>
+      </div>
+      <div class="nav-right">
+        <div class="lang" role="group" aria-label="Language">
+          <button type="button" data-lang="ja" aria-pressed="true">JA</button>
+          <span class="sep">/</span>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <a class="btn btn-sm" href="https://store.steampowered.com/app/5577780/?utm_source=presskit" target="_blank" rel="noopener">Steam</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="press">
+    <section class="wrap" style="padding-top:40px;padding-bottom:20px;">
+      <div class="kicker">PRESS KIT · STEAM 2026.12.22</div>
+      <h1>LOOT MULE</h1>
+      <p class="lead" data-ja="深く潜り、持てるだけ拾って、生きて拠点へ帰る。ターン制のダンジョン・ローグライト。潜るほど、奪うほどダンジョンに気づかれ、やがて番人が追ってくる。死ねば持ち物も装備も全部失う。行きは探索、帰りは死闘。" data-en="A turn-based dungeon roguelite. Dive deep, grab all you can carry, and make it back alive. The deeper you go and the more you take, the more the dungeon notices you, until its Warden comes hunting. Die, and you lose everything you carried.">深く潜り、持てるだけ拾って、生きて拠点へ帰る。ターン制のダンジョン・ローグライト。潜るほど、奪うほどダンジョンに気づかれ、やがて番人が追ってくる。死ねば持ち物も装備も全部失う。行きは探索、帰りは死闘。</p>
+      <div class="dl">
+        <a class="btn" href="assets/press/loot-mule/LOOT-MULE-presskit.zip" download data-ja="素材をまとめてダウンロード（ZIP・10.4 MB）" data-en="Download everything (ZIP, 10.4 MB)">素材をまとめてダウンロード（ZIP・10.4 MB）</a>
+        <a class="btn btn-ghost" href="https://store.steampowered.com/app/5577780/?utm_source=presskit" target="_blank" rel="noopener" data-ja="Steam ストアページ" data-en="Steam store page">Steam ストアページ</a>
+      </div>
+
+      <h2 data-ja="基本情報" data-en="Fact sheet">基本情報</h2>
+      <table class="facts">
+        <tbody>
+          <tr><th data-ja="タイトル" data-en="Title">タイトル</th><td data-ja="LOOT MULE（ルートミュール）" data-en="LOOT MULE">LOOT MULE（ルートミュール）</td></tr>
+          <tr><th data-ja="ジャンル" data-en="Genre">ジャンル</th><td data-ja="ターン制ダンジョン・ローグライト" data-en="Turn-based dungeon roguelite">ターン制ダンジョン・ローグライト</td></tr>
+          <tr><th data-ja="開発・販売" data-en="Developer / Publisher">開発・販売</th><td data-ja="RustyWorks（日本・個人開発）" data-en="RustyWorks (solo developer, Japan)">RustyWorks（日本・個人開発）</td></tr>
+          <tr><th data-ja="発売日" data-en="Release date">発売日</th><td data-ja="2026年12月22日（火）" data-en="December 22, 2026">2026年12月22日（火）</td></tr>
+          <tr><th data-ja="対応機種" data-en="Platforms">対応機種</th><td data-ja="PC（Windows / macOS）Steam" data-en="PC (Windows / macOS) on Steam">PC（Windows / macOS）Steam</td></tr>
+          <tr><th data-ja="価格" data-en="Price">価格</th><td data-ja="980円（税込）／ 6.99ドル。発売から2週間は30%オフ" data-en="$6.99 / ¥980. 30% off for the first two weeks">980円（税込）／ 6.99ドル。発売から2週間は30%オフ</td></tr>
+          <tr><th data-ja="対応言語" data-en="Languages">対応言語</th><td data-ja="日本語・英語ほか全12言語" data-en="12 languages, including English and Japanese">日本語・英語ほか全12言語</td></tr>
+          <tr><th data-ja="プレイ人数" data-en="Players">プレイ人数</th><td data-ja="1人" data-en="Single-player">1人</td></tr>
+          <tr><th data-ja="操作" data-en="Controls">操作</th><td data-ja="キーボード・マウス・ゲームパッド" data-en="Keyboard, mouse and gamepad">キーボード・マウス・ゲームパッド</td></tr>
+          <tr><th data-ja="無料体験版" data-en="Free demo">無料体験版</th><td data-ja="ブラウザで遊べます（unityroom / itch.io）" data-en="Plays in your browser (itch.io)">ブラウザで遊べます（unityroom / itch.io）</td></tr>
+          <tr><th data-ja="リンク" data-en="Links">リンク</th><td><a href="https://store.steampowered.com/app/5577780/?utm_source=presskit" target="_blank" rel="noopener">Steam</a> · <a href="loot-mule.html">rustyworks.jp</a> · <a href="https://unityroom.com/games/loot_mule_demo" target="_blank" rel="noopener">unityroom</a> · <a href="https://rustyworks.itch.io/loot-mule-demo" target="_blank" rel="noopener">itch.io</a></td></tr>
+          <tr><th data-ja="お問い合わせ" data-en="Contact">お問い合わせ</th><td><a href="mailto:rustyworks.games@gmail.com">rustyworks.games@gmail.com</a> · <a href="https://x.com/RustyWorksGames" target="_blank" rel="noopener">X @RustyWorksGames</a></td></tr>
+        </tbody>
+      </table>
+
+      <h2 data-ja="紹介" data-en="About">紹介</h2>
+      <p data-ja="『LOOT MULE』は、「ターン制ローグライク」と「生きて持ち帰る（エクストラクション）」を合わせたダンジョン・ローグライトです。入口まで歩いて帰れば、拾った物はすべて自分の物。帰還の巻物ならすぐ帰れますが、持ち帰れるのは身に着けている物だけ。潜るほど上がる「警戒度」が追跡に達すると、倒しにくい番人が追ってきて、帰り道は死闘に変わります。毎回レベル1から、武器ごとのスキルと7本の枝のスキルツリーで組み立て、助けた動物の仲間がしんがりを守ります。どこで引き返すかを決めるのは、あなたです。" data-en="LOOT MULE crosses a classic turn-based roguelike with extraction. Walk back to the entrance and everything you found is yours; read a Scroll of Return and you keep only what you are wearing. Every floor you descend and every treasure you take raises the dungeon&#x27;s Alert, and once you are Hunted, a hard-to-kill Warden comes after you. Each run starts at level 1: weapon-bound skills, a seven-branch skill tree, blessings and unique gear effects. Free a chained dog, cat or fox and it guards your retreat. You decide when to turn back.">『LOOT MULE』は、「ターン制ローグライク」と「生きて持ち帰る（エクストラクション）」を合わせたダンジョン・ローグライトです。入口まで歩いて帰れば、拾った物はすべて自分の物。帰還の巻物ならすぐ帰れますが、持ち帰れるのは身に着けている物だけ。潜るほど上がる「警戒度」が追跡に達すると、倒しにくい番人が追ってきて、帰り道は死闘に変わります。毎回レベル1から、武器ごとのスキルと7本の枝のスキルツリーで組み立て、助けた動物の仲間がしんがりを守ります。どこで引き返すかを決めるのは、あなたです。</p>
+      <h2 data-ja="特徴" data-en="Features">特徴</h2>
+      <ul>
+          <li data-ja="死ねば、全部失う。歩いて帰れば全部、巻物なら身に着けた物だけ" data-en="Die, and you lose everything. Walk out to keep it all, or read a Scroll of Return to keep only what you wear">死ねば、全部失う。歩いて帰れば全部、巻物なら身に着けた物だけ</li>
+          <li data-ja="潜るほど上がる警戒度。静か → ざわめき → 警戒 → 追跡で番人が来る" data-en="An Alert meter that rises as you dive and loot: Quiet, Stirring, Alert, Hunted. Then the Warden comes">潜るほど上がる警戒度。静か → ざわめき → 警戒 → 追跡で番人が来る</li>
+          <li data-ja="毎回レベル1から。武器ごとのスキル、7本の枝のスキルツリー、職業4つ" data-en="Level 1 every run: weapon-bound skills, a seven-branch skill tree, four classes">毎回レベル1から。武器ごとのスキル、7本の枝のスキルツリー、職業4つ</li>
+          <li data-ja="鎖につながれた動物（犬・猫・狐）を助けると、しんがりの仲間に" data-en="Free a chained dog, cat or fox and it guards your retreat">鎖につながれた動物（犬・猫・狐）を助けると、しんがりの仲間に</li>
+          <li data-ja="ダンジョン4つ・全42階、難易度3段階" data-en="Four dungeons, 42 floors, three difficulty levels">ダンジョン4つ・全42階、難易度3段階</li>
+      </ul>
+
+      <h2 data-ja="トレーラー" data-en="Trailer">トレーラー</h2>
+      <video controls preload="metadata" playsinline poster="assets/press/loot-mule/thumbs/ja/01_manor.webp" src="assets/press/loot-mule/LOOT-MULE-trailer-en.mp4"></video>
+      <div class="dl">
+        <a class="btn btn-ghost btn-sm" href="assets/press/loot-mule/LOOT-MULE-trailer-ja.mp4" download data-ja="トレーラー（日本語・1080p）" data-en="Trailer (Japanese, 1080p)">トレーラー（日本語・1080p）</a>
+        <a class="btn btn-ghost btn-sm" href="assets/press/loot-mule/LOOT-MULE-trailer-en.mp4" download data-ja="トレーラー（英語・1080p）" data-en="Trailer (English, 1080p)">トレーラー（英語・1080p）</a>
+      </div>
+
+      <h2 data-ja="スクリーンショット" data-en="Screenshots">スクリーンショット</h2>
+      <p class="note" data-ja="2560×1440。クリックで原寸を開きます。日本語の画面と英語の画面があります。" data-en="2560×1440. Click to open full size. Japanese and English UI versions.">2560×1440。クリックで原寸を開きます。日本語の画面と英語の画面があります。</p>
+      <div class="grid">
+          <figure><a href="assets/press/loot-mule/shots/en/loot-mule_en_00_title.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/thumbs/en/00_title.webp" alt="LOOT MULE Title" loading="lazy" width="960" height="540"></a><figcaption data-ja="タイトル（英語の画面）" data-en="Title (English UI)">タイトル（英語の画面）</figcaption></figure>
+          <figure><a href="assets/press/loot-mule/shots/en/loot-mule_en_01_manor.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/thumbs/en/01_manor.webp" alt="LOOT MULE The Old Manor" loading="lazy" width="960" height="540"></a><figcaption data-ja="古びた屋敷（英語の画面）" data-en="The Old Manor (English UI)">古びた屋敷（英語の画面）</figcaption></figure>
+          <figure><a href="assets/press/loot-mule/shots/en/loot-mule_en_02_catacomb.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/thumbs/en/02_catacomb.webp" alt="LOOT MULE The Catacombs" loading="lazy" width="960" height="540"></a><figcaption data-ja="地下墓地（英語の画面）" data-en="The Catacombs (English UI)">地下墓地（英語の画面）</figcaption></figure>
+          <figure><a href="assets/press/loot-mule/shots/en/loot-mule_en_03_abyss.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/thumbs/en/03_abyss.webp" alt="LOOT MULE The Abyss" loading="lazy" width="960" height="540"></a><figcaption data-ja="奈落（英語の画面）" data-en="The Abyss (English UI)">奈落（英語の画面）</figcaption></figure>
+          <figure><a href="assets/press/loot-mule/shots/en/loot-mule_en_05_inventory.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/thumbs/en/05_inventory.webp" alt="LOOT MULE Inventory" loading="lazy" width="960" height="540"></a><figcaption data-ja="持ち物（英語の画面）" data-en="Inventory (English UI)">持ち物（英語の画面）</figcaption></figure>
+          <figure><a href="assets/press/loot-mule/shots/en/loot-mule_en_06_tree.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/thumbs/en/06_tree.webp" alt="LOOT MULE Skill tree" loading="lazy" width="960" height="540"></a><figcaption data-ja="スキルツリー（英語の画面）" data-en="Skill tree (English UI)">スキルツリー（英語の画面）</figcaption></figure>
+          <figure><a href="assets/press/loot-mule/shots/en/loot-mule_en_07_town.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/thumbs/en/07_town.webp" alt="LOOT MULE Town" loading="lazy" width="960" height="540"></a><figcaption data-ja="拠点（英語の画面）" data-en="Town (English UI)">拠点（英語の画面）</figcaption></figure>
+          <figure><a href="assets/press/loot-mule/shots/en/loot-mule_en_08_returned.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/thumbs/en/08_returned.webp" alt="LOOT MULE Returned" loading="lazy" width="960" height="540"></a><figcaption data-ja="生還（英語の画面）" data-en="Returned (English UI)">生還（英語の画面）</figcaption></figure>
+          <figure><a href="assets/press/loot-mule/shots/ja/loot-mule_ja_00_title.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/thumbs/ja/00_title.webp" alt="LOOT MULE Title" loading="lazy" width="960" height="540"></a><figcaption data-ja="タイトル（日本語の画面）" data-en="Title (Japanese UI)">タイトル（日本語の画面）</figcaption></figure>
+          <figure><a href="assets/press/loot-mule/shots/ja/loot-mule_ja_01_manor.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/thumbs/ja/01_manor.webp" alt="LOOT MULE The Old Manor" loading="lazy" width="960" height="540"></a><figcaption data-ja="古びた屋敷（日本語の画面）" data-en="The Old Manor (Japanese UI)">古びた屋敷（日本語の画面）</figcaption></figure>
+          <figure><a href="assets/press/loot-mule/shots/ja/loot-mule_ja_02_catacomb.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/thumbs/ja/02_catacomb.webp" alt="LOOT MULE The Catacombs" loading="lazy" width="960" height="540"></a><figcaption data-ja="地下墓地（日本語の画面）" data-en="The Catacombs (Japanese UI)">地下墓地（日本語の画面）</figcaption></figure>
+          <figure><a href="assets/press/loot-mule/shots/ja/loot-mule_ja_03_abyss.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/thumbs/ja/03_abyss.webp" alt="LOOT MULE The Abyss" loading="lazy" width="960" height="540"></a><figcaption data-ja="奈落（日本語の画面）" data-en="The Abyss (Japanese UI)">奈落（日本語の画面）</figcaption></figure>
+          <figure><a href="assets/press/loot-mule/shots/ja/loot-mule_ja_05_inventory.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/thumbs/ja/05_inventory.webp" alt="LOOT MULE Inventory" loading="lazy" width="960" height="540"></a><figcaption data-ja="持ち物（日本語の画面）" data-en="Inventory (Japanese UI)">持ち物（日本語の画面）</figcaption></figure>
+          <figure><a href="assets/press/loot-mule/shots/ja/loot-mule_ja_06_tree.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/thumbs/ja/06_tree.webp" alt="LOOT MULE Skill tree" loading="lazy" width="960" height="540"></a><figcaption data-ja="スキルツリー（日本語の画面）" data-en="Skill tree (Japanese UI)">スキルツリー（日本語の画面）</figcaption></figure>
+          <figure><a href="assets/press/loot-mule/shots/ja/loot-mule_ja_07_town.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/thumbs/ja/07_town.webp" alt="LOOT MULE Town" loading="lazy" width="960" height="540"></a><figcaption data-ja="拠点（日本語の画面）" data-en="Town (Japanese UI)">拠点（日本語の画面）</figcaption></figure>
+          <figure><a href="assets/press/loot-mule/shots/ja/loot-mule_ja_08_returned.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/thumbs/ja/08_returned.webp" alt="LOOT MULE Returned" loading="lazy" width="960" height="540"></a><figcaption data-ja="生還（日本語の画面）" data-en="Returned (Japanese UI)">生還（日本語の画面）</figcaption></figure>
+      </div>
+
+      <h2 data-ja="ロゴ・キーアート" data-en="Logos and key art">ロゴ・キーアート</h2>
+      <div class="grid">
+          <figure class="art"><a href="assets/press/loot-mule/art/logo_transparent_680x360.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/art/logo_transparent_680x360.png" alt="LOOT MULE Logo (transparent)" loading="lazy"></a><figcaption data-ja="ロゴ（透過）" data-en="Logo (transparent)">ロゴ（透過）</figcaption></figure>
+          <figure class="art"><a href="assets/press/loot-mule/art/logo_transparent_1280x720.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/art/logo_transparent_1280x720.png" alt="LOOT MULE Logo (transparent, large)" loading="lazy"></a><figcaption data-ja="ロゴ（透過・大）" data-en="Logo (transparent, large)">ロゴ（透過・大）</figcaption></figure>
+          <figure class="art"><a href="assets/press/loot-mule/art/keyart_3840x1240.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/art/keyart_3840x1240.png" alt="LOOT MULE Key art (no logo)" loading="lazy"></a><figcaption data-ja="キーアート（ロゴなし）" data-en="Key art (no logo)">キーアート（ロゴなし）</figcaption></figure>
+          <figure class="art"><a href="assets/press/loot-mule/art/capsule_920x430.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/art/capsule_920x430.png" alt="LOOT MULE Capsule" loading="lazy"></a><figcaption data-ja="カプセル画像" data-en="Capsule">カプセル画像</figcaption></figure>
+          <figure class="art"><a href="assets/press/loot-mule/art/capsule_1232x706.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/art/capsule_1232x706.png" alt="LOOT MULE Capsule (large)" loading="lazy"></a><figcaption data-ja="カプセル画像（大）" data-en="Capsule (large)">カプセル画像（大）</figcaption></figure>
+          <figure class="art"><a href="assets/press/loot-mule/art/capsule_vertical_600x900.png" target="_blank" rel="noopener"><img src="assets/press/loot-mule/art/capsule_vertical_600x900.png" alt="LOOT MULE Vertical capsule" loading="lazy"></a><figcaption data-ja="縦長カプセル画像" data-en="Vertical capsule">縦長カプセル画像</figcaption></figure>
+      </div>
+
+      <h2 data-ja="開発者" data-en="Developer">開発者</h2>
+      <p data-ja="RustyWorks は日本の個人開発者です。" data-en="RustyWorks is a solo developer based in Japan.">RustyWorks は日本の個人開発者です。</p>
+      <p class="note" data-ja="素材は記事・動画での紹介に自由にお使いください。レビュー用の Steam キーが必要な方は、メールでご連絡ください。" data-en="All assets may be used freely for coverage. If you would like a Steam key for review, please email me.">素材は記事・動画での紹介に自由にお使いください。レビュー用の Steam キーが必要な方は、メールでご連絡ください。</p>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <a href="index.html">&larr; RustyWorks</a>
+      <a href="site_privacy.html" data-ja="サイトのポリシー" data-en="Site policy">サイトのポリシー</a>
+      <span>&copy; RustyWorks</span>
+    </div>
+  </footer>
+<script>
+(function () {
+  // 日英切替。サイト共通の作法（fumannote.html などと同じ）。
+  // 選択は localStorage の 'rw-lang' に持つので、ページを移っても保たれる。
+  // ⚠️ textContent を差し替えるので、訳を付ける要素の中に別のタグを入れないこと。
+  var KEY = 'rw-lang';
+  var buttons = document.querySelectorAll('.lang button');
+  var nodes = document.querySelectorAll('[data-ja][data-en]');
+  function apply(lang) {
+    document.documentElement.lang = lang;
+    nodes.forEach(function (el) {
+      var text = el.getAttribute('data-' + lang);
+      if (text !== null) el.textContent = text;
+    });
+    buttons.forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
+    });
+    try { localStorage.setItem(KEY, lang); } catch (e) {}
+  }
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () { apply(b.dataset.lang); });
+  });
+  var saved = null;
+  // 言語は強い順に決める。1. URL の ?lang  2. 前回の選択  3. 既定は日本語。
+  // ブラウザの言語では切り替えない。クローラーは en を名乗ることが多く、
+  // 日本語で書いたページが英語で索引されてしまうため。
+  try {
+    var q = new URLSearchParams(location.search).get('lang');
+    if (q === 'en' || q === 'ja') {
+      saved = q;
+      localStorage.setItem(KEY, q);
+    }
+  } catch (e) {}
+  if (!saved) { try { saved = localStorage.getItem(KEY); } catch (e) {} }
+  if (!saved) saved = 'ja';
+  if (saved === 'en') apply('en');
+})();
+</script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "04f66ad1837a4b63af68beb6e835358f"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
